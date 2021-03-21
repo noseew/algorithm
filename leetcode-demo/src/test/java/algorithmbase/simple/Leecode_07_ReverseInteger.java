@@ -5,7 +5,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReverseInteger {
+public class Leecode_07_ReverseInteger {
 
     @Test
     public void test() {
@@ -22,7 +22,7 @@ public class ReverseInteger {
      */
     @Test
     public void contextLoads() {
-        int num = 1;
+        int num = -2;
 //        reverse(num);
         System.out.println(reverse2(num));
     }

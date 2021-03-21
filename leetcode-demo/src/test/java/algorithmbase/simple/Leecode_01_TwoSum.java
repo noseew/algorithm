@@ -8,7 +8,7 @@ import java.util.Map;
 
 //@RunWith(SpringRunner.class)
 //@SpringBootTest
-public class TwoSum {
+public class Leecode_01_TwoSum {
 
     /**
      * 来自算法网站 https://leetcode.com/problems/two-sum/
@@ -27,7 +27,7 @@ public class TwoSum {
      * return [0, 1].
      */
     @Test
-    public void contextLoads() {
+    public void test() {
         int[] nums = new int[]{3, 3, 4};
         int target = 6;
 //        print(twoSum(nums, target));
