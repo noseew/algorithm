@@ -1,11 +1,11 @@
-package algorithmbase.simple;
+package algorithmbase.leetcode.simple;
 
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Leecode_07_ReverseInteger {
+public class Leetcode_07_ReverseInteger {
 
     @Test
     public void test() {

@@ -1,11 +1,14 @@
-package algorithmbase.simple;
+package algorithmbase.leetcode.simple;
 
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class RomanToIntTest {
+/**
+ * 罗马数字转整数
+ */
+public class Leetcode_13_RomanToIntTest {
 
     @Test
     public void romanToInt() {

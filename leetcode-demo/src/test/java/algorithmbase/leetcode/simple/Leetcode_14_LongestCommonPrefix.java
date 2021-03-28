@@ -1,8 +1,8 @@
-package algorithmbase.simple;
+package algorithmbase.leetcode.simple;
 
 import org.junit.Test;
 
-public class LongestCommonPrefix {
+public class Leetcode_14_LongestCommonPrefix {
 
     @Test
     public void test() {

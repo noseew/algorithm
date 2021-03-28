@@ -1,8 +1,11 @@
-package algorithmbase.simple;
+package algorithmbase.leetcode.simple;
 
 import org.junit.Test;
 
-public class PalindromeTest {
+/**
+ * 回文数
+ */
+public class Leetcode_09_PalindromeTest {
 
     @Test
     public void test() {

@@ -1,4 +1,4 @@
-package algorithmbase.simple;
+package algorithmbase.leetcode.simple;
 
 import org.junit.Test;
 
@@ -8,7 +8,7 @@ import java.util.Map;
 
 //@RunWith(SpringRunner.class)
 //@SpringBootTest
-public class Leecode_01_TwoSum {
+public class Leetcode_01_TwoSum {
 
     /**
      * 来自算法网站 https://leetcode.com/problems/two-sum/

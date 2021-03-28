@@ -1,10 +1,13 @@
-package algorithmbase.simple;
+package algorithmbase.leetcode.simple;
 
 import org.junit.Test;
 
 import java.util.*;
 
-public class Solution {
+/**
+ * 有效的括号
+ */
+public class Leetcode_20_Solution {
 
     @Test
     public void test(){
