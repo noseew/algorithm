@@ -30,7 +30,7 @@ public class Leecode_28_strstr {
 
     @Test
     public void test() {
-        System.out.println(strStr("aaab", "bb"));
+        System.out.println(strStr("mississippi", "issip"));
     }
 
     public int strStr(String haystack, String needle) {
@@ -83,4 +83,5 @@ public class Leecode_28_strstr {
 
         return matchIndex;
     }
+
 }
