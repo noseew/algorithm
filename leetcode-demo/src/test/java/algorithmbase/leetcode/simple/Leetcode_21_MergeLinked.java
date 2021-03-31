@@ -33,9 +33,22 @@ public class Leetcode_21_MergeLinked {
 
     @Test
     public void test() {
-
+//        ListNode l1 = new ListNode(1, new ListNode(2, new ListNode(4)));
+        ListNode l1 = null;
+        ListNode l2 = new ListNode(0);
+        ListNode listNode = mergeTwoLists(l1, l2);
+        System.out.println(listNode);
     }
 
+    public static class Ele {
+        ListNode node;
+        ListNode nextHandle;
+
+        public Ele(ListNode node) {
+            this.node = node;
+            this.nextHandle = node;
+        }
+    }
 
     public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
 
@@ -47,41 +60,42 @@ public class Leetcode_21_MergeLinked {
         }
         ListNode head = null;
 
-        int currentRule = 0;
-        ListNode[] nodes = new ListNode[]{l1, l2};
-        ListNode currentNode = nodes[currentRule];
-//        for (; ; ) {
-//        }
+        Ele ele1 = new Ele(l1);
+        Ele ele2 = new Ele(l2);
 
-        return new ListNode();
+        ListNode tail = null;
+        Ele[] nodes = new Ele[]{ele1, ele2};
+        for (; ; ) {
+            ListNode mix = null;
+            Ele currentEle = null;
+            for (int i = 0; i < nodes.length; i++) {
+                if (mix == null && nodes[i].nextHandle != null) {
+                    mix = nodes[i].nextHandle;
+                    currentEle = nodes[i];
+                } else if (nodes[i].nextHandle != null && mix != null) {
+                    if (mix.val > nodes[i].nextHandle.val) {
+                        mix = nodes[i].nextHandle;
+                        currentEle = nodes[i];
+                    }
+                }
+            }
+            if (mix == null) {
+                break;
+            }
+            if (currentEle != null) {
+                currentEle.nextHandle = mix.next;
+            }
+            if (head == null) {
+                head = mix;
+                tail = mix;
+            } else {
+                tail.next = mix;
+                tail = mix;
+            }
+        }
+
+        return head;
     }
-
-    public static ListNode getMinOtherFirst(ListNode l1, ListNode l2) {
-        if (l1 == null) {
-            return l2;
-        }
-        if (l2 == null) {
-            return l1;
-        }
-        if (l1.val < l2.val) {
-            return l1;
-        }
-        return l2;
-    }
-
-    public static int getMin(ListNode [] nodes) {
-        if (nodes == null) {
-            return -1;
-        }
-        if (nodes.length == 1) {
-            return 0;
-        }
-        if (nodes[0].val < nodes[1].val) {
-            return 0;
-        }
-        return 1;
-    }
-
 
    // Definition for singly-linked list.
    public class ListNode {
