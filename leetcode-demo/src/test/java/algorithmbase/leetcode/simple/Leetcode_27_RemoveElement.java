@@ -53,7 +53,7 @@ import org.junit.Test;
  * 链接：https://leetcode-cn.com/problems/remove-element
  * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
  */
-public class Leetccode_27_RemoveElement {
+public class Leetcode_27_RemoveElement {
 
     @Test
     public void test() {
