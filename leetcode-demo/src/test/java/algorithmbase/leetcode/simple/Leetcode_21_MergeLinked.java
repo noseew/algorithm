@@ -33,10 +33,10 @@ public class Leetcode_21_MergeLinked {
 
     @Test
     public void test() {
-        ListNode l1 = new ListNode(1);
+        ListNode l1 = new ListNode(2);
 //        ListNode l1 = null;
-        ListNode l2 = new ListNode(1, new ListNode(2, new ListNode(4)));
-        ListNode listNode = mergeTwoLists3(l1, l2);
+        ListNode l2 = new ListNode(1, new ListNode(1, new ListNode(1)));
+        ListNode listNode = mergeTwoLists4(l1, l2);
         System.out.println(listNode);
     }
 
@@ -194,6 +194,66 @@ public class Leetcode_21_MergeLinked {
                 tail.next = mix;
                 tail = mix;
             }
+            if (single) {
+                break;
+            }
+        }
+
+        return head;
+    }
+
+    public ListNode mergeTwoLists4(ListNode l1, ListNode l2) {
+
+        if (l1 == null) {
+            return l2;
+        }
+        if (l2 == null) {
+            return l1;
+        }
+
+        ListNode[] currentHandle = {l1, l2};
+
+        ListNode head = null;
+
+        ListNode tail = null;
+        for (; ; ) {
+            ListNode mix = null;
+            int currentIndex = -1;
+            boolean single = false;
+            for (int i = 0; i < currentHandle.length; i++) {
+                if (mix == null && currentHandle[i] != null) {
+                    mix = currentHandle[i];
+                    currentIndex = i;
+                } else if (currentHandle[i] != null && mix != null) {
+                    if (mix.val > currentHandle[i].val) {
+                        mix = currentHandle[i];
+                        currentIndex = i;
+                    }
+                } else {
+                    single = true;
+                }
+            }
+            if (mix == null) {
+                break;
+            }
+            if (currentIndex >= 0) {
+                currentHandle[currentIndex] = mix.next;
+            }
+            if (head == null) {
+                head = mix;
+                tail = mix;
+            } else {
+                tail.next = mix;
+                tail = mix;
+            }
+
+            while (mix.next != null && mix.val == mix.next.val) {
+                mix = mix.next;
+                tail.next = mix;
+                tail = mix;
+                currentHandle[currentIndex] = mix.next;
+            }
+
             if (single) {
                 break;
             }
