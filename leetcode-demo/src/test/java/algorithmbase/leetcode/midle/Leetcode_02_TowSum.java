@@ -20,7 +20,8 @@ import org.junit.Test;
  * <p>
  * 输入：l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]
  * 输出：[8,9,9,9,0,0,0,1]
- *  
+ * 输入 [9], [1,9,9,9,9,9,9,9,9,9]
+ * 输出 [0,0,0,0,0,0,0,0,0,0,1]
  * <p>
  * 提示：
  * <p>
@@ -38,29 +39,38 @@ public class Leetcode_02_TowSum {
     public void test() {
         // 未通过
         ListNode listNode = addTwoNumbers(
-                new ListNode(2, new ListNode(4, new ListNode(3))),
-                new ListNode(5, new ListNode(6, new ListNode(4))));
+                new ListNode(9),
+                new ListNode(1,
+                        new ListNode(9,
+                                new ListNode(9,
+                                        new ListNode(9,
+                                                new ListNode(9,
+                                                        new ListNode(9,
+                                                                new ListNode(9,
+                                                                        new ListNode(9,
+                                                                                new ListNode(9,
+                                                                                        new ListNode(9)))))))))));
         System.out.println(listNode.val);
     }
 
 
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
 
-        int l1Val = 0;
-        int wei = 1;
+        java.math.BigInteger l1Val = java.math.BigInteger.valueOf(0L);
+        java.math.BigInteger wei = java.math.BigInteger.valueOf(1L);
         do {
-            l1Val += l1.val *= wei;
+            l1Val = l1Val.add(java.math.BigInteger.valueOf(l1.val).multiply(wei));
             l1 = l1.next;
-            wei *= 10;
+            wei = wei.multiply(java.math.BigInteger.valueOf(10L));
         } while (l1 != null);
-        wei = 1;
-        int l2Val = 0;
+        wei = java.math.BigInteger.valueOf(1L);
+        java.math.BigInteger l2Val = java.math.BigInteger.valueOf(0L);
         do {
-            l2Val += l2.val *= wei;
+            l2Val = l2Val.add(java.math.BigInteger.valueOf(l2.val).multiply(wei));
             l2 = l2.next;
-            wei *= 10;
+            wei = wei.multiply(java.math.BigInteger.valueOf(10L));
         } while (l2 != null);
-        String sum = String.valueOf(l1Val + l2Val);
+        String sum = String.valueOf(l1Val.add(l2Val).toString());
         char[] chars = sum.toCharArray();
 
         ListNode head = null;
