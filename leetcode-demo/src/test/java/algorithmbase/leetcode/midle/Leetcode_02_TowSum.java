@@ -37,8 +37,7 @@ public class Leetcode_02_TowSum {
 
     @Test
     public void test() {
-        // 未通过
-        ListNode listNode = addTwoNumbers(
+        ListNode listNode = addTwoNumbers2(
                 new ListNode(9),
                 new ListNode(1,
                         new ListNode(9,
@@ -79,6 +78,49 @@ public class Leetcode_02_TowSum {
                 head = new ListNode(Integer.parseInt(chars[i] + ""));
             } else {
                 head = new ListNode(Integer.parseInt(chars[i] + ""), head);
+            }
+        }
+
+        return head;
+
+    }
+
+    /**
+     * 未通过
+     */
+    public ListNode addTwoNumbers2(ListNode l1, ListNode l2) {
+
+        java.math.BigInteger l1Val = java.math.BigInteger.valueOf(0L);
+        java.math.BigInteger wei = java.math.BigInteger.valueOf(1L);
+        do {
+            l1Val = l1Val.add(java.math.BigInteger.valueOf(l1.val).multiply(wei));
+            l1 = l1.next;
+            wei = wei.multiply(java.math.BigInteger.valueOf(10L));
+        } while (l1 != null);
+        wei = java.math.BigInteger.valueOf(1L);
+        java.math.BigInteger l2Val = java.math.BigInteger.valueOf(0L);
+        do {
+            l2Val = l2Val.add(java.math.BigInteger.valueOf(l2.val).multiply(wei));
+            l2 = l2.next;
+            wei = wei.multiply(java.math.BigInteger.valueOf(10L));
+        } while (l2 != null);
+        long longValue = l1Val.add(l2Val).longValue();
+        if (longValue == 0) {
+            return new ListNode(0);
+        }
+
+        ListNode head = null;
+        ListNode tail = null;
+        long last = 0L;
+        while (longValue > 0) {
+            last = longValue % 10;
+            longValue = longValue / 10;
+            if (head == null) {
+                head = new ListNode((int) last);
+                tail = head;
+            } else {
+                tail.next = new ListNode((int) last);
+                tail = tail.next;
             }
         }
 
