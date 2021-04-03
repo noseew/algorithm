@@ -50,7 +50,24 @@ public class Leetcode_58_LastWord {
             } else if (!hasWord && lastWordEnd >= 0) {
                 lastWordStart = i;
             }
-            if (lastWordEnd >= 0 && lastWordStart >=0) {
+            if (lastWordEnd >= 0 && lastWordStart >= 0) {
+                break;
+            }
+        }
+        return lastWordEnd - lastWordStart;
+    }
+
+    public int lengthOfLastWord2(String s) {
+        if (s == null || s.length() == 0) {
+            return 0;
+        }
+        char[] chars = s.toCharArray();
+        int lastWordStart = -1, lastWordEnd = -1;
+        for (int i = chars.length - 1; i >= 0; i--) {
+            if (chars[i] != ' ' && lastWordEnd < 0) {
+                lastWordEnd = i;
+            } else if (chars[i] == ' ' && lastWordEnd >= 0) {
+                lastWordStart = i;
                 break;
             }
         }
