@@ -43,7 +43,7 @@ public class Leetcode_66_PlusOne {
 
     @Test
     public void test() {
-        String s = Arrays.toString(plusOne2(new int[]{1,2,3}));
+        String s = Arrays.toString(plusOne3(new int[]{1, 2, 3}));
         System.out.println(s);
     }
 
@@ -97,6 +97,34 @@ public class Leetcode_66_PlusOne {
             newInts[0] = 1;
             System.arraycopy(ints, 0, newInts, 1, ints.length);
             return newInts;
+        }
+        return ints;
+    }
+
+    public int[] plusOne3(int[] digits) {
+        int[] ints = new int[digits.length];
+        int[] ints2 = new int[digits.length + 1];
+        boolean plus = false;
+        for (int i = ints.length - 1; i >= 0; i--) {
+            ints[i] = digits[i];
+            ints2[i + 1] = digits[i];
+            if (plus) {
+                ints[i]++;
+                plus = false;
+            }
+            if (i == ints.length - 1) {
+                ints[i]++;
+                ints2[i + 1]++;
+            }
+            if (ints[i] > 9) {
+                ints[i] = ints[i] % 10;
+                ints2[i + 1] = ints[i] % 10;
+                plus = true;
+            }
+        }
+        if (plus) {
+            ints2[0] = 1;
+            return ints2;
         }
         return ints;
     }
