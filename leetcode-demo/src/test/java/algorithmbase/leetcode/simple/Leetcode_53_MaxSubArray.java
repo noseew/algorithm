@@ -1,5 +1,7 @@
 package algorithmbase.leetcode.simple;
 
+import org.junit.Test;
+
 /**
  * 53. 最大子序和
  *
@@ -44,7 +46,47 @@ package algorithmbase.leetcode.simple;
  */
 public class Leetcode_53_MaxSubArray {
 
-    public int maxSubArray(int[] nums) {
-        return 0;
+    @Test
+    public void test() {
+        System.out.println(maxSubArray(new int[]{-2,1,-3,4,-1,2,1,-5,4}));
     }
+
+    /**
+     * 实现复杂度太高, 执行超时
+     *
+     * @param nums
+     * @return
+     */
+    public int maxSubArray(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        if (nums.length == 1) {
+            return nums[0];
+        }
+
+        int startIndex = 0;
+        int maxWindow = 0;
+        int maxCount = Integer.MIN_VALUE;
+        int countTemp = 0;
+        // 窗口大小从1到最大开始循环
+        for (int window = 1; window <= nums.length; window++) {
+            // 窗口向后移动
+            for (int startWindow = 0; startWindow <= nums.length - window; startWindow++) {
+                for (int i = startWindow; i < window + startWindow; i++) {
+                    // 窗口内数据求和
+                    countTemp += nums[i];
+                }
+                if (countTemp > maxCount) {
+                    maxCount = countTemp;
+                    maxWindow = window;
+                    startIndex = startWindow;
+                }
+                countTemp = 0;
+            }
+        }
+        System.out.println(String.format("最大 %s, startIndex %s, startWindow %s", maxCount, startIndex, maxWindow));
+        return maxCount;
+    }
+
 }
