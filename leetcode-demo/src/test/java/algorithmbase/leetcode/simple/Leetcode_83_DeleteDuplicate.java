@@ -40,10 +40,7 @@ public class Leetcode_83_DeleteDuplicate {
             return head;
         }
         ListNode tail = head;
-        while (true) {
-            if (tail.next  == null) {
-                break;
-            }
+        while (tail.next != null) {
             if (tail.next.val > tail.val) {
                 tail = tail.next;
             } else {
