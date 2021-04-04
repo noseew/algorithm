@@ -37,18 +37,22 @@ public class Leetcode_02_TowSum {
 
     @Test
     public void test() {
-        ListNode listNode = addTwoNumbers2(
-                new ListNode(9),
-                new ListNode(1,
-                        new ListNode(9,
-                                new ListNode(9,
-                                        new ListNode(9,
-                                                new ListNode(9,
-                                                        new ListNode(9,
-                                                                new ListNode(9,
-                                                                        new ListNode(9,
-                                                                                new ListNode(9,
-                                                                                        new ListNode(9)))))))))));
+//        ListNode listNode = addTwoNumbers3(
+//                new ListNode(9),
+//                new ListNode(1,
+//                        new ListNode(9,
+//                                new ListNode(9,
+//                                        new ListNode(9,
+//                                                new ListNode(9,
+//                                                        new ListNode(9,
+//                                                                new ListNode(9,
+//                                                                        new ListNode(9,
+//                                                                                new ListNode(9,
+//                                                                                        new ListNode(9)))))))))));
+
+
+        ListNode listNode = addTwoNumbers3(new ListNode(2, new ListNode(4, new ListNode(3))),
+                new ListNode(5, new ListNode(6, new ListNode(4))));
         System.out.println(listNode.val);
     }
 
@@ -141,6 +145,51 @@ public class Leetcode_02_TowSum {
                 head = new ListNode(Integer.parseInt(chars[i] + ""));
             } else {
                 head = new ListNode(Integer.parseInt(chars[i] + ""), head);
+            }
+        }
+
+        return head;
+    }
+
+    public ListNode addTwoNumbers3(ListNode l1, ListNode l2) {
+
+        ListNode l1Current = l1;
+        ListNode l2Current = l2;
+
+        StringBuilder res = new StringBuilder();
+        boolean plus = false;
+        do {
+            int l1Val = 0;
+            if (l1Current != null) {
+                l1Val = l1Current.val;
+            }
+            int l2Val = 0;
+            if (l2Current != null) {
+                l2Val = l2Current.val;
+            }
+            int newVal = l1Val + l2Val;
+            if (plus) {
+                newVal++;
+                plus = false;
+            }
+            if (newVal > 9) {
+                plus = true;
+                newVal = newVal % 10;
+            }
+            res.append(newVal);
+        } while ((l1Current != null && (l1Current = l1Current.next) != null)
+                | (l2Current != null && (l2Current = l2Current.next) != null));
+
+        if (plus) {
+            res.append(1);
+        }
+        char[] chars = res.reverse().toString().toCharArray();
+        ListNode head = null;
+        for (char aChar : chars) {
+            if (head == null) {
+                head = new ListNode(Integer.parseInt(aChar + ""));
+            } else {
+                head = new ListNode(Integer.parseInt(aChar + ""), head);
             }
         }
 
