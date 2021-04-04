@@ -47,14 +47,10 @@ public class Leetcode_03_MaxStr {
 
     @Test
     public void test() {
-        System.out.println(lengthOfLongestSubstring("aab"));
+        System.out.println(lengthOfLongestSubstring2("bbbbb"));
     }
 
     /**
-     * 未完成
-     *
-     * @param s
-     * @return
      */
     public int lengthOfLongestSubstring(String s) {
         if (s == null) {
@@ -83,6 +79,42 @@ public class Leetcode_03_MaxStr {
                 nextHeadIndex = put + 1;
             }
 
+        }
+        return maxMap.size();
+    }
+
+    /**
+     */
+    public int lengthOfLongestSubstring2(String s) {
+        if (s == null) {
+            return 0;
+        }
+        if (s.length() <= 1) {
+            return s.length();
+        }
+        char[] chars = s.toCharArray();
+        Map<Character, Integer> maxMap = new HashMap<>();
+
+        Map<Character, Integer> nextMap = new HashMap<>();
+        int nextHeadIndex = 0;
+
+        for (int i = 0; i < chars.length; i++) {
+            Integer put = nextMap.put(chars[i], i);
+            if (put != null) {
+                if (nextMap.size() > maxMap.size()) {
+                    maxMap.clear();
+                    maxMap.putAll(nextMap);
+                    maxMap.put(chars[i], put);
+                }
+                for (int j = nextHeadIndex; j < put; j++) {
+                    nextMap.remove(chars[j]);
+                }
+                nextHeadIndex = put + 1;
+            }
+        }
+        if (nextMap.size() > maxMap.size()) {
+            maxMap.clear();
+            maxMap.putAll(nextMap);
         }
         return maxMap.size();
     }
