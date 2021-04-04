@@ -85,47 +85,66 @@ public class Leetcode_02_TowSum {
 
     }
 
-    /**
-     * 未通过
-     */
     public ListNode addTwoNumbers2(ListNode l1, ListNode l2) {
 
-        java.math.BigInteger l1Val = java.math.BigInteger.valueOf(0L);
-        java.math.BigInteger wei = java.math.BigInteger.valueOf(1L);
-        do {
-            l1Val = l1Val.add(java.math.BigInteger.valueOf(l1.val).multiply(wei));
-            l1 = l1.next;
-            wei = wei.multiply(java.math.BigInteger.valueOf(10L));
-        } while (l1 != null);
-        wei = java.math.BigInteger.valueOf(1L);
-        java.math.BigInteger l2Val = java.math.BigInteger.valueOf(0L);
-        do {
-            l2Val = l2Val.add(java.math.BigInteger.valueOf(l2.val).multiply(wei));
-            l2 = l2.next;
-            wei = wei.multiply(java.math.BigInteger.valueOf(10L));
-        } while (l2 != null);
-        long longValue = l1Val.add(l2Val).longValue();
-        if (longValue == 0) {
-            return new ListNode(0);
+        StringBuilder l1Str = new StringBuilder();
+        ListNode l1Current = l1;
+        l1Str.append(l1Current.val);
+        while (l1Current.next != null) {
+            l1Current = l1Current.next;
+            l1Str.append(l1Current.val);
+        }
+        char[] l1chars = l1Str.toString().toCharArray();
+
+        StringBuilder l2Str = new StringBuilder();
+        ListNode l2Current = l2;
+        l2Str.append(l2Current.val);
+        while (l2Current.next != null) {
+            l2Current = l2Current.next;
+            l2Str.append(l2Current.val);
+        }
+        char[] l2chars = l2Str.toString().toCharArray();
+
+        int maxSize = Math.max(l1chars.length, l2chars.length);
+        StringBuilder res = new StringBuilder(maxSize);
+
+        boolean plus = false;
+        for (int i = 0; i < maxSize; i++) {
+            int l1Val = 0;
+            if (i < l1chars.length) {
+                l1Val = Integer.parseInt(String.valueOf(l1chars[i]));
+            }
+            int l2Val = 0;
+            if (i < l2chars.length) {
+                l2Val = Integer.parseInt(String.valueOf(l2chars[i]));
+            }
+            int newVal = l1Val + l2Val;
+            if (plus) {
+                newVal++;
+                plus = false;
+            }
+            if (newVal > 9) {
+                plus = true;
+                newVal = newVal % 10;
+            }
+            res.append(newVal);
+        }
+        if (plus) {
+            res.append(1);
         }
 
+        char[] chars = res.reverse().toString().toCharArray();
+
         ListNode head = null;
-        ListNode tail = null;
-        long last = 0L;
-        while (longValue > 0) {
-            last = longValue % 10;
-            longValue = longValue / 10;
+        for (int i = 0; i < chars.length; i++) {
             if (head == null) {
-                head = new ListNode((int) last);
-                tail = head;
+                head = new ListNode(Integer.parseInt(chars[i] + ""));
             } else {
-                tail.next = new ListNode((int) last);
-                tail = tail.next;
+                head = new ListNode(Integer.parseInt(chars[i] + ""), head);
             }
         }
 
         return head;
-
     }
 
 
