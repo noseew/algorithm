@@ -37,22 +37,22 @@ public class Leetcode_02_TowSum {
 
     @Test
     public void test() {
-//        ListNode listNode = addTwoNumbers3(
-//                new ListNode(9),
-//                new ListNode(1,
-//                        new ListNode(9,
-//                                new ListNode(9,
-//                                        new ListNode(9,
-//                                                new ListNode(9,
-//                                                        new ListNode(9,
-//                                                                new ListNode(9,
-//                                                                        new ListNode(9,
-//                                                                                new ListNode(9,
-//                                                                                        new ListNode(9)))))))))));
+        ListNode listNode = addTwoNumbers4(
+                new ListNode(9),
+                new ListNode(1,
+                        new ListNode(9,
+                                new ListNode(9,
+                                        new ListNode(9,
+                                                new ListNode(9,
+                                                        new ListNode(9,
+                                                                new ListNode(9,
+                                                                        new ListNode(9,
+                                                                                new ListNode(9,
+                                                                                        new ListNode(9)))))))))));
 
 
-        ListNode listNode = addTwoNumbers3(new ListNode(2, new ListNode(4, new ListNode(3))),
-                new ListNode(5, new ListNode(6, new ListNode(4))));
+//        ListNode listNode = addTwoNumbers4(new ListNode(2, new ListNode(4, new ListNode(3))),
+//                new ListNode(5, new ListNode(6, new ListNode(4))));
         System.out.println(listNode.val);
     }
 
@@ -193,6 +193,50 @@ public class Leetcode_02_TowSum {
             }
         }
 
+        return head;
+    }
+
+    public ListNode addTwoNumbers4(ListNode l1, ListNode l2) {
+
+        ListNode head = null;
+        ListNode next = null;
+
+        ListNode l1Current = l1;
+        ListNode l2Current = l2;
+
+        boolean plus = false;
+        do {
+            int l1Val = 0;
+            if (l1Current != null) {
+                l1Val = l1Current.val;
+            }
+            int l2Val = 0;
+            if (l2Current != null) {
+                l2Val = l2Current.val;
+            }
+            int newVal = l1Val + l2Val;
+            if (plus) {
+                newVal++;
+                plus = false;
+            }
+            if (newVal > 9) {
+                plus = true;
+                newVal = newVal % 10;
+            }
+
+            if (next == null) {
+                head = new ListNode(newVal);
+                next = head;
+            } else {
+                next.next = new ListNode(newVal);
+                next = next.next;
+            }
+        } while ((l1Current != null && (l1Current = l1Current.next) != null)
+                | (l2Current != null && (l2Current = l2Current.next) != null));
+
+        if (plus) {
+            next.next = new ListNode(1);
+        }
         return head;
     }
 
