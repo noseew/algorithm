@@ -2,8 +2,8 @@ package algorithmbase.leetcode.midle;
 
 import org.junit.Test;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 3. 无重复字符的最长子串
@@ -47,7 +47,7 @@ public class Leetcode_03_MaxStr {
 
     @Test
     public void test() {
-
+        System.out.println(lengthOfLongestSubstring("aab"));
     }
 
     /**
@@ -64,43 +64,26 @@ public class Leetcode_03_MaxStr {
             return s.length();
         }
         char[] chars = s.toCharArray();
-        Set<Character> maxSet = new HashSet<>();
-        int maxHeadIndex = 0;
-        int maxTailIndex = 0;
+        Map<Character, Integer> maxMap = new HashMap<>();
 
-        Set<Character> nextSet = new HashSet<>();
-        int nextHeadIndex = -1;
-        int nextTailIndex = -1;
+        Map<Character, Integer> nextMap = new HashMap<>();
+        int nextHeadIndex = 0;
 
-        boolean hasRepeat = false;
         for (int i = 0; i < chars.length; i++) {
-            if (nextSet.size() > maxSet.size()) {
-                maxSet.clear();
-                maxSet.addAll(nextSet);
-                nextSet.clear();
-                maxHeadIndex = nextHeadIndex;
-                maxTailIndex = nextTailIndex;
-                nextHeadIndex = -1;
-                nextTailIndex = -1;
-
-            }
-            if (hasRepeat) {
-                i = maxHeadIndex + 1;
-                continue;
-            }
-
-            if (nextSet.add(chars[i]) && !hasRepeat) {
-                maxTailIndex = i;
+            Integer put = nextMap.put(chars[i], i);
+            if (put == null) {
+                if (nextMap.size() > maxMap.size()) {
+                    maxMap.clear();
+                    maxMap.putAll(nextMap);
+                }
             } else {
-                hasRepeat = true;
-                nextHeadIndex = maxHeadIndex + 1;
-                nextTailIndex = i;
-
+                for (int j = nextHeadIndex; j < put; j++) {
+                    nextMap.remove(chars[j]);
+                }
+                nextHeadIndex = put + 1;
             }
 
         }
-
-        return 0;
-
+        return maxMap.size();
     }
 }
