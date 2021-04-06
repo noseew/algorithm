@@ -1,7 +1,6 @@
 package algorithmbase.leetcode.midle;
 
-import java.util.ArrayDeque;
-import java.util.Queue;
+import org.junit.Test;
 
 /**
  * 5. 最长回文子串
@@ -37,8 +36,64 @@ import java.util.Queue;
  */
 public class Leetcode_05_LongestPalindrome {
 
+    @Test
+    public void test() {
+        System.out.println(longestPalindrome("cccccc"));
+        System.out.println();
+    }
+
+    /**
+     * 未完成
+     *
+     */
     public String longestPalindrome(String s) {
 
-        return s;
+        if (s.length() <= 1) {
+            return s;
+        }
+
+        char[] chars = s.toCharArray();
+
+        int startIndex = 0;
+        int maxLen = 1;
+
+        for (int i = 1; i < chars.length; i++) {
+
+            if (chars[i] == chars[i - 1]) {
+                // 偶对称
+                int maxLenTemp = 2;
+                int startIndexTemp = i - 1;
+                for (int j = 0; j < chars.length - i - 1 && j <= i; j++) {
+                    if (i + j <= chars.length - 1 && i - j - 1 >= 0
+                            && chars[i + j] == chars[i - j - 1]) {
+                        maxLenTemp = j * 2;
+                        startIndexTemp = i - j - 1;
+                    }
+                }
+                if (maxLenTemp > maxLen) {
+                    startIndex = startIndexTemp;
+                    maxLen = maxLenTemp;
+                }
+            }
+            if (i > 1 && chars[i] == chars[i - 2]) {
+                // 奇对称
+                int maxLenTemp = 3;
+                int startIndexTemp = i - 2;
+                for (int j = 2; j < chars.length - i - 1 && j <= i; j++) {
+                    if (i + j <= chars.length - 1 && i - j >= 0
+                            && chars[i + j] == chars[i - j]) {
+                        maxLenTemp = j * 2 + 1;
+                        startIndexTemp = i - j;
+                    }
+                }
+                if (maxLenTemp > maxLen) {
+                    startIndex = startIndexTemp;
+                    maxLen = maxLenTemp;
+                }
+            }
+
+        }
+
+        return s.substring(startIndex, startIndex + maxLen);
     }
 }
