@@ -38,14 +38,11 @@ public class Leetcode_05_LongestPalindrome {
 
     @Test
     public void test() {
-        System.out.println(longestPalindrome("cccccc"));
+        // "xaabacxcabaax"
+        System.out.println(longestPalindrome("xaabacxcabaaxcabaax"));
         System.out.println();
     }
 
-    /**
-     * 未完成
-     *
-     */
     public String longestPalindrome(String s) {
 
         if (s.length() <= 1) {
@@ -54,20 +51,29 @@ public class Leetcode_05_LongestPalindrome {
 
         char[] chars = s.toCharArray();
 
+        if (chars.length == 2 && chars[0] != chars[1]) {
+            return String.valueOf(chars[0]);
+        }
+
         int startIndex = 0;
         int maxLen = 1;
 
-        for (int i = 1; i < chars.length; i++) {
+        for (int i = 0; i < chars.length; i++) {
+            if (maxLen == chars.length) {
+                break;
+            }
 
-            if (chars[i] == chars[i - 1]) {
+            if (i >= 1 && chars[i] == chars[i - 1]) {
                 // 偶对称
-                int maxLenTemp = 2;
+                int maxLenTemp = 0;
                 int startIndexTemp = i - 1;
-                for (int j = 0; j < chars.length - i - 1 && j <= i; j++) {
-                    if (i + j <= chars.length - 1 && i - j - 1 >= 0
-                            && chars[i + j] == chars[i - j - 1]) {
-                        maxLenTemp = j * 2;
+                int maxJ = Math.min(chars.length - i, i);
+                for (int j = 0; j < maxJ; j++) {
+                    if (chars[i - j - 1] == chars[i + j]) {
+                        maxLenTemp += 2;
                         startIndexTemp = i - j - 1;
+                    } else {
+                        break;
                     }
                 }
                 if (maxLenTemp > maxLen) {
@@ -75,15 +81,18 @@ public class Leetcode_05_LongestPalindrome {
                     maxLen = maxLenTemp;
                 }
             }
-            if (i > 1 && chars[i] == chars[i - 2]) {
+            if (i > 0 && i < chars.length - 1
+                    && chars[i - 1] == chars[i + 1]) {
                 // 奇对称
-                int maxLenTemp = 3;
-                int startIndexTemp = i - 2;
-                for (int j = 2; j < chars.length - i - 1 && j <= i; j++) {
-                    if (i + j <= chars.length - 1 && i - j >= 0
-                            && chars[i + j] == chars[i - j]) {
-                        maxLenTemp = j * 2 + 1;
+                int maxLenTemp = 1;
+                int startIndexTemp = i;
+                int maxJ = Math.min(chars.length - i - 1, i);
+                for (int j = 1; j <= maxJ; j++) {
+                    if (chars[i + j] == chars[i - j]) {
+                        maxLenTemp += 2;
                         startIndexTemp = i - j;
+                    } else {
+                        break;
                     }
                 }
                 if (maxLenTemp > maxLen) {
