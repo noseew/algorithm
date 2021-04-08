@@ -3,6 +3,7 @@ package algorithmbase.leetcode.simple;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
@@ -35,7 +36,7 @@ public class Leetcode_100_SameTree {
 
     @Test
     public void test() {
-        System.out.println(isSameTree(new TreeNode(1, new TreeNode(1), new TreeNode(1)), new TreeNode(1, new TreeNode(1), new TreeNode(1))));
+        System.out.println(isSameTree(new TreeNode(1, new TreeNode(1), null), new TreeNode(1, null, new TreeNode(1))));
         System.out.println();
     }
 
@@ -99,6 +100,12 @@ public class Leetcode_100_SameTree {
         System.out.print(node.val + " ");
     }
 
+    /**************************** 二叉树的遍历-循环方式 *****************************/
+    /**
+     * 前序遍历
+     *
+     * @param node
+     */
     public static void preOrderTraveralWithStack(TreeNode node) {
         Stack<TreeNode> stack = new Stack<TreeNode>();
         TreeNode treeNode = node;
@@ -113,6 +120,85 @@ public class Leetcode_100_SameTree {
             if (!stack.isEmpty()) {
                 treeNode = stack.pop();
                 treeNode = treeNode.right;
+            }
+        }
+    }
+
+    /**
+     * 中序遍历
+     *
+     * @param node
+     */
+    public static void inOrderTraveralWithStack(TreeNode node) {
+        Stack<TreeNode> stack = new Stack<TreeNode>();
+        TreeNode treeNode = node;
+        while (treeNode != null || !stack.isEmpty()) {
+            while (treeNode != null) {
+                stack.push(treeNode);
+                treeNode = treeNode.left;
+            }
+            if (!stack.isEmpty()) {
+                treeNode = stack.pop();
+                System.out.print(treeNode.val + " ");
+                treeNode = treeNode.right;
+            }
+
+        }
+    }
+
+    /**
+     * 后续遍历
+     *
+     * @param node
+     */
+    public static void postOrderTraveralWithStack(TreeNode node) {
+        Stack<TreeNode> stack = new Stack<TreeNode>();
+        TreeNode treeNode = node;
+        TreeNode lastVisit = null;   //标记每次遍历最后一次访问的节点
+        while (treeNode != null || !stack.isEmpty()) {//节点不为空，结点入栈，并且指向下一个左孩子
+            while (treeNode != null) {
+                stack.push(treeNode);
+                treeNode = treeNode.left;
+            }
+            //栈不为空
+            if (!stack.isEmpty()) {
+                //出栈
+                treeNode = stack.pop();
+                /**
+                 * 这块就是判断treeNode是否有右孩子，
+                 * 如果没有输出treeNode.data，让lastVisit指向treeNode，并让treeNode为空
+                 * 如果有右孩子，将当前节点继续入栈，treeNode指向它的右孩子,继续重复循环
+                 */
+                if (treeNode.right == null || treeNode.right == lastVisit) {
+                    System.out.print(treeNode.val + " ");
+                    lastVisit = treeNode;
+                    treeNode = null;
+                } else {
+                    stack.push(treeNode);
+                    treeNode = treeNode.right;
+                }
+
+            }
+
+        }
+    }
+
+    /**
+     * 层序遍历
+     *
+     * @param root
+     */
+    public static void levelOrder(TreeNode root) {
+        LinkedList<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            root = queue.pop();
+            System.out.print(root.val + " ");
+            if (root.left != null) {
+                queue.add(root.left);
+            }
+            if (root.right != null) {
+                queue.add(root.right);
             }
         }
     }
