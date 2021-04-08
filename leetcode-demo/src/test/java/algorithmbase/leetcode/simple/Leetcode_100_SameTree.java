@@ -36,7 +36,7 @@ public class Leetcode_100_SameTree {
 
     @Test
     public void test() {
-        System.out.println(isSameTree2(new TreeNode(1, new TreeNode(1), null), new TreeNode(1, null, new TreeNode(1))));
+        System.out.println(isSameTree3(new TreeNode(1, new TreeNode(1), null), new TreeNode(1, null, new TreeNode(1))));
         System.out.println();
     }
 
@@ -63,6 +63,25 @@ public class Leetcode_100_SameTree {
 
         List<TreeNode> qList = new ArrayList<>();
         preOrderTraveral(q, qList);
+
+        if (pList.size() != qList.size()) {
+            return false;
+        }
+        for (int i = 0; i < pList.size(); i++) {
+            if (!isSameTreeUtil(pList.get(i), qList.get(i), true)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isSameTree3(TreeNode p, TreeNode q) {
+
+        List<TreeNode> pList = new ArrayList<>();
+        preOrderTraveralWithStack(p, pList);
+
+        List<TreeNode> qList = new ArrayList<>();
+        preOrderTraveralWithStack(q, qList);
 
         if (pList.size() != qList.size()) {
             return false;
@@ -102,6 +121,22 @@ public class Leetcode_100_SameTree {
         treeNodes.add(node);
         preOrderTraveral(node.left, treeNodes);
         preOrderTraveral(node.right, treeNodes);
+    }
+
+    public static void preOrderTraveralWithStack(TreeNode node, List<TreeNode> treeNodes) {
+        Stack<TreeNode> stack = new Stack<TreeNode>();
+        TreeNode treeNode = node;
+        while (treeNode != null || !stack.isEmpty()) {
+            while (treeNode != null) {
+                treeNodes.add(treeNode);
+                stack.push(treeNode);
+                treeNode = treeNode.left;
+            }
+            if (!stack.isEmpty()) {
+                treeNode = stack.pop();
+                treeNode = treeNode.right;
+            }
+        }
     }
 
     /****************************二叉树的遍历*****************************/
