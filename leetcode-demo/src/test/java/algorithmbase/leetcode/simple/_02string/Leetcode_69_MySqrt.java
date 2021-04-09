@@ -1,4 +1,4 @@
-package algorithmbase.leetcode.simple;
+package algorithmbase.leetcode.simple._02string;
 
 /**
  * 69. x 的平方根

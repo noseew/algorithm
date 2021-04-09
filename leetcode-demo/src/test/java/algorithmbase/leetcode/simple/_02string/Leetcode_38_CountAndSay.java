@@ -1,4 +1,4 @@
-package algorithmbase.leetcode.simple;
+package algorithmbase.leetcode.simple._02string;
 
 /**
  * 38. 外观数列

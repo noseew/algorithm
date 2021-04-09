@@ -1,4 +1,4 @@
-package algorithmbase.leetcode.simple;
+package algorithmbase.leetcode.simple._02string;
 
 /**
  * 70. 爬楼梯

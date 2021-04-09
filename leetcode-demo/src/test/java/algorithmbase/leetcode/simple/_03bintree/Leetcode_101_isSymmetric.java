@@ -1,4 +1,4 @@
-package algorithmbase.leetcode.simple;
+package algorithmbase.leetcode.simple._03bintree;
 
 import org.junit.Test;
 
