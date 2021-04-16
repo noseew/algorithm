@@ -20,22 +20,18 @@ public class Sort_Insert {
      * 基础版本
      */
     public static int[] sort_01(int[] data) {
-        int count = 0;
-        int countOuter = 0;
-        for (int i = 0; i < data.length - 1; i++) {
-            int countInner = 0;
-            System.out.println(String.format("外部循环: 次数 %s, 结果: %s", countOuter++, Arrays.toString(data)));
-            for (int j = i + 1; j < data.length; j++) {
+        int sortedMaxIndex = 0;
+        for (int i = 1; i < data.length; i++) {
+            for (int j = 0; j < i; j++) {
+
+
                 if (data[i] > data[j]) {
                     int temp = data[i];
                     data[i] = data[j];
                     data[j] = temp;
                 }
-                count++;
-                System.out.println(String.format("\t内部循环: 次数 %s, 结果: %s", countInner++, Arrays.toString(data)));
             }
         }
-        System.out.println(String.format("总次数 %s", count));
         return data;
     }
 
