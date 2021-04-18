@@ -5,7 +5,8 @@ import org.junit.Test;
 import java.util.Arrays;
 
 /**
- * 选择排序
+ * 选择排序: 在剩下的数组中, 选择最小(大)的依次放入已经排好序的数据中
+ *
  * 1. 内层循环, 选择最小的数字放在最左边, 一轮之后最小的在最左
  * 2. 外层循环, 在剩下的数字中执行1
  */
@@ -13,7 +14,7 @@ public class Sort_Selection {
 
     @Test
     public void test() {
-        int[] arr = new int[]{5, 4, 3, 2, 1};
+        int[] arr = new int[]{3, 0, 4, 2, 1};
         System.out.println(Arrays.toString(sort_01(arr)));
     }
 

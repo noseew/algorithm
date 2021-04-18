@@ -5,7 +5,8 @@ import org.junit.Test;
 import java.util.Arrays;
 
 /**
- * 冒泡排序
+ * 冒泡排序: 两两比较和交换, 将最小(大)的移动到一边
+ *
  * 1. 内层循环, 相邻两个两两对比, 对比出最大的逐渐右移, 一轮之后排在最后
  * 2. 外层循环, 在剩下的数字中执行1
  */
@@ -15,7 +16,7 @@ public class Sort_Bubble {
     public void test() {
 
 //        int[] arr = new int[]{1, 2, 3, 4, 5};
-        int[] arr = new int[]{5, 4, 3, 2, 1};
+        int[] arr = new int[]{3, 0, 4, 2, 1};
 
         System.out.println(Arrays.toString(sort_01(arr)));
 //        System.out.println(Arrays.toString(sort_02(arr)));
@@ -71,30 +72,6 @@ public class Sort_Bubble {
                     data[j] = data[j + 1];
                     data[j + 1] = iData;
                     change = true;
-                }
-                count++;
-                System.out.println(String.format("\t内部循环: 次数 %s, 结果: %s", countInner++, Arrays.toString(data)));
-            }
-        }
-        System.out.println(String.format("总次数 %s", count));
-        return data;
-    }
-
-    /**
-     * 冒泡的变种
-     * 时间空间复杂度一致
-     */
-    public static int[] sort(int[] data) {
-        int count = 0;
-        int countOuter = 0;
-        for (int i = 0; i < data.length; i++) {
-            int countInner = 0;
-            System.out.println(String.format("外部循环: 次数 %s, 结果: %s", countOuter++, Arrays.toString(data)));
-            for (int j = i + 1; j < data.length; j++) {
-                if (data[i] > data[j]) {
-                    int iData = data[i];
-                    data[i] = data[j];
-                    data[j] = iData;
                 }
                 count++;
                 System.out.println(String.format("\t内部循环: 次数 %s, 结果: %s", countInner++, Arrays.toString(data)));
