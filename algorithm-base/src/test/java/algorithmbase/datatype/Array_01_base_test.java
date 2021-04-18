@@ -15,6 +15,8 @@ public class Array_01_base_test {
         System.out.println(list.toString());
         list.remove(2);
         System.out.println(list.toString());
+        list.clear();
+        System.out.println(list.toString());
 
     }
 }

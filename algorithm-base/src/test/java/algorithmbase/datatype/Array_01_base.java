@@ -24,10 +24,14 @@ public class Array_01_base<T> {
     public T remove(int index) {
         if (index <= size - 1) {
             T oldVal = datas[index];
-            for (int j = index; j < size - 1; j++) {
+            for (int j = index; j < size; j++) {
                 datas[j] = datas[j + 1];
+                if (j == size - 1) {
+                    datas[j] = null;
+                }
             }
             size--;
+            shrink();
             return oldVal;
         }
         return null;
@@ -37,10 +41,14 @@ public class Array_01_base<T> {
         if (value == null) {
             for (int i = 0; i < size; i++) {
                 if (datas[i] == null) {
-                    for (int j = i; j < size - 2; j++) {
+                    for (int j = i; j < size; j++) {
                         datas[j] = datas[j + 1];
+                        if (j == size - 1) {
+                            datas[j] = null;
+                        }
                     }
                     size--;
+                    shrink();
                     return null;
                 }
             }
@@ -49,16 +57,29 @@ public class Array_01_base<T> {
             for (int i = 0; i < size; i++) {
                 if (datas[i] == value) {
                     T oldVal = datas[i];
-                    for (int j = i; j < size - 2; j++) {
+                    for (int j = i; j < size; j++) {
                         datas[j] = datas[j + 1];
+                        if (j == size - 1) {
+                            datas[j] = null;
+                        }
                     }
                     size--;
+                    shrink();
                     return oldVal;
                 }
             }
             return null;
 
         }
+    }
+
+    public void clear() {
+        for (int i = 0; i < size; i++) {
+            datas[i] = null;
+        }
+        size = 0;
+        shrink();
+
     }
 
     /**
@@ -77,6 +98,20 @@ public class Array_01_base<T> {
         T[] newData = (T[]) new Object[datas.length + (datas.length >> 1)];
         System.arraycopy(datas, 0, newData, 0, datas.length);
         datas = newData;
+    }
+
+    /**
+     * 收缩
+     */
+    private void shrink() {
+        double ratio = 0.3;
+        if ((double)size / (double)datas.length < ratio) {
+            T[] newData = (T[]) new Object[datas.length >> 1];
+            if (size > 0) {
+                System.arraycopy(datas, 0, newData, 0, size);
+            }
+            datas = newData;
+        }
     }
 
     @Override
