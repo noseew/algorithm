@@ -1,6 +1,6 @@
 package algorithmbase._01base.sort.compare;
 
-import algorithmbase._01base.sort.SortUtils;
+import algorithmbase._01base.sort.CommonUtils;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -23,7 +23,7 @@ public class Sort_01_Bubble {
 //        System.out.println(Arrays.toString(sort_02(arr)));
 //        System.out.println(Arrays.toString(sort_03(arr)));
 
-        int[] ints = SortUtils.generateTailOrder(6, 3);
+        int[] ints = CommonUtils.generateTailOrder(6, 3);
         System.out.println(Arrays.toString(sort_03(ints)));
 
     }

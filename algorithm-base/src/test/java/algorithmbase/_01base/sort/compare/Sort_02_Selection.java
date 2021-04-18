@@ -19,7 +19,6 @@ public class Sort_02_Selection {
     }
 
     /**
-     * 基础版本
      */
     public static int[] sort_01(int[] data) {
         int count = 0;
