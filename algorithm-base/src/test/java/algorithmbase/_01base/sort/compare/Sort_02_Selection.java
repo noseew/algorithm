@@ -1,4 +1,4 @@
-package algorithmbase._01base.sort;
+package algorithmbase._01base.sort.compare;
 
 import org.junit.Test;
 
@@ -10,7 +10,7 @@ import java.util.Arrays;
  * 1. 内层循环, 选择最小的数字放在最左边, 一轮之后最小的在最左
  * 2. 外层循环, 在剩下的数字中执行1
  */
-public class Sort_Selection {
+public class Sort_02_Selection {
 
     @Test
     public void test() {

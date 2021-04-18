@@ -1,4 +1,4 @@
-package algorithmbase._01base.sort;
+package algorithmbase._01base.sort.compare;
 
 import org.junit.Test;
 
@@ -8,18 +8,19 @@ import java.util.Arrays;
  * 插入排序: 和选择排序类似,
  * 选择排序是在剩下的数据中, 按照顺找出数据, 并依次放好, 找出的过程就是排序的过程, 码放的过程直接并排码放即可
  * 插入排序是依次将剩下的数据取出, 并码放好, 取出的过程逐个取出即可, 码放的过程是排序的过程
- *
+ * <p>
  * 1. 一次选择一个数, 插入到最左边已经排好序的数组中,
  */
-public class Sort_Insert {
+public class Sort_03_Insert {
 
     @Test
     public void test() {
-        int[] arr = new int[]{4, 5, 2, 0};
+        int[] arr = new int[]{1, 4, 5, 2, 0, 3};
         System.out.println(Arrays.toString(sort_01(arr)));
     }
 
     /**
+     *
      */
     public static int[] sort_01(int[] data) {
         int count = 0;

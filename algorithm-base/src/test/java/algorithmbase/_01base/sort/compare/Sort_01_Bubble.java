@@ -1,4 +1,4 @@
-package algorithmbase._01base.sort;
+package algorithmbase._01base.sort.compare;
 
 import org.junit.Test;
 
@@ -10,7 +10,7 @@ import java.util.Arrays;
  * 1. 内层循环, 相邻两个两两对比, 对比出最大的逐渐右移, 一轮之后排在最后
  * 2. 外层循环, 在剩下的数字中执行1
  */
-public class Sort_Bubble {
+public class Sort_01_Bubble {
 
     @Test
     public void test() {
