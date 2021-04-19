@@ -4,6 +4,7 @@ public class Linked_01_base<T> {
 
     private Node<T> head;
     private Node<T> tail;
+    private int size;
 
     public void add(T val) {
         if (tail != null) {
@@ -13,23 +14,42 @@ public class Linked_01_base<T> {
             head = new Node<>(null, val);
             tail = head;
         }
+        size++;
     }
 
-    private T remove(T val) {
+    public T remove(T val) {
         if (head == null) {
             return null;
         }
-        Node<T> h = head;
-        while (h != null) {
-            T oldVal = null;
-            if (h.value.equals(val)) {
-                oldVal = h.value;
+        T oldVal = null;
+        Node<T> pre = head;
+        if (pre.value.equals(val)) {
+            oldVal = pre.value;
+            head = head.next;
+            size--;
+            return oldVal;
+        }
 
+        Node<T> next = pre.next;
+        while (next != null) {
+            if (next.value.equals(val)) {
+                oldVal = next.value;
+                pre.next = next.next;
+                size--;
+                return oldVal;
             }
+            pre = pre.next;
+            next = next.next;
         }
         return null;
     }
 
+    @Override
+    public String toString() {
+        return "head.value=" + head.value +
+                ", tail.value=" + tail.value +
+                ", size=" + size;
+    }
 
     class Node<T> {
         Node next;
