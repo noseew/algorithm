@@ -66,6 +66,33 @@ public class HashMap_01_base<K, V> {
         return null;
     }
 
+    public V remove(K k) {
+        int hash = hash(k);
+        Entry<K, V> head = datas[hash % datas.length];
+        if (head == null) {
+            return null;
+        } else if (head.k.equals(k)) {
+            datas[hash % datas.length] = head.next;
+            size--;
+            return head.val;
+        } else {
+            Entry<K, V> pre = head, next;
+            while (pre != null) {
+                next = pre.next;
+                if (next == null) {
+                    break;
+                }
+                if (next.k.equals(k)) {
+                    pre.next = next.next;
+                    size--;
+                    return next.val;
+                }
+                pre = next;
+            }
+        }
+        return null;
+    }
+
 
     /**
      * 确保容量
