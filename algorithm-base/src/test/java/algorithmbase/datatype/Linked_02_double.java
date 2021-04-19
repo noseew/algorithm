@@ -1,6 +1,6 @@
 package algorithmbase.datatype;
 
-public class Deque_01_base<T> {
+public class Linked_02_double<T> {
 
     private Node<T> head;
     private Node<T> tail;
