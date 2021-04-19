@@ -22,13 +22,16 @@ public class HashMap_01_base<K, V> {
         } else if (head.k.equals(k)) {
             return head.val;
         } else {
-            Entry<K, V> pre = head, next = pre.next;
-            while (next != null) {
+            Entry<K, V> pre = head, next;
+            while (pre != null) {
+                next = pre.next;
+                if (next == null) {
+                    break;
+                }
                 if (next.k.equals(k)) {
                     return next.val;
                 }
                 pre = next;
-                next = pre.next;
             }
         }
         return null;
@@ -43,15 +46,18 @@ public class HashMap_01_base<K, V> {
         } else if (head.k.equals(k)) {
             datas[hash % datas.length] = new Entry<>(k, v, head.next);
         } else {
-            Entry<K, V> pre = head, next = pre.next;
-            while (next != null) {
+            Entry<K, V> pre = head, next;
+            while (pre != null) {
+                next = pre.next;
+                if (next == null) {
+                    break;
+                }
                 if (next.k.equals(k)) {
                     oldEntry = next;
                     pre.next = new Entry<>(k, v, next.next);
                     return oldEntry.val;
                 }
                 pre = next;
-                next = pre.next;
             }
             pre.next = new Entry<>(k, v, null);
         }

@@ -30,17 +30,17 @@ public class Linked_01_base<T> {
             return oldVal;
         }
 
-        Node<T> next = pre.next;
-        while (next != null) {
-            if (next.value.equals(val)) {
+        while (pre != null) {
+            Node<T> next = pre.next;
+            if (next != null && next.value.equals(val)) {
                 oldVal = next.value;
                 pre.next = next.next;
                 size--;
                 return oldVal;
             }
-            pre = pre.next;
-            next = next.next;
+            pre = next;
         }
+
         return null;
     }
 
