@@ -105,7 +105,7 @@ public class Array_01_base<T> {
      */
     private void shrink() {
         double ratio = 0.3;
-        if ((double)size / (double)datas.length < ratio) {
+        if ((double) size / (double) datas.length < ratio) {
             T[] newData = (T[]) new Object[datas.length >> 1];
             if (size > 0) {
                 System.arraycopy(datas, 0, newData, 0, size);
