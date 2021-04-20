@@ -115,6 +115,7 @@ public class HashMap_base_01<K, V> {
         for (Entry<K, V> head : datas) {
             while (head != null) {
                 Entry<K, V> next = head.next;
+                head.next = null;
                 putNewEntry(newDatas, head);
                 head = next;
             }

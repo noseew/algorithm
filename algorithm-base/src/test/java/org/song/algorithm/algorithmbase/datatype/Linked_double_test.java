@@ -1,11 +1,16 @@
 package org.song.algorithm.algorithmbase.datatype;
 
 import org.junit.Test;
+import org.springframework.util.StopWatch;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
 
 public class Linked_double_test {
 
     @Test
-    public void test() {
+    public void test_01_start() {
         Linked_double_02<Integer> deque = new Linked_double_02<>();
         deque.rpush(0);
         deque.lpush(-1);
@@ -19,5 +24,31 @@ public class Linked_double_test {
         deque.remove(-1);
         System.out.println(deque.toString());
         System.out.println(deque.toPrettyString());
+    }
+
+    /**
+     * -Xint
+     * 效率接近
+     */
+    @Test
+    public void test_02_perf_add() {
+        int num = 10_0000;
+        StopWatch stopWatch = new StopWatch();
+
+        stopWatch.start("Linked_double_02");
+        Linked_double_02<String> linked = new Linked_double_02<>();
+        for (int i = 0; i < num; i++) {
+            linked.rpush(UUID.randomUUID().toString());
+        }
+        stopWatch.stop();
+
+        stopWatch.start("LinkedList");
+        List<String> liked2 = new LinkedList<>();
+        for (int i = 0; i < num; i++) {
+            liked2.add(UUID.randomUUID().toString());
+        }
+        stopWatch.stop();
+
+        System.out.println(stopWatch.prettyPrint());
     }
 }

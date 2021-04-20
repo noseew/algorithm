@@ -1,7 +1,10 @@
 package org.song.algorithm.algorithmbase.datatype;
 
 import org.junit.Test;
+import org.springframework.util.StopWatch;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Array_test {
@@ -22,12 +25,29 @@ public class Array_test {
 
     }
 
+    /**
+     * -Xint
+     * 效率接近
+     */
     @Test
     public void test_02_perf_add() {
-        int num = 10;
+        int num = 10_0000;
+        StopWatch stopWatch = new StopWatch();
 
+        stopWatch.start("Array_base_01");
+        Array_base_01<String> list = new Array_base_01<>();
         for (int i = 0; i < num; i++) {
-            UUID.randomUUID();
+            list.add(UUID.randomUUID().toString());
         }
+        stopWatch.stop();
+
+        stopWatch.start("ArrayList");
+        List<String> list2 = new ArrayList<>();
+        for (int i = 0; i < num; i++) {
+            list2.add(UUID.randomUUID().toString());
+        }
+        stopWatch.stop();
+
+        System.out.println(stopWatch.prettyPrint());
     }
 }
