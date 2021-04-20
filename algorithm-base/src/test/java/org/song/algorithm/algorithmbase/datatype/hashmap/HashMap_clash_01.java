@@ -53,6 +53,11 @@ public class HashMap_clash_01<K, V> {
             datas[index] = new Entry<>(k, v, hash);
             return oldEntry.val;
         } else {
+            /*
+             线性探测
+             如果冲突, 找到下一个空格, 并放入
+             如果到数组末尾, 则从头开始
+             */
             for (int i = 0; i < len; i++) {
                 int ni = index + i >= len ? i + index - len : i;
                 if (datas[ni] != null) {
