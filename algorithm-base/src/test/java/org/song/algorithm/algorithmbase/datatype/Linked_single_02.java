@@ -21,20 +21,33 @@ public class Linked_single_02<T> {
         if (head == null) {
             return null;
         }
-        Node<T> pre = head;
-        Node<T> e = pre;
+        /*
+         单向链表遍历删除问题
+         1. 如果匹配到当前元素e, 并需要删除e, 则需要将e.prev连接到e.next,
+            问题: 由于是单向链表, 没有e.prev,
+            解决: 所以需要两个变量 prev和n
+         2. 如果e需要删除, 则新的链接为 prev.next = e.next
+            问题: 如果e是第一个元素, 此时没有prev如何解决
+            解决:
+                1. 第一个元素单独处理, 处理完之后在进入遍历代码
+                2. 第一个元素在遍历代码中处理,
+                    如果 e = prev, 则说明是第一个元素, 直接将第一个元素设置成 e.next
+                    否则 prev 向后移动一步 prev = e, e 向后移动一步 e = e.next
+         */
+        Node<T> prev = head;
+        Node<T> e = prev;
         while (e != null) {
             Node<T> next = e.next;
             if (e.value.equals(val)) {
                 size--;
-                if (pre == e) {
+                if (prev == e) {
                     head = next;
                 } else {
-                    pre.next = next;
+                    prev.next = next;
                 }
                 return e.value;
             }
-            pre = e;
+            prev = e;
             e = next;
         }
 
