@@ -3,7 +3,7 @@ package org.song.algorithm.algorithmbase.datatype.hashmap;
 /**
  * 实现简单功能的 HashMap,
  * <p>
- * 冲突处理方式: 采用线性探测法
+ * 冲突处理方式: 采用开放定址法, 使用线性探测找到下一个空格
  *
  * @param <K>
  * @param <V>
@@ -54,8 +54,8 @@ public class HashMap_clash_01<K, V> {
             return oldEntry.val;
         } else {
             /*
-             线性探测
-             如果冲突, 找到下一个空格, 并放入
+             冲突处理
+             采用开放定址法, 使用线性探测找到下一个空格 并放入
              如果到数组末尾, 则从头开始
              */
             for (int i = 0; i < len; i++) {
