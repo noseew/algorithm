@@ -37,7 +37,7 @@ public class HashMap_test {
         map.put("6fgh", "6");
         map.put("7ghi", "7");
         map.put("8hij", "8");
-        System.out.println();
+        System.out.println(map.get("5efg"));
     }
 
     @Test
@@ -100,11 +100,63 @@ public class HashMap_test {
 
     /**
      * -Xint
+     * 优化后的尾插法 效率比 头插法 高约 10%
+     */
+    @Test
+    public void test_02_perf_put_02() {
+        int num = 10_0000;
+        StopWatch stopWatch = new StopWatch();
+
+        StopWatchUtils.warnup(() -> {
+            HashMap_base_03<String, String> map = new HashMap_base_03<>();
+            for (int i = 0; i < num; i++) {
+                map.put(UUID.randomUUID().toString(), "");
+            }
+            HashMap_base_02<String, String> map2 = new HashMap_base_02<>();
+            for (int i = 0; i < num; i++) {
+                map2.put(UUID.randomUUID().toString(), "");
+            }
+        });
+
+        StopWatchUtils.run(stopWatch, "HashMap_base_02", () -> {
+            HashMap_base_02<String, String> map2 = new HashMap_base_02<>();
+            for (int i = 0; i < num; i++) {
+                map2.put(UUID.randomUUID().toString(), "");
+            }
+        });
+
+        StopWatchUtils.run(stopWatch, "HashMap_base_03", () -> {
+            HashMap_base_03<String, String> map = new HashMap_base_03<>();
+            for (int i = 0; i < num; i++) {
+                map.put(UUID.randomUUID().toString(), "");
+            }
+        });
+
+        StopWatchUtils.run(stopWatch, "HashMap_base_03", () -> {
+            HashMap_base_03<String, String> map = new HashMap_base_03<>();
+            for (int i = 0; i < num; i++) {
+                map.put(UUID.randomUUID().toString(), "");
+            }
+        });
+
+        StopWatchUtils.run(stopWatch, "HashMap_base_02", () -> {
+            HashMap_base_02<String, String> map2 = new HashMap_base_02<>();
+            for (int i = 0; i < num; i++) {
+                map2.put(UUID.randomUUID().toString(), "");
+            }
+        });
+
+        System.out.println(stopWatch.prettyPrint());
+        System.out.println(StopWatchUtils.calculate(stopWatch));
+    }
+
+    /**
+     * -Xint
      * HashMap 快约 15%, 主要差扩容(红黑树)上
      * put + 扩容
      */
     @Test
-    public void test_02_perf_put_02() {
+    public void test_02_perf_proto_put_01() {
         int num = 1_0000;
         StopWatch stopWatch = new StopWatch();
 
@@ -130,7 +182,7 @@ public class HashMap_test {
      * 效率接近, 排除扩容
      */
     @Test
-    public void test_02_perf_put_03() {
+    public void test_02_perf_proto_put_02() {
         int num = 1_0000;
         StopWatch stopWatch = new StopWatch();
 

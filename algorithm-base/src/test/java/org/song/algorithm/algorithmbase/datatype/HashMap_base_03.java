@@ -138,6 +138,20 @@ public class HashMap_base_03<K, V> {
             if (datas[i] == null) {
                 continue;
             }
+            /*
+             把原有的队列分成两个队列
+             headOld 老队列头, 表示到新的数组中索引不会发生改变
+             headNew 新队列头, 表示到新的数组中索引会发生改变
+             直接将队列头元素, 放置到新数组指定位置即可
+
+             和JDK7中对比,
+                 1. 都只遍历一次, 但是不会出现列表倒转的情况
+                 2. 部分元素不需要重复计算hash值和索引值
+
+             难点:
+                1. 遍历单向链表, 详情参见 Linked_single_02 单向链表遍历删除问题
+                2. 由于需要保持头元素用于移动整个列表, 所以要多出两个变量 headOld headNew
+             */
             Entry<K, V> headOld = datas[i],
                     prevOld = headOld,
                     headNew = null,
@@ -154,19 +168,23 @@ public class HashMap_base_03<K, V> {
                 } else {
                     // 需要移动
                     if (n == prevOld) {
+                        // 是头元素, 更换头元素
                         headOld = next;
                         datas[i] = next;
                         prevOld = datas[i];
                     } else {
+                        // 不是头元素, 跳过需要移动的元素
                         prevOld.next = next;
                     }
                     // 开始移动
                     // 新链表
                     if (prevNew == null) {
+                        // 初始化新链表
                         headNew = n;
                         prevNew = headNew;
                         headNew.next = null;
                     } else {
+                        // 在新链表尾部添加
                         prevNew.next = n;
                         prevNew = prevNew.next;
                     }
@@ -175,10 +193,12 @@ public class HashMap_base_03<K, V> {
             }
 
             if (headOld != null) {
+                // 不需要移动的链表
                 newDatas[i] = headOld;
                 datas[i] = null;
             }
             if (headNew != null) {
+                // 需要移动的链表
                 int index = headNew.hash & (newDatas.length - 1);
                 newDatas[index] = headNew;
             }
