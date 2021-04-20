@@ -123,53 +123,60 @@ public class HashMap_base_03<K, V> {
      * 确保容量
      */
     private void ensureCapacity() {
-        if ((double) size / (double) datas.length > dilatationRatio) {
+        if ((double) size / (double) datas.length >= dilatationRatio) {
             dilatation();
         }
     }
 
     /**
      * 扩容
-     * TODO 未完成
      */
     private void dilatation() {
         Entry<K, V>[] newDatas = new Entry[datas.length << 1];
 
-        for (int i = 0; i < datas.length && datas[i] != null; i++) {
-            Entry<K, V> headOld = null,
-                    lastOld = null,
+        for (int i = 0; i < datas.length; i++) {
+            if (datas[i] == null) {
+                continue;
+            }
+            Entry<K, V> headOld = datas[i],
+                    prevOld = headOld,
                     headNew = null,
-                    lastNew = null,
-                    next = datas[i];
-            do {
-                if ((next.hash & datas.length) == 0) {
+                    prevNew = null,
+                    n = prevOld;
+
+            while (n != null) {
+                Entry<K, V> next = n.next;
+                if ((n.hash & datas.length) == 0) {
                     // 不需要移动
-                    if (headOld == null) {
-                        headOld = next;
-                        lastOld = next;
-                    } else {
-                        lastOld.next = next;
-                        lastOld = lastOld.next;
+                    if (n != prevOld) {
+                        prevOld = n;
                     }
                 } else {
                     // 需要移动
-                    if (headOld != null) {
-                        headOld.next = next.next;
-                    }
-                    if (headNew == null) {
-                        headNew = next;
-                        headNew.next = null;
-                        lastNew = headNew;
+                    if (n == prevOld) {
+                        headOld = next;
+                        datas[i] = next;
+                        prevOld = datas[i];
                     } else {
-                        lastNew.next = next;
-                        lastNew.next.next = null;
+                        prevOld.next = next;
+                    }
+                    // 开始移动
+                    // 新链表
+                    if (prevNew == null) {
+                        headNew = n;
+                        prevNew = headNew;
+                        headNew.next = null;
+                    } else {
+                        prevNew.next = n;
+                        prevNew = prevNew.next;
                     }
                 }
-            } while ((next = next.next) != null);
+                n = next;
+            }
 
             if (headOld != null) {
-                int index = headOld.hash & (newDatas.length - 1);
-                newDatas[index] = headOld;
+                newDatas[i] = headOld;
+                datas[i] = null;
             }
             if (headNew != null) {
                 int index = headNew.hash & (newDatas.length - 1);
@@ -183,7 +190,9 @@ public class HashMap_base_03<K, V> {
         if (k == null) {
             return 0;
         }
+        // 相同的值 x, 在不同的JVM进程中返回的值可能不同, 但在同一个JVM进程中相同
         int hash = System.identityHashCode(k);
+//        int hash = k.hashCode();
         return hash ^ (hash >>> 16);
     }
 

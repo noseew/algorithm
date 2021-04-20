@@ -29,15 +29,21 @@ public class HashMap_test {
     @Test
     public void test_01_start_03() {
         HashMap_base_03<String, String> map = new HashMap_base_03<>();
-        map.put("1", "1");
-        map.put("2", "2");
-        map.put("3", "3");
-        map.put("4", "4");
-        map.put("5", "5");
-        map.put("6", "6");
-        map.put("7", "7");
-        map.put("8", "8");
+        map.put("1abc", "1");
+        map.put("2bcd", "2");
+        map.put("3cde", "3");
+        map.put("4def", "4");
+        map.put("5efg", "5");
+        map.put("6fgh", "6");
+        map.put("7ghi", "7");
+        map.put("8hij", "8");
         System.out.println();
+    }
+
+    @Test
+    public void hash_test() {
+        System.out.println(System.identityHashCode("1"));
+        System.out.println("1".hashCode());
     }
 
     /**
