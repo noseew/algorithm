@@ -26,6 +26,20 @@ public class HashMap_test {
         System.out.println();
     }
 
+    @Test
+    public void test_01_start_03() {
+        HashMap_base_03<String, String> map = new HashMap_base_03<>();
+        map.put("1", "1");
+        map.put("2", "2");
+        map.put("3", "3");
+        map.put("4", "4");
+        map.put("5", "5");
+        map.put("6", "6");
+        map.put("7", "7");
+        map.put("8", "8");
+        System.out.println();
+    }
+
     /**
      * -Xint
      * 效率接近

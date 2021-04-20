@@ -57,9 +57,9 @@ public class HashMap_base_03<K, V> {
         Entry<K, V> oldEntry = null;
         Entry<K, V> head = datas[index];
         if (head == null) {
-            datas[index] = new Entry<>(k, v, null);
+            datas[index] = new Entry<>(k, v, null, hash);
         } else if (head.k.equals(k)) {
-            datas[index] = new Entry<>(k, v, head.next);
+            datas[index] = new Entry<>(k, v, head.next, hash);
         } else {
             Entry<K, V> pre = head, next;
             while (pre != null) {
@@ -69,12 +69,12 @@ public class HashMap_base_03<K, V> {
                 }
                 if (next.k.equals(k)) {
                     oldEntry = next;
-                    pre.next = new Entry<>(k, v, next.next);
+                    pre.next = new Entry<>(k, v, next.next, hash);
                     return oldEntry.val;
                 }
                 pre = next;
             }
-            pre.next = new Entry<>(k, v, null);
+            pre.next = new Entry<>(k, v, null, hash);
         }
         size++;
         ensureCapacity();
@@ -130,42 +130,53 @@ public class HashMap_base_03<K, V> {
 
     /**
      * 扩容
+     * TODO 未完成
      */
     private void dilatation() {
         Entry<K, V>[] newDatas = new Entry[datas.length << 1];
-        for (Entry<K, V> head : datas) {
-            while (head != null) {
-                Entry<K, V> next = head.next;
-                head.next = null;
-                putNewEntry(newDatas, head);
-                head = next;
+
+        for (int i = 0; i < datas.length && datas[i] != null; i++) {
+            Entry<K, V> headOld = null,
+                    lastOld = null,
+                    headNew = null,
+                    lastNew = null,
+                    next = datas[i];
+            do {
+                if ((next.hash & datas.length) == 0) {
+                    // 不需要移动
+                    if (headOld == null) {
+                        headOld = next;
+                        lastOld = next;
+                    } else {
+                        lastOld.next = next;
+                        lastOld = lastOld.next;
+                    }
+                } else {
+                    // 需要移动
+                    if (headOld != null) {
+                        headOld.next = next.next;
+                    }
+                    if (headNew == null) {
+                        headNew = next;
+                        headNew.next = null;
+                        lastNew = headNew;
+                    } else {
+                        lastNew.next = next;
+                        lastNew.next.next = null;
+                    }
+                }
+            } while ((next = next.next) != null);
+
+            if (headOld != null) {
+                int index = headOld.hash & (newDatas.length - 1);
+                newDatas[index] = headOld;
+            }
+            if (headNew != null) {
+                int index = headNew.hash & (newDatas.length - 1);
+                newDatas[index] = headNew;
             }
         }
         datas = newDatas;
-    }
-
-    private void putNewEntry(Entry<K, V>[] newDatas, Entry<K, V> entry) {
-
-        int hash = hash(entry.k);
-        int len = newDatas.length;
-        int index = hash & (len - 1);
-
-        Entry<K, V> head = newDatas[index];
-        if (head == null) {
-            newDatas[index] = entry;
-        } else {
-            // 头插法, 只需要遍历一次链表
-            entry.next = head;
-            newDatas[index] = entry;
-
-            // 尾插法, 需要多遍历一次链表
-//            Entry<K, V> pre = head, next = pre.next;
-//            while (next != null) {
-//                pre = next;
-//                next = pre.next;
-//            }
-//            pre.next = entry;
-        }
     }
 
     public int hash(K k) {
@@ -181,11 +192,19 @@ public class HashMap_base_03<K, V> {
         K k;
         V val;
         Entry<K, V> next;
+        int hash;
 
         public Entry(K k, V val, Entry<K, V> next) {
             this.k = k;
             this.val = val;
             this.next = next;
+        }
+
+        public Entry(K k, V val, Entry<K, V> next, int hash) {
+            this.k = k;
+            this.val = val;
+            this.next = next;
+            this.hash = hash;
         }
     }
 }
