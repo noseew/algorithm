@@ -20,10 +20,9 @@ public class Linked_02_double<T> {
     public T rpop() {
         if (tail != null) {
             T value = tail.value;
-            Node prev = tail.prev;
-            prev.next = null;
+            tail.prev.next = null;
+            tail = tail.prev;
             tail.prev = null;
-            tail = prev;
             size--;
             return value;
         } else {
@@ -34,10 +33,9 @@ public class Linked_02_double<T> {
     public T lpop() {
         if (head != null) {
             T value = head.value;
-            Node next = head.next;
-            next.prev = null;
+            head.next.prev = null;
+            head = head.next;
             head.next = null;
-            head = next;
             size--;
             return value;
         } else {
@@ -88,11 +86,11 @@ public class Linked_02_double<T> {
 
 
     class Node<T> {
-        Node prev;
-        Node next;
+        Node<T> prev;
+        Node<T> next;
         T value;
 
-        public Node(Node prev, Node next, T value) {
+        public Node(Node<T> prev, Node<T> next, T value) {
             this.prev = prev;
             this.next = next;
             this.value = value;
