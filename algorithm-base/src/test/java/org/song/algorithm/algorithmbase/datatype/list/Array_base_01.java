@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase.datatype;
+package org.song.algorithm.algorithmbase.datatype.list;
 
 import java.util.Arrays;
 

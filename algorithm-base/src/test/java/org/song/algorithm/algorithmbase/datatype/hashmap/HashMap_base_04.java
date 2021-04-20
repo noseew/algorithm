@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase.datatype;
+package org.song.algorithm.algorithmbase.datatype.hashmap;
 
 public class HashMap_base_04<K, V> {
 

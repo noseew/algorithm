@@ -1,12 +1,10 @@
-package org.song.algorithm.algorithmbase.datatype;
+package org.song.algorithm.algorithmbase.datatype.hashmap;
 
 import org.junit.Test;
 import org.song.algorithm.algorithmbase.utils.StopWatchUtils;
 import org.springframework.util.StopWatch;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.UUID;
 
 public class HashMap_test {
