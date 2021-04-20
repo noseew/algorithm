@@ -1,5 +1,11 @@
 package org.song.algorithm.algorithmbase.datatype;
 
+/**
+ * 实现简单功能的 HashMap
+ *
+ * @param <K>
+ * @param <V>
+ */
 public class HashMap_base_01<K, V> {
 
     private Entry<K, V>[] datas;
@@ -96,7 +102,6 @@ public class HashMap_base_01<K, V> {
         }
         return null;
     }
-
 
     /**
      * 确保容量

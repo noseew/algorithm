@@ -3,13 +3,12 @@ package org.song.algorithm.algorithmbase.datatype;
 /**
  * 实现简单功能的 HashMap
  * 相比较 HashMap_base_01
- * 1. 增加 hash 扰动算法
- * 2. 采用 & 替换 % 计算下标
+ * 1. 扩容的头插法, 改成优化后的尾插法
  *
  * @param <K>
  * @param <V>
  */
-public class HashMap_base_02<K, V> {
+public class HashMap_base_03<K, V> {
 
     private Entry<K, V>[] datas;
 
@@ -19,11 +18,11 @@ public class HashMap_base_02<K, V> {
 
     private int size;
 
-    public HashMap_base_02() {
+    public HashMap_base_03() {
         datas = new Entry[initCapacity];
     }
 
-    public HashMap_base_02(int capacity) {
+    public HashMap_base_03(int capacity) {
         datas = new Entry[initCapacity = upPower(capacity)];
     }
 
