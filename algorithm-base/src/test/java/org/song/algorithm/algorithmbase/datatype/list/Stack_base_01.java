@@ -18,8 +18,8 @@ public class Stack_base_01<T> {
     public T pop() {
         T val = null;
         if (head != null) {
-            head = head.next;
             val = head.value;
+            head = head.next;
         }
         size--;
         return val;
