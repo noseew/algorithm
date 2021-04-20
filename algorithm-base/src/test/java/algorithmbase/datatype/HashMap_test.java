@@ -2,11 +2,11 @@ package algorithmbase.datatype;
 
 import org.junit.Test;
 
-public class HashMap_01_base_test {
+public class HashMap_test {
 
     @Test
     public void test() {
-        HashMap_01_base<String, String> map = new HashMap_01_base<>();
+        HashMap_base_01<String, String> map = new HashMap_base_01<>();
         map.put("1", "1");
         map.put("2", "2");
         map.put("3", "3");

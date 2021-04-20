@@ -2,11 +2,11 @@ package algorithmbase.datatype;
 
 import org.junit.Test;
 
-public class Linked_01_base_test {
+public class Linked_single_test {
 
     @Test
     public void test() {
-        Linked_01_base<Integer> linked = new Linked_01_base<>();
+        Linked_single_01<Integer> linked = new Linked_single_01<>();
         linked.add(1);
         linked.add(2);
         linked.add(3);

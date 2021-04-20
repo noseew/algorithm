@@ -2,11 +2,11 @@ package algorithmbase.datatype;
 
 import org.junit.Test;
 
-public class Array_01_base_test {
+public class Array_test {
 
     @Test
     public void test() {
-        Array_01_base<Integer> list = new Array_01_base<>(5);
+        Array_base_01<Integer> list = new Array_base_01<>(5);
         list.add(1);
         list.add(2);
         list.add(3);

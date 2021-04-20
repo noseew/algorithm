@@ -2,17 +2,17 @@ package algorithmbase.datatype;
 
 import java.util.Arrays;
 
-public class Array_01_base<T> {
+public class Array_base_01<T> {
 
     private T[] datas;
 
     private int size;
 
-    public Array_01_base(int capacity) {
+    public Array_base_01(int capacity) {
         datas = (T[]) new Object[capacity];
     }
 
-    public Array_01_base() {
+    public Array_base_01() {
         this(10);
     }
 

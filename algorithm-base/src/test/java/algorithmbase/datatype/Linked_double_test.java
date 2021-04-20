@@ -2,11 +2,11 @@ package algorithmbase.datatype;
 
 import org.junit.Test;
 
-public class Linked_02_double_test {
+public class Linked_double_test {
 
     @Test
     public void test() {
-        Linked_02_double<Integer> deque = new Linked_02_double<>();
+        Linked_double_02<Integer> deque = new Linked_double_02<>();
         deque.rpush(0);
         deque.lpush(-1);
         deque.lpush(-2);

@@ -1,6 +1,6 @@
 package algorithmbase.datatype;
 
-public class Linked_01_base<T> {
+public class Linked_single_01<T> {
 
     private Node<T> head;
     private Node<T> tail;

@@ -1,6 +1,6 @@
 package algorithmbase.datatype;
 
-public class HashMap_01_base<K, V> {
+public class HashMap_base_01<K, V> {
 
     private Entry<K, V>[] datas;
 
@@ -10,11 +10,11 @@ public class HashMap_01_base<K, V> {
 
     private int size;
 
-    public HashMap_01_base() {
+    public HashMap_base_01() {
         datas = new Entry[initCapacity];
     }
 
-    public HashMap_01_base(int capacity) {
+    public HashMap_base_01(int capacity) {
         datas = new Entry[initCapacity = capacity];
     }
 
