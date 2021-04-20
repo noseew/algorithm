@@ -53,7 +53,8 @@ public class HashMap_test {
 
     /**
      * -Xint
-     * HashMap 快约 15%
+     * HashMap 快约 15%, 主要差扩容(红黑树)上
+     * put + 扩容
      */
     @Test
     public void test_02_perf_put_02() {
@@ -71,6 +72,32 @@ public class HashMap_test {
         HashMap_base_02<String, String> map2 = new HashMap_base_02<>();
         for (int i = 0; i < num; i++) {
             map2.put(UUID.randomUUID().toString(), "");
+        }
+        stopWatch.stop();
+
+        System.out.println(stopWatch.prettyPrint());
+    }
+
+    /**
+     * -Xint
+     * 效率接近, 排除扩容
+     */
+    @Test
+    public void test_02_perf_put_03() {
+        int num = 1_0000;
+        StopWatch stopWatch = new StopWatch();
+
+        stopWatch.start("HashMap_base_02");
+        HashMap_base_02<String, String> map2 = new HashMap_base_02<>(num);
+        for (int i = 0; i < num; i++) {
+            map2.put(UUID.randomUUID().toString(), "");
+        }
+        stopWatch.stop();
+
+        stopWatch.start("HashMap");
+        HashMap<String, String> map3 = new HashMap<>(num);
+        for (int i = 0; i < num; i++) {
+            map3.put(UUID.randomUUID().toString(), "");
         }
         stopWatch.stop();
 
