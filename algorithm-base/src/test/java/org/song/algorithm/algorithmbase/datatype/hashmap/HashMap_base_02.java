@@ -1,7 +1,8 @@
 package org.song.algorithm.algorithmbase.datatype.hashmap;
 
 /**
- * 实现简单功能的 HashMap
+ * 实现简单功能的 HashMap, 模仿JDK中的HashMap
+ *
  * 相比较 HashMap_base_01
  * 1. 增加 hash 扰动算法
  * 2. 采用 & 替换 % 计算下标

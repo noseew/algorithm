@@ -1,7 +1,8 @@
 package org.song.algorithm.algorithmbase.datatype.hashmap;
 
 /**
- * 实现简单功能的 HashMap
+ * 实现简单功能的 HashMap, 模仿JDK中的HashMap
+ *
  * 相比较 HashMap_base_01
  * 1. 扩容的头插法, 改成优化后的尾插法
  * 2. 链表中部分元素无用重新计算索引

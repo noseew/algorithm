@@ -1,7 +1,7 @@
 package org.song.algorithm.algorithmbase.datatype.hashmap;
 
 /**
- * 实现简单功能的 HashMap
+ * 实现简单功能的 HashMap, 模仿JDK中的HashMap
  *
  * @param <K>
  * @param <V>

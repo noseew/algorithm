@@ -1,5 +1,12 @@
 package org.song.algorithm.algorithmbase.datatype.hashmap;
 
+/**
+ * 实现简单功能的 HashMap, 模仿JDK中的HashMap
+ * 增加树华, 未完成
+ *
+ * @param <K>
+ * @param <V>
+ */
 public class HashMap_base_04<K, V> {
 
     private Entry<K, V>[] datas;
