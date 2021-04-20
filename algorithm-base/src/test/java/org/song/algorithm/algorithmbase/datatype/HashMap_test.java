@@ -101,6 +101,7 @@ public class HashMap_test {
     /**
      * -Xint
      * 优化后的尾插法 效率比 头插法 高约 10%
+     * 其中 不用重新计算 索引 约 5%
      */
     @Test
     public void test_02_perf_put_02() {
@@ -118,20 +119,6 @@ public class HashMap_test {
             }
         });
 
-        StopWatchUtils.run(stopWatch, "HashMap_base_02", () -> {
-            HashMap_base_02<String, String> map2 = new HashMap_base_02<>();
-            for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
-            }
-        });
-
-        StopWatchUtils.run(stopWatch, "HashMap_base_03", () -> {
-            HashMap_base_03<String, String> map = new HashMap_base_03<>();
-            for (int i = 0; i < num; i++) {
-                map.put(UUID.randomUUID().toString(), "");
-            }
-        });
-
         StopWatchUtils.run(stopWatch, "HashMap_base_03", () -> {
             HashMap_base_03<String, String> map = new HashMap_base_03<>();
             for (int i = 0; i < num; i++) {
@@ -143,6 +130,20 @@ public class HashMap_test {
             HashMap_base_02<String, String> map2 = new HashMap_base_02<>();
             for (int i = 0; i < num; i++) {
                 map2.put(UUID.randomUUID().toString(), "");
+            }
+        });
+
+        StopWatchUtils.run(stopWatch, "HashMap_base_02", () -> {
+            HashMap_base_02<String, String> map2 = new HashMap_base_02<>();
+            for (int i = 0; i < num; i++) {
+                map2.put(UUID.randomUUID().toString(), "");
+            }
+        });
+
+        StopWatchUtils.run(stopWatch, "HashMap_base_03", () -> {
+            HashMap_base_03<String, String> map = new HashMap_base_03<>();
+            for (int i = 0; i < num; i++) {
+                map.put(UUID.randomUUID().toString(), "");
             }
         });
 
@@ -152,37 +153,10 @@ public class HashMap_test {
 
     /**
      * -Xint
-     * HashMap 快约 15%, 主要差扩容(红黑树)上
-     * put + 扩容
-     */
-    @Test
-    public void test_02_perf_proto_put_01() {
-        int num = 1_0000;
-        StopWatch stopWatch = new StopWatch();
-
-        stopWatch.start("HashMap");
-        HashMap<String, String> map3 = new HashMap<>();
-        for (int i = 0; i < num; i++) {
-            map3.put(UUID.randomUUID().toString(), "");
-        }
-        stopWatch.stop();
-
-        stopWatch.start("HashMap_base_02");
-        HashMap_base_02<String, String> map2 = new HashMap_base_02<>();
-        for (int i = 0; i < num; i++) {
-            map2.put(UUID.randomUUID().toString(), "");
-        }
-        stopWatch.stop();
-
-        System.out.println(stopWatch.prettyPrint());
-    }
-
-    /**
-     * -Xint
      * 效率接近, 排除扩容
      */
     @Test
-    public void test_02_perf_proto_put_02() {
+    public void test_02_perf_proto_put_01() {
         int num = 1_0000;
         StopWatch stopWatch = new StopWatch();
 
@@ -197,6 +171,33 @@ public class HashMap_test {
         HashMap<String, String> map3 = new HashMap<>(num);
         for (int i = 0; i < num; i++) {
             map3.put(UUID.randomUUID().toString(), "");
+        }
+        stopWatch.stop();
+
+        System.out.println(stopWatch.prettyPrint());
+    }
+
+    /**
+     * -Xint
+     * HashMap 快约 15%, 主要差扩容上
+     * put + 扩容
+     */
+    @Test
+    public void test_02_perf_proto_put_02() {
+        int num = 1_0000;
+        StopWatch stopWatch = new StopWatch();
+
+        stopWatch.start("HashMap");
+        HashMap<String, String> map3 = new HashMap<>();
+        for (int i = 0; i < num; i++) {
+            map3.put(UUID.randomUUID().toString(), "");
+        }
+        stopWatch.stop();
+
+        stopWatch.start("HashMap_base_02");
+        HashMap_base_02<String, String> map2 = new HashMap_base_02<>();
+        for (int i = 0; i < num; i++) {
+            map2.put(UUID.randomUUID().toString(), "");
         }
         stopWatch.stop();
 

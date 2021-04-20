@@ -4,6 +4,7 @@ package org.song.algorithm.algorithmbase.datatype;
  * 实现简单功能的 HashMap
  * 相比较 HashMap_base_01
  * 1. 扩容的头插法, 改成优化后的尾插法
+ * 2. 链表中部分元素无用重新计算索引
  *
  * @param <K>
  * @param <V>
@@ -194,6 +195,7 @@ public class HashMap_base_03<K, V> {
 
             if (headOld != null) {
                 // 不需要移动的链表
+//                newDatas[headOld.hash & (newDatas.length - 1)] = headOld;
                 newDatas[i] = headOld;
                 datas[i] = null;
             }
