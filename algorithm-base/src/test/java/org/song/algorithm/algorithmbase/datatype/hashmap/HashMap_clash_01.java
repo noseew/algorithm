@@ -141,6 +141,7 @@ public class HashMap_clash_01<K, V> {
                     int ni = newIndex + i >= newDatas.length ? i + newIndex - newDatas.length : i;
                     if (newDatas[ni] == null) {
                         newDatas[ni] = datas[i];
+                        break;
                     }
                 }
             }
