@@ -162,7 +162,8 @@ public class HashMap_base_02<K, V> {
         if (k == null) {
             return 0;
         }
-        return System.identityHashCode(k);
+        int hash = System.identityHashCode(k);
+        return hash ^ (hash >>> 16);
     }
 
     class Entry<K, V> {

@@ -1,6 +1,7 @@
 package org.song.algorithm.algorithmbase.datatype;
 
 import org.junit.Test;
+import org.song.algorithm.algorithmbase.utils.StopWatchUtils;
 import org.springframework.util.StopWatch;
 
 import java.util.HashMap;
@@ -34,21 +35,47 @@ public class HashMap_test {
         int num = 10_0000;
         StopWatch stopWatch = new StopWatch();
 
-        stopWatch.start("HashMap_base_02");
-        HashMap_base_02<String, String> map2 = new HashMap_base_02<>();
-        for (int i = 0; i < num; i++) {
-            map2.put(UUID.randomUUID().toString(), "");
-        }
-        stopWatch.stop();
+        StopWatchUtils.warnup(() -> {
+            HashMap_base_01<String, String> map = new HashMap_base_01<>();
+            for (int i = 0; i < num; i++) {
+                map.put(UUID.randomUUID().toString(), "");
+            }
+            HashMap_base_02<String, String> map2 = new HashMap_base_02<>();
+            for (int i = 0; i < num; i++) {
+                map2.put(UUID.randomUUID().toString(), "");
+            }
+        });
 
-        stopWatch.start("HashMap_base_01");
-        HashMap_base_01<String, String> map = new HashMap_base_01<>();
-        for (int i = 0; i < num; i++) {
-            map.put(UUID.randomUUID().toString(), "");
-        }
-        stopWatch.stop();
+        StopWatchUtils.run(stopWatch, "HashMap_base_01", () -> {
+            HashMap_base_01<String, String> map = new HashMap_base_01<>();
+            for (int i = 0; i < num; i++) {
+                map.put(UUID.randomUUID().toString(), "");
+            }
+        });
+
+        StopWatchUtils.run(stopWatch, "HashMap_base_02", () -> {
+            HashMap_base_02<String, String> map2 = new HashMap_base_02<>();
+            for (int i = 0; i < num; i++) {
+                map2.put(UUID.randomUUID().toString(), "");
+            }
+        });
+
+        StopWatchUtils.run(stopWatch, "HashMap_base_02", () -> {
+            HashMap_base_02<String, String> map2 = new HashMap_base_02<>();
+            for (int i = 0; i < num; i++) {
+                map2.put(UUID.randomUUID().toString(), "");
+            }
+        });
+
+        StopWatchUtils.run(stopWatch, "HashMap_base_01", () -> {
+            HashMap_base_01<String, String> map = new HashMap_base_01<>();
+            for (int i = 0; i < num; i++) {
+                map.put(UUID.randomUUID().toString(), "");
+            }
+        });
 
         System.out.println(stopWatch.prettyPrint());
+        System.out.println(StopWatchUtils.calculate(stopWatch));
     }
 
     /**
