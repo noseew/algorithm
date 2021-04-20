@@ -14,6 +14,10 @@ public class HashMap_01_base<K, V> {
         datas = new Entry[initCapacity];
     }
 
+    public HashMap_01_base(int capacity) {
+        datas = new Entry[initCapacity = capacity];
+    }
+
     public V get(K k) {
         int hash = hash(k);
         Entry<K, V> head = datas[hash % datas.length];
