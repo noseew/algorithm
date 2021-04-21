@@ -45,7 +45,7 @@ public class Heap_base_01<T> {
     public void push(T v) {
         // 新元素存储到数组下一位,
         datas[size++] = v;
-        if (size <= 1) {
+        if (size == 1) {
             // 只有一个元素
             return;
         }
@@ -177,6 +177,53 @@ public class Heap_base_01<T> {
             System.arraycopy(datas, 0, newDatas, 0, size);
             datas = newDatas;
         }
+    }
+
+    public String toPretty() {
+        // 层数, 从1开始
+        int totalLevel = (int) Math.floor(log2(size)) + 1;
+        if (totalLevel<=0) {
+            return "";
+        }
+        // 每层元素数
+        int[] levelCount = new int[totalLevel];
+        for (int i = 0; i < totalLevel; i++) {
+            if (i == 0) {
+                levelCount[i] =  1;
+            } else {
+                levelCount[i] = i << 1;
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+
+        int count = 0;
+        for (int i = 0; i < levelCount.length; i++) {
+            boolean inter = false;
+            for (int j = 0; j < levelCount[i]; j++) {
+                sb.append(datas[count++]);
+                if (count >= size) {
+                    inter = true;
+                    break;
+                }
+            }
+            if (inter) {
+                break;
+            }
+            sb.append("\r\n");
+        }
+        return sb.toString();
+    }
+
+    public static void appendEnter(StringBuilder sb, String e, int times) {
+        for (int i = 0; i < times; i++) {
+            sb.append(e);
+        }
+    }
+
+    public static double log2(double x) {
+        double n = 2;//底数
+        double m = x;//指数
+        return Math.log(m) / Math.log(n);
     }
 
 

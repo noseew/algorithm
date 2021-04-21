@@ -13,13 +13,19 @@ public class Heap_test {
         heap.push(5);
         heap.push(0);
         heap.push(3);
-        System.out.println();
+        System.out.println(heap.toPretty());
         System.out.println(heap.pop());
+        System.out.println(heap.toPretty());
         System.out.println(heap.pop());
+        System.out.println(heap.toPretty());
         System.out.println(heap.pop());
+        System.out.println(heap.toPretty());
         System.out.println(heap.pop());
+        System.out.println(heap.toPretty());
         System.out.println(heap.pop());
+        System.out.println(heap.toPretty());
         System.out.println(heap.pop());
+        System.out.println(heap.toPretty());
 
     }
 }
