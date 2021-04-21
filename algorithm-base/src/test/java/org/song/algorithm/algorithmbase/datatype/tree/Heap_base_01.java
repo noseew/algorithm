@@ -84,21 +84,21 @@ public class Heap_base_01<T> {
         size--;
 
         int parenIndex = 0;
-        int childIndex = 2 * parenIndex + 1;
+        int left = 2 * parenIndex + 1;
 
-        while (childIndex < size) {
+        while (left < size) {
             // 父子对比并交换
-            if (isExchange(parenIndex, childIndex)) {
-                exchange(parenIndex, childIndex);
+            if (isExchange(parenIndex, left)) {
+                exchange(parenIndex, left);
             }
             // 兄弟对比并交换
-            int brotherIndex = isLeft(childIndex) ? childIndex + 1 : parenIndex * 2 + 1;
-            if (isExchange(parenIndex, brotherIndex)) {
-                exchange(parenIndex, brotherIndex);
+            int brother = isLeft(left) ? left + 1 : parenIndex * 2 + 1;
+            if (isExchange(parenIndex, brother)) {
+                exchange(parenIndex, brother);
             }
             // 索引下移
-            parenIndex = childIndex;
-            childIndex = 2 * parenIndex + 1;
+            parenIndex = left;
+            left = 2 * parenIndex + 1;
         }
         return v;
     }
@@ -115,9 +115,6 @@ public class Heap_base_01<T> {
      * @param childIndex
      */
     private void exchange(int parentIndex, int childIndex) {
-        if (parentIndex == childIndex) {
-            return;
-        }
         T parent = datas[parentIndex];
         datas[parentIndex] = datas[childIndex];
         datas[childIndex] = parent;
