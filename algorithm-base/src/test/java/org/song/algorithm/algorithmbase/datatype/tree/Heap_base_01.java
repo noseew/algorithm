@@ -53,37 +53,15 @@ public class Heap_base_01<T> {
         ensureCapacity();
     }
 
-    /**
-     * 未完成
-     *
-     * @return
-     */
     public T pop() {
         if (size == 0) {
             return null;
         }
         T v = datas[0];
-        datas[0] = datas[size--];
-
-        int parenIndex = 0;
-        int left = 2 * parenIndex + 1;
-        int right = left + 1;
-
-        int harf = size >>> 1;
-        while (parenIndex < harf) {
-            // 父子对比并交换
-            if (isExchange(parenIndex, left)) {
-                exchange(parenIndex, left);
-                parenIndex = left;
-            }
-            if (isExchange(parenIndex, right)) {
-                exchange(parenIndex, right);
-                parenIndex = right;
-            }
-            // 索引下移
-            left = 2 * parenIndex + 1;
-            right = left + 1;
-        }
+        datas[0] = datas[size - 1];
+        datas[size - 1] = null;
+        shiftDown(0);
+        size--;
         return v;
     }
 
@@ -95,7 +73,7 @@ public class Heap_base_01<T> {
 
         int childIndex = child;
         int parenIndex = (childIndex - 1) >> 1;
-        while (parenIndex >= 0 && parenIndex != childIndex) {
+        while (parenIndex >= 0) {
             // 父子对比并交换
             if (isExchange(parenIndex, childIndex)) {
                 exchange(parenIndex, childIndex);
@@ -119,16 +97,24 @@ public class Heap_base_01<T> {
      * 现将尾结点元素移动到根节点上, 然后对根节点进行下降调整
      */
     private void shiftDown(int parent) {
-        int childIndex = parent >> 1 + 1;
-//        while (left < size) {
-//            // 父子对比并交换
-//            if (isExchange(parenIndex, childIndex)) {
-//                exchange(parenIndex, childIndex);
-//            } else {
-//                break;
-//            }
-//
-//        }
+        int parenIndex = parent;
+        int childIndex = (parenIndex << 1) + 1;
+        while (childIndex < size ) {
+            // 父子对比并交换
+            if (isExchange(parenIndex, childIndex)) {
+                exchange(parenIndex, childIndex);
+            }
+            // 兄弟对比并交换
+            int brotherIndex = isLeft(childIndex) ? childIndex + 1 : parenIndex * 2 + 1;
+            if (isExchange(parenIndex, brotherIndex)) {
+                exchange(parenIndex, brotherIndex);
+            }
+            parenIndex = childIndex;
+            childIndex = (parenIndex >> 1) + 1;
+            if (childIndex == parenIndex) {
+                break;
+            }
+        }
     }
 
     private boolean isLeft(int i) {
@@ -164,9 +150,6 @@ public class Heap_base_01<T> {
         T child = (T) datas[childIndex];
         if (child == null) {
             return false;
-        }
-        if (parent == null) {
-            return true;
         }
 
         if (property == 1) {
