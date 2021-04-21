@@ -26,9 +26,81 @@ public class Sort_Heap {
     }
 
     /**
+     * 未完成
      */
-    public static int[] sort_01(int[] data) {
+    public int[] sort_01(int[] data) {
+
+        HeapLittle heapLittle = new HeapLittle(data);
+        for (int i = 1; i < data.length; i++) {
+            heapLittle.shiftUp(i);
+        }
+        for (int i = 0; i < data.length; i++) {
+            System.out.println(heapLittle.pop());
+        }
 
         return data;
+    }
+
+    static class HeapLittle {
+
+        int[] datas;
+        int size;
+
+        public HeapLittle(int[] datas) {
+            this.datas = datas;
+            this.size = datas.length;
+        }
+
+        public int pop() {
+            int data = datas[size - 1];
+            datas[0] = datas[size - 1];
+            datas[size - 1] = 0;
+            size--;
+            shiftDown();
+            return data;
+        }
+
+        public void shiftUp(int i) {
+            int parent = (i - 1) >> 1;
+            int child = i;
+            while (parent >= 0) {
+                if (datas[parent] > datas[child]) {
+                    exchange(parent, child);
+                }
+                int brother = child % 2 == 1 ? child + 1 : child - 1;
+                if (datas[parent] > datas[brother]) {
+                    exchange(parent, brother);
+                }
+                child = parent;
+                parent = (child - 1) >> 1;
+                if (parent == child) {
+                    break;
+                }
+            }
+        }
+
+        public void shiftDown() {
+            int parent = 0;
+            int child = (parent << 1) + 1;
+            while (child < size) {
+                if (datas[parent] < datas[child]) {
+                    exchange(parent, child);
+                }
+                int brother = child % 2 == 1 ? child + 1 : child - 1;
+                if (datas[parent] < datas[brother]) {
+                    exchange(parent, brother);
+                }
+                parent = child;
+                child = (parent << 1) + 1;
+            }
+
+        }
+
+        private void exchange(int parentIndex, int childIndex) {
+            int parent = datas[parentIndex];
+            datas[parentIndex] = datas[childIndex];
+            datas[childIndex] = parent;
+        }
+
     }
 }
