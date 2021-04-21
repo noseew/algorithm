@@ -1,33 +1,36 @@
 package org.song.algorithm.algorithmbase.datatype.tree;
 
 import java.lang.reflect.Array;
+import java.util.Comparator;
 
 /**
  * heap 基于数组存储
  *
  * @param <T>
  */
-public class Heap_base_01<T extends Comparable<T>> {
+public class Heap_base_01<T> {
 
-    private Comparable[] datas;
+    private T[] datas;
     private int size;
     /**
      * 0: 小堆(默认)
      * 1: 大堆
      */
     private int property;
+    private Comparator<T> comparator;
 
     private double dilatationRatio = 0.8;
     private static int initCapacity = 7;
 
     public Heap_base_01() {
         this.property = 0;
-        datas = (T[]) Array.newInstance(Comparable.class, initCapacity);
+        datas = (T[]) new Object[initCapacity];
     }
 
-    public Heap_base_01(int property) {
+    public Heap_base_01(int property, Comparator<T> comparator) {
         this.property = property;
-        datas = (T[]) Array.newInstance(Comparable.class, initCapacity);
+        this.comparator = comparator;
+        datas = (T[]) new Object[initCapacity];
     }
 
     /*
@@ -67,6 +70,39 @@ public class Heap_base_01<T extends Comparable<T>> {
         ensureCapacity();
     }
 
+    /**
+     * 未完成
+     *
+     * @return
+     */
+    public T pop() {
+        if (size == 0) {
+            return null;
+        }
+        T v = datas[0];
+        datas[0] = null;
+        size--;
+
+        int parenIndex = 0;
+        int childIndex = 2 * parenIndex + 1;
+
+        while (childIndex < size) {
+            // 父子对比并交换
+            if (isExchange(parenIndex, childIndex)) {
+                exchange(parenIndex, childIndex);
+            }
+            // 兄弟对比并交换
+            int brotherIndex = isLeft(childIndex) ? childIndex + 1 : parenIndex * 2 + 1;
+            if (isExchange(parenIndex, brotherIndex)) {
+                exchange(parenIndex, brotherIndex);
+            }
+            // 索引下移
+            parenIndex = childIndex;
+            childIndex = 2 * parenIndex + 1;
+        }
+        return v;
+    }
+
     private boolean isLeft(int i) {
         // 是奇数则是左子节点
         return i % 2 == 1;
@@ -82,7 +118,7 @@ public class Heap_base_01<T extends Comparable<T>> {
         if (parentIndex == childIndex) {
             return;
         }
-        Comparable parent = datas[parentIndex];
+        T parent = datas[parentIndex];
         datas[parentIndex] = datas[childIndex];
         datas[childIndex] = parent;
     }
@@ -101,17 +137,25 @@ public class Heap_base_01<T extends Comparable<T>> {
 
         T parent = (T) datas[parentIndex];
         T child = (T) datas[childIndex];
-
         if (child == null) {
             return false;
+        }
+        if (parent == null) {
+            return true;
         }
 
         if (property == 1) {
             // 大堆
-            return (parent).compareTo(child) < 0;
+            if (comparator != null) {
+                return comparator.compare(parent, child) < 0;
+            }
+            return ((Comparable) parent).compareTo(child) < 0;
         } else {
             // 小堆
-            return (parent).compareTo(child) > 0;
+            if (comparator != null) {
+                return comparator.compare(parent, child) > 0;
+            }
+            return ((Comparable) parent).compareTo(child) > 0;
         }
     }
 
