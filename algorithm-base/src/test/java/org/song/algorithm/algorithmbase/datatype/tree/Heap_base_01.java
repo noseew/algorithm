@@ -85,20 +85,22 @@ public class Heap_base_01<T> {
 
         int parenIndex = 0;
         int left = 2 * parenIndex + 1;
+        int right = left + 1;
 
-        while (left < size) {
+        int harf = size >>> 1;
+        while (parenIndex < harf) {
             // 父子对比并交换
             if (isExchange(parenIndex, left)) {
                 exchange(parenIndex, left);
+                parenIndex = left;
             }
-            // 兄弟对比并交换
-            int brother = isLeft(left) ? left + 1 : parenIndex * 2 + 1;
-            if (isExchange(parenIndex, brother)) {
-                exchange(parenIndex, brother);
+            if (isExchange(parenIndex, right)) {
+                exchange(parenIndex, right);
+                parenIndex = right;
             }
             // 索引下移
-            parenIndex = left;
             left = 2 * parenIndex + 1;
+            right = left + 1;
         }
         return v;
     }
