@@ -105,12 +105,12 @@ public class Heap_base_01<T> {
                 exchange(parenIndex, childIndex);
             }
             // 兄弟对比并交换
-            int brotherIndex = isLeft(childIndex) ? childIndex + 1 : parenIndex * 2 + 1;
+            int brotherIndex = isLeft(childIndex) ? childIndex + 1 :(parenIndex << 1) + 1;
             if (isExchange(parenIndex, brotherIndex)) {
                 exchange(parenIndex, brotherIndex);
             }
             parenIndex = childIndex;
-            childIndex = (parenIndex >> 1) + 1;
+            childIndex = (parenIndex << 1) + 1;
             if (childIndex == parenIndex) {
                 break;
             }
