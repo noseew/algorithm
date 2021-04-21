@@ -72,7 +72,7 @@ public class Sort_Heap {
                     exchange(parent, brother);
                 }
                 child = parent;
-                parent = (child - 1) >> 1;
+                parent = (parent - 1) >> 1;
                 if (parent == child) {
                     break;
                 }
