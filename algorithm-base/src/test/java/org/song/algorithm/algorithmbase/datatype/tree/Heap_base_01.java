@@ -36,37 +36,20 @@ public class Heap_base_01<T> {
     /*
      堆节点关系
         i: 当前节点
-        parent(i) = floor((i - 1)/2)
-        child(i)  = 2*i + 1
-        left(i)   = 2*i + 1
-        right(i)  = 2*i + 2
+        parent(i) = floor((i - 1)/2) = (i - 1) >> 1
+        child(i)  = 2*i + 1     =   i >> 1 + 1
+        left(i)   = 2*i + 1     =   i >> 1 + 1
+        right(i)  = 2*i + 2     =   i >> 1 + 2
      */
 
     public void push(T v) {
+        // 新元素存储到数组下一位,
         datas[size++] = v;
         if (size <= 1) {
             // 只有一个元素
             return;
         }
-
-        int childIndex = size - 1;
-        int parenIndex = (childIndex - 1) / 2;
-
-        while (parenIndex >= 0 && parenIndex < childIndex) {
-            // 父子对比并交换
-            if (isExchange(parenIndex, childIndex)) {
-                exchange(parenIndex, childIndex);
-            }
-            // 兄弟对比并交换
-            int brotherIndex = isLeft(childIndex) ? childIndex + 1 : parenIndex * 2 + 1;
-            if (isExchange(parenIndex, brotherIndex)) {
-                exchange(parenIndex, brotherIndex);
-            }
-
-            // 索引上移
-            childIndex = parenIndex;
-            parenIndex = (parenIndex - 1) / 2;
-        }
+        shiftUp(size - 1);
         ensureCapacity();
     }
 
@@ -80,8 +63,7 @@ public class Heap_base_01<T> {
             return null;
         }
         T v = datas[0];
-        datas[0] = null;
-        size--;
+        datas[0] = datas[size--];
 
         int parenIndex = 0;
         int left = 2 * parenIndex + 1;
@@ -103,6 +85,50 @@ public class Heap_base_01<T> {
             right = left + 1;
         }
         return v;
+    }
+
+    /**
+     * 子节点上升
+     * 新元素存储到数组下一位, 新元素在叶子节点判断一次上升, 直到合适的位置
+     */
+    private void shiftUp(int child) {
+
+        int childIndex = child;
+        int parenIndex = (childIndex - 1) >> 1;
+        while (parenIndex >= 0 && parenIndex != childIndex) {
+            // 父子对比并交换
+            if (isExchange(parenIndex, childIndex)) {
+                exchange(parenIndex, childIndex);
+            } else {
+                break;
+            }
+            // 兄弟对比并交换
+            int brotherIndex = isLeft(childIndex) ? childIndex + 1 : parenIndex * 2 + 1;
+            if (isExchange(parenIndex, brotherIndex)) {
+                exchange(parenIndex, brotherIndex);
+                break;
+            }
+            // 索引上移
+            childIndex = parenIndex;
+            parenIndex = (parenIndex - 1) >> 1;
+        }
+    }
+
+    /**
+     * 父节点下降
+     * 现将尾结点元素移动到根节点上, 然后对根节点进行下降调整
+     */
+    private void shiftDown(int parent) {
+        int childIndex = parent >> 1 + 1;
+//        while (left < size) {
+//            // 父子对比并交换
+//            if (isExchange(parenIndex, childIndex)) {
+//                exchange(parenIndex, childIndex);
+//            } else {
+//                break;
+//            }
+//
+//        }
     }
 
     private boolean isLeft(int i) {
