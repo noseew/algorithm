@@ -2,10 +2,12 @@ package org.song.algorithm.algorithmbase.datatype.tree;
 
 import org.junit.Test;
 
+import java.util.Random;
+
 public class Heap_test {
 
     @Test
-    public void test() {
+    public void test_start_01() {
         Heap_base_01<Integer> heap = new Heap_base_01<>();
         heap.push(2);
         heap.push(1);
@@ -21,5 +23,17 @@ public class Heap_test {
         System.out.println(heap.pop());
         System.out.println(heap.toPretty());
 
+    }
+
+    @Test
+    public void test_start_02() {
+        Random random = new Random();
+        Heap_base_01<Integer> heap = new Heap_base_01<>();
+        for (int i = 0; i < 20; i++) {
+            heap.push(random.nextInt(30));
+        }
+        for (int i = 0; i < 20; i++) {
+            System.out.println(heap.pop());
+        }
     }
 }

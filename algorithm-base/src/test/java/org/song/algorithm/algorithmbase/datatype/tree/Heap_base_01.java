@@ -37,9 +37,9 @@ public class Heap_base_01<T> {
      堆节点关系
         i: 当前节点
         parent(i) = floor((i - 1)/2) = (i - 1) >> 1
-        child(i)  = 2*i + 1     =   i >> 1 + 1
-        left(i)   = 2*i + 1     =   i >> 1 + 1
-        right(i)  = 2*i + 2     =   i >> 1 + 2
+        child(i)  = 2*i + 1     =   i << 1 + 1
+        left(i)   = 2*i + 1     =   i << 1 + 1
+        right(i)  = 2*i + 2     =   i << 1 + 20
      */
 
     public void push(T v) {
@@ -72,23 +72,16 @@ public class Heap_base_01<T> {
     private void shiftUp(int child) {
 
         int childIndex = child;
-        int parenIndex = (childIndex - 1) >> 1;
-        while (parenIndex >= 0) {
+        int parenIndex;
+        while ((parenIndex = (childIndex - 1) >> 1) >= 0) {
             // 父子对比并交换
             if (isExchange(parenIndex, childIndex)) {
                 exchange(parenIndex, childIndex);
+                // 索引上移
+                childIndex = parenIndex;
             } else {
                 break;
             }
-            // 兄弟对比并交换
-            int brotherIndex = isLeft(childIndex) ? childIndex + 1 : parenIndex * 2 + 1;
-            if (isExchange(parenIndex, brotherIndex)) {
-                exchange(parenIndex, brotherIndex);
-                break;
-            }
-            // 索引上移
-            childIndex = parenIndex;
-            parenIndex = (parenIndex - 1) >> 1;
         }
     }
 
@@ -98,20 +91,16 @@ public class Heap_base_01<T> {
      */
     private void shiftDown(int parent) {
         int parenIndex = parent;
-        int childIndex = (parenIndex << 1) + 1;
-        while (childIndex < size ) {
+        int leftIndex;
+        while ((leftIndex = ((parenIndex << 1) + 1)) < size) {
+            int rightIndex = leftIndex + 1;
+            // 找出较 小/大 的子节点
+            int child = match(leftIndex, rightIndex);
             // 父子对比并交换
-            if (isExchange(parenIndex, childIndex)) {
-                exchange(parenIndex, childIndex);
-            }
-            // 兄弟对比并交换
-            int brotherIndex = isLeft(childIndex) ? childIndex + 1 :(parenIndex << 1) + 1;
-            if (isExchange(parenIndex, brotherIndex)) {
-                exchange(parenIndex, brotherIndex);
-            }
-            parenIndex = childIndex;
-            childIndex = (parenIndex << 1) + 1;
-            if (childIndex == parenIndex) {
+            if (isExchange(parenIndex, child)) {
+                exchange(parenIndex, child);
+                parenIndex = child;
+            } else {
                 break;
             }
         }
@@ -136,6 +125,7 @@ public class Heap_base_01<T> {
 
     /**
      * 是否需要交换
+     * childIndex 是否 大于/小于 parentIndex
      *
      * @param parentIndex
      * @param childIndex
@@ -167,6 +157,47 @@ public class Heap_base_01<T> {
         }
     }
 
+    private int match(int left, int right) {
+        if (left == right) {
+            return left;
+        }
+
+        T childLeft = (T) datas[left];
+        T childRight = (T) datas[right];
+        if (childLeft == null) {
+            return right;
+        }
+        if (childRight == null) {
+            return left;
+        }
+
+        if (property == 1) {
+            // 大堆
+            if (comparator != null) {
+                if (comparator.compare(childLeft, childRight) < 0) {
+                    return right;
+                }
+                return left;
+            }
+            if (((Comparable) childLeft).compareTo(childRight) < 0) {
+                return right;
+            }
+            return left;
+        } else {
+            // 小堆
+            if (comparator != null) {
+                if (comparator.compare(childLeft, childRight) > 0) {
+                    return right;
+                }
+                return left;
+            }
+            if (((Comparable) childLeft).compareTo(childRight) > 0) {
+                return right;
+            }
+            return left;
+        }
+    }
+
     /**
      * 确保容量
      */
@@ -182,14 +213,14 @@ public class Heap_base_01<T> {
     public String toPretty() {
         // 层数, 从1开始
         int totalLevel = (int) Math.floor(log2(size)) + 1;
-        if (totalLevel<=0) {
+        if (totalLevel <= 0) {
             return "";
         }
         // 每层元素数
         int[] levelCount = new int[totalLevel];
         for (int i = 0; i < totalLevel; i++) {
             if (i == 0) {
-                levelCount[i] =  1;
+                levelCount[i] = 1;
             } else {
                 levelCount[i] = i << 1;
             }
