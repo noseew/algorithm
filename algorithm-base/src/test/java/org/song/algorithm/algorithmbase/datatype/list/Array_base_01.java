@@ -2,6 +2,20 @@ package org.song.algorithm.algorithmbase.datatype.list;
 
 import java.util.Arrays;
 
+/**
+ * 基于数组的链表
+ *
+ * 优点
+ * 1. 随机读写复杂度 O(1)
+ * 缺点:
+ * 1. 扩容复杂度 O(n)
+ * 2. 删除复杂度 O(n)
+ * 解决:
+ * 1. 扩容复杂度均摊, 将扩容的复制元素均摊到每次操作, 最终复杂度还是 O(1)
+ * 2. 采用动态指针表示头尾, 解决删除(头尾)元素复杂度降为 O(1), 删除中间元素复杂度降低一半还是 O(n)
+ *
+ * @param <T>
+ */
 public class Array_base_01<T> {
 
     private T[] datas;
