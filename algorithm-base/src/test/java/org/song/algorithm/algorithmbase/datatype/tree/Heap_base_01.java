@@ -5,6 +5,23 @@ import java.util.Comparator;
 
 /**
  * heap 基于数组存储
+ * 逻辑结构 heap, 存储结构 数组
+ * 堆节点关系
+ * i: 当前节点
+ * parent(i) = floor((i - 1)/2) = (i - 1) >> 1
+ * child(i)  = 2*i + 1     =   i << 1 + 1
+ * left(i)   = 2*i + 1     =   i << 1 + 1
+ * right(i)  = 2*i + 2     =   i << 1 + 2
+ *
+ * 思路: 以小堆为例
+ * 1. push: 存入heap尾, 依次上升
+ * -    存储在数组最后一个元素(完全二叉树最后一个元素, 叶子节点)
+ * -    和父节点比较, 子<父 则向上升
+ * 2. pop: 取出heap顶, heap尾移动到heap顶, 选择分支, 依次下降
+ * -    取出heap顶, 将heap尾元素移动到heap顶
+ * -    heap顶作为父节点 parent, 选一个最小的 child = Min(left, right),
+ * -    parent 和 child 对比并互换, 依次下降
+ *
  *
  * @param <T>
  */
@@ -39,7 +56,7 @@ public class Heap_base_01<T> {
         parent(i) = floor((i - 1)/2) = (i - 1) >> 1
         child(i)  = 2*i + 1     =   i << 1 + 1
         left(i)   = 2*i + 1     =   i << 1 + 1
-        right(i)  = 2*i + 2     =   i << 1 + 20
+        right(i)  = 2*i + 2     =   i << 1 + 2
      */
 
     public void push(T v) {
@@ -70,7 +87,11 @@ public class Heap_base_01<T> {
      * 新元素存储到数组下一位, 新元素在叶子节点判断一次上升, 直到合适的位置
      */
     private void shiftUp(int child) {
-
+        /*
+         子节点依次上升
+         子节点上升路线跟子节点在哪个叶子分支有关
+         只需要和父节点对比, 只要比父节点小(小堆), 则肯定比兄弟节点小(小堆)
+         */
         int childIndex = child;
         int parenIndex;
         while ((parenIndex = (childIndex - 1) >> 1) >= 0) {
@@ -90,6 +111,12 @@ public class Heap_base_01<T> {
      * 现将尾结点元素移动到根节点上, 然后对根节点进行下降调整
      */
     private void shiftDown(int parent) {
+        /*
+         父节点依次下降
+         父节点下降路线和对比有关(和 子节点依次上升 不同)
+         父节点在(left, right)中选择一个最小(小堆)的子节点, 作为对比分支
+         父节点只要比最小子节点大, 则最小子节点一定应当是父节点, 因为: 最小子节点 < 兄弟节点 & 最小子节点 < 父节点
+         */
         int parenIndex = parent;
         int leftIndex;
         while ((leftIndex = ((parenIndex << 1) + 1)) < size) {
@@ -104,11 +131,6 @@ public class Heap_base_01<T> {
                 break;
             }
         }
-    }
-
-    private boolean isLeft(int i) {
-        // 是奇数则是左子节点
-        return i % 2 == 1;
     }
 
     /**
