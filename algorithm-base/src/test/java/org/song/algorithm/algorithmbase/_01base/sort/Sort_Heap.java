@@ -13,7 +13,7 @@ import java.util.Arrays;
  * -    堆选出来最小的数据的复杂度是O(1), 这是由堆得性质决定的,
  * -    同时, 还要将数组中的数据放入堆中
  * -    如果是原地变堆, 则过程是将堆顶元素和数组最后元素交换
- *
+ * <p>
  * 复杂度是 O(logn), 主要在数组堆化这一步是 O(logn) 的
  */
 public class Sort_Heap {
@@ -26,18 +26,18 @@ public class Sort_Heap {
     }
 
     /**
-     * 未完成
      */
     public int[] sort_01(int[] data) {
 
+        // 将数组原地建堆(小堆)
         HeapLittle heapLittle = new HeapLittle(data);
-        for (int i = 1; i < data.length; i++) {
-            heapLittle.shiftUp(i);
-        }
         for (int i = 0; i < data.length; i++) {
-            System.out.println(heapLittle.pop());
+            heapLittle.push(data[i]);
         }
-
+        // 依次取出, 并原地排序
+        for (int i = 0; i < data.length; i++) {
+            data[data.length - i - 1] = heapLittle.pop();
+        }
         return data;
     }
 
@@ -48,11 +48,10 @@ public class Sort_Heap {
 
         public HeapLittle(int[] datas) {
             this.datas = datas;
-            this.size = datas.length;
         }
 
         public int pop() {
-            int data = datas[size - 1];
+            int data = datas[0];
             datas[0] = datas[size - 1];
             datas[size - 1] = 0;
             size--;
@@ -60,40 +59,39 @@ public class Sort_Heap {
             return data;
         }
 
-        public void shiftUp(int i) {
-            int parent = (i - 1) >> 1;
+        public void push(int val) {
+            datas[size++] = val;
+            if (size == 1) {
+                return;
+            }
+            shiftUp(size - 1);
+        }
+
+        private void shiftUp(int i) {
             int child = i;
-            while (parent >= 0) {
+            int parent;
+            while ((parent = (child - 1) >> 1) >= 0) {
                 if (datas[parent] > datas[child]) {
                     exchange(parent, child);
-                }
-                int brother = child % 2 == 1 ? child + 1 : child - 1;
-                if (datas[parent] > datas[brother]) {
-                    exchange(parent, brother);
-                }
-                child = parent;
-                parent = (parent - 1) >> 1;
-                if (parent == child) {
+                    child = parent;
+                } else {
                     break;
                 }
             }
         }
 
-        public void shiftDown() {
+        private void shiftDown() {
             int parent = 0;
-            int child = (parent << 1) + 1;
-            while (child < size) {
-                if (datas[parent] < datas[child]) {
+            int left;
+            while ((left = ((parent << 1) + 1)) < size) {
+                int child = datas[left] <= datas[left + 1] || left + 1 >= size ? left : left + 1;
+                if (datas[parent] > datas[child] && child < size) {
                     exchange(parent, child);
+                    parent = child;
+                } else {
+                    break;
                 }
-                int brother = child % 2 == 1 ? child + 1 : child - 1;
-                if (datas[parent] < datas[brother]) {
-                    exchange(parent, brother);
-                }
-                parent = child;
-                child = (parent << 1) + 1;
             }
-
         }
 
         private void exchange(int parentIndex, int childIndex) {
