@@ -279,24 +279,4 @@ public class Heap_base_01<T> {
         return Math.log(m) / Math.log(n);
     }
 
-
-    //    class TreeNode<K, V> {
-//
-//        TreeNode<K, V> parent;
-//        TreeNode<K, V> left;
-//        TreeNode<K, V> right;
-//        K k;
-//        V v;
-//
-//        public TreeNode(TreeNode<K, V> parent, TreeNode<K, V> left, TreeNode<K, V> right) {
-//            this.parent = parent;
-//            this.left = left;
-//            this.right = right;
-//        }
-//
-//        public TreeNode(K k, V v) {
-//            this.k = k;
-//            this.v = v;
-//        }
-//    }
 }
