@@ -17,7 +17,7 @@ public class AVLTree_base<V> {
 
     public void push(V v) {
         if (root == null) {
-            root = new AVLTreeNode<>(null, null, null, v, 0);
+            root = new AVLTreeNode<>(null, null, null, v);
             size++;
             return;
         }
@@ -49,7 +49,7 @@ public class AVLTree_base<V> {
     }
 
     private void put(AVLTreeNode<V> parent, V v) {
-        AVLTreeNode<V> newNode = new AVLTreeNode<>(parent, null, null, v, parent.height + 1);
+        AVLTreeNode<V> newNode = new AVLTreeNode<>(parent, null, null, v);
         if (comparator != null) {
             if (comparator.compare(v, parent.v) < 0) {
                 parent.left = newNode;
@@ -135,13 +135,13 @@ public class AVLTree_base<V> {
         AVLTreeNode<V> right;
         V v;
         int height;
+        int balanceFactor;
 
-        AVLTreeNode(AVLTreeNode<V> parent, AVLTreeNode<V> left, AVLTreeNode<V> right, V v, int height) {
+        AVLTreeNode(AVLTreeNode<V> parent, AVLTreeNode<V> left, AVLTreeNode<V> right, V v) {
             this.parent = parent;
             this.left = left;
             this.right = right;
             this.v = v;
-            this.height = height;
         }
 
     }
