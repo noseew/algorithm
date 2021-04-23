@@ -49,6 +49,9 @@ public class AVLTree_base<V> {
         }
 
         put(parent, v);
+
+
+
         size++;
     }
 
@@ -81,6 +84,7 @@ public class AVLTree_base<V> {
 
     /**
      * 右旋 处理 / 型不平衡
+     * 平衡成 ^
      *
      * @param node 不平衡的节点, isBalanced(node) = false
      * @return 新的 parent 节点
@@ -109,6 +113,7 @@ public class AVLTree_base<V> {
 
     /**
      * 左旋 处理 \ 型不平衡
+     * 平衡成 ^
      *
      * @param node 不平衡的节点, isBalanced(node) = false
      * @return 新的 parent 节点
@@ -176,6 +181,10 @@ public class AVLTree_base<V> {
          有的定义是从1开始
          */
         int height;
+        /*
+         平衡因子 = 左子树高度 - 右子树高度
+         如果平衡因子 = 1, -1, 0 则说明该树是平衡树
+         */
         int balanceFactor;
 
         AVLTreeNode(AVLTreeNode<V> parent, AVLTreeNode<V> left, AVLTreeNode<V> right, V v) {
