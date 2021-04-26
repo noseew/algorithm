@@ -34,11 +34,7 @@ public class AVLTree_base<V> {
     }
 
     public void remove_recursive(V v) {
-        TreeNode<V> removeNode;
-        // 查找到待删除的node
-        if ((removeNode = search_recursive(root, v)) != null) {
-            root = remove_recursive(root, removeNode);
-        }
+        root = remove_recursive(root, v);
     }
 
     /**
@@ -67,83 +63,15 @@ public class AVLTree_base<V> {
         if (com < 0) {
             // 向左插入
             parent.left = insert_recursive(parent.left, v);
-            // 新节点如果不平衡(左右子树高度差 > 1)
-            if (getHeight(parent.left) - getHeight(parent.right) > 1) {
-                /*
-                  判断不平衡类型
-                  这里是向左插入节点, 不平衡有两种
-                  1. LL型 /:
-                            p
-                           /
-                        p.left
-                         /
-                       v
-                    旋转成
-                      p.left
-                      /  \
-                     v    p
-                  2. LR型 <:
-                            p
-                           /
-                        p.left
-                            \
-                             v
-                    旋转成
-                      p.left
-                      /  \
-                     v    p
-
-                 */
-                if (((Comparable) v).compareTo(parent.left.v) < 0) {
-                    // LL型
-                    parent = leftLeftRotate(parent);
-                } else {
-                    // LR型
-                    parent = leftRightRotate(parent);
-                }
-            }
         } else if (com > 0) {
             // 向右插入
             parent.right = insert_recursive(parent.right, v);
-            // 新节点如果不平衡(左右子树高度差 > 1)
-            if (getHeight(parent.right) - getHeight(parent.left) > 1) {
-                /*
-                  判断不平衡类型
-                  这里是向左插入节点, 不平衡有两种
-                  1. RR型 \:
-                        p
-                         \
-                        p.left
-                           \
-                            v
-                    旋转成
-                      p.left
-                      /  \
-                     v    p
-                  2. LR型 <:
-                        p
-                         \
-                        p.left
-                          /
-                        v
-                    旋转成
-                      p.left
-                      /  \
-                     p    v
-                 */
-                if (((Comparable) v).compareTo(parent.right.v) > 0) {
-                    // RR型
-                    parent = rightRightRotation(parent);
-                } else {
-                    // RL型
-                    parent = rightLeftRotate(parent);
-                }
-            }
         } else {
             // 重复元素不处理
             return parent;
         }
-        parent.height = Math.max(getHeight(parent.left), getHeight(parent.right)) + 1;
+        // 平衡处理, 每个节点都要判断并处理
+        parent = balance(parent);
         return parent;
     }
 
@@ -177,75 +105,37 @@ public class AVLTree_base<V> {
      * 采用递归方式, 删除节点
      *
      * @param parent
-     * @param removeNode
+     * @param v
      * @return
      */
-    private TreeNode<V> remove_recursive(TreeNode<V> parent, TreeNode<V> removeNode) {
-        if (parent == null || removeNode == null) {
-            return null;
-        }
-        int com;
-        if (comparator != null) {
-            com = comparator.compare(removeNode.v, parent.v);
-        } else {
-            com = ((Comparable) removeNode.v).compareTo(parent.v);
+    private TreeNode<V> remove_recursive(TreeNode<V> parent, V v) {
+
+        if (null == parent) {
+            return parent;
         }
 
-        if (com < 0) {
-            parent.left = remove_recursive(parent.left, removeNode);
-            if (getHeight(parent.right) - getHeight(parent.left) > 1) {
-                TreeNode<V> r = parent.right;
-                if (getHeight(r.left) > getHeight(r.right)) {
-                    parent = rightLeftRotate(parent);
-                } else {
-                    parent = rightRightRotation(parent);
-                }
-            }
-        } else if (com > 0) {
-            parent.right = remove_recursive(parent.right, removeNode);
-            if (getHeight(parent.left) - getHeight(parent.right) > 1) {
-                TreeNode<V> l = parent.left;
-                if (getHeight(l.right) > getHeight(l.left))
-                    parent = leftRightRotate(parent);
-                else
-                    parent = leftLeftRotate(parent);
-            }
+        int com;
+        if (comparator != null) {
+            com = comparator.compare(v, parent.v);
         } else {
-            // 上面的代码类似于 insert, 目的是寻找和调整, 真正删除在这里
-            // tree的左右孩子都非空
-            if ((parent.left != null) && (parent.right != null)) {
-                if (getHeight(parent.left) > getHeight(parent.right)) {
-                    /*
-                     如果左子树比右子树高
-                     1. 找出左子树中的最大节点
-                     2. 将该最大节点的值赋值给parent
-                     3. 删除该最大节点
-                     这类似于用"tree的左子树中最大节点"做"tree"的替身；
-                     采用这种方式的好处是：删除"tree的左子树中最大节点"之后，AVL树仍然是平衡的。
-                     */
-                    TreeNode<V> max = maximum(parent.left);
-                    parent.v = max.v;
-                    parent.left = remove_recursive(parent.left, max);
-                } else {
-                    /*
-                     如果左子树不比右子树高(即它们相等，或右子树比左子树高1)
-                     1. 找出tree的右子树中的最小节点
-                     2. 将该最小节点的值赋值给tree
-                     3. 删除该最小节点
-                     这类似于用"tree的右子树中最小节点"做"tree"的替身；
-                     采用这种方式的好处是：删除"tree的右子树中最小节点"之后，AVL树仍然是平衡的。
-                     */
-                    TreeNode<V> min = maximum(parent.right);
-                    parent.v = min.v;
-                    parent.right = remove_recursive(parent.right, min);
-                }
-            } else {
-                TreeNode<V> tmp = parent;
-                parent = (parent.left != null) ? parent.left : parent.right;
-                tmp = null;
-            }
+            com = ((Comparable) v).compareTo(parent.v);
         }
-        return parent;
+
+        //小于当前根节点
+        if (com < 0) {
+            parent.left = remove_recursive(parent.left, v);
+        } else if (com > 0) {
+            //大于当前根节点
+            parent.right = remove_recursive(parent.left, v);
+        } else if (parent.left != null && parent.right != null) {
+            //找到右边最小的节点
+            parent.v = findMin(parent.right).v;
+            //当前节点的右边等于原节点右边删除已经被选为的替代节点
+            parent.right = remove_recursive(parent.right, parent.v);
+        } else {
+            parent = (parent.left != null) ? parent.left : parent.right;
+        }
+        return balance(parent);
     }
 
     /*
@@ -255,6 +145,80 @@ public class AVLTree_base<V> {
          LL: 单向左型 / : leftLeftRotate(旋转方向: 右旋转, 左上右下)
          RL: 右左型   > : 先旋转成 LL
      */
+    private TreeNode<V> balance(TreeNode<V> node) {
+        if (node == null) {
+            return node;
+        }
+
+        // 新节点如果不平衡(左右子树高度差 > 1)
+        if (getHeight(node.left) - getHeight(node.right) > 1) {
+                /* LL 或者 LR 旋转
+                  判断不平衡类型
+                  这里是向左插入节点, 不平衡有两种
+                  1. LL型 /:
+                            p
+                           /
+                        p.left
+                         /
+                       v
+                    旋转成
+                      p.left
+                      /  \
+                     v    p
+                  2. LR型 <:
+                            p
+                           /
+                        p.left
+                            \
+                             v
+                    旋转成
+                      p.left
+                      /  \
+                     v    p
+
+                 */
+            if (getHeight(node.left.left) >= getHeight(node.left.right)) {
+                node = leftLeftRotate(node);
+            } else {
+                node = leftRightRotate(node);
+            }
+        }
+
+        // 新节点如果不平衡(左右子树高度差 > 1)
+        else if (getHeight(node.right) - getHeight(node.left) > 1) {
+                /* RR 或者 RL 旋转
+                  判断不平衡类型
+                  这里是向左插入节点, 不平衡有两种
+                  1. RR型 \:
+                        p
+                         \
+                        p.left
+                           \
+                            v
+                    旋转成
+                      p.left
+                      /  \
+                     v    p
+                  2. LR型 <:
+                        p
+                         \
+                        p.left
+                          /
+                        v
+                    旋转成
+                      p.left
+                      /  \
+                     p    v
+                 */
+            if (getHeight(node.right.right) >= getHeight(node.right.left)) {
+                node = rightRightRotation(node);
+            } else {
+                node = rightLeftRotate(node);
+            }
+        }
+        node.height = Math.max(getHeight(node.left), getHeight(node.right)) + 1;
+        return node;
+    }
 
     /**
      * 处理 <
@@ -398,6 +362,20 @@ public class AVLTree_base<V> {
         rotateTimes++;
 
         return newParent;
+    }
+
+    /**
+     * 找最小节点
+     *
+     * @param root 根节点
+     */
+    private TreeNode<V> findMin(TreeNode<V> root) {
+        if (root == null) {
+            return null;
+        } else if (root.left == null) {
+            return root;
+        }
+        return findMin(root.left);
     }
 
     /**
