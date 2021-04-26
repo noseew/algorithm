@@ -22,15 +22,23 @@ public class AVLTree_base<V> {
     public TreeNode<V> root;
 
     public void push_recursive(V v) {
-        root = insert(root, v);
+        root = insert_recursive(root, v);
     }
 
     public V search_recursive(V v) {
-        TreeNode<V> treeNode = search(root, v);
+        TreeNode<V> treeNode = search_recursive(root, v);
         if (treeNode != null) {
             return treeNode.v;
         }
         return null;
+    }
+
+    public void remove_recursive(V v) {
+        TreeNode<V> removeNode;
+        // 查找到待删除的node
+        if ((removeNode = search_recursive(root, v)) != null) {
+            root = remove_recursive(root, removeNode);
+        }
     }
 
     /**
@@ -40,7 +48,7 @@ public class AVLTree_base<V> {
      * @param v
      * @return
      */
-    private TreeNode<V> insert(TreeNode<V> parent, V v) {
+    private TreeNode<V> insert_recursive(TreeNode<V> parent, V v) {
         if (parent == null) {
             // 新建节点, 高度默认1
             parent = new TreeNode<>(parent, null, null, v);
@@ -58,7 +66,7 @@ public class AVLTree_base<V> {
 
         if (com < 0) {
             // 向左插入
-            parent.left = insert(parent.left, v);
+            parent.left = insert_recursive(parent.left, v);
             // 新节点如果不平衡(左右子树高度差 > 1)
             if (getHeight(parent.left) - getHeight(parent.right) > 1) {
                 /*
@@ -96,7 +104,7 @@ public class AVLTree_base<V> {
             }
         } else if (com > 0) {
             // 向右插入
-            parent.right = insert(parent.right, v);
+            parent.right = insert_recursive(parent.right, v);
             // 新节点如果不平衡(左右子树高度差 > 1)
             if (getHeight(parent.right) - getHeight(parent.left) > 1) {
                 /*
@@ -146,7 +154,7 @@ public class AVLTree_base<V> {
      * @param v
      * @return
      */
-    private TreeNode<V> search(TreeNode<V> parent, V v) {
+    private TreeNode<V> search_recursive(TreeNode<V> parent, V v) {
         if (parent == null) {
             return null;
         }
@@ -157,12 +165,87 @@ public class AVLTree_base<V> {
             com = ((Comparable) v).compareTo(parent.v);
         }
         if (com < 0) {
-            return search(parent.left, v);
+            return search_recursive(parent.left, v);
         } else if (com > 0) {
-            return search(parent.right, v);
+            return search_recursive(parent.right, v);
         } else {
             return parent;
         }
+    }
+
+    /**
+     * 采用递归方式, 删除节点
+     *
+     * @param parent
+     * @param removeNode
+     * @return
+     */
+    private TreeNode<V> remove_recursive(TreeNode<V> parent, TreeNode<V> removeNode) {
+        if (parent == null || removeNode == null) {
+            return null;
+        }
+        int com;
+        if (comparator != null) {
+            com = comparator.compare(removeNode.v, parent.v);
+        } else {
+            com = ((Comparable) removeNode.v).compareTo(parent.v);
+        }
+
+        if (com < 0) {
+            parent.left = remove_recursive(parent.left, removeNode);
+            if (getHeight(parent.right) - getHeight(parent.left) > 1) {
+                TreeNode<V> r = parent.right;
+                if (getHeight(r.left) > getHeight(r.right)) {
+                    parent = rightLeftRotate(parent);
+                } else {
+                    parent = rightRightRotation(parent);
+                }
+            }
+        } else if (com > 0) {
+            parent.right = remove_recursive(parent.right, removeNode);
+            if (getHeight(parent.left) - getHeight(parent.right) > 1) {
+                TreeNode<V> l = parent.left;
+                if (getHeight(l.right) > getHeight(l.left))
+                    parent = leftRightRotate(parent);
+                else
+                    parent = leftLeftRotate(parent);
+            }
+        } else {
+            // 上面的代码类似于 insert, 目的是寻找和调整, 真正删除在这里
+            // tree的左右孩子都非空
+            if ((parent.left != null) && (parent.right != null)) {
+                if (getHeight(parent.left) > getHeight(parent.right)) {
+                    /*
+                     如果左子树比右子树高
+                     1. 找出左子树中的最大节点
+                     2. 将该最大节点的值赋值给parent
+                     3. 删除该最大节点
+                     这类似于用"tree的左子树中最大节点"做"tree"的替身；
+                     采用这种方式的好处是：删除"tree的左子树中最大节点"之后，AVL树仍然是平衡的。
+                     */
+                    TreeNode<V> max = maximum(parent.left);
+                    parent.v = max.v;
+                    parent.left = remove_recursive(parent.left, max);
+                } else {
+                    /*
+                     如果左子树不比右子树高(即它们相等，或右子树比左子树高1)
+                     1. 找出tree的右子树中的最小节点
+                     2. 将该最小节点的值赋值给tree
+                     3. 删除该最小节点
+                     这类似于用"tree的右子树中最小节点"做"tree"的替身；
+                     采用这种方式的好处是：删除"tree的右子树中最小节点"之后，AVL树仍然是平衡的。
+                     */
+                    TreeNode<V> min = maximum(parent.right);
+                    parent.v = min.v;
+                    parent.right = remove_recursive(parent.right, min);
+                }
+            } else {
+                TreeNode<V> tmp = parent;
+                parent = (parent.left != null) ? parent.left : parent.right;
+                tmp = null;
+            }
+        }
+        return parent;
     }
 
     /*
@@ -317,26 +400,32 @@ public class AVLTree_base<V> {
         return newParent;
     }
 
-    private boolean isBalanced() {
-        return isBalanced(root);
+    /**
+     * 查找最大结点
+     */
+    private TreeNode<V> maximum(TreeNode<V> tree) {
+        if (tree == null) {
+            return null;
+        }
+
+        while (tree.right != null) {
+            tree = tree.right;
+        }
+        return tree;
     }
 
-    private boolean isBalanced(TreeNode<V> node) {
-        if (node == null) {
-            return true;
+    /**
+     * 查找最小结点
+     */
+    private TreeNode<V> minimum(TreeNode<V> tree) {
+        if (tree == null) {
+            return null;
         }
-        int balanceFactory = Math.abs(getBalanceFactor(node));
-        if (balanceFactory > 1) {
-            return false;
-        }
-        return isBalanced(node.left) && isBalanced(node.right);
-    }
 
-    private int getBalanceFactor(TreeNode<V> node) {
-        if (node == null) {
-            return 0;
+        while (tree.left != null) {
+            tree = tree.left;
         }
-        return getHeight(node.left) - getHeight(node.right);
+        return tree;
     }
 
     private int getHeight(TreeNode<V> node) {
