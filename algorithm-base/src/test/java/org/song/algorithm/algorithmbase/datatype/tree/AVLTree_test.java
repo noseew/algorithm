@@ -8,9 +8,10 @@ public class AVLTree_test {
     @Test
     public void test_01_start() {
         AVLTree_base<Integer> tree = new AVLTree_base<>();
-        tree.push(1);
-        tree.push(2);
-        tree.push(3);
+        for (int i = 0; i < 100; i++) {
+            tree.push_recursive(i);
+        }
         BTreePrinter.printNode(tree.root);
+        System.out.println(tree.toString());
     }
 }
