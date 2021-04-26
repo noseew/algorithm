@@ -25,6 +25,14 @@ public class AVLTree_base<V> {
         root = insert(root, v);
     }
 
+    public V search_recursive(V v) {
+        TreeNode<V> treeNode = search(root, v);
+        if (treeNode != null) {
+            return treeNode.v;
+        }
+        return null;
+    }
+
     /**
      * 采用递归的方式, 插入节点
      *
@@ -129,6 +137,32 @@ public class AVLTree_base<V> {
         }
         parent.height = Math.max(getHeight(parent.left), getHeight(parent.right)) + 1;
         return parent;
+    }
+
+    /**
+     * 采用递归方式, 查找节点
+     *
+     * @param parent
+     * @param v
+     * @return
+     */
+    private TreeNode<V> search(TreeNode<V> parent, V v) {
+        if (parent == null) {
+            return null;
+        }
+        int com;
+        if (comparator != null) {
+            com = comparator.compare(v, parent.v);
+        } else {
+            com = ((Comparable) v).compareTo(parent.v);
+        }
+        if (com < 0) {
+            return search(parent.left, v);
+        } else if (com > 0) {
+            return search(parent.right, v);
+        } else {
+            return parent;
+        }
     }
 
     /*
