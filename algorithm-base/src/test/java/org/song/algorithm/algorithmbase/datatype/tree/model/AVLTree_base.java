@@ -129,7 +129,7 @@ public class AVLTree_base<V> {
             parent.right = remove_recursive(parent.left, v);
         } else if (parent.left != null && parent.right != null) {
             //找到右边最小的节点
-            parent.v = findMin(parent.right).v;
+            parent.v = minNode(parent.right).v;
             //当前节点的右边等于原节点右边删除已经被选为的替代节点
             parent.right = remove_recursive(parent.right, parent.v);
         } else {
@@ -365,23 +365,21 @@ public class AVLTree_base<V> {
     }
 
     /**
-     * 找最小节点
-     *
-     * @param root 根节点
+     * 查找最小结点, 递归
      */
-    private TreeNode<V> findMin(TreeNode<V> root) {
+    private TreeNode<V> minNode_recursive(TreeNode<V> root) {
         if (root == null) {
             return null;
         } else if (root.left == null) {
             return root;
         }
-        return findMin(root.left);
+        return minNode_recursive(root.left);
     }
 
     /**
      * 查找最大结点
      */
-    private TreeNode<V> maximum(TreeNode<V> tree) {
+    private TreeNode<V> maxNode(TreeNode<V> tree) {
         if (tree == null) {
             return null;
         }
@@ -395,7 +393,7 @@ public class AVLTree_base<V> {
     /**
      * 查找最小结点
      */
-    private TreeNode<V> minimum(TreeNode<V> tree) {
+    private TreeNode<V> minNode(TreeNode<V> tree) {
         if (tree == null) {
             return null;
         }
