@@ -46,7 +46,7 @@ public class AVLTree_base<V> {
             }
         } else if (com > 0) {
             parent.right = insert(parent.right, v);
-            if (getHeight(parent.right) - getHeight(parent.right) > 1) {
+            if (getHeight(parent.right) - getHeight(parent.left) > 1) {
                 if (((Comparable) v).compareTo(parent.right.v) > 0) {
                     parent = rightRightRotation(parent);
                 } else {
