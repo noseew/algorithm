@@ -37,6 +37,8 @@ public class AVLTree_base<V> {
         root = remove_recursive(root, v);
     }
 
+    /***************************************** 增删查-递归 *****************************************************/
+
     /**
      * 采用递归的方式, 插入节点
      *
@@ -138,12 +140,21 @@ public class AVLTree_base<V> {
         return balance(parent);
     }
 
+    /***************************************** 平衡处理-旋转 *****************************************************/
+
     /*
          平衡二叉树的平衡分为
          RR: 单向右型 \ : rightRightRotation(旋转方向: 左旋转, 右上左下)
          LR: 左右型   < : 先旋转成 RR
          LL: 单向左型 / : leftLeftRotate(旋转方向: 右旋转, 左上右下)
          RL: 右左型   > : 先旋转成 LL
+     */
+
+    /**
+     * 平衡判断和处理
+     *
+     * @param node
+     * @return
      */
     private TreeNode<V> balance(TreeNode<V> node) {
         if (node == null) {
@@ -216,6 +227,8 @@ public class AVLTree_base<V> {
                 node = rightLeftRotate(node);
             }
         }
+
+        // 更新高度
         node.height = Math.max(getHeight(node.left), getHeight(node.right)) + 1;
         return node;
     }
@@ -364,31 +377,8 @@ public class AVLTree_base<V> {
         return newParent;
     }
 
-    /**
-     * 查找最小结点, 递归
-     */
-    private TreeNode<V> minNode_recursive(TreeNode<V> root) {
-        if (root == null) {
-            return null;
-        } else if (root.left == null) {
-            return root;
-        }
-        return minNode_recursive(root.left);
-    }
 
-    /**
-     * 查找最大结点
-     */
-    private TreeNode<V> maxNode(TreeNode<V> tree) {
-        if (tree == null) {
-            return null;
-        }
-
-        while (tree.right != null) {
-            tree = tree.right;
-        }
-        return tree;
-    }
+    /***************************************** 工具 *****************************************************/
 
     /**
      * 查找最小结点
