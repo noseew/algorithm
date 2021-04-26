@@ -8,18 +8,18 @@ public class BSTree_base<V> {
 
     private Comparator<V> comparator;
 
-    private BSTreeNode<V> root;
+    public TreeNode<V> root;
 
     public void push(V v) {
         if (root == null) {
-            root = new BSTreeNode<>(null, null, null, v);
+            root = new TreeNode<>(null, null, null, v);
             size++;
             return;
         }
 
-        BSTreeNode<V> parent = root;
+        TreeNode<V> parent = root;
         while (true) {
-            BSTreeNode<V> next;
+            TreeNode<V> next;
             if (comparator != null) {
                 if (comparator.compare(v, parent.v) < 0) {
                     next = parent.left;
@@ -43,8 +43,8 @@ public class BSTree_base<V> {
         size++;
     }
 
-    private void put(BSTreeNode<V> parent, V v) {
-        BSTreeNode<V> newNode = new BSTreeNode<>(parent, null, null, v);
+    private void put(TreeNode<V> parent, V v) {
+        TreeNode<V> newNode = new TreeNode<>(parent, null, null, v);
         if (comparator != null) {
             if (comparator.compare(v, parent.v) < 0) {
                 parent.left = newNode;
@@ -58,22 +58,6 @@ public class BSTree_base<V> {
                 parent.right = newNode;
             }
         }
-    }
-
-    static class BSTreeNode<V> {
-
-        BSTreeNode<V> parent;
-        BSTreeNode<V> left;
-        BSTreeNode<V> right;
-        V v;
-
-        BSTreeNode(BSTreeNode<V> parent, BSTreeNode<V> left, BSTreeNode<V> right, V v) {
-            this.parent = parent;
-            this.left = left;
-            this.right = right;
-            this.v = v;
-        }
-
     }
 
 }

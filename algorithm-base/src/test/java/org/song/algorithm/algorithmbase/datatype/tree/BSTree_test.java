@@ -15,5 +15,7 @@ public class BSTree_test {
         tree.push(8);
         tree.push(7);
         System.out.println();
+        BTreePrinter.printNode(tree.root);
+        BTreePrinter.show(tree.root);
     }
 }

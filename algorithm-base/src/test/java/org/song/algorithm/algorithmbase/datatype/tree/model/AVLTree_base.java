@@ -13,50 +13,62 @@ public class AVLTree_base<V> {
 
     private Comparator<V> comparator;
 
-    private AVLTreeNode<V> root;
+    public TreeNode<V> root;
 
     public void push(V v) {
-        if (root == null) {
-            root = new AVLTreeNode<>(null, null, null, v);
-            // 叶子节点的高度都是0
-            root.height = 0;
-            size++;
-            return;
-        }
-
-        AVLTreeNode<V> parent = root;
-        while (true) {
-            AVLTreeNode<V> next;
-            if (comparator != null) {
-                if (comparator.compare(v, parent.v) < 0) {
-                    next = parent.left;
-                } else {
-                    next = parent.right;
-                }
-            } else {
-                if (((Comparable) v).compareTo(((Comparable) parent.v)) < 0) {
-                    next = parent.left;
-                } else {
-                    next = parent.right;
-                }
-            }
-            if (next == null) {
-                break;
-            }
-            // 遍历过的节点, 高度+1
-            next.height++;
-            parent = next;
-        }
-
-        put(parent, v);
-
-
-
-        size++;
+        root = insert(root, v);
     }
 
-    private void put(AVLTreeNode<V> parent, V v) {
-        AVLTreeNode<V> newNode = new AVLTreeNode<>(parent, null, null, v);
+    private TreeNode<V> insert(TreeNode<V> parent, V v) {
+        if (parent == null) {
+            parent = new TreeNode<>(parent, null, null, v);
+            // 叶子节点的高度都是0
+            parent.height = 0;
+            size++;
+            return parent;
+        }
+
+        int com;
+        if (comparator != null) {
+            com = comparator.compare(v, parent.v);
+        } else {
+            com = ((Comparable) v).compareTo(parent.v);
+        }
+
+        if (com < 0) {
+            parent.left = insert(parent.left, v);
+            if (getHeight(parent.left) - getHeight(parent.right) > 1) {
+                if (((Comparable) v).compareTo(parent.left.v) < 0) {
+                    parent = leftLeftRotate(parent);
+                } else {
+                    parent = leftRightRotate(parent);
+                }
+            }
+        } else if (com > 0) {
+            parent.right = insert(parent.right, v);
+            if (getHeight(parent.right) - getHeight(parent.right) > 1) {
+                if (((Comparable) v).compareTo(parent.right.v) > 0) {
+                    parent = rightRightRotation(parent);
+                } else {
+                    parent = rightLeftRotate(parent);
+                }
+            }
+
+        }
+        parent.height = Math.max(getHeight(parent.left), getHeight(parent.right)) + 1;
+        return parent;
+    }
+
+    private int compare(TreeNode<V> node1, TreeNode<V> node2) {
+        if (comparator != null) {
+            return comparator.compare(node1.v, node2.v);
+        } else {
+            return ((Comparable) node1.v).compareTo(node2.v);
+        }
+    }
+
+    private void put(TreeNode<V> parent, V v) {
+        TreeNode<V> newNode = new TreeNode<>(parent, null, null, v);
         if (comparator != null) {
             if (comparator.compare(v, parent.v) < 0) {
                 parent.left = newNode;
@@ -72,24 +84,45 @@ public class AVLTree_base<V> {
         }
     }
 
-    private void balance(AVLTreeNode<V> node) {
+    private void balance(TreeNode<V> node) {
         /*
          平衡二叉树的平衡分为
-         RR: 单向右型 / : 需要左旋操作
-         LR: 左右型   < : 先左旋再右旋
-         LL: 单向左型 / : 需要右旋操作
-         RL: 右左型   > : 先右旋再左旋
+         RR: 单向右型 \ : rightRightRotation(旋转方向: 左旋转, 右上左下)
+         LR: 左右型   < : 先旋转成 RR
+         LL: 单向左型 / : leftLeftRotate(旋转方向: 右旋转, 左上右下)
+         RL: 右左型   > : 先旋转成 LL
          */
     }
 
     /**
-     * 右旋 处理 / 型不平衡
-     * 平衡成 ^
+     * 处理 <
+     *
+     * @param node
+     * @return
+     */
+    private TreeNode<V> leftRightRotate(TreeNode<V> node) {
+        node.left = rightRightRotation(node);
+        return leftLeftRotate(node);
+    }
+
+    /**
+     * 处理 >
+     *
+     * @param node
+     * @return
+     */
+    private TreeNode<V> rightLeftRotate(TreeNode<V> node) {
+        node.left = leftLeftRotate(node);
+        return rightRightRotation(node);
+    }
+
+    /**
+     * 处理 /
      *
      * @param node 不平衡的节点, isBalanced(node) = false
      * @return 新的 parent 节点
      */
-    private AVLTreeNode<V> rightRotate(AVLTreeNode<V> node) {
+    private TreeNode<V> leftLeftRotate(TreeNode<V> node) {
         /*
          右旋: 需要操作两个节点
              node: 不平衡的节点
@@ -100,10 +133,9 @@ public class AVLTree_base<V> {
             3. 更新高度
          树节点的变更, 至少要操作2个指针才能确定位置安全和线程安全, 因此无法使用CAS操作来保证线程安全
          */
-        AVLTreeNode<V> newParent = node.left;
-        AVLTreeNode<V> v = newParent.right;
+        TreeNode<V> newParent = node.left;
+        node.left = newParent.right;
         newParent.right = node;
-        node.left = v;
 
         node.height = Math.max(getHeight(node.left), getHeight(node.right)) + 1;
         newParent.height = Math.max(getHeight(newParent.left), getHeight(newParent)) + 1;
@@ -112,13 +144,12 @@ public class AVLTree_base<V> {
     }
 
     /**
-     * 左旋 处理 \ 型不平衡
-     * 平衡成 ^
+     * 处理 \
      *
      * @param node 不平衡的节点, isBalanced(node) = false
      * @return 新的 parent 节点
      */
-    private AVLTreeNode<V> leftRotate(AVLTreeNode<V> node) {
+    private TreeNode<V> rightRightRotation(TreeNode<V> node) {
         /*
          左旋: 需要操作两个节点
              node: 不平衡的节点
@@ -129,10 +160,9 @@ public class AVLTree_base<V> {
             3. 更新高度
          树节点的变更, 至少要操作2个指针才能确定位置安全和线程安全, 因此无法使用CAS操作来保证线程安全
          */
-        AVLTreeNode<V> newParent = node.right;
-        AVLTreeNode<V> v = newParent.left;
+        TreeNode<V> newParent = node.right;
+        node.right = newParent.left;
         newParent.left = node;
-        node.right = v;
 
         node.height = Math.max(getHeight(node.left), getHeight(node.right)) + 1;
         newParent.height = Math.max(getHeight(newParent.left), getHeight(newParent)) + 1;
@@ -144,7 +174,7 @@ public class AVLTree_base<V> {
         return isBalanced(root);
     }
 
-    private boolean isBalanced(AVLTreeNode<V> node) {
+    private boolean isBalanced(TreeNode<V> node) {
         if (node == null) {
             return true;
         }
@@ -155,44 +185,18 @@ public class AVLTree_base<V> {
         return isBalanced(node.left) && isBalanced(node.right);
     }
 
-    private int getBalanceFactor(AVLTreeNode<V> node) {
+    private int getBalanceFactor(TreeNode<V> node) {
         if (node == null) {
             return 0;
         }
         return getHeight(node.left) - getHeight(node.right);
     }
 
-    private int getHeight(AVLTreeNode<V> node) {
+    private int getHeight(TreeNode<V> node) {
         if (node == null) {
             return 0;
         }
         return node.height;
     }
 
-    static class AVLTreeNode<V> {
-
-        AVLTreeNode<V> parent;
-        AVLTreeNode<V> left;
-        AVLTreeNode<V> right;
-        V v;
-        /*
-         树的高度: 从最低的叶子节点开始, 由0开始, 如果左右子树长度不一样, 则以最长的为准
-         区别于树的深度: 根节点的深度为0, 每个叶子节点的深度不一样
-         有的定义是从1开始
-         */
-        int height;
-        /*
-         平衡因子 = 左子树高度 - 右子树高度
-         如果平衡因子 = 1, -1, 0 则说明该树是平衡树
-         */
-        int balanceFactor;
-
-        AVLTreeNode(AVLTreeNode<V> parent, AVLTreeNode<V> left, AVLTreeNode<V> right, V v) {
-            this.parent = parent;
-            this.left = left;
-            this.right = right;
-            this.v = v;
-        }
-
-    }
 }
