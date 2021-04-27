@@ -18,6 +18,20 @@ public class Linked_single_alg {
         return linked.head;
     }
 
+    private Linked_single_01.Node<Integer> initRingData() {
+        Linked_single_01.Node<Integer> node = initData();
+
+        Linked_single_01.Node node1 = node.next.next;
+        Linked_single_01.Node head = node;
+        Linked_single_01.Node tail = head;
+        while (head != null) {
+            tail = head;
+            head = head.next;
+        }
+        tail.next = node1;
+        return node;
+    }
+
     /**
      * 倒数第k个节点
      * 1. 单向列表
@@ -148,5 +162,35 @@ public class Linked_single_alg {
         }
         inversionPrint_02(linked.next);
         System.out.println(linked.value);
+    }
+
+    /**
+     * 判断链表是否有环
+     * 使用快慢指针: slow, fast
+     * slow: 慢指针一次遍历一个
+     * fast: 快指针一次遍历2个,
+     * 这样如果有环, 快指针迟早会追上慢指针, slow == fast, 注意slow, fast初始选择不要相等
+     */
+    @Test
+    public void test_04_hasRing() {
+        Linked_single_01.Node<Integer> linked = initRingData();
+        Linked_single_01.Node<Integer> slow = linked;
+        Linked_single_01.Node<Integer> fast = slow.next;
+
+        boolean hasRing = false;
+        while (true) {
+            if (slow == null || fast == null || fast.next == null) {
+                hasRing = false;
+                break;
+            }
+            if (slow.value == fast.value) {
+                hasRing = true;
+                break;
+            }
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        System.out.println(hasRing);
+
     }
 }
