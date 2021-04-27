@@ -225,17 +225,42 @@ public class Linked_single_alg {
             fast = fast.next.next;
         }
         System.out.println(ringSize);
-
     }
 
     /**
-     * 链表环入口节点 未完成
+     * 链表环入口节点
      * 1. 如果有环
      * 2. 获取环大小k
-     * 3. 链表倒数第k的元素既是环的入口
+     * 3. 两个指针slow, fast, slow在head, fast先走到k, 然后同时走, 当他们相遇时, 就是入口节点
      */
     @Test
     public void test_04_ringEntry() {
+        Linked_single_01.Node<Integer> linked = initRingData();
+
+        int ringSize = ringSize();
+
+        Linked_single_01.Node<Integer> slow = linked;
+        Linked_single_01.Node<Integer> fast = slow;
+        Linked_single_01.Node<Integer> entry = null;
+
+        while (true) {
+            if (ringSize > 0) {
+                fast = fast.next;
+                ringSize--;
+            } else {
+                slow = slow.next;
+                fast = fast.next;
+                if (slow.value == fast.value) {
+                    entry = slow;
+                    break;
+                }
+            }
+        }
+        System.out.println(entry.value);
+
+    }
+
+    public int ringSize() {
         Linked_single_01.Node<Integer> linked = initRingData();
         Linked_single_01.Node<Integer> slow = linked;
         Linked_single_01.Node<Integer> fast = slow.next;
@@ -260,7 +285,6 @@ public class Linked_single_alg {
             slow = slow.next;
             fast = fast.next.next;
         }
-        System.out.println(ringSize);
-
+        return ringSize;
     }
 }
