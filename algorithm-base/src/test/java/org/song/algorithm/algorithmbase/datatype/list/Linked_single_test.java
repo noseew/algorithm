@@ -22,19 +22,6 @@ public class Linked_single_test {
         System.out.println(linked.toString());
     }
 
-    @Test
-    public void test_01_start_02() {
-        Linked_single_02<Integer> linked = new Linked_single_02<>();
-        linked.add(1);
-        linked.add(2);
-        linked.add(3);
-        linked.add(4);
-        linked.add(5);
-        System.out.println(linked.toString());
-        linked.remove(3);
-        System.out.println(linked.toString());
-    }
-
     /**
      * -Xint
      * 效率接近
@@ -51,7 +38,7 @@ public class Linked_single_test {
         }
         stopWatch.stop();
 
-        stopWatch.start("Linked_single_01");
+        stopWatch.start("Linked_single_02");
         Linked_single_01<String> linked = new Linked_single_01<>();
         for (int i = 0; i < num; i++) {
             linked.add(UUID.randomUUID().toString());
