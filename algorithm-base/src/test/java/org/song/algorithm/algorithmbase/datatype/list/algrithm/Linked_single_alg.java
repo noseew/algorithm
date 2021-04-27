@@ -3,6 +3,7 @@ package org.song.algorithm.algorithmbase.datatype.list.algrithm;
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase.datatype.list.Linked_single_01;
 import org.song.algorithm.algorithmbase.datatype.list.ListPrinter;
+import org.song.algorithm.algorithmbase.datatype.list.Stack_base_01;
 
 /**
  * 单向链表相关算法
@@ -110,5 +111,42 @@ public class Linked_single_alg {
         n = next;
         next = null;
         return inversion_02(prev, n, next);
+    }
+
+    /**
+     * 反向打印
+     * 循环方式
+     */
+    @Test
+    public void test_03_inversionPrint_01() {
+        Linked_single_01.Node<Integer> linked = initData();
+        Stack_base_01<Integer> stack = new Stack_base_01<>();
+        while (linked != null) {
+            stack.push(linked.value);
+            linked = linked.next;
+        }
+
+        Integer v;
+        while ((v = stack.pop()) != null) {
+            System.out.println(v);
+        }
+    }
+
+    /**
+     * 反向打印
+     * 递归方式
+     */
+    @Test
+    public void test_03_inversionPrint_02() {
+        Linked_single_01.Node<Integer> linked = initData();
+        inversionPrint_02(linked);
+    }
+
+    private void inversionPrint_02(Linked_single_01.Node<Integer> linked) {
+        if (linked == null) {
+            return;
+        }
+        inversionPrint_02(linked.next);
+        System.out.println(linked.value);
     }
 }
