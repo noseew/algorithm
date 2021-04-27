@@ -48,4 +48,22 @@ public class Linked_single_alg {
         }
         System.out.println(p2.value);
     }
+
+    /**
+     * 链表倒转
+     */
+    @Test
+    public void test_02_inversion() {
+        Linked_single_01.Node<Integer> linked = initData();
+        Linked_single_01.Node<Integer> prev = null, n = linked, next = null;
+        while (n != null) {
+            // 赋值
+
+            Linked_single_01.Node<Integer> nTemp = n;
+            n = next;
+            next = next.next;
+
+        }
+
+    }
 }
