@@ -193,4 +193,38 @@ public class Linked_single_alg {
         System.out.println(hasRing);
 
     }
+
+    /**
+     * 判断链表环大小
+     * 1. 选判断是否有环, 然后统计再次相遇
+     */
+    @Test
+    public void test_04_ringSize() {
+        Linked_single_01.Node<Integer> linked = initRingData();
+        Linked_single_01.Node<Integer> slow = linked;
+        Linked_single_01.Node<Integer> fast = slow.next;
+
+        int ringSize = 0;
+        while (true) {
+            if (slow == null || fast == null || fast.next == null) {
+                break;
+            }
+            if (slow.value == fast.value) {
+                if (ringSize > 0) {
+                    // 第二次相遇, 中断
+                    break;
+                }
+                // 第一次相遇 +1
+                ringSize++;
+            } else if (ringSize > 0) {
+                // 之后每次 +1
+                ringSize++;
+            }
+
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        System.out.println(ringSize);
+
+    }
 }
