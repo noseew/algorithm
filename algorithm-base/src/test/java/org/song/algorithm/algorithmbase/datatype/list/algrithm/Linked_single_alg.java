@@ -55,7 +55,7 @@ public class Linked_single_alg {
      * 循环方式
      */
     @Test
-    public void test_02_inversion() {
+    public void test_02_inversion_01() {
         Linked_single_01.Node<Integer> linked = initData();
         Linked_single_01.Node<Integer> prev = null, n = linked, next = null;
         while (n != null) {
@@ -75,5 +75,40 @@ public class Linked_single_alg {
 
         ListPrinter.printSingleList(prev);
 
+    }
+
+    /**
+     * 链表倒转
+     * 递归的方式
+     */
+    @Test
+    public void test_02_inversion_02() {
+        Linked_single_01.Node<Integer> linked = initData();
+        Linked_single_01.Node<Integer> prev = null, n = linked, next = null;
+        Linked_single_01.Node<Integer> newHead = inversion_02(prev, n, next);
+
+        ListPrinter.printSingleList(newHead);
+
+    }
+
+    private Linked_single_01.Node<Integer> inversion_02(Linked_single_01.Node<Integer> prev,
+                                                        Linked_single_01.Node<Integer> n,
+                                                        Linked_single_01.Node<Integer> next) {
+        if (n == null) {
+            return prev;
+        }
+        // 初始赋值
+        if (next == null) {
+            next = n.next;
+        }
+
+        // 倒转
+        n.next = prev;
+
+        // 右移
+        prev = n;
+        n = next;
+        next = null;
+        return inversion_02(prev, n, next);
     }
 }
