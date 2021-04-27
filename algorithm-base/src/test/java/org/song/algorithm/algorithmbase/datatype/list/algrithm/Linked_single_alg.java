@@ -2,6 +2,7 @@ package org.song.algorithm.algorithmbase.datatype.list.algrithm;
 
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase.datatype.list.Linked_single_01;
+import org.song.algorithm.algorithmbase.datatype.list.ListPrinter;
 
 /**
  * 单向链表相关算法
@@ -51,19 +52,28 @@ public class Linked_single_alg {
 
     /**
      * 链表倒转
+     * 循环方式
      */
     @Test
     public void test_02_inversion() {
         Linked_single_01.Node<Integer> linked = initData();
         Linked_single_01.Node<Integer> prev = null, n = linked, next = null;
         while (n != null) {
-            // 赋值
+            // 初始赋值
+            if (next == null) {
+                next = n.next;
+            }
 
-            Linked_single_01.Node<Integer> nTemp = n;
+            // 倒转
+            n.next = prev;
+
+            // 右移
+            prev = n;
             n = next;
-            next = next.next;
-
+            next = null;
         }
+
+        ListPrinter.printSingleList(prev);
 
     }
 }
