@@ -199,7 +199,7 @@ public class Linked_single_alg {
      * 1. 选判断是否有环, 然后统计再次相遇
      */
     @Test
-    public void test_04_ringSize() {
+    public void test_05_ringSize() {
         Linked_single_01.Node<Integer> linked = initRingData();
         Linked_single_01.Node<Integer> slow = linked;
         Linked_single_01.Node<Integer> fast = slow.next;
@@ -234,7 +234,7 @@ public class Linked_single_alg {
      * 3. 两个指针slow, fast, slow在head, fast先走到k, 然后同时走, 当他们相遇时, 就是入口节点
      */
     @Test
-    public void test_04_ringEntry() {
+    public void test_06_ringEntry() {
         Linked_single_01.Node<Integer> linked = initRingData();
 
         int ringSize = ringSize();
@@ -296,7 +296,7 @@ public class Linked_single_alg {
      * 3. 但是如果删除的是最后一个元素, 则需要遍历, 总体复杂度仍然是O(1)
      */
     @Test
-    public void test_05_removeO1() {
+    public void test_07_removeO1() {
         Linked_single_01.Node<Integer> head = initData();
         Linked_single_01.Node<Integer> oHead = head;
         Linked_single_01.Node<Integer> waiteRemove = head.next.next;
@@ -326,7 +326,7 @@ public class Linked_single_alg {
      * 找到两个链表的公共尾结点 入口
      */
     @Test
-    public void test_05_commonTail() {
+    public void test_08_commonTail() {
 
     }
 }
