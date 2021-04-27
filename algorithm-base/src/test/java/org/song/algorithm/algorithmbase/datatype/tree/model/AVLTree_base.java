@@ -21,11 +21,11 @@ public class AVLTree_base<V> {
 
     public TreeNode<V> root;
 
-    public void push_recursive(V v) {
+    public void insert(V v) {
         root = insert_recursive(root, v);
     }
 
-    public V search_recursive(V v) {
+    public V search(V v) {
         TreeNode<V> treeNode = search_recursive(root, v);
         if (treeNode != null) {
             return treeNode.v;
@@ -33,7 +33,7 @@ public class AVLTree_base<V> {
         return null;
     }
 
-    public void remove_recursive(V v) {
+    public void remove(V v) {
         root = remove_recursive(root, v);
     }
 
@@ -161,7 +161,7 @@ public class AVLTree_base<V> {
             return node;
         }
 
-        // 新节点如果不平衡(左右子树高度差 > 1)
+        // 新节点如果不平衡 左高右低
         if (getHeight(node.left) - getHeight(node.right) > 1) {
                 /* LL 或者 LR 旋转
                   判断不平衡类型
@@ -176,6 +176,7 @@ public class AVLTree_base<V> {
                       p.left
                       /  \
                      v    p
+
                   2. LR型 <:
                             p
                            /
@@ -195,7 +196,7 @@ public class AVLTree_base<V> {
             }
         }
 
-        // 新节点如果不平衡(左右子树高度差 > 1)
+        // 新节点如果不平衡 右高左低
         else if (getHeight(node.right) - getHeight(node.left) > 1) {
                 /* RR 或者 RL 旋转
                   判断不平衡类型
@@ -210,6 +211,7 @@ public class AVLTree_base<V> {
                       p.left
                       /  \
                      v    p
+
                   2. LR型 <:
                         p
                          \
