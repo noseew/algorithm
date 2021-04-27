@@ -2,9 +2,9 @@ package org.song.algorithm.algorithmbase.datatype.list;
 
 public class Linked_single_01<T> {
 
-    private Node<T> head;
-    private Node<T> tail;
-    private int size;
+    public Node<T> head;
+    public Node<T> tail;
+    public int size;
 
     public void add(T val) {
         if (tail != null) {
@@ -61,9 +61,9 @@ public class Linked_single_01<T> {
                 ", size=" + size;
     }
 
-    class Node<T> {
-        Node next;
-        T value;
+    public static class Node<T> {
+        public Node next;
+        public T value;
 
         public Node(Node next, T value) {
             this.next = next;
