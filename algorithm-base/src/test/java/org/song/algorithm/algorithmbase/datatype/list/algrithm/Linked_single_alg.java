@@ -12,7 +12,7 @@ public class Linked_single_alg {
 
     private Linked_single_01.Node<Integer> initData() {
         Linked_single_01<Integer> linked = new Linked_single_01<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 3; i++) {
             linked.add(i);
         }
         return linked.head;
@@ -286,5 +286,47 @@ public class Linked_single_alg {
             fast = fast.next.next;
         }
         return ringSize;
+    }
+
+    /**
+     * 给定节点指针, O(1)的复杂度删除之
+     * 思路:
+     * 1. 通常删除是先遍历到prev节点, 然后删除prev.next节点
+     * 2. 可以将prev.next值赋值给prev, 同时删除prev.next, 达到类似的效果
+     * 3. 但是如果删除的是最后一个元素, 则需要遍历, 总体复杂度仍然是O(1)
+     */
+    @Test
+    public void test_05_removeO1() {
+        Linked_single_01.Node<Integer> head = initData();
+        Linked_single_01.Node<Integer> oHead = head;
+        Linked_single_01.Node<Integer> waiteRemove = head.next.next;
+
+        if (waiteRemove.next != null) {
+            // 非尾节点
+            waiteRemove.value = waiteRemove.next.value;
+            waiteRemove.next = waiteRemove.next.next;
+        } else {
+            // 是尾结点
+            Linked_single_01.Node<Integer> prev = head;
+            while (head != null) {
+                if (head.value == waiteRemove.value) {
+                    break;
+                }
+                // 注意和普通遍历有区别, 并不是等到最后一个才停止遍历, 所以prev要到倒数第二个
+                prev = head;
+                head = head.next;
+            }
+            // 删除尾结点
+            prev.next = null;
+        }
+        ListPrinter.printSingleList(oHead);
+    }
+
+    /**
+     * 找到两个链表的公共尾结点 入口
+     */
+    @Test
+    public void test_05_commonTail() {
+
     }
 }

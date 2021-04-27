@@ -62,10 +62,10 @@ public class Linked_single_01<T> {
     }
 
     public static class Node<T> {
-        public Node next;
+        public Node<T> next;
         public T value;
 
-        public Node(Node next, T value) {
+        public Node(Node<T> next, T value) {
             this.next = next;
             this.value = value;
         }
