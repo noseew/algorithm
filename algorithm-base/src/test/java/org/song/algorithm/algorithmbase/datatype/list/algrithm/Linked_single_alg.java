@@ -227,4 +227,40 @@ public class Linked_single_alg {
         System.out.println(ringSize);
 
     }
+
+    /**
+     * 链表环入口节点 未完成
+     * 1. 如果有环
+     * 2. 获取环大小k
+     * 3. 链表倒数第k的元素既是环的入口
+     */
+    @Test
+    public void test_04_ringEntry() {
+        Linked_single_01.Node<Integer> linked = initRingData();
+        Linked_single_01.Node<Integer> slow = linked;
+        Linked_single_01.Node<Integer> fast = slow.next;
+
+        int ringSize = 0;
+        while (true) {
+            if (slow == null || fast == null || fast.next == null) {
+                break;
+            }
+            if (slow.value == fast.value) {
+                if (ringSize > 0) {
+                    // 第二次相遇, 中断
+                    break;
+                }
+                // 第一次相遇 +1
+                ringSize++;
+            } else if (ringSize > 0) {
+                // 之后每次 +1
+                ringSize++;
+            }
+
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        System.out.println(ringSize);
+
+    }
 }
