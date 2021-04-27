@@ -1,6 +1,6 @@
 package org.song.algorithm.algorithmbase.datatype.list;
 
-public class Linked_double_02<T> {
+public class Linked_double_01<T> {
 
     private Node<T> head;
     private Node<T> tail;

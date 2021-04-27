@@ -11,7 +11,7 @@ public class Linked_double_test {
 
     @Test
     public void test_01_start() {
-        Linked_double_02<Integer> deque = new Linked_double_02<>();
+        Linked_double_01<Integer> deque = new Linked_double_01<>();
         deque.rpush(0);
         deque.lpush(-1);
         deque.lpush(-2);
@@ -36,7 +36,7 @@ public class Linked_double_test {
         StopWatch stopWatch = new StopWatch();
 
         stopWatch.start("Linked_double_02");
-        Linked_double_02<String> linked = new Linked_double_02<>();
+        Linked_double_01<String> linked = new Linked_double_01<>();
         for (int i = 0; i < num; i++) {
             linked.rpush(UUID.randomUUID().toString());
         }
