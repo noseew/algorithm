@@ -467,4 +467,61 @@ public class Linked_single_alg {
 
     }
 
+    /**
+     * 合并两个有序 链表, 未完成
+     */
+    @Test
+    public void test_09_merge() {
+        Linked_single_01.Node<Integer> linked1 = initData(5);
+        Linked_single_01.Node<Integer> linked2 = initData(3);
+
+        Linked_single_01.Node<Integer> newLinkedHead = null;
+        Linked_single_01.Node<Integer> newLinked = null;
+
+        while (linked1 != null || linked2 != null) {
+            if (linked1 != null && linked2 != null) {
+                if (linked1.value < linked2.value) {
+                    if (newLinked == null) {
+                        newLinked = linked1;
+                    } else {
+                        newLinked.next = linked1;
+                        newLinked = newLinked.next;
+                    }
+                    linked1 = linked1.next;
+                } else {
+                    if (newLinked == null) {
+                        newLinked = linked2;
+                    } else {
+                        newLinked.next = linked2;
+                        newLinked = newLinked.next;
+                    }
+                    linked2 = linked2.next;
+                }
+            } else if (linked1 != null) {
+                if (newLinked == null) {
+                    newLinked = linked1;
+                } else {
+                    newLinked.next = linked1;
+                    newLinked = newLinked.next;
+                }
+                linked1 = linked1.next;
+            } else if (linked2 != null) {
+                if (newLinked == null) {
+                    newLinked = linked2;
+                } else {
+                    newLinked.next = linked2;
+                    newLinked = newLinked.next;
+                }
+                linked2 = linked2.next;
+            } else {
+                break;
+            }
+            if (newLinkedHead == null) {
+                newLinkedHead = newLinked;
+            }
+            newLinked.next = null;
+        }
+        ListPrinter.printSingleList(newLinked);
+    }
+
 }
