@@ -475,53 +475,28 @@ public class Linked_single_alg {
         Linked_single_01.Node<Integer> linked1 = initData(5);
         Linked_single_01.Node<Integer> linked2 = initData(3);
 
-        Linked_single_01.Node<Integer> newLinkedHead = null;
-        Linked_single_01.Node<Integer> newLinked = null;
+        // 临时头结点
+        Linked_single_01.Node<Integer> newLinkedHead = new Linked_single_01.Node<>(null, -1);
+        Linked_single_01.Node<Integer> newLinked = newLinkedHead;
 
-        while (linked1 != null || linked2 != null) {
-            if (linked1 != null && linked2 != null) {
-                if (linked1.value < linked2.value) {
-                    if (newLinked == null) {
-                        newLinked = linked1;
-                    } else {
-                        newLinked.next = linked1;
-                        newLinked = newLinked.next;
-                    }
-                    linked1 = linked1.next;
-                } else {
-                    if (newLinked == null) {
-                        newLinked = linked2;
-                    } else {
-                        newLinked.next = linked2;
-                        newLinked = newLinked.next;
-                    }
-                    linked2 = linked2.next;
-                }
-            } else if (linked1 != null) {
-                if (newLinked == null) {
-                    newLinked = linked1;
-                } else {
-                    newLinked.next = linked1;
-                    newLinked = newLinked.next;
-                }
+        while (linked1 != null && linked2 != null) {
+            if (linked1.value < linked2.value) {
+                newLinked.next = linked1;
                 linked1 = linked1.next;
-            } else if (linked2 != null) {
-                if (newLinked == null) {
-                    newLinked = linked2;
-                } else {
-                    newLinked.next = linked2;
-                    newLinked = newLinked.next;
-                }
-                linked2 = linked2.next;
             } else {
-                break;
+                newLinked.next = linked2;
+                linked2 = linked2.next;
             }
-            if (newLinkedHead == null) {
-                newLinkedHead = newLinked;
-            }
-            newLinked.next = null;
+            newLinked = newLinked.next;
         }
-        ListPrinter.printSingleList(newLinked);
+        if (linked1 == null) {
+            newLinked.next = linked2;
+        }
+        if (linked2 == null) {
+            newLinked.next = linked1;
+        }
+        // 跳过临时头结点
+        ListPrinter.printSingleList(newLinkedHead.next);
     }
 
 }
