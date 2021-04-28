@@ -539,4 +539,19 @@ public class Linked_single_alg {
         System.out.println(middle);
     }
 
+    /**
+     * 单链表交换任意两个元素指针(不包括表头)
+     * 思路: 直接更换他们的值?
+     */
+    @Test
+    public void test_11_exchangeNode() {
+        Linked_single_01.Node<Integer> head = initData(9);
+        Linked_single_01.Node<Integer> node1 = head.next, node2 = head.next.next.next;
+        Integer node1Val = node1.value;
+        node1.value = node2.value;
+        node2.value = node1Val;
+
+        ListPrinter.printSingleList(head);
+    }
+
 }
