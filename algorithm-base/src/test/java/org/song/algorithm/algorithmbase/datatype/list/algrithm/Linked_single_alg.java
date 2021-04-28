@@ -10,16 +10,16 @@ import org.song.algorithm.algorithmbase.datatype.list.Stack_base_01;
  */
 public class Linked_single_alg {
 
-    private Linked_single_01.Node<Integer> initData() {
+    private Linked_single_01.Node<Integer> initData(int count) {
         Linked_single_01<Integer> linked = new Linked_single_01<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < count; i++) {
             linked.add(i);
         }
         return linked.head;
     }
 
     private Linked_single_01.Node<Integer> initRingData() {
-        Linked_single_01.Node<Integer> node = initData();
+        Linked_single_01.Node<Integer> node = initData(10);
 
         Linked_single_01.Node node1 = node.next.next;
         Linked_single_01.Node head = node;
@@ -32,23 +32,44 @@ public class Linked_single_alg {
         return node;
     }
 
+    private Linked_single_01.Node<Integer> commonTailData(Linked_single_01.Node<Integer> head1) {
+        Linked_single_01.Node<Integer> head2 = initData(10);
+        Linked_single_01.Node<Integer> head2Tail = head2;
+        Linked_single_01.Node<Integer> head1Temp = head1;
+
+        // head2 的尾结点指向 head1 的 index 节点
+        int index = 5;
+        while (head2Tail.next != null) {
+            head2Tail = head2Tail.next;
+        }
+
+        while (head1Temp != null) {
+            if (index <= 0) {
+                head2Tail.next = head1Temp;
+                break;
+            }
+            head1Temp = head1Temp.next;
+            index--;
+        }
+        return head2;
+    }
+
     /**
      * 倒数第k个节点
      * 1. 单向列表
      * 2. 取倒数第k个节点
      * 3. 复杂度O(n)
-     *
+     * <p>
      * 解决思路:
      * 1. 有两个指针 p1, p2
      * 2. p1先从头遍历k个节点后, p2开始从头遍历
      * 3. p1遍历结束后, p2节点就是第k个节点
-     *
+     * <p>
      * size - k = p2需要遍历的位置 = 倒数第k个位置
-     *
      */
     @Test
     public void test_01() {
-        Linked_single_01.Node<Integer> linked = initData();
+        Linked_single_01.Node<Integer> linked = initData(10);
 
         Linked_single_01.Node<Integer> head = linked;
         Linked_single_01.Node<Integer> p1 = head;
@@ -71,7 +92,7 @@ public class Linked_single_alg {
      */
     @Test
     public void test_02_inversion_01() {
-        Linked_single_01.Node<Integer> linked = initData();
+        Linked_single_01.Node<Integer> linked = initData(10);
         Linked_single_01.Node<Integer> prev = null, n = linked, next = null;
         while (n != null) {
             // 初始赋值
@@ -98,7 +119,7 @@ public class Linked_single_alg {
      */
     @Test
     public void test_02_inversion_02() {
-        Linked_single_01.Node<Integer> linked = initData();
+        Linked_single_01.Node<Integer> linked = initData(10);
         Linked_single_01.Node<Integer> prev = null, n = linked, next = null;
         Linked_single_01.Node<Integer> newHead = inversion_02(prev, n, next);
 
@@ -133,7 +154,7 @@ public class Linked_single_alg {
      */
     @Test
     public void test_03_inversionPrint_01() {
-        Linked_single_01.Node<Integer> linked = initData();
+        Linked_single_01.Node<Integer> linked = initData(10);
         Stack_base_01<Integer> stack = new Stack_base_01<>();
         while (linked != null) {
             stack.push(linked.value);
@@ -152,7 +173,7 @@ public class Linked_single_alg {
      */
     @Test
     public void test_03_inversionPrint_02() {
-        Linked_single_01.Node<Integer> linked = initData();
+        Linked_single_01.Node<Integer> linked = initData(10);
         inversionPrint_02(linked);
     }
 
@@ -297,7 +318,7 @@ public class Linked_single_alg {
      */
     @Test
     public void test_07_removeO1() {
-        Linked_single_01.Node<Integer> head = initData();
+        Linked_single_01.Node<Integer> head = initData(10);
         Linked_single_01.Node<Integer> oHead = head;
         Linked_single_01.Node<Integer> waiteRemove = head.next.next;
 
@@ -327,6 +348,69 @@ public class Linked_single_alg {
      */
     @Test
     public void test_08_commonTail() {
+        Linked_single_01.Node<Integer> head1 = initData(10);
+        Linked_single_01.Node<Integer> head2 = commonTailData(head1);
+//        ListPrinter.printSingleList(head1);
+//        System.out.println();
+//        ListPrinter.printSingleList(head2);
+
+        Linked_single_01.Node<Integer> head1Temp = head1;
+        Linked_single_01.Node<Integer> head2Temp = head2;
+
+        int countHead1Count = 0;
+        while (head1Temp != null) {
+            countHead1Count++;
+            head1Temp = head1Temp.next;
+        }
+
+        int countHead2Count = 0;
+        while (head2Temp != null) {
+            countHead2Count++;
+            head2Temp = head2Temp.next;
+        }
+
+
+        head1Temp = head1;
+        head2Temp = head2;
+
+        if (countHead1Count == countHead2Count) {
+            // 两个链表完全长度重合
+            while (head1Temp != null && head2Temp != null) {
+                if (head1Temp.value == head2Temp.value) {
+                    System.out.println("公共入口 " + head1Temp.value);
+                    break;
+                }
+                head1Temp = head1Temp.next;
+                head2Temp = head2Temp.next;
+            }
+        } else if (countHead1Count > countHead2Count) {
+            // head1 更长
+            int more = countHead1Count - countHead2Count;
+            while (head1Temp != null && head2Temp != null) {
+                if (head1Temp.value == head2Temp.value) {
+                    System.out.println("公共入口 " + head1Temp.value);
+                    break;
+                }
+                if (more-- <= 0) {
+                    head2Temp = head2Temp.next;
+                }
+                head1Temp = head1Temp.next;
+            }
+        } else {
+            // head2 更长
+            int more = countHead2Count - countHead1Count;
+            while (head1Temp != null && head2Temp != null) {
+                if (head1Temp.value == head2Temp.value && head1Temp == head2Temp) {
+                    System.out.println("公共入口 " + head1Temp.value);
+                    break;
+                }
+                if (more-- <= 0) {
+                    head1Temp = head1Temp.next;
+                }
+                head2Temp = head2Temp.next;
+            }
+        }
 
     }
+
 }
