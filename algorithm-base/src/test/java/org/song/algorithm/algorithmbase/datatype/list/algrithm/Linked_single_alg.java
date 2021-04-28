@@ -186,10 +186,7 @@ public class Linked_single_alg {
     }
 
     private Linked_single_01.Node<Integer> inversion_04(Linked_single_01.Node<Integer> head) {
-        if (head == null) {
-            return null;
-        }
-        if (head.next == null) {
+        if (head == null || head.next == null) {
             return head;
         }
 
@@ -199,6 +196,30 @@ public class Linked_single_alg {
         // 反向将next值为null
         head.next = null;
         // 返回最新的head
+        return newHead;
+    }
+
+
+    /**
+     * 链表倒转
+     * 递归的方式
+     * 等价于 inversion_04
+     */
+    @Test
+    public void test_02_inversion_05() {
+        Linked_single_01.Node<Integer> linked = initData(10);
+        Linked_single_01.Node<Integer> newHead = inversion_05(linked);
+        ListPrinter.printSingleList(newHead);
+    }
+
+    public Linked_single_01.Node<Integer> inversion_05(Linked_single_01.Node<Integer> head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        Linked_single_01.Node<Integer> next = head.next;
+        head.next = null;
+        Linked_single_01.Node<Integer> newHead = inversion_05(next);
+        next.next = head;
         return newHead;
     }
 
@@ -468,7 +489,7 @@ public class Linked_single_alg {
     }
 
     /**
-     * 合并两个有序 链表, 未完成
+     * 合并两个有序 链表
      */
     @Test
     public void test_09_merge() {
