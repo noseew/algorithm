@@ -520,4 +520,23 @@ public class Linked_single_alg {
         ListPrinter.printSingleList(newLinkedHead.next);
     }
 
+    /**
+     * 找出链表中间元素
+     * 方式1: O(n^2)遍历2遍, 第一遍获取总长度, 第二遍获取其一半
+     * 方式2: O(1)两个指针, p1,p2, p1逐个遍历, p2遍历的速度是p1的2倍, 当p2遍历到尾部的时候, p1就是中间位置
+     */
+    @Test
+    public void test_10_middle() {
+        Linked_single_01.Node<Integer> head = initData(9);
+        Linked_single_01.Node<Integer> p1 = head, p2 = head;
+
+        int middle = 0;
+        while (p2 != null && p2.next != null) {
+            middle++;
+            p1 = p1.next;
+            p2 = p2.next.next;
+        }
+        System.out.println(middle);
+    }
+
 }
