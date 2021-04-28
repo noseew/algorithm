@@ -149,6 +149,57 @@ public class Linked_single_alg {
     }
 
     /**
+     * 链表倒转
+     * 循环方式
+     */
+    @Test
+    public void test_02_inversion_03() {
+        Linked_single_01.Node<Integer> head = initData(10);
+        Linked_single_01.Node<Integer> newHead = null;
+        /*
+         使用两个指针 head, newHead
+         head用于遍历, newHead用户串新的链表
+         */
+        while (head != null) {
+            Linked_single_01.Node<Integer> next = head.next;
+            // 串新链
+            head.next = newHead;
+            // 记录上一个head
+            newHead = head;
+            // 用于串联遍历
+            head = next;
+        }
+
+        ListPrinter.printSingleList(newHead);
+
+    }
+
+    /**
+     * 链表倒转
+     * 递归的方式
+     */
+    @Test
+    public void test_02_inversion_04() {
+        Linked_single_01.Node<Integer> linked = initData(10);
+        Linked_single_01.Node<Integer> newHead = inversion_04(linked);
+        ListPrinter.printSingleList(newHead);
+    }
+
+    private Linked_single_01.Node<Integer> inversion_04(Linked_single_01.Node<Integer> head) {
+        if (head == null) {
+            return null;
+        }
+        if (head.next == null) {
+            return head;
+        }
+
+        Linked_single_01.Node<Integer> newHead = inversion_04(head.next);
+        head.next.next = head;
+        head.next = null;
+        return newHead;
+    }
+
+    /**
      * 反向打印
      * 循环方式
      */
