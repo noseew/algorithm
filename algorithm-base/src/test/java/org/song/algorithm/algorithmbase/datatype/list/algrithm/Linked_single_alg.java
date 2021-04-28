@@ -194,8 +194,11 @@ public class Linked_single_alg {
         }
 
         Linked_single_01.Node<Integer> newHead = inversion_04(head.next);
+        // 类似于反向遍历
         head.next.next = head;
+        // 反向将next值为null
         head.next = null;
+        // 返回最新的head
         return newHead;
     }
 
