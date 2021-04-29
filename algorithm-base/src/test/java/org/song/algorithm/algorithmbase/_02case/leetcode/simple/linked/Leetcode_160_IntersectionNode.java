@@ -59,16 +59,4 @@ public class Leetcode_160_IntersectionNode {
 
         return null;
     }
-
-
-
-    class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode(int x, ListNode next) {
-            this.val = x;
-            this.next = next;
-        }
-    }
 }

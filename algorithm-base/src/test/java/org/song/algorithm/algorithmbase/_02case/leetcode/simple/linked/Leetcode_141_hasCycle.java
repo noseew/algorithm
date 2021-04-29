@@ -50,15 +50,4 @@ public class Leetcode_141_hasCycle {
 
     }
 
-
-    class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode(int x, ListNode next) {
-            this.val = x;
-            this.next = next;
-        }
-    }
-
 }
