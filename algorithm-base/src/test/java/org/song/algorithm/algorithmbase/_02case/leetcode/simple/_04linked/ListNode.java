@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase._02case.leetcode.simple.linked;
+package org.song.algorithm.algorithmbase._02case.leetcode.simple._04linked;
 
 public class ListNode {
 

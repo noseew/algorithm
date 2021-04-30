@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase._02case.leetcode.simple._02string;
+package org.song.algorithm.algorithmbase._02case.leetcode.simple._04linked;
 
 import org.junit.Test;
 
@@ -26,7 +26,7 @@ public class Leetcode_83_DeleteDuplicate {
 
     @Test
     public void test() {
-        ListNode l2 = new ListNode(1, new ListNode(1, new ListNode(2)));
+        ListNode l2 = new ListNode(1, new ListNode(1, new ListNode(2, null)));
         ListNode listNode = deleteDuplicates(l2);
         System.out.println(listNode);
     }
@@ -45,16 +45,4 @@ public class Leetcode_83_DeleteDuplicate {
         }
         return head;
     }
-
-    /**
-     * Definition for singly-linked list.
-     */
-     public class ListNode {
-         int val;
-         ListNode next;
-         ListNode() {}
-         ListNode(int val) { this.val = val; }
-         ListNode(int val, ListNode next) { this.val = val; this.next = next; }
-     }
-
 }

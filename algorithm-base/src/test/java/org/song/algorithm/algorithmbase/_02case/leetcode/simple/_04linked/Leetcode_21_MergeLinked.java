@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase._02case.leetcode.simple._01array;
+package org.song.algorithm.algorithmbase._02case.leetcode.simple._04linked;
 
 import org.junit.Test;
 
