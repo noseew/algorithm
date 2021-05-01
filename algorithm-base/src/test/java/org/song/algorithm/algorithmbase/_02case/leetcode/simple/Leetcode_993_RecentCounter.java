@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -24,12 +25,26 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Leetcode_993_RecentCounter {
 
     @Test
-    public void test() {
+    public void test() throws InterruptedException {
         RecentCounter recentCounter = new RecentCounter();
-        for (int i = 0; i < 100; i++) {
-            int ping = recentCounter.ping(10);
-            System.out.println(LocalDateTime.now() + ": " + ping + ":" + i);
-        }
+//        for (int i = 0; i < 100; i++) {
+//            int ping = recentCounter.ping(10);
+//            System.out.println(LocalDateTime.now() + ": " + ping + ":" + i);
+//        }
+
+        //  [1],[100],[3001],[3002]]
+        int ping = recentCounter.ping(1);
+        System.out.println(LocalDateTime.now() + ": " + ping);
+        TimeUnit.MILLISECONDS.sleep(1);
+        ping = recentCounter.ping(100);
+        System.out.println(LocalDateTime.now() + ": " + ping);
+        TimeUnit.MILLISECONDS.sleep(1);
+        ping = recentCounter.ping(3001);
+        System.out.println(LocalDateTime.now() + ": " + ping);
+        TimeUnit.MILLISECONDS.sleep(1);
+        ping = recentCounter.ping(3002);
+        System.out.println(LocalDateTime.now() + ": " + ping);
+
     }
 
     class RecentCounter {
