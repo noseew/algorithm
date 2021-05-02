@@ -11,8 +11,7 @@ import java.util.Queue;
  * 栈是 先进后出
  */
 public class Leetcode_225_MyStack {
-    /**
-     */
+
     @Test
     public void test() {
         MyStack obj = new MyStack();
@@ -141,6 +140,111 @@ public class Leetcode_225_MyStack {
                     queue1Size = queue2Size;
                 }
                 queue2Size = 0;
+                return last;
+            }
+        }
+    }
+
+    @Test
+    public void test2() {
+        MyStack2 obj = new MyStack2();
+
+        System.out.println();
+        for (int i = 0; i < 3; i++) {
+            obj.push(i);
+        }
+
+        for (int i = 0; i < 3; i++) {
+            System.out.println("top " + obj.top());
+//            System.out.println("pop " + obj.pop());
+        }
+    }
+
+    class MyStack2 {
+
+        Queue<Integer> queue1 = new LinkedList<>();
+        Queue<Integer> queue2 = new LinkedList<>();
+        int dataIn = 1;
+
+        /**
+         * Initialize your data structure here.
+         */
+        public MyStack2() {
+
+        }
+
+        /**
+         * Push element x onto stack.
+         * <p>
+         * O(1)
+         */
+        public void push(int x) {
+            Queue<Integer> queue = getDataQueue();
+            queue.add(x);
+        }
+
+        /**
+         * Removes the element on top of the stack and returns that element.
+         * <p>
+         * O(n)
+         */
+        public Integer pop() {
+            return getQueueLast(true);
+        }
+
+        /**
+         * Get the top element.
+         * O(n)
+         */
+        public Integer top() {
+            return getQueueLast(false);
+        }
+
+        /**
+         * Returns whether the stack is empty.
+         */
+        public boolean empty() {
+            return queue1.isEmpty() && queue2.isEmpty();
+        }
+
+        private Queue<Integer> getDataQueue() {
+            if (dataIn == 1) {
+                return queue1;
+            }
+            return queue2;
+        }
+
+        /**
+         * 获取队列最后一个元素, 用户模拟栈的后进先出
+         *
+         * @param isPop 是否取出元素
+         * @return
+         */
+        private Integer getQueueLast(boolean isPop) {
+
+            if (dataIn == 1) {
+                dataIn = 2;
+                Integer last = null;
+                while (queue1.size() > 1) {
+                    last = queue1.poll();
+                    queue2.add(last);
+                }
+                last = queue1.poll();
+                if (!isPop) {
+                    queue2.add(last);
+                }
+                return last;
+            } else {
+                dataIn = 1;
+                Integer last = null;
+                while (queue2.size() > 1) {
+                    last = queue2.poll();
+                    queue1.add(last);
+                }
+                last = queue2.poll();
+                if (!isPop) {
+                    queue1.add(last);
+                }
                 return last;
             }
         }
