@@ -34,6 +34,9 @@ public class Leetcode_225_MyStack {
         }
     }
 
+    /**
+     * 平均 O(n)
+     */
     class MyStack {
 
         Queue<Integer> queue1 = new LinkedList<>();
@@ -160,6 +163,9 @@ public class Leetcode_225_MyStack {
         }
     }
 
+    /**
+     * 平均 O(n)
+     */
     class MyStack2 {
 
         Queue<Integer> queue1 = new LinkedList<>();
