@@ -34,6 +34,14 @@ public class Leetcode_82_deleteDuplicates {
 
     }
 
+    /**
+     * 思路
+     * 1. 第一次遍历, 通过set1记录重复, 并删除重复, 同时记录重复的值到另一个set2
+     * 2. 第二次遍历, 删除set2中的值
+     *
+     * @param head
+     * @return
+     */
     public ListNode deleteDuplicates(ListNode head) {
         ListNode prev = null, h = head;
         Set<Integer> set = new HashSet<>();
