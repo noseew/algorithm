@@ -2,12 +2,8 @@ package org.song.algorithm.algorithmbase._02case.leetcode.simple;
 
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 242. 有效的字母异位词
@@ -22,7 +18,6 @@ public class Leetcode_242_isAnagram {
     }
 
     /**
-     * 未完成
      *
      */
     public boolean isAnagram(String s, String t) {
@@ -33,7 +28,20 @@ public class Leetcode_242_isAnagram {
             return false;
         }
 
+        Map<Character, Integer> map = new HashMap<>(schars.length);
+        for (char sc : schars) {
+            Integer val = map.getOrDefault(sc, 0);
+            map.put(sc, val + 1);
+        }
+        for (char tc : tchars) {
+            Integer val = map.getOrDefault(tc, 0);
+            if (val <= 0) {
+                return false;
+            }
+            map.put(tc, val - 1);
+        }
         return true;
     }
+
 
 }
