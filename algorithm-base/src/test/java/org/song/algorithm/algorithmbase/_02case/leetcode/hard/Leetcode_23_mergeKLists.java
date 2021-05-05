@@ -20,6 +20,9 @@ public class Leetcode_23_mergeKLists {
         System.out.println(listNode);
     }
 
+    /**
+     * 太慢
+     */
     public ListNode mergeKLists(ListNode[] lists) {
 
         if (lists.length == 0) {
@@ -34,6 +37,7 @@ public class Leetcode_23_mergeKLists {
         while (true) {
             ListNode minNode = null;
             int minNodeIndex = -1;
+            // 每次循环, 都找出所有链表中, 表头最小的元素, 并拼接在新链表中
             for (int i = 0; i < lists.length; i++) {
                 ListNode node = lists[i];
                 if (node == null) {
