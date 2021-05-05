@@ -3,6 +3,9 @@ package org.song.algorithm.algorithmbase._02case.leetcode.hard;
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._02case.leetcode.simple.linked.ListNode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 25. K 个一组翻转链表
  * 给你一个链表，每 k 个节点一组进行翻转，请你返回翻转后的链表。
@@ -25,41 +28,72 @@ public class Leetcode_25_reverseKGroup {
     @Test
     public void test() {
 
-        ListNode head1 = new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(4, null))));
+        ListNode head1 = new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(4, new ListNode(5, null)))));
         ListNode listNode = reverseKGroup(head1, 2);
         System.out.println(listNode);
     }
 
     /**
+     * 思路1
+     * 1. 翻转链表, 并按照k长度分组
+     * 2. 分组倒序串联链表, 形成新链表. 实现比较简单
+     *
      * 未完成
+     * 思路2
+     * 1. 遍历并反转链表, 同时根据k进行拆解链表, 同时串联新链表. 实现比较复杂
      */
     public ListNode reverseKGroup(ListNode head, int k) {
 
-        ListNode h = head, prev = null;
+        List<ListNode> list = new ArrayList<>();
 
-        ListNode temp_head = null, temp_tail = null;
-        int temp_k = 1;
+        int k_times = 1;
+
+        ListNode h = head, prev = null;
         while (h != null) {
             ListNode next = h.next;
-
-            if (temp_tail == null) {
-                temp_tail = prev;
+            if (k_times == k
+                    // 末尾不够数量直接添加
+                    || next == null) {
+                k_times = 0;
+                list.add(h);
             }
 
-
-            if (temp_k == k) {
-                temp_k = 0;
-                temp_tail.next = next;
-
+            if (k_times == 1) {
+                // 断开连接
+                h.next = null;
+                prev = null;
             }
             h.next = prev;
-
-
-            temp_k++;
             prev = h;
+
             h = next;
+            k_times++;
         }
-        return head;
+
+        // 总队头
+        ListNode newHead = null;
+
+        // 串新链表
+        ListNode listTail = null;
+        for (ListNode listHead : list) {
+            // 本次队头
+            if (newHead == null) {
+                newHead = listHead;
+            }
+
+            if (listTail != null) {
+                // 上一个队尾连接本次队头
+                listTail.next = listHead;
+            }
+
+            // 本次队尾
+            while (listHead != null) {
+                listTail = listHead;
+                listHead = listHead.next;
+            }
+        }
+
+        return newHead;
     }
 
 }
