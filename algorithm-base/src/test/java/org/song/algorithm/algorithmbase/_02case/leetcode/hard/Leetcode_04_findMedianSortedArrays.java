@@ -2,8 +2,6 @@ package org.song.algorithm.algorithmbase._02case.leetcode.hard;
 
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
-
 /**
  * 4. 寻找两个正序数组的中位数
  */
@@ -11,7 +9,7 @@ public class Leetcode_04_findMedianSortedArrays {
 
     @Test
     public void test() {
-        double val = findMedianSortedArrays2(new int[]{1,2,3,4,5,6}, new int[]{7});
+        double val = findMedianSortedArrays2(new int[]{2, 3, 4, 5, 6}, new int[]{1});
         System.out.println(val);
     }
 
@@ -82,4 +80,5 @@ public class Leetcode_04_findMedianSortedArrays {
         }
         return ints[middle + 1];
     }
+
 }
