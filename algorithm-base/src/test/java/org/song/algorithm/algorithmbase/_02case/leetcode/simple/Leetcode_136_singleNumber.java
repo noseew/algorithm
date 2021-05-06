@@ -2,8 +2,7 @@ package org.song.algorithm.algorithmbase._02case.leetcode.simple;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 136. 只出现一次的数字
@@ -21,24 +20,52 @@ public class Leetcode_136_singleNumber {
 
     @Test
     public void test() {
-        System.out.println(singleNumber(new int[]{1, 2, 2}));
+        System.out.println(singleNumber2(new int[]{1, 2, 2}));
     }
 
     /**
-     * 未完成
      *
      * @param nums
      * @return
      */
     public int singleNumber(int[] nums) {
-        Map<Integer, Integer> map = new HashMap<>(nums.length);
+        if (nums.length == 0) {
+            return 0;
+        }
+        if (nums.length == 1) {
+            return nums[0];
+        }
+
+        Set<Integer> set = new HashSet<>(nums.length);
 
         for (int num : nums) {
-            Integer val = map.getOrDefault(num, 0);
-
+            if (!set.contains(num)) {
+                set.add(num);
+            } else {
+                set.remove(num);
+            }
         }
-        return 0;
+        Iterator<Integer> iterator = set.iterator();
+        return iterator.next();
 
+    }
+
+    /**
+     * 采用异或运算
+     * 两个相同的数进行异或等于0
+     * a ^ a = 0;
+     * b ^ 0 = b
+     * 成对出现的a可以相互抵消, 没有成对出现的b就会凸显出来
+     *
+     * @param nums
+     * @return
+     */
+    public int singleNumber2(int[] nums) {
+        int single = 0;
+        for (int num : nums) {
+            single ^= num;
+        }
+        return single;
     }
 
 
