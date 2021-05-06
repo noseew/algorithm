@@ -29,7 +29,7 @@ public class Leetcode_25_reverseKGroup {
     public void test() {
 
         ListNode head1 = new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(4, new ListNode(5, null)))));
-        ListNode listNode = reverseKGroup(head1, 2);
+        ListNode listNode = reverseKGroup(head1, 3);
         System.out.println(listNode);
     }
 
@@ -38,11 +38,15 @@ public class Leetcode_25_reverseKGroup {
      * 1. 翻转链表, 并按照k长度分组
      * 2. 分组倒序串联链表, 形成新链表. 实现比较简单
      *
-     * 未完成
+     * 执行超时
      * 思路2
      * 1. 遍历并反转链表, 同时根据k进行拆解链表, 同时串联新链表. 实现比较复杂
      */
     public ListNode reverseKGroup(ListNode head, int k) {
+
+        if (head == null || head.next == null) {
+            return head;
+        }
 
         List<ListNode> list = new ArrayList<>();
 
@@ -51,23 +55,35 @@ public class Leetcode_25_reverseKGroup {
         ListNode h = head, prev = null;
         while (h != null) {
             ListNode next = h.next;
-            if (k_times == k
-                    // 末尾不够数量直接添加
-                    || next == null) {
-                k_times = 0;
-                list.add(h);
-            }
-
-            if (k_times == 1) {
-                // 断开连接
-                h.next = null;
-                prev = null;
-            }
             h.next = prev;
             prev = h;
 
+            if (k_times % k == 0) {
+                // 分组添加到list
+                list.add(h);
+            } else if (k_times % k == 1) {
+                // 分组断开
+                h.next = null;
+            }
+
+            if (next == null) {
+                break;
+            }
+
             h = next;
             k_times++;
+        }
+        if (k_times % k != 0) {
+            // 末尾不足的链表, 该链表不进行翻转(所以需要反过来)
+            h = prev;
+            prev = null;
+            while (h != null) {
+                ListNode next = h.next;
+                h.next = prev;
+                prev = h;
+                h = next;
+            }
+            list.add(prev);
         }
 
         // 总队头
