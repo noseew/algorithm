@@ -56,10 +56,21 @@ public class Leetcode_26_RemoveDuplicates {
     public void test() {
         int[] ints = {1, 1, 2};
         System.out.println(removeDuplicates(ints));
+        System.out.println(removeDuplicates2(ints));
         System.out.println();
     }
 
-
+    /**
+     * 思路
+     * 1. 有序数组, 则重复项会连续出现
+     * 2. 单次遍历, 记录当前最大的值maxVal, 和最大值的索引moveIndex
+     * 3. 直到遇到下一个更大的值, 在将更大的值拼接到 maxVal(moveIndex索引处) 的后面
+     * 4. moveIndex既是去重后的长度, 原数组到moveIndex索引处就是去重后的数组
+     * 和官网的双指针思路类似
+     *
+     * @param nums
+     * @return
+     */
     public int removeDuplicates(int[] nums) {
         if (nums == null || nums.length == 0) {
             return 0;
@@ -68,6 +79,7 @@ public class Leetcode_26_RemoveDuplicates {
             return 1;
         }
 
+        // 上一个值, 也就是截至目前为止, 最大的值
         int maxVal = Integer.MIN_VALUE;
         int moveIndex = -1;
         for (int i = 0; i < nums.length; i++) {
@@ -75,14 +87,40 @@ public class Leetcode_26_RemoveDuplicates {
                 maxVal = nums[i];
             }
             if (moveIndex == -1) {
+                // 上一个索引
                 moveIndex = i;
             }
+            // 将下一个值拼接到moveIndex后面
             if (nums[i] > maxVal) {
                 maxVal = nums[i];
                 nums[++moveIndex] = maxVal;
             }
         }
 
+        // 返回删除后的长度
+        return moveIndex + 1;
+    }
+
+    /**
+     * 写法优化, 思路没变
+     *
+     * @param nums
+     * @return
+     */
+    public int removeDuplicates2(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        if (nums.length == 1) {
+            return 1;
+        }
+
+        int moveIndex = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] > nums[moveIndex]) {
+                nums[++moveIndex] = nums[i];
+            }
+        }
         return moveIndex + 1;
     }
 }
