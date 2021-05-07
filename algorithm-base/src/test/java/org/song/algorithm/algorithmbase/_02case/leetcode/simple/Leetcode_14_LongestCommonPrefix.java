@@ -1,12 +1,13 @@
 package org.song.algorithm.algorithmbase._02case.leetcode.simple;
 
 import org.junit.Test;
+import org.springframework.test.annotation.IfProfileValue;
 
 public class Leetcode_14_LongestCommonPrefix {
 
     @Test
     public void test() {
-        String prefix = longestCommonPrefix(new String[]{"flower","flow","flight"});
+        String prefix = longestCommonPrefix2(new String[]{"flower","flow","flight"});
         System.out.println("最长前缀: " + prefix);
     }
 
@@ -69,6 +70,25 @@ public class Leetcode_14_LongestCommonPrefix {
         if (strs == null || strs.length <= 0) {
             return "";
         }
-        return null;
+
+        // 循环次数不可能超过任意一个字符串的长度
+        char[] lastChars = new char[strs[0].length()];
+        for (int j = 0; j < lastChars.length; j++) {
+
+            boolean finish = false;
+            // 循环每个字符串, 取第j个字符进行对比
+            for (String str : strs) {
+                if (lastChars[j] == '\u0000') {
+                    lastChars[j] = str.toCharArray()[j];
+                } else if (lastChars[j] != str.toCharArray()[j]) {
+                    finish = true;
+                }
+            }
+            // 如果提前结束, 则直接返回
+            if (finish) {
+                return new String(lastChars, 0, j);
+            }
+        }
+        return "";
     }
 }
