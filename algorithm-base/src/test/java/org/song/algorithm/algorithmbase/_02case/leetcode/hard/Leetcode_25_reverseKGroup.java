@@ -1,7 +1,7 @@
 package org.song.algorithm.algorithmbase._02case.leetcode.hard;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase._02case.leetcode.simple.linked.ListNode;
+import org.song.algorithm.algorithmbase._02case.leetcode.simple.ListNode;
 
 import java.util.ArrayList;
 import java.util.List;

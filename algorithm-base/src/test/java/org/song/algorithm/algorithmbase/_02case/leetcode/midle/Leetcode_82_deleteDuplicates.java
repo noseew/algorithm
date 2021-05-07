@@ -1,11 +1,10 @@
 package org.song.algorithm.algorithmbase._02case.leetcode.midle;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase._02case.leetcode.simple.linked.ListNode;
+import org.song.algorithm.algorithmbase._02case.leetcode.simple.ListNode;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Stack;
 
 /**
  * 82. 删除排序链表中的重复元素 II
