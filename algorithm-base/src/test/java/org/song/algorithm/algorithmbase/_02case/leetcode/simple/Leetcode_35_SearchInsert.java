@@ -58,7 +58,6 @@ public class Leetcode_35_SearchInsert {
 
     /**
      * 二分法
-     * 未完成
      *
      * @param nums
      * @param val
@@ -69,29 +68,18 @@ public class Leetcode_35_SearchInsert {
             return 0;
         }
 
-        int left = 0, right = nums.length - 1;
-        int middle = ((right - left) >> 1) + left;
-        while (middle != 0) {
-
-            if (nums[left] > val) {
-                return left;
-            } else if (nums[right] < val) {
-                return right + 1;
-            } else if (nums[middle] == val) {
-                return middle;
-            }
-
-            if (nums[middle] > val) {
-                right = middle;
-            } else if (nums[middle] < val) {
-                left = middle;
-            }
-
-            middle = ((right - left) >> 1) + left;
-            if (middle == 0) {
-                return left;
+        int left = 0, right = nums.length - 1, ans = nums.length;
+        while (left <= right) {
+            int middle = ((right - left) >> 1) + left;
+            if (val <= nums[middle]) {
+                ans = middle;
+                // -1 正好越过临界值, 下一次循环可以直接取ans
+                right = middle - 1;
+            } else {
+                // +1 正好越过临界值
+                left = middle + 1;
             }
         }
-        return nums.length;
+        return ans;
     }
 }
