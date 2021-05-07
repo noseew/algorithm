@@ -68,7 +68,7 @@ public class Leetcode_13_RomanToIntTest {
             case 'e': return 400 ;
             case 'f': return 900 ;
         }
-        return -1;
+        return 0;
     }
 
     private char parse2(String c) {
