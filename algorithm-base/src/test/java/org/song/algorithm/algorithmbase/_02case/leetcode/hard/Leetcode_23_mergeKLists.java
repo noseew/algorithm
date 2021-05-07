@@ -1,12 +1,12 @@
 package org.song.algorithm.algorithmbase._02case.leetcode.hard;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase._02case.leetcode.simple.ListNode;
+import org.song.algorithm.algorithmbase._02case.leetcode.ListNode;
 
 /**
  * 23. 合并K个升序链表
  * 给你一个链表数组，每个链表都已经按升序排列。
- *
+ * <p>
  * 请你将所有链表合并到一个升序链表中，返回合并后的链表。
  */
 public class Leetcode_23_mergeKLists {
