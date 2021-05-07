@@ -33,8 +33,9 @@ public class Leetcode_35_SearchInsert {
 
     @Test
     public void test() {
-        System.out.println(searchInsert(new int[]{1, 3, 5, 6}, 2));
-        System.out.println(searchInsert2(new int[]{1, 3, 5, 6}, 2));
+        System.out.println(searchInsert(new int[]{1, 3, 5, 6}, 7));
+        System.out.println(searchInsert2(new int[]{1, 3, 5, 6}, 7));
+        System.out.println(searchInsert3(new int[]{1, 3, 5, 6}, 7));
     }
 
     /**
@@ -81,5 +82,24 @@ public class Leetcode_35_SearchInsert {
             }
         }
         return ans;
+    }
+
+    public int searchInsert3(int[] nums, int val) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+
+        int left = 0, right = nums.length - 1;
+        while (left <= right) {
+            int middle = ((right - left) >> 1) + left;
+            if (val <= nums[middle]) {
+                // -1 正好越过临界值, 下一次循环可以直接取ans
+                right = middle - 1;
+            } else {
+                // +1 正好越过临界值
+                left = middle + 1;
+            }
+        }
+        return left;
     }
 }
