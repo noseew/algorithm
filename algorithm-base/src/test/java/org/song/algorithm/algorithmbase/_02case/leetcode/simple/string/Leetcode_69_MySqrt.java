@@ -1,5 +1,7 @@
 package org.song.algorithm.algorithmbase._02case.leetcode.simple.string;
 
+import org.junit.Test;
+
 /**
  * 69. x 的平方根
  *
@@ -26,7 +28,28 @@ package org.song.algorithm.algorithmbase._02case.leetcode.simple.string;
  */
 public class Leetcode_69_MySqrt {
 
+    @Test
+    public void test() {
+
+    }
+
+    /**
+     * 计算平方根公式
+     * 1. 将数字两两一组分好, 如果是奇数位则第一组个数为1
+     * 2. 每一组单独计算最近似的平方根, 计算出的数就是 len / 2 个最近似的数
+     * 3. 余数和下一组组成一组3位数的数
+     *
+     * @param x
+     * @return
+     */
     public int mySqrt(int x) {
+        int len = 0;
+        int x_temp = x;
+        while (x_temp > 0) {
+            x_temp /= 10;
+            len++;
+        }
+
         return 0;
     }
 }

@@ -1,5 +1,7 @@
 package org.song.algorithm.algorithmbase._02case.leetcode.simple.string;
 
+import org.junit.Test;
+
 /**
  * 70. 爬楼梯
  * 假设你正在爬楼梯。需要 n 阶你才能到达楼顶。
@@ -30,7 +32,18 @@ package org.song.algorithm.algorithmbase._02case.leetcode.simple.string;
  */
 public class Leetcode_70_ClimbStairs {
 
+    @Test
+    public void test() {
+        System.out.println(climbStairs(10));
+    }
+
     public int climbStairs(int n) {
-        return 0;
+        int p = 0, q = 0, r = 1;
+        for (int i = 1; i <= n; ++i) {
+            p = q;
+            q = r;
+            r = p + q;
+        }
+        return r;
     }
 }
