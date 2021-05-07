@@ -10,7 +10,7 @@ import java.util.*;
 public class Leetcode_20_Solution {
 
     @Test
-    public void test(){
+    public void test() {
         System.out.println("print: " + isValid("()[]{}"));
         System.out.println("print: " + isValid("{[]}"));
         System.out.println("print: " + isValid("([)]"));
@@ -68,27 +68,33 @@ public class Leetcode_20_Solution {
         if ("".equals(s)) {
             return true;
         }
-
-        HashSet<Character> left = new HashSet<>(4);
-        left.add('(');
-        left.add('[');
-        left.add('{');
-        Map<Character, Character> right = new HashMap<>(4);
-        right.put(')', '(');
-        right.put(']', '[');
-        right.put('}', '{');
-
         Stack<Character> stack = new Stack<>();
         char[] chars = s.toCharArray();
         for (char c : chars) {
-            if (left.contains(c)) {
+            if (valid(c)) {
                 stack.push(c);
-            } else if (stack.isEmpty() || right.get(c) != stack.pop()) {
+            } else if (stack.isEmpty() || parseLeft(c) != stack.pop()) {
                 return false;
             }
         }
         return stack.isEmpty();
 
+    }
+
+    private boolean valid(char c) {
+        return c == '(' || c == '[' || c == '{';
+    }
+
+    private char parseLeft(char c) {
+        switch (c) {
+            case ')':
+                return '(';
+            case ']':
+                return '[';
+            case '}':
+                return '{';
+        }
+        return '\u0000';
     }
 
 }
