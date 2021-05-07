@@ -1,6 +1,7 @@
 package org.song.algorithm.algorithmbase._02case.leetcode.simple;
 
 import org.junit.Test;
+import org.song.algorithm.algorithmbase._02case.leetcode.ListNode;
 
 /**
  * 21. 合并两个有序链表
@@ -33,121 +34,11 @@ public class Leetcode_21_MergeLinked {
 
     @Test
     public void test() {
-        ListNode l1 = new ListNode(2);
+        ListNode l1 = new ListNode(2, null);
 //        ListNode l1 = null;
-        ListNode l2 = new ListNode(1, new ListNode(1, new ListNode(1)));
+        ListNode l2 = new ListNode(1, new ListNode(1, new ListNode(1, null)));
         ListNode listNode = mergeTwoLists4(l1, l2);
         System.out.println(listNode);
-    }
-
-    public static class Ele {
-        ListNode node;
-        ListNode nextHandle;
-
-        public Ele(ListNode node) {
-            this.node = node;
-            this.nextHandle = node;
-        }
-    }
-
-    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
-
-        if (l1 == null) {
-            return l2;
-        }
-        if (l2 == null) {
-            return l1;
-        }
-        ListNode head = null;
-
-        Ele ele1 = new Ele(l1);
-        Ele ele2 = new Ele(l2);
-
-        ListNode tail = null;
-        Ele[] nodes = new Ele[]{ele1, ele2};
-        for (; ; ) {
-            ListNode mix = null;
-            Ele currentEle = null;
-            for (int i = 0; i < nodes.length; i++) {
-                if (mix == null && nodes[i].nextHandle != null) {
-                    mix = nodes[i].nextHandle;
-                    currentEle = nodes[i];
-                } else if (nodes[i].nextHandle != null && mix != null) {
-                    if (mix.val > nodes[i].nextHandle.val) {
-                        mix = nodes[i].nextHandle;
-                        currentEle = nodes[i];
-                    }
-                }
-            }
-            if (mix == null) {
-                break;
-            }
-            if (currentEle != null) {
-                currentEle.nextHandle = mix.next;
-            }
-            if (head == null) {
-                head = mix;
-                tail = mix;
-            } else {
-                tail.next = mix;
-                tail = mix;
-            }
-        }
-
-        return head;
-    }
-
-    public ListNode mergeTwoLists2(ListNode l1, ListNode l2) {
-
-        if (l1 == null) {
-            return l2;
-        }
-        if (l2 == null) {
-            return l1;
-        }
-        ListNode head = null;
-
-        Ele ele1 = new Ele(l1);
-        Ele ele2 = new Ele(l2);
-
-        ListNode tail = null;
-        Ele[] nodes = new Ele[]{ele1, ele2};
-        for (; ; ) {
-            ListNode mix = null;
-            Ele currentEle = null;
-            boolean single = false;
-            for (int i = 0; i < nodes.length; i++) {
-                if (mix == null && nodes[i].nextHandle != null) {
-                    mix = nodes[i].nextHandle;
-                    currentEle = nodes[i];
-                } else if (nodes[i].nextHandle != null && mix != null) {
-                    if (mix.val > nodes[i].nextHandle.val) {
-                        mix = nodes[i].nextHandle;
-                        currentEle = nodes[i];
-                    }
-                } else {
-                    single = true;
-                }
-            }
-            if (mix == null) {
-                break;
-            }
-            if (currentEle != null) {
-                currentEle.nextHandle = mix.next;
-            }
-            if (head == null) {
-                head = mix;
-                tail = mix;
-            } else {
-                tail.next = mix;
-                tail = mix;
-            }
-            if (single) {
-                break;
-            }
-        }
-
-        return head;
     }
 
     public ListNode mergeTwoLists3(ListNode l1, ListNode l2) {
@@ -217,41 +108,47 @@ public class Leetcode_21_MergeLinked {
 
         ListNode tail = null;
         for (; ; ) {
-            ListNode mix = null;
+            // 每次循环获取到的 最小的一个node
+            ListNode minNode = null;
             int currentIndex = -1;
             boolean single = false;
+
+            // 循环多个链表, 得到最小的node, 并拼接成下一个node
             for (int i = 0; i < currentHandle.length; i++) {
-                if (mix == null && currentHandle[i] != null) {
-                    mix = currentHandle[i];
+                if (minNode == null && currentHandle[i] != null) {
+                    minNode = currentHandle[i];
                     currentIndex = i;
-                } else if (currentHandle[i] != null && mix != null) {
-                    if (mix.val > currentHandle[i].val) {
-                        mix = currentHandle[i];
+                } else if (currentHandle[i] != null && minNode != null) {
+                    if (minNode.val > currentHandle[i].val) {
+                        minNode = currentHandle[i];
                         currentIndex = i;
                     }
                 } else {
                     single = true;
                 }
             }
-            if (mix == null) {
+            if (minNode == null) {
                 break;
             }
             if (currentIndex >= 0) {
-                currentHandle[currentIndex] = mix.next;
+                // 取到min之后, 数组后移
+                currentHandle[currentIndex] = minNode.next;
             }
+            // 串成新链表
             if (head == null) {
-                head = mix;
-                tail = mix;
+                head = minNode;
+                tail = minNode;
             } else {
-                tail.next = mix;
-                tail = mix;
+                tail.next = minNode;
+                tail = minNode;
             }
 
-            while (mix.next != null && mix.val == mix.next.val) {
-                mix = mix.next;
-                tail.next = mix;
-                tail = mix;
-                currentHandle[currentIndex] = mix.next;
+            // 如果当前链表 node = node.next, 则不切换链表, 直接取下一个
+            while (minNode.next != null && minNode.val == minNode.next.val) {
+                minNode = minNode.next;
+                tail.next = minNode;
+                tail = minNode;
+                currentHandle[currentIndex] = minNode.next;
             }
 
             if (single) {
@@ -261,25 +158,5 @@ public class Leetcode_21_MergeLinked {
 
         return head;
     }
-
-
-    // Definition for singly-linked list.
-    public class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode() {
-        }
-
-        ListNode(int val) {
-            this.val = val;
-        }
-
-        ListNode(int val, ListNode next) {
-            this.val = val;
-            this.next = next;
-        }
-    }
-
 
 }
