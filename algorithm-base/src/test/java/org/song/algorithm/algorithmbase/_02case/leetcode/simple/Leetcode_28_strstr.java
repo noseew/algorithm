@@ -36,8 +36,10 @@ public class Leetcode_28_strstr {
     /**
      * 思路
      * needle 在 haystack 中的第一个位置
-     * 思路
      * 暴力匹配
+     *
+     * 思路2
+     * 官网 KPM算法, 哎
      *
      * @param haystack
      * @param needle

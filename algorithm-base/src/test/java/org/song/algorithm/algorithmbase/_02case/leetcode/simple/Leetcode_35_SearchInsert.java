@@ -33,9 +33,17 @@ public class Leetcode_35_SearchInsert {
 
     @Test
     public void test() {
-        System.out.println(searchInsert(new int[]{1, 3, 5, 6}, 0));
+        System.out.println(searchInsert(new int[]{1, 3, 5, 6}, 2));
+        System.out.println(searchInsert2(new int[]{1, 3, 5, 6}, 2));
     }
 
+    /**
+     * 简单暴力
+     *
+     * @param nums
+     * @param target
+     * @return
+     */
     public int searchInsert(int[] nums, int target) {
         if (nums == null || nums.length == 0) {
             return 0;
@@ -43,6 +51,45 @@ public class Leetcode_35_SearchInsert {
         for (int i = 0; i < nums.length; i++) {
             if (nums[i] >= target) {
                 return i;
+            }
+        }
+        return nums.length;
+    }
+
+    /**
+     * 二分法
+     * 未完成
+     *
+     * @param nums
+     * @param val
+     * @return
+     */
+    public int searchInsert2(int[] nums, int val) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+
+        int left = 0, right = nums.length - 1;
+        int middle = ((right - left) >> 1) + left;
+        while (middle != 0) {
+
+            if (nums[left] > val) {
+                return left;
+            } else if (nums[right] < val) {
+                return right + 1;
+            } else if (nums[middle] == val) {
+                return middle;
+            }
+
+            if (nums[middle] > val) {
+                right = middle;
+            } else if (nums[middle] < val) {
+                left = middle;
+            }
+
+            middle = ((right - left) >> 1) + left;
+            if (middle == 0) {
+                return left;
             }
         }
         return nums.length;
