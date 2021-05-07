@@ -1,6 +1,7 @@
 package org.song.algorithm.algorithmbase._02case.leetcode.simple;
 
 import org.junit.Test;
+import org.song.algorithm.algorithmbase._02case.leetcode.ListNode;
 
 /**
  * 83. 删除排序链表中的重复元素

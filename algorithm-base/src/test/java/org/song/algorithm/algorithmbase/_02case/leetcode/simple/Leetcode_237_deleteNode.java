@@ -1,6 +1,7 @@
 package org.song.algorithm.algorithmbase._02case.leetcode.simple;
 
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.algorithmbase._02case.leetcode.ListNode;
 
 /**
  * 237. 删除链表中的节点

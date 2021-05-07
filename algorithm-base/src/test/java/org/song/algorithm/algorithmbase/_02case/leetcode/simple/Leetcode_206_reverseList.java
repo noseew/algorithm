@@ -1,6 +1,7 @@
 package org.song.algorithm.algorithmbase._02case.leetcode.simple;
 
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.algorithmbase._02case.leetcode.ListNode;
 
 public class Leetcode_206_reverseList {
 

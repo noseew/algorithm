@@ -1,6 +1,7 @@
 package org.song.algorithm.algorithmbase._02case.leetcode.simple;
 
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.algorithmbase._02case.leetcode.ListNode;
 
 /**
  * 剑指 Offer 22. 链表中倒数第k个节点
