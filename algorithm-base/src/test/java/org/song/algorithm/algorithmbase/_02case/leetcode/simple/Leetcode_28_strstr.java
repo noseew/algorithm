@@ -33,6 +33,16 @@ public class Leetcode_28_strstr {
         System.out.println(strStr("mississippi", "issip"));
     }
 
+    /**
+     * 思路
+     * needle 在 haystack 中的第一个位置
+     * 思路
+     * 暴力匹配
+     *
+     * @param haystack
+     * @param needle
+     * @return
+     */
     public int strStr(String haystack, String needle) {
         if (haystack == null || needle == null || needle.length() == 0) {
             return 0;
@@ -46,8 +56,11 @@ public class Leetcode_28_strstr {
         char[] needles = needle.toCharArray();
         char[] haystacks = haystack.toCharArray();
 
+        // 已匹配数量
         int matchCount = 0;
+        // 匹配的索引
         int matchIndex = -1;
+        // 是否匹配完成
         boolean match = false;
 
 
@@ -55,23 +68,33 @@ public class Leetcode_28_strstr {
             if (match) {
                 break;
             }
+            // 初始匹配索引
             int itemp = i;
             for (int j = 0; j < needles.length; j++) {
+                // 逐个匹配, 判断是否相等
                 if (needles[j] == haystacks[i]
+                        // 判断剩余字符是否满足未匹配长度
                         && haystacks.length - i >= needles.length - matchCount) {
+                    // 匹配数+1
                     matchCount++;
+                    // 匹配索引赋值
                     matchIndex = itemp;
+                    // 外层i+1, 同内层j+1 逐个匹配
                     i++;
+                    // 匹配完成
                     if (matchCount == needle.length()) {
                         match = true;
                         break;
                     }
                 } else {
+                    // 匹配失败, 重置
                     matchCount = 0;
                     matchIndex = -1;
+                    // 外层从i重新开始
                     i = itemp;
                 }
                 if (matchCount != j + 1) {
+                    // 外层从i重新开始
                     i = itemp;
                     break;
                 }

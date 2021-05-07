@@ -62,6 +62,13 @@ public class Leetcode_27_RemoveElement {
         System.out.println();
     }
 
+    /**
+     * 思路和 26 题 类似
+     *
+     * @param nums
+     * @param val
+     * @return
+     */
     public int removeElement(int[] nums, int val) {
         if (nums == null || nums.length == 0) {
             return 0;
