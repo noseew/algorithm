@@ -2,9 +2,8 @@ package org.song.algorithm.algorithmbase._02case.leetcode.simple;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 169. 多数元素
@@ -21,9 +20,23 @@ public class Leetcode_169_majorityElement {
     @Test
     public void test() {
         System.out.println(majorityElement(new int[]{1, 2, 2}));
+        System.out.println(majorityElement(new int[]{2, 2, 1, 1, 1, 2, 2}));
     }
 
+    /**
+     * 思路
+     * 使用map计数
+     * 速度较慢
+     */
     public int majorityElement(int[] nums) {
+        Map<Integer, Integer> map = new HashMap<>(nums.length);
+        for (int num : nums) {
+            Integer val = map.getOrDefault(num, 0);
+            map.put(num, ++val);
+            if (val >= (nums.length >> 1) + 1) {
+                return num;
+            }
+        }
         return 0;
     }
 
