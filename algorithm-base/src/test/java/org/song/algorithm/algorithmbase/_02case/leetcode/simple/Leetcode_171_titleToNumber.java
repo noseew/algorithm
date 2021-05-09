@@ -45,6 +45,7 @@ public class Leetcode_171_titleToNumber {
     }
 
     private int parse(char c) {
+        // 将字符 A 转成 1, 字符 B 转成 2 ...
         return c - 'A' + 1;
     }
 
