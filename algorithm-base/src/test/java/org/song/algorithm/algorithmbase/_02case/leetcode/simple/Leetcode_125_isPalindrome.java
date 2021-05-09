@@ -64,6 +64,47 @@ public class Leetcode_125_isPalindrome {
         return true;
     }
 
+    /**
+     * 写法优化
+     *
+     */
+    public boolean isPalindrome2(String s) {
+        if (s == null || s.length() == 0 || s.length() == 1) {
+            return true;
+        }
+
+        // 最终有效的数组
+        char[] newChar = new char[s.length()];
+        char[] chars = s.toCharArray();
+        // 最终有效的长度
+        int len = 0;
+        for (char c : chars) {
+            if (isValid(c)) {
+                newChar[len++] = upper(c);
+            }
+        }
+
+        // 从中间开始对比
+        int middle = len >> 1;
+        boolean even = len % 2 == 0;
+        for (int i = 0; ; i++) {
+            boolean equ;
+            if (even && middle - i - 1 >= 0) {
+                // 偶数
+                equ = newChar[middle + i] == newChar[middle - i - 1];
+            } else if (!even && middle - i >= 0) {
+                // 奇数
+                equ = newChar[middle + i] == newChar[middle - i];
+            } else {
+                break;
+            }
+            if (!equ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private boolean isValid(char c) {
         boolean valid = c >= 'a' && c <= 'z';
         valid = valid || c >= 'A' && c <= 'Z';
