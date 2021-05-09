@@ -21,6 +21,8 @@ public class Leetcode_169_majorityElement {
     public void test() {
         System.out.println(majorityElement(new int[]{1, 2, 2}));
         System.out.println(majorityElement(new int[]{2, 2, 1, 1, 1, 2, 2}));
+        System.out.println(majorityElement2(new int[]{1, 2, 2}));
+        System.out.println(majorityElement2(new int[]{2, 2, 1, 1, 1, 2, 2}));
     }
 
     /**
@@ -38,6 +40,27 @@ public class Leetcode_169_majorityElement {
             }
         }
         return 0;
+    }
+
+    /**
+     * 思路 将数组中两种元素映射成 a 和 -a, 一次遍历进行相加, 根据结果 是正数或者负数判断 a多还是-a多
+     * 未通过, 此方法仅限于2个数
+     */
+    public int majorityElement2(int[] nums) {
+        Integer n1_temp = null, n2_temp = null , sum = 0;
+        for (int num : nums) {
+            if (n1_temp == null) {
+                n1_temp = num;
+            } else if (n1_temp == num) {
+                sum += num;
+            } else if (n2_temp == null) {
+                sum -= n1_temp;
+                n2_temp = num;
+            } else if (n2_temp == num) {
+                sum -= n1_temp;
+            }
+        }
+        return sum >= 0 ? n1_temp : n2_temp;
     }
 
 
