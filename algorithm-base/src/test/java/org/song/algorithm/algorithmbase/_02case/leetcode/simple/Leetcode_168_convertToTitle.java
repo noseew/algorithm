@@ -10,9 +10,9 @@ public class Leetcode_168_convertToTitle {
 
     @Test
     public void test() {
-        System.out.println("AAA = " + convertToTitle(703));
-        System.out.println("ZY = " + convertToTitle(701));
-        System.out.println("AB = " + convertToTitle(28));
+//        System.out.println("AAA = " + convertToTitle(703));
+//        System.out.println("ZY = " + convertToTitle(701));
+//        System.out.println("AB = " + convertToTitle(28));
         System.out.println("AA = " + convertToTitle(27));
         System.out.println("Z = " + convertToTitle(26));
         System.out.println("A = " + convertToTitle(1));
@@ -37,7 +37,7 @@ public class Leetcode_168_convertToTitle {
         }
         StringBuilder sb = new StringBuilder();
         int n = columnNumber;
-        while (n > 1) {
+        while (n > 0) {
             sb.append(parse(n % 26));
             n /= 26;
         }
