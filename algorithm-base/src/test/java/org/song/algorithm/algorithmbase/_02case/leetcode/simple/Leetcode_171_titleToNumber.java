@@ -15,6 +15,8 @@ public class Leetcode_171_titleToNumber {
         System.out.println("27 = " + titleToNumber("AA"));
         System.out.println("28 = " + titleToNumber("AB"));
         System.out.println("703 = " + titleToNumber("AAA"));
+        System.out.println("701 = " + titleToNumber("ZY"));
+        System.out.println("52 = " + titleToNumber("AZ"));
     }
 
     /**
