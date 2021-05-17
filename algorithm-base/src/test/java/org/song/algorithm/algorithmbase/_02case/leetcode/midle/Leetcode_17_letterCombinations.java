@@ -30,7 +30,7 @@ public class Leetcode_17_letterCombinations {
     }
 
     /**
-     * 未完成
+     * 未完成 建议递归试试
      */
     public List<String> letterCombinations(String digits) {
         List<String> res = new ArrayList<>();
@@ -40,11 +40,27 @@ public class Leetcode_17_letterCombinations {
             chars.add(parse(c - 48));
         }
 
-        for (String[] aChar : chars) {
-            for (String s : aChar) {
+        int[] bits = new int[chars.size()];
 
+        int bit = chars.size() - 1;
+        while (bit >= 0) {
+            StringBuilder sb = new StringBuilder(chars.size());
+            for (int i = 0; i < chars.size(); i++) {
+                sb.append(chars.get(i)[bits[i]]);
+                if (i > bit) {
+
+                } else if (i == bit) {
+
+                    bits[i]++;
+                    if (bits[i] >= chars.get(i).length) {
+                        bit--;
+                        bits[i] = 0;
+                    }
+                }
             }
+            res.add(sb.toString());
         }
+
 
         return res;
     }
