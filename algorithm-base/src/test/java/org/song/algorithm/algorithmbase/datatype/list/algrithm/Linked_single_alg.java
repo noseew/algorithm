@@ -356,6 +356,10 @@ public class Linked_single_alg {
 
     }
 
+    /**
+     * 获取环大小, 快慢指针第一次相遇后, 确定有环
+     * 然后慢指针再走一圈, 即可确定环大小
+     */
     public int ringSize() {
         Linked_single_01.Node<Integer> linked = initRingData();
         Linked_single_01.Node<Integer> slow = linked;
