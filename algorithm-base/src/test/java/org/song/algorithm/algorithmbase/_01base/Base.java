@@ -55,8 +55,9 @@ public class Base {
      * 一个数同另一个数异或两次, 等于这个数本身
      */
     public void swap_03(int[] arr, int i1, int i2) {
-        arr[i1] = arr[i1] ^ arr[i2];
-        arr[i2] = arr[i1] ^ arr[i2];
-        arr[i1] = arr[i1] ^ arr[i2];
+        arr[i1] = arr[i1] ^ arr[i2]; // i1 和 i2 异或了一次, 或者, i2 和 i1 异或了一次, 此时的i1属于他们结果的中间变量
+        
+        arr[i2] = arr[i1] ^ arr[i2]; // i1又和i2异或了一次, 返回结果等于 i1本身, 将i1的值赋值给i2
+        arr[i1] = arr[i1] ^ arr[i2]; // 此时的 i2=i1, i2又和i1异或了一次, 结果等于i2本身, 将i2赋值给i1
     }
 }
