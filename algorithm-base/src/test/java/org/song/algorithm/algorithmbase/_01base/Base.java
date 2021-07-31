@@ -17,7 +17,7 @@ public class Base {
      * 将换两个数的方式
      */
     @Test
-    public void test_01() {
+    public void swap_test() {
         int[] arr = {3, 5};
 //        swap_01(arr, 0, 1);
 //        swap_02(arr, 0, 1);
@@ -59,5 +59,14 @@ public class Base {
         
         arr[i2] = arr[i1] ^ arr[i2]; // i1又和i2异或了一次, 返回结果等于 i1本身, 将i1的值赋值给i2
         arr[i1] = arr[i1] ^ arr[i2]; // 此时的 i2=i1, i2又和i1异或了一次, 结果等于i2本身, 将i2赋值给i1
+    }
+
+    /**
+     * 二分法
+     * 
+     */
+    @Test
+    public void dichotomy_test() {
+        
     }
 }
