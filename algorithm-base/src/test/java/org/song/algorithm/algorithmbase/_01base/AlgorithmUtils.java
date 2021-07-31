@@ -46,4 +46,23 @@ public class AlgorithmUtils {
         return generateDoubleArr(random.nextInt());
     }
 
+    public static boolean eq(Object[] a, Object[] b) {
+        if (a == null && b == null) {
+            return true;
+        }
+        if (a == null || b == null) {
+            return false;
+        }
+        if (a.length != b.length) {
+            return false;
+        }
+
+        for (int i = 0; i < a.length; i++) {
+            if (a[i] != b[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }
