@@ -6,8 +6,8 @@ import java.util.Arrays;
 import java.util.Random;
 
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.algorithmbase.from_ma.CountSort;
 
-import com.mashibing.CountSort;
 
 class CountSortTest {
 	
