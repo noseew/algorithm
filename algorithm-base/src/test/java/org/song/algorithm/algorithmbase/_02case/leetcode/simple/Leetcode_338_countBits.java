@@ -15,8 +15,19 @@ public class Leetcode_338_countBits {
     public void test() {
 
         System.out.println(Arrays.toString(countBits(16)));
+        System.out.println(Arrays.toString(countBits(7)));
+        System.out.println(Arrays.toString(countBits(0)));
+        System.out.println(Arrays.toString(countBits(2)));
+        System.out.println(Arrays.toString(countBits(5)));
     }
-    
+
+    /**
+     * 将数字转成二进制, 并转成int数组返回
+     * 注意并不是本题的题解
+     * 
+     * @param n
+     * @return
+     */
     public int[] countBits(int n) {
         
         int m = n;
@@ -35,7 +46,12 @@ public class Leetcode_338_countBits {
         if (size == 0) {
             return new int[]{};
         }
-        int[] ints = new int[size + 1];
+        int[] ints = new int[size];
+        m = n;
+        for (int i = ints.length - 1; i >= 0; i--) {
+            ints[i] = (m & 1);
+            m = (m >>> 1);
+        }
 
         return ints;
     }
