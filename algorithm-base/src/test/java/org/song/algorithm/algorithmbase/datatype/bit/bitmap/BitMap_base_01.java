@@ -11,18 +11,16 @@ public class BitMap_base_01 {
         BitMap bitMap = new BitMap(32);
 
         bitMap.set(2);
-        System.out.println(bitMap.toString());
         bitMap.set(4);
-        System.out.println(bitMap.toString());
 
         System.out.println(bitMap.get(4));
         System.out.println(bitMap.get(5));
 
-        System.out.println(bitMap.toString());
-
         System.out.println(bitMap.bitCount());
-
         System.out.println(bitMap.bitCount(0, 3));
+
+        bitMap.set(35);
+        System.out.println(bitMap.bitCount(0, 36));
 
     }
 
@@ -77,6 +75,12 @@ public class BitMap_base_01 {
             return bitCount(this.bitMap, 0, this.bitMap.length - 1);
         }
 
+        /**
+         * TODO 未完成
+         * @param startOffset
+         * @param endOffset
+         * @return
+         */
         public int bitCount(int startOffset, int endOffset) {
             if (startOffset >= this.bitMap.length * 32 || endOffset <= 0 || endOffset <= startOffset) {
                 return 0;
@@ -104,14 +108,18 @@ public class BitMap_base_01 {
                 计算元素在截止元素后一个
 
                  */
-                return bitCount(fullBit(1 << moreEndOffset) & (~(fullBit(1 << (32 - moreStartOffset))) & bitMap[startIndex]));
+                return bitCount(
+                        fullBit(1 << moreEndOffset) & (~(fullBit(1 << (32 - moreStartOffset))) & bitMap[startIndex]));
             }
 
 
             // 中间完整元素的bitcount
-            int bitCount = bitCount(bitMap, startIndex, endIndex);
+            int bitCount = 0;
+            if (endIndex - startIndex > 1) {
+                bitCount += bitCount(bitMap, startIndex, endIndex);
+            }
             // 头不完整元素的bitcount
-            if (startIndex > 0) {
+            if (moreStartOffset > 0) {
                 /*
                 计算头部对出的元素数 = 32 - moreStartOffset,
                 获取元素应该从后往前计算, ~(upPower(1 << (32 - moreStartOffset))
@@ -126,7 +134,7 @@ public class BitMap_base_01 {
                 获取元素 upPower((1 << (moreEndOffset)))
                 计算元素在截止元素后一个
                  */
-                bitCount += bitCount(fullBit(1 << moreEndOffset) & bitMap[endIndex + 1]);
+                bitCount += bitCount(fullBit(1 << moreEndOffset) & bitMap[endIndex]);
             }
             return bitCount;
         }
@@ -152,6 +160,7 @@ public class BitMap_base_01 {
 
         /**
          * 当前数字最高位为准, 剩余低位全都变为1
+         *
          * @param n
          * @return
          */
