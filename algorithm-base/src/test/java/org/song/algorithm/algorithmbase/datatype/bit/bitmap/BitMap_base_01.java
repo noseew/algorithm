@@ -72,7 +72,7 @@ public class BitMap_base_01 {
         }
 
         public int bitCount() {
-            return bitCount(this.bitMap, 0, this.bitMap.length - 1);
+            return bitCount(this.bitMap, 0, this.bitMap.length);
         }
 
         /**
@@ -139,9 +139,17 @@ public class BitMap_base_01 {
             return bitCount;
         }
 
-        public int bitCount(int[] subBitMap, int startIndex, int endIndex) {
+        /**
+         * 左开右闭
+         *
+         * @param subBitMap
+         * @param startIndex
+         * @param endIndex
+         * @return
+         */
+        private int bitCount(int[] subBitMap, int startIndex, int endIndex) {
             int count = 0;
-            for (int i = startIndex; i <= endIndex; i++) {
+            for (int i = startIndex; i < endIndex; i++) {
                 count += hammingWeight(subBitMap[i]);
             }
             return count;
