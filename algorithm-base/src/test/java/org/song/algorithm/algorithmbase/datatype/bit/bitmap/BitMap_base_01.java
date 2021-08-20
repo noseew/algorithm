@@ -24,6 +24,33 @@ public class BitMap_base_01 {
 
     }
 
+    @Test
+    public void test_01_bitCount() {
+        BitMap bitMap = new BitMap(32);
+
+        bitMap.set(0);
+        bitMap.set(3);
+        bitMap.set(31);
+
+        bitMap.set(32);
+        bitMap.set(35);
+        bitMap.set(63);
+
+        bitMap.set(64);
+        bitMap.set(65);
+
+        System.out.println(bitMap.bitCount()); // 8
+        System.out.println(bitMap.bitCount(0, 3)); // 2
+        System.out.println(bitMap.bitCount(0, 36)); // 5
+        
+        System.out.println(bitMap.bitCount(3, 31)); // 1
+        System.out.println(bitMap.bitCount(3, 63)); // 4
+        System.out.println(bitMap.bitCount(3, 95)); // 7
+        
+        System.out.println(bitMap.bitCount(3, 65)); // 6
+
+    }
+
     /*
     bitmap
     1. 数据结构: 一维数组长度n, 子数组长度32(也可以用long类型, 64位)
@@ -52,6 +79,8 @@ public class BitMap_base_01 {
      */
     public static class BitMap {
 
+        private final int bit = 32;
+
         private int[] bitMap;
 
         private BitMap(int offset) {
@@ -62,13 +91,18 @@ public class BitMap_base_01 {
             this(1);
         }
 
+        /**
+         * 偏移量从0开始
+         *
+         * @param offset
+         */
         public void set(int offset) {
             ensureCapacity(offset);
-            bitMap[offset / 32] = (1 << (offset % 32)) | (bitMap[offset / 32]);
+            bitMap[offset / bit] = (1 << (offset % bit)) | (bitMap[offset / bit]);
         }
 
         public int get(int offset) {
-            return ((1 << (offset % 32)) & (bitMap[offset / 32])) > 0 ? 1 : 0;
+            return ((1 << (offset % bit)) & (bitMap[offset / bit])) > 0 ? 1 : 0;
         }
 
         public int bitCount() {
@@ -76,64 +110,51 @@ public class BitMap_base_01 {
         }
 
         /**
-         * TODO 未完成
-         * @param startOffset
+         * 偏移量, 从0开始
+         *
+         * @param startOffset 开始偏移量, 从0开始
          * @param endOffset
          * @return
          */
         public int bitCount(int startOffset, int endOffset) {
-            if (startOffset >= this.bitMap.length * 32 || endOffset <= 0 || endOffset <= startOffset) {
+            if (startOffset >= this.bitMap.length * bit || endOffset <= 0 || endOffset <= startOffset) {
                 return 0;
             }
-            // 头部多出的offset, 注意: 如果计算头部对出的元素应该是 32-moreStartOffset, 并且从后往前计算,
-            int moreStartOffset = startOffset % 32;
-            // 尾部多出的offset
-            int moreEndOffset = endOffset % 32;
-            int startIndex = (startOffset / 32) + moreStartOffset > 0 ? 1 : 0;
-            int endIndex = (endOffset / 32);
-            if (startIndex == endIndex) {
-                if (moreStartOffset == 0 && moreEndOffset == 0) {
-                    // 正好覆盖完整的一个
-                    return bitCount(bitMap[startIndex]);
-                }
-                /*
-                正好在一个内, 但是不完整
+            int moreStartOffset,
+                    moreEndOffset,
+                    startIndex,
+                    endIndex;
 
-                计算头部对出的元素数 = 32 - moreStartOffset,
-                获取元素应该从后往前计算, ~(upPower(1 << (32 - moreStartOffset))
-                计算元素在开始元素前一个
+            moreStartOffset = startOffset % bit;
+            moreEndOffset = endOffset % bit;
 
-                计算头部对出的元素数 = moreEndOffset,
-                获取元素 upPower((1 << (moreEndOffset)))
-                计算元素在截止元素后一个
+            startIndex = startOffset / bit + (moreStartOffset > 0 ? 1 : 0);
+            endIndex = endOffset / bit;
 
-                 */
-                return bitCount(
-                        fullBit(1 << moreEndOffset) & (~(fullBit(1 << (32 - moreStartOffset))) & bitMap[startIndex]));
-            }
-
-
-            // 中间完整元素的bitcount
             int bitCount = 0;
-            if (endIndex - startIndex > 1) {
+
+            /*
+            多出的头部
+            计算头部对出的元素数 = bit - moreStartOffset,
+            获取元素应该从后往前计算, ~(upPower(1 << (bit - moreStartOffset))
+            计算元素在开始元素前一个
+             */
+            if (moreStartOffset > 0) {
+                bitCount += bitCount((~(fullBit(1 << (bit - moreStartOffset))) & bitMap[startIndex]));
+            }
+            /*
+            完整的中间
+             */
+            if (endOffset - startOffset >= bit) {
                 bitCount += bitCount(bitMap, startIndex, endIndex);
             }
-            // 头不完整元素的bitcount
-            if (moreStartOffset > 0) {
-                /*
-                计算头部对出的元素数 = 32 - moreStartOffset,
-                获取元素应该从后往前计算, ~(upPower(1 << (32 - moreStartOffset))
-                计算元素在开始元素前一个
-                 */
-                bitCount += bitCount((~(fullBit(1 << (32 - moreStartOffset))) & bitMap[startIndex - 1]));
-            }
-            // 尾不完整元素的bitcount
+            /*
+            多出的尾部
+            计算头部对出的元素数 = moreEndOffset,
+            获取元素 upPower((1 << (moreEndOffset)))
+            计算元素在截止元素后一个
+             */
             if (moreEndOffset > 0) {
-                /*
-                计算头部对出的元素数 = moreEndOffset,
-                获取元素 upPower((1 << (moreEndOffset)))
-                计算元素在截止元素后一个
-                 */
                 bitCount += bitCount(fullBit(1 << moreEndOffset) & bitMap[endIndex]);
             }
             return bitCount;
@@ -143,8 +164,6 @@ public class BitMap_base_01 {
          * 左开右闭
          *
          * @param subBitMap
-         * @param startIndex
-         * @param endIndex
          * @return
          */
         private int bitCount(int[] subBitMap, int startIndex, int endIndex) {
@@ -203,29 +222,23 @@ public class BitMap_base_01 {
         }
 
         private int newSize(int offset) {
-            int initLen = 1;
-            if (offset >= 32) {
-                while ((offset = (offset / 32)) > 0) {
-                    initLen++;
-                }
-            }
-            return initLen;
+            return offset / bit + 1;
         }
 
         /**
          * 确保容量
          */
         private void ensureCapacity(int offset) {
-            if (offset > bitMap.length * 32) {
-                dilatation(offset);
+            if (offset > bitMap.length * bit - 1) {
+                dilatation(newSize(offset));
             }
         }
 
         /**
          * 扩容
          */
-        private void dilatation(int offset) {
-            int[] newBitMap = new int[offset];
+        private void dilatation(int newSize) {
+            int[] newBitMap = new int[newSize];
             System.arraycopy(bitMap, 0, newBitMap, 0, bitMap.length);
             this.bitMap = newBitMap;
         }
