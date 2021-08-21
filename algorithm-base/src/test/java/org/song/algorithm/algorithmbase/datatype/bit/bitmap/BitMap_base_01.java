@@ -80,8 +80,11 @@ public class BitMap_base_01 {
         bitMap.setBit(63);
 
 //        bitMap.and(new int[]{14});
-        bitMap.or(new int[]{3});
-        bitMap.not();
+//        bitMap.or(new int[]{3});
+//        bitMap.not();
+
+        int[] ints = bitMap.notNew();
+        System.out.println();
     }
 
     /*
