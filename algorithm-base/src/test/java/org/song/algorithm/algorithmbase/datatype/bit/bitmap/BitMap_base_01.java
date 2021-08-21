@@ -157,9 +157,9 @@ public class BitMap_base_01 {
          * @param subBitMap
          * @return
          */
-        private int bitCount(int[] subBitMap, int startIndex, int endIndex, boolean skipHead) {
+        private int bitCount(int[] subBitMap, int startIndex, int endIndex, boolean skipFirst) {
             int count = 0;
-            int i = startIndex + (skipHead ? 1 : 0);
+            int i = startIndex + (skipFirst ? 1 : 0);
             for (; i < endIndex; i++) {
                 count += hammingWeight(subBitMap[i]);
             }
