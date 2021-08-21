@@ -166,17 +166,6 @@ public class BitMap_base_01 {
             return count;
         }
 
-        private int bitCount(int n) {
-            int c = 0;
-            while (n > 0) {
-                if ((n & 1) == 1) {
-                    c++;
-                }
-                n = n >> 1;
-            }
-            return c;
-        }
-
         private int bitCount(int n, int start, int end) {
             int c = 0;
             n = n >> start;
@@ -187,21 +176,6 @@ public class BitMap_base_01 {
                 n = n >> 1;
             }
             return c;
-        }
-
-        /**
-         * 当前数字最高位为准, 剩余低位全都变为1
-         *
-         * @param n
-         * @return
-         */
-        private static int fullBit(int n) {
-            n |= n >>> 1;
-            n |= n >>> 2;
-            n |= n >>> 4;
-            n |= n >>> 8;
-            n |= n >>> 16;
-            return n;
         }
 
         /**
