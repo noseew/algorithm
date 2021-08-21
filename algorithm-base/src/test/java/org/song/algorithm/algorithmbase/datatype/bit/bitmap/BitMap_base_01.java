@@ -67,6 +67,23 @@ public class BitMap_base_01 {
         bitMap.leftShift(2);
     }
 
+    @Test
+    public void test_01_bit() {
+        BitMap bitMap = new BitMap(1);
+
+        bitMap.setBit(1);
+        bitMap.setBit(2);
+        bitMap.setBit(31);
+
+        bitMap.setBit(32);
+        bitMap.setBit(35);
+        bitMap.setBit(63);
+
+//        bitMap.and(new int[]{14});
+        bitMap.or(new int[]{3});
+        bitMap.not();
+    }
+
     /*
     bitmap
     1. 数据结构: 一维数组长度n, 子数组长度32(也可以用long类型, 64位)
@@ -153,6 +170,7 @@ public class BitMap_base_01 {
                 lastMore = currentMore;
             }
         }
+
         /**
          * 左移位
          * 注意: 采用数组序的左移位, 
@@ -169,6 +187,95 @@ public class BitMap_base_01 {
                 this.bitMap[i] = (e >>> b) | (lastMore << (this.bit - b));
                 lastMore = currentMore;
             }
+        }
+
+        /**
+         * 与运算
+         *
+         * @param bitMap
+         */
+        public void and(int[] bitMap) {
+            if (this.bitMap.length != bitMap.length) {
+                throw new IllegalArgumentException("bitMap.length not eq this.bitMap.length");
+            }
+            for (int i = 0; i < this.bitMap.length; i++) {
+                this.bitMap[i] = this.bitMap[i] & bitMap[i];
+            }
+        }
+
+        /**
+         * 或运算
+         *
+         * @param bitMap
+         */
+        public void or(int[] bitMap) {
+            int minLen = Math.min(this.bitMap.length, bitMap.length);
+            for (int i = 0; i < minLen; i++) {
+                this.bitMap[i] = this.bitMap[i] | bitMap[i];
+            }
+        }
+
+        /**
+         * 取反运算
+         */
+        public void not() {
+            for (int i = 0; i < this.bitMap.length; i++) {
+                this.bitMap[i] = ~this.bitMap[i];
+            }
+        }
+
+        public int[] rightShiftNew(int b) {
+            int[] bm = copy();
+            int lastMore = 0;
+            int currentMore = 0;
+            for (int i = 0; i < bm.length; i++) {
+                int e = bm[i];
+                currentMore = e & -1 << (this.bit - b);
+                bm[i] = (e << b) | (lastMore >>> (this.bit - b));
+                lastMore = currentMore;
+            }
+            return bm;
+        }
+
+        public int[] leftShiftNew(int b) {
+            int[] bm = copy();
+            int lastMore = 0;
+            int currentMore = 0;
+            for (int i = bm.length - 1; i >= 0; i--) {
+                int e = bm[i];
+                currentMore = e & ((1 << b) - 1);
+                bm[i] = (e >>> b) | (lastMore << (this.bit - b));
+                lastMore = currentMore;
+            }
+            return bm;
+        }
+
+        public int[] andNew(int[] bitMap) {
+            if (this.bitMap.length != bitMap.length) {
+                throw new IllegalArgumentException("bitMap.length not eq this.bitMap.length");
+            }
+            int[] bm = copy();
+            for (int i = 0; i < bm.length; i++) {
+                bm[i] = bm[i] & bitMap[i];
+            }
+            return bm;
+        }
+
+        public int[] orNew(int[] bitMap) {
+            int[] bm = copy();
+            int minLen = Math.min(bm.length, bitMap.length);
+            for (int i = 0; i < minLen; i++) {
+                bm[i] = bm[i] | bitMap[i];
+            }
+            return bm;
+        }
+
+        public int[] notNew() {
+            int[] bm = copy();
+            for (int i = 0; i < bm.length; i++) {
+                bm[i] = ~bm[i];
+            }
+            return bm;
         }
 
         /**
@@ -238,6 +345,12 @@ public class BitMap_base_01 {
                 n = n >> 1;
             }
             return c;
+        }
+
+        private int[] copy() {
+            int[] newBitMap = new int[bitMap.length];
+            System.arraycopy(bitMap, 0, newBitMap, 0, bitMap.length);
+            return newBitMap;
         }
 
         /**
