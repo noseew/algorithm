@@ -10,16 +10,16 @@ public class BitMap_base_01 {
     public void test_01_start() {
         BitMap bitMap = new BitMap(32);
 
-        bitMap.set(2);
-        bitMap.set(4);
+        bitMap.setBit(2);
+        bitMap.setBit(4);
 
-        System.out.println(bitMap.get(4));
-        System.out.println(bitMap.get(5));
+        System.out.println(bitMap.getBit(4));
+        System.out.println(bitMap.getBit(5));
 
         System.out.println(bitMap.bitCount());
         System.out.println(bitMap.bitCount(0, 3));
 
-        bitMap.set(35);
+        bitMap.setBit(35);
         System.out.println(bitMap.bitCount(0, 36));
 
     }
@@ -28,27 +28,43 @@ public class BitMap_base_01 {
     public void test_01_bitCount() {
         BitMap bitMap = new BitMap(32);
 
-        bitMap.set(0);
-        bitMap.set(3);
-        bitMap.set(31);
+        bitMap.setBit(0);
+        bitMap.setBit(3);
+        bitMap.setBit(31);
 
-        bitMap.set(32);
-        bitMap.set(35);
-        bitMap.set(63);
+        bitMap.setBit(32);
+        bitMap.setBit(35);
+        bitMap.setBit(63);
 
-        bitMap.set(64);
-        bitMap.set(65);
+        bitMap.setBit(64);
+        bitMap.setBit(65);
 
         System.out.println(bitMap.bitCount()); // 8
         System.out.println(bitMap.bitCount(0, 3)); // 1
         System.out.println(bitMap.bitCount(0, 36)); // 5
-        
+
         System.out.println(bitMap.bitCount(3, 31)); // 1
         System.out.println(bitMap.bitCount(3, 63)); // 4
         System.out.println(bitMap.bitCount(3, 95)); // 7
-        
+
         System.out.println(bitMap.bitCount(3, 65)); // 6
 
+    }
+
+    @Test
+    public void test_01_leftRight() {
+        BitMap bitMap = new BitMap(1);
+
+        bitMap.setBit(1);
+        bitMap.setBit(2);
+        bitMap.setBit(31);
+
+        bitMap.setBit(32);
+        bitMap.setBit(35);
+        bitMap.setBit(63);
+
+        bitMap.rightShift(2);
+        bitMap.leftShift(2);
     }
 
     /*
@@ -77,6 +93,11 @@ public class BitMap_base_01 {
         2. 计算bitmap区间start和end中1的数量,
             1. 思路, 头尾非完整数据单独计算, 中间完整元素采用汉明重量计算
      */
+
+    /**
+     * BitMap 位图
+     * 偏移量从0开始
+     */
     public static class BitMap {
 
         private final int bit = 32;
@@ -96,17 +117,52 @@ public class BitMap_base_01 {
          *
          * @param offset
          */
-        public void set(int offset) {
+        public void setBit(int offset) {
             ensureCapacity(offset);
             bitMap[offset / bit] = (1 << (offset % bit)) | (bitMap[offset / bit]);
         }
 
-        public int get(int offset) {
+        public int getBit(int offset) {
             return ((1 << (offset % bit)) & (bitMap[offset / bit])) > 0 ? 1 : 0;
         }
 
         public int bitCount() {
             return bitCount(this.bitMap, 0, this.bitMap.length, false);
+        }
+
+        /**
+         * 右移位
+         * 注意: 采用数组序的右移位, 
+         * 由于的大端序存储, 所以bitmap int反向操作
+         *
+         * @param b
+         */
+        public void rightShift(int b) {
+            int lastMore = 0;
+            int currentMore = 0;
+            for (int i = 0; i < this.bitMap.length; i++) {
+                int e = this.bitMap[i];
+                currentMore = e & -1 << (this.bit - b);
+                this.bitMap[i] = (e << b) | (lastMore >>> (this.bit - b));
+                lastMore = currentMore;
+            }
+        }
+        /**
+         * 左移位
+         * 注意: 采用数组序的左移位, 
+         * 由于的大端序存储, 所以bitmap int反向操作
+         *
+         * @param b
+         */
+        public void leftShift(int b) {
+            int lastMore = 0;
+            int currentMore = 0;
+            for (int i = this.bitMap.length - 1; i >= 0; i--) {
+                int e = this.bitMap[i];
+                currentMore = e & ((1 << b) - 1);
+                this.bitMap[i] = (e >>> b) | (lastMore << (this.bit - b));
+                lastMore = currentMore;
+            }
         }
 
         /**
@@ -204,6 +260,15 @@ public class BitMap_base_01 {
             c = (c & 0B0000_0000_0000_0000_1111_1111_1111_1111)
                     + ((c >>> 16) & 0B0000_0000_0000_0000_1111_1111_1111_1111);
             return c;
+        }
+
+        private int fullBit(int n) {
+            n |= n >>> 1;
+            n |= n >>> 2;
+            n |= n >>> 4;
+            n |= n >>> 8;
+            n |= n >>> 16;
+            return n;
         }
 
         private int newSize(int offset) {
