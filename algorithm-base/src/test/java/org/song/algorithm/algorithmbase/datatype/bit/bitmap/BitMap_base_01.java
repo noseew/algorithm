@@ -40,7 +40,7 @@ public class BitMap_base_01 {
         bitMap.set(65);
 
         System.out.println(bitMap.bitCount()); // 8
-        System.out.println(bitMap.bitCount(0, 3)); // 2
+        System.out.println(bitMap.bitCount(0, 3)); // 1
         System.out.println(bitMap.bitCount(0, 36)); // 5
         
         System.out.println(bitMap.bitCount(3, 31)); // 1
@@ -106,7 +106,7 @@ public class BitMap_base_01 {
         }
 
         public int bitCount() {
-            return bitCount(this.bitMap, 0, this.bitMap.length);
+            return bitCount(this.bitMap, 0, this.bitMap.length, false);
         }
 
         /**
@@ -120,42 +120,33 @@ public class BitMap_base_01 {
             if (startOffset >= this.bitMap.length * bit || endOffset <= 0 || endOffset <= startOffset) {
                 return 0;
             }
-            int moreStartOffset,
-                    moreEndOffset,
-                    startIndex,
-                    endIndex;
-
-            moreStartOffset = startOffset % bit;
-            moreEndOffset = endOffset % bit;
-
-            startIndex = startOffset / bit + (moreStartOffset > 0 ? 1 : 0);
-            endIndex = endOffset / bit;
+            int moreStartOffset = startOffset % bit, // 头offset
+                    moreEndOffset = endOffset % bit, // 尾offset
+                    startIndex = startOffset / bit, // 头所在的下标
+                    endIndex = endOffset / bit; // 尾所在的下标
 
             int bitCount = 0;
-
-            /*
-            多出的头部
-            计算头部对出的元素数 = bit - moreStartOffset,
-            获取元素应该从后往前计算, ~(upPower(1 << (bit - moreStartOffset))
-            计算元素在开始元素前一个
-             */
-            if (moreStartOffset > 0) {
-                bitCount += bitCount((~(fullBit(1 << (bit - moreStartOffset))) & bitMap[startIndex]));
-            }
-            /*
-            完整的中间
-             */
-            if (endOffset - startOffset >= bit) {
-                bitCount += bitCount(bitMap, startIndex, endIndex);
-            }
-            /*
-            多出的尾部
-            计算头部对出的元素数 = moreEndOffset,
-            获取元素 upPower((1 << (moreEndOffset)))
-            计算元素在截止元素后一个
-             */
-            if (moreEndOffset > 0) {
-                bitCount += bitCount(fullBit(1 << moreEndOffset) & bitMap[endIndex]);
+            if (endIndex > startIndex) {
+                // 不在同一个下标元素中
+                if (endOffset - startOffset > bit) {
+                    if (moreStartOffset == 0
+                            || moreEndOffset == 0
+                            || (endIndex - startIndex) > 1){
+                        // 有完整的元素
+                        bitCount += bitCount(bitMap, startIndex, endIndex, moreStartOffset != 0);
+                    }
+                }
+                // 取头
+                if (moreStartOffset > 0) {
+                    bitCount += bitCount(bitMap[startIndex], moreStartOffset, bit);
+                }
+                // 取尾
+                if (moreEndOffset > 0) {
+                    bitCount += bitCount(bitMap[startIndex], 0, moreEndOffset);
+                }
+            } else {
+                // 在同一个下标元素中, 头尾交集
+                bitCount += bitCount(bitMap[startIndex], moreStartOffset, moreEndOffset);
             }
             return bitCount;
         }
@@ -166,9 +157,10 @@ public class BitMap_base_01 {
          * @param subBitMap
          * @return
          */
-        private int bitCount(int[] subBitMap, int startIndex, int endIndex) {
+        private int bitCount(int[] subBitMap, int startIndex, int endIndex, boolean skipHead) {
             int count = 0;
-            for (int i = startIndex; i < endIndex; i++) {
+            int i = startIndex + (skipHead ? 1 : 0);
+            for (; i < endIndex; i++) {
                 count += hammingWeight(subBitMap[i]);
             }
             return count;
@@ -179,6 +171,18 @@ public class BitMap_base_01 {
             while (n > 0) {
                 if ((n & 1) == 1) {
                     c++;
+                }
+                n = n >> 1;
+            }
+            return c;
+        }
+
+        private int bitCount(int n, int start, int end) {
+            int c = 0;
+            n = n >> start;
+            for (int i = start; i < end; i++) {
+                if ((n & 1) == 1) {
+                    c += 1;
                 }
                 n = n >> 1;
             }
@@ -207,17 +211,24 @@ public class BitMap_base_01 {
          * @return
          */
         private int hammingWeight(int n) {
+            if (n == 0 || n == 1) {
+                return n;
+            }
+            if (n == -1) {
+                return bit;
+            }
+
             int c = 0;
-            c = (n & 0B0101_0101_0101_0101_0101_0101_0101_0101) + ((n >>> 1)
-                    & 0B0101_0101_0101_0101_0101_0101_0101_0101);
-            c = (c & 0B0011_0011_0011_0011_0011_0011_0011_0011) + ((c >>> 2)
-                    & 0B0011_0011_0011_0011_0011_0011_0011_0011);
-            c = (c & 0B0000_1111_0000_1111_0000_1111_0000_1111) + ((c >>> 4)
-                    & 0B0000_1111_0000_1111_0000_1111_0000_1111);
-            c = (c & 0B0000_0000_1111_1111_0000_0000_1111_1111) + ((c >>> 8)
-                    & 0B0000_0000_1111_1111_0000_0000_1111_1111);
-            c = (c & 0B0000_0000_0000_0000_1111_1111_1111_1111) + ((c >>> 16)
-                    & 0B0000_0000_0000_0000_1111_1111_1111_1111);
+            c = (n & 0B0101_0101_0101_0101_0101_0101_0101_0101)
+                    + ((n >>> 1) & 0B0101_0101_0101_0101_0101_0101_0101_0101);
+            c = (c & 0B0011_0011_0011_0011_0011_0011_0011_0011)
+                    + ((c >>> 2) & 0B0011_0011_0011_0011_0011_0011_0011_0011);
+            c = (c & 0B0000_1111_0000_1111_0000_1111_0000_1111)
+                    + ((c >>> 4) & 0B0000_1111_0000_1111_0000_1111_0000_1111);
+            c = (c & 0B0000_0000_1111_1111_0000_0000_1111_1111)
+                    + ((c >>> 8) & 0B0000_0000_1111_1111_0000_0000_1111_1111);
+            c = (c & 0B0000_0000_0000_0000_1111_1111_1111_1111)
+                    + ((c >>> 16) & 0B0000_0000_0000_0000_1111_1111_1111_1111);
             return c;
         }
 
