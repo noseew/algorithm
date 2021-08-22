@@ -133,7 +133,7 @@ public class BitMap_base_02 {
             定位元素: offset / bit
             定位偏移量: 1L << (offset % bit)
              */
-            bitMap[offset / bit] = (0x1L << (bit - offset % bit)) | (bitMap[offset / bit]);
+            bitMap[offset / bit] = (0x80000000_00000000L >>> (offset % bit)) | (bitMap[offset / bit]);
         }
 
         /**
@@ -149,7 +149,7 @@ public class BitMap_base_02 {
             定位元素: offset / bit
             定位偏移量: 1L << (offset % bit)
              */
-            return ((0x1L << (bit - offset % bit)) & (bitMap[offset / bit])) > 0 ? 1 : 0;
+            return ((0x80000000_00000000L >>> (offset % bit)) & (bitMap[offset / bit])) > 0 ? 1 : 0;
         }
 
         /**
@@ -476,18 +476,18 @@ public class BitMap_base_02 {
          * 时间复杂度 O(n), n指的是int位数
          *
          * @param n
-         * @param start int低位, 包含
-         * @param end   int高位, 不包含
+         * @param start int高位, 包含
+         * @param end   int低位, 不包含
          * @return
          */
         private int bitCount(long n, int start, int end) {
             int c = 0;
-            n = n >> start;
+            n = n << start;
             for (int i = start; i < end; i++) {
-                if ((n & 1) == 1) {
+                if ((n & 0x80000000_00000000L) != 0) {
                     c += 1;
                 }
-                n = n >> 1;
+                n = n << 1;
             }
             return c;
         }

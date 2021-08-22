@@ -8,7 +8,6 @@ import org.song.algorithm.algorithmbase.utils.BinaryUtils;
  */
 public class BitMap_base_01 {
 
-
     @Test
     public void test_01_start() {
         BitMap bitMap = new BitMap(32);
@@ -16,8 +15,8 @@ public class BitMap_base_01 {
         bitMap.setBit(2);
         bitMap.setBit(4);
 
-        System.out.println(bitMap.getBit(4));
-        System.out.println(bitMap.getBit(5));
+        System.out.println(bitMap.getBit(4)); // 1
+        System.out.println(bitMap.getBit(5)); // 0
     }
 
     @Test
