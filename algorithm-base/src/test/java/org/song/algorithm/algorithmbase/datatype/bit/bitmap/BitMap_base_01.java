@@ -82,6 +82,26 @@ public class BitMap_base_01 {
         System.out.println();
     }
 
+    @Test
+    public void test_01_consecutive() {
+        BitMap bitMap = new BitMap(1);
+
+        bitMap.setBit(1);
+        bitMap.setBit(2);
+        bitMap.setBit(3);
+        bitMap.setBit(31);
+
+        for (int i = 0; i < 32; i++) {
+            bitMap.setBit(32 + i);
+        }
+        bitMap.setBit(64);
+        bitMap.setBit(65);
+        
+        bitMap.setBit(67);
+
+        System.out.println(bitMap.consecutive());
+    }
+
     /*
     bitmap
     1. 数据结构: 一维数组长度n, 子数组长度32(也可以用long类型, 64位)
@@ -119,6 +139,18 @@ public class BitMap_base_01 {
         1. 能够存储最大的数是, 21亿
         2. 数组长度约6千万, 约250MB内存存储
         3. 如果直接采用int存储, 约8G内存存储
+        
+     5. 优点:
+            1. 少量内存空间能够标记海量数据
+            2. 算法复杂度低, O(1)到O(n)
+        缺点:
+            1. 不能存储重复的数据
+            
+     6. 应用场景
+        1. redis的位图
+        2. 布隆过滤器
+        3. 海量信息的去重或者判断是否存在
+        4. 和HashSet算法思路类似, 但是比他占用空间小
      */
 
     /**
@@ -458,6 +490,86 @@ public class BitMap_base_01 {
                 bitCount += bitCount(bitMap[startIndex], moreStartOffset, moreEndOffset);
             }
             return bitCount;
+        }
+        
+        public int consecutive() {
+            return maxConsecutive(1);
+        }
+
+        /**
+         * TODO 未完成
+         * 上一个遗留的数量并不一定是上一个最大的数量
+         * 
+         * @param val
+         * @return
+         */
+        private int maxConsecutive(int val) {
+            // 目前位置, 最大值
+            int totalMax = 0;
+            // 上次计算截止到目前的累加值
+            int last = 0;
+            // 当前元素最大值
+            int current = 0;
+            // 上一个是否连续接上下一个
+            boolean lastConsecutive = false;
+            for (int i = 0; i < this.bitMap.length; i++) {
+
+                int[] ints = maxConsecutive(this.bitMap[i], val);
+                // 当前最大连续个数
+                current = ints[1] - ints[0];
+                // 当前是否连续接上上一个
+                boolean currentConsecutiveLast = ints[0] == 0;
+                // 当前是否连续接上下一个
+                boolean currentConsecutiveNext = ints[1] == 32;
+
+                if (lastConsecutive && currentConsecutiveLast) {
+                    // 当前连续接上上一个, 则 last 累加
+                    last += current;
+                }
+                
+                if (!currentConsecutiveLast) {
+                    // 当前不接上一个, 则 last 归档
+                    totalMax = Math.max(totalMax, last);
+                    last = 0;
+                }
+                
+                // 归档最大值
+                totalMax = Math.max(totalMax, current);
+                totalMax = Math.max(totalMax, last);
+                
+                lastConsecutive = currentConsecutiveNext;
+            }
+            return 0; 
+        }
+
+        /**
+         * 最大连续数bit的起止下标, 左开右闭, 大端序
+         * 0表示包含开头, 31表示不包含结尾
+         * <p>
+         * 这里采用大端序
+         *
+         * @param number
+         * @param bit    取值 1, 0
+         * @return
+         */
+        private int[] maxConsecutive(int number, int bit) {
+            int end = 0;
+            int max = 0;
+            int current = 0;
+            for (int i = 1; i <= Integer.SIZE; i++) {
+                if ((number & 1) == bit) {
+                    current++;
+                } else {
+                    current = 0;
+                }
+                if (current > max) {
+                    max = current;
+                    end = i;
+                }
+                number = (number >>> 1);
+            }
+            int[] indexes = {end - Math.max(current, max), end};
+            return indexes;
         }
 
         /**
