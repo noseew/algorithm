@@ -12,6 +12,10 @@ public class BitMap_base_02 {
 
     @Test
     public void test_01_start() {
+        System.out.println(0x8000_0000_0000_0000L);
+        System.out.println(BinaryUtils.binaryPretty(0x8000_0000_0000_0000L));
+        System.out.println(BinaryUtils.binaryPretty(-1L));
+        
         BitMap bitMap = new BitMap(32);
 
         bitMap.setBit(2);
