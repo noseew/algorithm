@@ -5,7 +5,7 @@ import org.song.algorithm.algorithmbase.utils.BinaryUtils;
 
 /**
  * 基于 long 64位, 
- * TODO 待修改成 小端序实现的bitmap
+ * 小端序实现的bitmap
  */
 public class BitMap_base_02 {
 
