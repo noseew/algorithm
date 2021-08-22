@@ -133,7 +133,7 @@ public class BitMap_base_02 {
             定位元素: offset / bit
             定位偏移量: 1L << (offset % bit)
              */
-            bitMap[offset / bit] = (1L << (offset % bit)) | (bitMap[offset / bit]);
+            bitMap[offset / bit] = (0x1L << (bit - offset % bit)) | (bitMap[offset / bit]);
         }
 
         /**
@@ -149,13 +149,13 @@ public class BitMap_base_02 {
             定位元素: offset / bit
             定位偏移量: 1L << (offset % bit)
              */
-            return ((1L << (offset % bit)) & (bitMap[offset / bit])) > 0 ? 1 : 0;
+            return ((0x1L << (bit - offset % bit)) & (bitMap[offset / bit])) > 0 ? 1 : 0;
         }
 
         /**
          * 右移位
          * 宏观上, 采用数组序的右移位, bitmap中的数据会被替换
-         * 由于底层int采用是大端序存储, 所以采用的是int的左移位操作
+         * 由于底层int采用是小端序存储, 所以采用的是int的右移位操作
          * <p>
          * 时间复杂度 O(n), n指的是bitmap数组数量
          *
@@ -170,10 +170,10 @@ public class BitMap_base_02 {
             for (int i = 0; i < this.bitMap.length; i++) {
                 long e = this.bitMap[i];
                 // 获取当前元素后b个数, 因为他们将会被移位掉
-                currentMore = e & -1L << (this.bit - b);
-                // 当前元素右移b位(小端序, 所以操作是左移), 并拼接上次移位多出的数
+                currentMore = e & -1L >>> (this.bit - b);
+                // 当前元素右移b位(小端序), 并拼接上次移位多出的数
                 // 多出的数原来在头部, 需要移动到尾部, 然后才能进行拼接
-                this.bitMap[i] = (e << b) | (lastMore >>> (this.bit - b));
+                this.bitMap[i] = (e >>> b) | (lastMore << (this.bit - b));
                 // 当前多出的数传下去
                 lastMore = currentMore;
             }
@@ -182,7 +182,7 @@ public class BitMap_base_02 {
         /**
          * 左移位
          * 宏观上, 采用数组序的左移位, bitmap中的数据会被替换
-         * 由于底层int采用是大端序存储, 所以采用的是int的右移位操作
+         * 由于底层int采用是小端序存储, 所以采用的是int的左移位操作
          * <p>
          * 时间复杂度 O(n), n指的是bitmap数组数量
          *
@@ -197,10 +197,10 @@ public class BitMap_base_02 {
             for (int i = this.bitMap.length - 1; i >= 0; i--) {
                 long e = this.bitMap[i];
                 // 获取当前元素前b个数, 因为他们将会被移位掉
-                currentMore = e & ((1L << b) - 1);
-                // 当前元素左移b位(小端序, 所以操作是右移, bitmap中没有符号), 并拼接上次移位多出的数
+                currentMore = e & -1L << (this.bit - b);
+                // 当前元素左移b位(小端序), 并拼接上次移位多出的数
                 // 多出的数原来在头部, 需要移动到尾部, 然后才能进行拼接
-                this.bitMap[i] = (e >>> b) | (lastMore << (this.bit - b));
+                this.bitMap[i] = (e << b) | (lastMore >>> (this.bit - b));
                 // 当前多出的数传下去
                 lastMore = currentMore;
             }
@@ -257,7 +257,7 @@ public class BitMap_base_02 {
          * 右移位
          * 宏观上, 采用数组序的右移位,
          * 将当前bitmap中的数据和传入的参数进行位运算, 并返回新的bitmap元素, 原bitmap中的数据不会被修改
-         * 由于底层int采用是大端序存储, 所以采用的是int的左移位操作
+         * 由于底层int采用是小端序存储, 所以采用的是int的左移位操作
          * <p>
          * 时间复杂度 O(n), n指的是bitmap数组数量
          *
@@ -281,7 +281,7 @@ public class BitMap_base_02 {
          * 左移位
          * 宏观上, 采用数组序的左移位,
          * 将当前bitmap中的数据和传入的参数进行位运算, 并返回新的bitmap元素, 原bitmap中的数据不会被修改
-         * 由于底层int采用是大端序存储, 所以采用的是int的右移位操作
+         * 由于底层int采用是小端序存储, 所以采用的是int的右移位操作
          * <p>
          * 时间复杂度 O(n), n指的是bitmap数组数量
          *

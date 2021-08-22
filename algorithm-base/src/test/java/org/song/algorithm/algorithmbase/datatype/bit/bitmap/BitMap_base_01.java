@@ -182,28 +182,86 @@ public class BitMap_base_01 {
         /**
          * 右移位
          * 宏观上, 采用数组序的右移位, bitmap中的数据会被替换
-         * 由于底层int采用是大端序存储, 所以采用的是int的左移位操作
          * <p>
          * 时间复杂度 O(n), n指的是bitmap数组数量
          *
          * @param b
          */
         public void rightShift(int b) {
+            rightShift(this.bitMap, b, this.bit);
+        }
+
+        /**
+         * 右移位
+         * 宏观上, 采用数组序的右移位,
+         * 将当前bitmap中的数据和传入的参数进行位运算, 并返回新的bitmap元素, 原bitmap中的数据不会被修改
+         * <p>
+         * 时间复杂度 O(n), n指的是bitmap数组数量
+         *
+         * @param b
+         * @return
+         */
+        public BitMap rightShiftNew(int b) {
+            int[] bm = bitMapArrayImage();
+            rightShift(bm, b, this.bit);
+            return new BitMap(bm);
+        }
+
+        /**
+         * 右移位
+         * 宏观上, 采用数组序的右移位, bitmap中的数据会被替换
+         * 由于底层int采用是大端序存储, 所以采用的是int的左移位操作
+         * <p>
+         * 时间复杂度 O(n), n指的是bitmap数组数量
+         *
+         * @param bitMap 位图数组
+         * @param b      移动距离
+         * @param bit    总bit位, 32或者64
+         */
+        private static void rightShift(int[] bitMap, int b, int bit) {
             // 移位上个元素多出的数, 需要拼接到下一个元素上
             int lastMore = 0;
             // 移位当前元素多出的数, 用于暂存, 然后交给 lastMore
             int currentMore = 0;
             // 右移位, 正序操作, 只需要使用两个临时变量用来保存多出的数即可
-            for (int i = 0; i < this.bitMap.length; i++) {
-                int e = this.bitMap[i];
+            for (int i = 0; i < bitMap.length; i++) {
+                int e = bitMap[i];
                 // 获取当前元素后b个数, 因为他们将会被移位掉
-                currentMore = e & -1 << (this.bit - b);
-                // 当前元素右移b位(小端序, 所以操作是左移), 并拼接上次移位多出的数
+                currentMore = e & -1 << (bit - b);
+                // 当前元素右移b位(大端序, 所以操作是左移), 并拼接上次移位多出的数
                 // 多出的数原来在头部, 需要移动到尾部, 然后才能进行拼接
-                this.bitMap[i] = (e << b) | (lastMore >>> (this.bit - b));
+                bitMap[i] = (e << b) | (lastMore >>> (bit - b));
                 // 当前多出的数传下去
                 lastMore = currentMore;
             }
+        }
+
+        /**
+         * 左移位
+         * 宏观上, 采用数组序的左移位, bitmap中的数据会被替换
+         * <p>
+         * 时间复杂度 O(n), n指的是bitmap数组数量
+         *
+         * @param b
+         */
+        public void leftShift(int b) {
+            leftShift(this.bitMap, b, this.bit);
+        }
+
+        /**
+         * 左移位
+         * 宏观上, 采用数组序的左移位,
+         * 将当前bitmap中的数据和传入的参数进行位运算, 并返回新的bitmap元素, 原bitmap中的数据不会被修改
+         * <p>
+         * 时间复杂度 O(n), n指的是bitmap数组数量
+         *
+         * @param b
+         * @return
+         */
+        public BitMap leftShiftNew(int b) {
+            int[] bm = bitMapArrayImage();
+            leftShift(bm, b, this.bit);
+            return new BitMap(bm);
         }
 
         /**
@@ -215,19 +273,19 @@ public class BitMap_base_01 {
          *
          * @param b
          */
-        public void leftShift(int b) {
+        public static void leftShift(int[] bitMap, int b, int bit) {
             // 移位上个元素多出的数, 需要拼接到下一个元素上
             int lastMore = 0;
             // 移位当前元素多出的数, 用于暂存, 然后交给 lastMore
             int currentMore = 0;
             // 左移位, 倒序操作, 只需要使用两个临时变量用来保存多出的数即可
-            for (int i = this.bitMap.length - 1; i >= 0; i--) {
-                int e = this.bitMap[i];
+            for (int i = bitMap.length - 1; i >= 0; i--) {
+                int e = bitMap[i];
                 // 获取当前元素前b个数, 因为他们将会被移位掉
                 currentMore = e & ((1 << b) - 1);
-                // 当前元素左移b位(小端序, 所以操作是右移, bitmap中没有符号), 并拼接上次移位多出的数
+                // 当前元素左移b位(大端序, 所以操作是右移, bitmap中没有符号), 并拼接上次移位多出的数
                 // 多出的数原来在头部, 需要移动到尾部, 然后才能进行拼接
-                this.bitMap[i] = (e >>> b) | (lastMore << (this.bit - b));
+                bitMap[i] = (e >>> b) | (lastMore << (bit - b));
                 // 当前多出的数传下去
                 lastMore = currentMore;
             }
@@ -249,83 +307,6 @@ public class BitMap_base_01 {
             for (int i = 0; i < this.bitMap.length; i++) {
                 this.bitMap[i] = this.bitMap[i] & bitMap[i];
             }
-        }
-
-        /**
-         * 或运算
-         * 将当前bitmap中的数据和传入的参数进行位运算, bitmap中的数据会被替换
-         * 循环bitmap数组, 逐个进行位运算
-         *
-         * 时间复杂度 O(n), n指的是bitmap数组数量
-         *
-         * @param bitMap
-         */
-        public void or(int[] bitMap) {
-            int minLen = Math.min(this.bitMap.length, bitMap.length);
-            for (int i = 0; i < minLen; i++) {
-                this.bitMap[i] = this.bitMap[i] | bitMap[i];
-            }
-        }
-
-        /**
-         * 取反运算
-         * 将当前bitmap中的数据和传入的参数进行位运算, bitmap中的数据会被替换
-         * 循环bitmap数组, 逐个进行位运算
-         * <p>
-         * 时间复杂度 O(n), n指的是bitmap数组数量
-         */
-        public void not() {
-            for (int i = 0; i < this.bitMap.length; i++) {
-                this.bitMap[i] = ~this.bitMap[i];
-            }
-        }
-
-        /**
-         * 右移位
-         * 宏观上, 采用数组序的右移位,
-         * 将当前bitmap中的数据和传入的参数进行位运算, 并返回新的bitmap元素, 原bitmap中的数据不会被修改
-         * 由于底层int采用是大端序存储, 所以采用的是int的左移位操作
-         * <p>
-         * 时间复杂度 O(n), n指的是bitmap数组数量
-         *
-         * @param b
-         * @return
-         */
-        public BitMap rightShiftNew(int b) {
-            int[] bm = bitMapArrayImage();
-            int lastMore = 0;
-            int currentMore = 0;
-            for (int i = 0; i < bm.length; i++) {
-                int e = bm[i];
-                currentMore = e & -1 << (this.bit - b);
-                bm[i] = (e << b) | (lastMore >>> (this.bit - b));
-                lastMore = currentMore;
-            }
-            return new BitMap(bm);
-        }
-
-        /**
-         * 左移位
-         * 宏观上, 采用数组序的左移位,
-         * 将当前bitmap中的数据和传入的参数进行位运算, 并返回新的bitmap元素, 原bitmap中的数据不会被修改
-         * 由于底层int采用是大端序存储, 所以采用的是int的右移位操作
-         * <p>
-         * 时间复杂度 O(n), n指的是bitmap数组数量
-         *
-         * @param b
-         * @return
-         */
-        public BitMap leftShiftNew(int b) {
-            int[] bm = bitMapArrayImage();
-            int lastMore = 0;
-            int currentMore = 0;
-            for (int i = bm.length - 1; i >= 0; i--) {
-                int e = bm[i];
-                currentMore = e & ((1 << b) - 1);
-                bm[i] = (e >>> b) | (lastMore << (this.bit - b));
-                lastMore = currentMore;
-            }
-            return new BitMap(bm);
         }
 
         /**
@@ -351,6 +332,22 @@ public class BitMap_base_01 {
 
         /**
          * 或运算
+         * 将当前bitmap中的数据和传入的参数进行位运算, bitmap中的数据会被替换
+         * 循环bitmap数组, 逐个进行位运算
+         *
+         * 时间复杂度 O(n), n指的是bitmap数组数量
+         *
+         * @param bitMap
+         */
+        public void or(int[] bitMap) {
+            int minLen = Math.min(this.bitMap.length, bitMap.length);
+            for (int i = 0; i < minLen; i++) {
+                this.bitMap[i] = this.bitMap[i] | bitMap[i];
+            }
+        }
+
+        /**
+         * 或运算
          * 将当前bitmap中的数据和传入的参数进行位运算, 并返回新的bitmap元素, 原bitmap中的数据不会被修改
          * 循环bitmap数组, 逐个进行位运算
          * <p>
@@ -366,6 +363,19 @@ public class BitMap_base_01 {
                 bm[i] = bm[i] | bitMap[i];
             }
             return new BitMap(bm);
+        }
+
+        /**
+         * 取反运算
+         * 将当前bitmap中的数据和传入的参数进行位运算, bitmap中的数据会被替换
+         * 循环bitmap数组, 逐个进行位运算
+         * <p>
+         * 时间复杂度 O(n), n指的是bitmap数组数量
+         */
+        public void not() {
+            for (int i = 0; i < this.bitMap.length; i++) {
+                this.bitMap[i] = ~this.bitMap[i];
+            }
         }
 
         /**
@@ -436,12 +446,12 @@ public class BitMap_base_01 {
                 }
                 // 取头, 在bitmap数组中是头部, 单独看这个元素, 取的是其尾部的元素
                 if (moreStartOffset > 0) {
-                    // 小端序, 所以是int类型中的高位
+                    // 大端序, 所以是int类型中的高位
                     bitCount += bitCount(bitMap[startIndex], moreStartOffset, bit);
                 }
                 // 取尾, 在bitmap数组中是尾部, 单独看这个元素, 取的是其头部的元素
                 if (moreEndOffset > 0) {
-                    // 小端序, 所以是int类型中的低位
+                    // 大端序, 所以是int类型中的低位
                     bitCount += bitCount(bitMap[endIndex], 0, moreEndOffset);
                 }
             } else {
@@ -486,7 +496,7 @@ public class BitMap_base_01 {
 
         /**
          * 计算int类型中1的数量,
-         * 注意: 并不是计算int中所有的1, 而是以小端序限制起止下标, 左开右闭
+         * 注意: 并不是计算int中所有的1, 而是以大端序限制起止下标, 左开右闭
          * <p>
          * 时间复杂度 O(n), n指的是int位数
          *
