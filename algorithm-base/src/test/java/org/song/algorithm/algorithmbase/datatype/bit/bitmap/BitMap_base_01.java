@@ -657,6 +657,40 @@ public class BitMap_base_01 {
             return c;
         }
 
+        private int bitCountByTable(int n, int start, int end) {
+            int moreStartOffset = start % tableBit, // 头offset
+                    moreEndOffset = end % tableBit, // 尾offset
+                    startIndex = start / tableBit, // 头所在的下标
+                    endIndex = end / tableBit; // 尾所在的下标
+
+            int bitCount = 0;
+            if (endIndex > startIndex) {
+                // 他们不在同一个下标元素中
+                if (end - start > tableBit) {
+                    // 他们间隔大于32, 有可能有完整的一个元素
+                    if (moreStartOffset == 0 || moreEndOffset == 0 || (endIndex - startIndex) > 1) {
+                        // 有完整的元素
+                        bitCount += bitCount(bitMap, startIndex, endIndex, moreStartOffset != 0);
+                    }
+                }
+                // 取头, 在bitmap数组中是头部, 单独看这个元素, 取的是其尾部的元素
+                if (moreStartOffset > 0) {
+                    // 大端序, 所以是int类型中的高位
+                    bitCount += bitCount(n, moreStartOffset, tableBit);
+                }
+                // 取尾, 在bitmap数组中是尾部, 单独看这个元素, 取的是其头部的元素
+                if (moreEndOffset > 0) {
+                    // 大端序, 所以是int类型中的低位
+                    bitCount += bitCount(n, 0, moreEndOffset);
+                }
+            } else {
+                // 特殊情况, 起止偏移量在同一个元素内, 则需要取头尾的交集
+                bitCount += bitCount(bitMap[startIndex], moreStartOffset, moreEndOffset);
+            }
+            return bitCount;
+
+        }
+
         /**
          * 汉明重量计算bit数量
          *
