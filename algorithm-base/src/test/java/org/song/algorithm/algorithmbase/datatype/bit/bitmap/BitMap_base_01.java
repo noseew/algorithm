@@ -507,16 +507,16 @@ public class BitMap_base_01 {
                 // 取头, 在bitmap数组中是头部, 单独看这个元素, 取的是其尾部的元素
                 if (moreStartOffset > 0) {
                     // 大端序, 所以是int类型中的高位
-                    bitCount += bitCount(bitMap[startIndex], moreStartOffset, bit);
+                    bitCount += bitCountByTable(bitMap[startIndex], moreStartOffset, bit);
                 }
                 // 取尾, 在bitmap数组中是尾部, 单独看这个元素, 取的是其头部的元素
                 if (moreEndOffset > 0) {
                     // 大端序, 所以是int类型中的低位
-                    bitCount += bitCount(bitMap[endIndex], 0, moreEndOffset);
+                    bitCount += bitCountByTable(bitMap[endIndex], 0, moreEndOffset);
                 }
             } else {
                 // 特殊情况, 起止偏移量在同一个元素内, 则需要取头尾的交集
-                bitCount += bitCount(bitMap[startIndex], moreStartOffset, moreEndOffset);
+                bitCount += bitCountByTable(bitMap[startIndex], moreStartOffset, moreEndOffset);
             }
             return bitCount;
         }
@@ -639,13 +639,41 @@ public class BitMap_base_01 {
          * 注意: 并不是计算int中所有的1, 而是以大端序限制起止下标, 左开右闭
          * <p>
          * 时间复杂度 O(n), n指的是int位数
+         * TODO 未完成
          *
          * @param n
          * @param start int低位, 包含
          * @param end   int高位, 不包含
          * @return
          */
-        private int bitCount(int n, int start, int end) {
+        private int bitCountByTable(int n, int start, int end) {
+            if (end - start < tableBit) {
+                return bitCountTraverse(n, start, end);
+            }
+            int c = 0;
+            n = n >>> start;
+            int i = start;
+            for (; i <= end - 4; i += tableBit) {
+                c += bitCountTable[0b1111 & n];
+                n = n >>> tableBit;
+            }
+            int moreBit = (end - start) % tableBit;
+            c += bitCountTraverse(i - tableBit, start, moreBit);
+            return c;
+        }
+
+        /**
+         * 计算int类型中1的数量,
+         * 注意: 并不是计算int中所有的1, 而是以大端序限制起止下标, 左开右闭
+         * <p>
+         * 时间复杂度 O(n), n指的是int位数
+         *
+         * @param n
+         * @param start int低位, 包含
+         * @param end   int高位, 不包含
+         * @return
+         */
+        private int bitCountTraverse(int n, int start, int end) {
             int c = 0;
             n = n >> start;
             for (int i = start; i < end; i++) {
@@ -655,40 +683,6 @@ public class BitMap_base_01 {
                 n = n >> 1;
             }
             return c;
-        }
-
-        private int bitCountByTable(int n, int start, int end) {
-            int moreStartOffset = start % tableBit, // 头offset
-                    moreEndOffset = end % tableBit, // 尾offset
-                    startIndex = start / tableBit, // 头所在的下标
-                    endIndex = end / tableBit; // 尾所在的下标
-
-            int bitCount = 0;
-            if (endIndex > startIndex) {
-                // 他们不在同一个下标元素中
-                if (end - start > tableBit) {
-                    // 他们间隔大于32, 有可能有完整的一个元素
-                    if (moreStartOffset == 0 || moreEndOffset == 0 || (endIndex - startIndex) > 1) {
-                        // 有完整的元素
-                        bitCount += bitCount(bitMap, startIndex, endIndex, moreStartOffset != 0);
-                    }
-                }
-                // 取头, 在bitmap数组中是头部, 单独看这个元素, 取的是其尾部的元素
-                if (moreStartOffset > 0) {
-                    // 大端序, 所以是int类型中的高位
-                    bitCount += bitCount(n, moreStartOffset, tableBit);
-                }
-                // 取尾, 在bitmap数组中是尾部, 单独看这个元素, 取的是其头部的元素
-                if (moreEndOffset > 0) {
-                    // 大端序, 所以是int类型中的低位
-                    bitCount += bitCount(n, 0, moreEndOffset);
-                }
-            } else {
-                // 特殊情况, 起止偏移量在同一个元素内, 则需要取头尾的交集
-                bitCount += bitCount(bitMap[startIndex], moreStartOffset, moreEndOffset);
-            }
-            return bitCount;
-
         }
 
         /**
