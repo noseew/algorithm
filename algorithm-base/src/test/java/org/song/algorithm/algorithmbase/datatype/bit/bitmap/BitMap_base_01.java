@@ -160,10 +160,39 @@ public class BitMap_base_01 {
      * 每个数组元素就是一个int元素
      */
     public static class BitMap {
-
+        /**
+         * 当前元素的位数, int 采用 32
+         */
         private final int bit = 32;
-
+        /**
+         * 数据数组
+         */
         private int[] bitMap;
+
+        private final int tableBit = 4;
+        /**
+         * 查找表, 采用4个字节, 最多16个数
+         * 下标表示对应数字的值
+         * 元素表示对应元素值的bitCount
+         */
+        private static int[] bitCountTable = {
+                0, // 0b0000
+                1, // 0b0001
+                1, // 0b0010
+                2, // 0b0011
+                1, // 0b0100
+                2, // 0b0101
+                2, // 0b0110
+                3, // 0b0111
+                1, // 0b1000
+                2, // 0b1001
+                2, // 0b1010
+                3, // 0b1011
+                2, // 0b1100
+                3, // 0b1101
+                3, // 0b1110
+                4, // 0b1111
+        };
 
         private BitMap() {
             this(1);
