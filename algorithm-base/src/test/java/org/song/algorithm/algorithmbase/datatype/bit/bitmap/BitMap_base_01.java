@@ -639,7 +639,6 @@ public class BitMap_base_01 {
          * 注意: 并不是计算int中所有的1, 而是以大端序限制起止下标, 左开右闭
          * <p>
          * 时间复杂度 O(n), n指的是int位数
-         * TODO 未完成
          *
          * @param n
          * @param start int低位, 包含
@@ -650,15 +649,16 @@ public class BitMap_base_01 {
             if (end - start < tableBit) {
                 return bitCountTraverse(n, start, end);
             }
-            int c = 0;
+            // 只保留 start和  end 中间的 bit 位
+            n = (-1 >>> (bit - end)) & n;
+            n = (-1 << start) & n;
             n = n >>> start;
-            int i = start;
-            for (; i <= end - 4; i += tableBit) {
+            int c = 0;
+            for (int i = start; i <= end + tableBit; i += tableBit) {
+                // 每4位一组, 通过 table 查找 bitCount 数
                 c += bitCountTable[0b1111 & n];
                 n = n >>> tableBit;
             }
-            int moreBit = (end - start) % tableBit;
-            c += bitCountTraverse(i - tableBit, start, moreBit);
             return c;
         }
 
