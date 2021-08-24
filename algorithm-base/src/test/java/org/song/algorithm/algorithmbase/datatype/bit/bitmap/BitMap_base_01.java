@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.song.algorithm.algorithmbase.utils.BinaryUtils;
 
 /**
- * 基于 int 32位, 大端序存储 实现的bitmap
+ * 基于 int 32位, 大端序存储(也是int默认存储方式) 实现的bitmap
  */
 public class BitMap_base_01 {
 
@@ -128,7 +128,7 @@ public class BitMap_base_01 {
         1. 计算bitmap中1的数量, 时间复杂度O(1)
             1. 思路, 单独计算每个int元素, 单个元素采用汉明重量计算
         2. 计算bitmap区间start和end中1的数量, 时间复杂度O(n), n表示数组数量
-            1. 思路, 头尾非完整数据单独计算, 中间完整元素采用汉明重量计算
+            1. 思路, 头尾非完整数据单独计算, 或者使用查找表计算, 中间完整元素采用汉明重量计算
         3. 位移运算, 时间复杂度O(n), n表示数组数量
             1. 思路, 将数组中的int依次进行位运算, 移位多出的元素拼接到下一个元素上
             2. 位移运算的方向和int方向不同, bitmap中的位移运算采用的是数组序, 
