@@ -640,9 +640,9 @@ public class BitMap_base_01 {
          * @return
          */
         private int bitCountByTable(int n, int start, int end) {
-            if (end - start < tableBit) {
-                return bitCountTraverse(n, start, end);
-            }
+//            if (end - start < tableBit) {
+//                return bitCountTraverse(n, start, end);
+//            }
             // 只保留 start和  end 中间的 bit 位
             n = (-1 >>> (bit - end)) & n;
             n = (-1 << start) & n;
