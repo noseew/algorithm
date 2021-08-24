@@ -169,30 +169,24 @@ public class BitMap_base_01 {
          */
         private int[] bitMap;
 
-        private final int tableBit = 4;
+        private static final int tableBit = 8;
+        
+        private static final int tableBitTag = 0b1111_1111;
+        
         /**
-         * 查找表, 采用4个字节, 最多16个数
+         * 查找表, 采用8个字节, 最多256个数
          * 下标表示对应数字的值
          * 元素表示对应元素值的bitCount
          */
-        private static int[] bitCountTable = {
-                0, // 0b0000
-                1, // 0b0001
-                1, // 0b0010
-                2, // 0b0011
-                1, // 0b0100
-                2, // 0b0101
-                2, // 0b0110
-                3, // 0b0111
-                1, // 0b1000
-                2, // 0b1001
-                2, // 0b1010
-                3, // 0b1011
-                2, // 0b1100
-                3, // 0b1101
-                3, // 0b1110
-                4, // 0b1111
-        };
+        private static int[] bitCountTable;
+        
+        static {
+            bitCountTable = new int[tableBitTag + 1];
+            for (int i = 0; i < bitCountTable.length; i++) {
+                // 下标表示 int 值, value表示 bitCount 数
+                bitCountTable[i] = hammingWeight(i);
+            }
+        }
 
         private BitMap() {
             this(1);
@@ -655,8 +649,8 @@ public class BitMap_base_01 {
             n = n >>> start;
             int c = 0;
             for (int i = start; i <= end + tableBit; i += tableBit) {
-                // 每4位一组, 通过 table 查找 bitCount 数
-                c += bitCountTable[0b1111 & n];
+                // 每8位一组, 通过 table 查找 bitCount 数
+                c += bitCountTable[tableBitTag & n];
                 n = n >>> tableBit;
             }
             return c;
@@ -673,7 +667,7 @@ public class BitMap_base_01 {
          * @param end   int高位, 不包含
          * @return
          */
-        private int bitCountTraverse(int n, int start, int end) {
+        private static int bitCountTraverse(int n, int start, int end) {
             int c = 0;
             n = n >> start;
             for (int i = start; i < end; i++) {
@@ -691,14 +685,7 @@ public class BitMap_base_01 {
          * @param n
          * @return
          */
-        private int hammingWeight(int n) {
-            if (n == 0 || n == 1) {
-                return n;
-            }
-            if (n == -1) {
-                return bit;
-            }
-
+        private static int hammingWeight(int n) {
             int c = 0;
             c = (n & 0B0101_0101_0101_0101_0101_0101_0101_0101)
                     + ((n >>> 1) & 0B0101_0101_0101_0101_0101_0101_0101_0101);
