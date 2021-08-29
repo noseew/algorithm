@@ -1,8 +1,8 @@
 package org.song.algorithm.algorithmbase.datatype.list.algrithm;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase.datatype.list.Linked_single_01;
-import org.song.algorithm.algorithmbase.datatype.list.ListPrinter;
+import org.song.algorithm.algorithmbase.datatype.list.base.Linked_single_01;
+import org.song.algorithm.algorithmbase.datatype.list.base.ListPrinter;
 import org.song.algorithm.algorithmbase.datatype.list.Stack_base_01;
 
 /**

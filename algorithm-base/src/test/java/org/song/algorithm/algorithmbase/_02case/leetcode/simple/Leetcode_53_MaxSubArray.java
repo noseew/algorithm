@@ -48,7 +48,8 @@ public class Leetcode_53_MaxSubArray {
 
     @Test
     public void test() {
-        System.out.println(maxSubArray(new int[]{-2,1,-3,4,-1,2,1,-5,4}));
+        System.out.println(maxSubArray(new int[]{-2, 1, -3, 4, -1, 2, 1, -5, 4})); // 6
+        System.out.println(maxSubArray2(new int[]{-2, 1, -3, 4, -1, 2, 1, -5, 4}));
     }
 
     /**
@@ -87,6 +88,29 @@ public class Leetcode_53_MaxSubArray {
         }
         System.out.println(String.format("最大 %s, startIndex %s, startWindow %s", maxCount, startIndex, maxWindow));
         return maxCount;
+    }
+
+    /**
+     * 官方题解, 动态规划
+     * 
+     * @param nums
+     * @return
+     */
+    public int maxSubArray2(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        if (nums.length == 1) {
+            return nums[0];
+        }
+
+        int pre = 0;
+        int current = 0;
+        for (int num : nums) {
+            current += num;
+            pre = Math.max(pre, current);
+        }
+        return current;
     }
 
 }

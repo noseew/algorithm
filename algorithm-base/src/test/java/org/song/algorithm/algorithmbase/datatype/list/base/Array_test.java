@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase.datatype.list;
+package org.song.algorithm.algorithmbase.datatype.list.base;
 
 import org.junit.Test;
 import org.springframework.util.StopWatch;

@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase.datatype.hashmap;
+package org.song.algorithm.algorithmbase.datatype.hashmap.jdk;
 
 import org.junit.Test;
 
