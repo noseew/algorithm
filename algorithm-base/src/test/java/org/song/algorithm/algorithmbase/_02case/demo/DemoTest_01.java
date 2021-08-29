@@ -2,12 +2,11 @@ package org.song.algorithm.algorithmbase._02case.demo;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class DemoTest {
+public class DemoTest_01 {
 
     /**
      * 超级水王问题
