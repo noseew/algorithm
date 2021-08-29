@@ -45,8 +45,29 @@ public class DemoTest_03_LRU {
      */
     @Test
     public void test_01() {
+        LRULinkedHashMap<String, Object> lru = new LRULinkedHashMap<>(5);
+        lru.put("1", 1);
+        lru.put("5", 5);
+        lru.put("7", 7);
+        lru.put("4", 4);
+        lru.put("3", 3);
+        lru.put("8", 8);
+        lru.put("6", 6);
+        lru.put("2", 2);
+        
+        
+        
     }
 
+    /**
+     * 基于LinkedHashMap 实现LRU数据结构
+     * LinkedHashMap 本身就是来用于实现LRU算法的数据结构, LRU主要用于删除不常用的元素, 
+     * 所以只需要指定最大容量和
+     * removeEldestEntry 重写满足淘汰条件
+     * 
+     * @param <K>
+     * @param <V>
+     */
     public class LRULinkedHashMap<K, V> extends LinkedHashMap<K, V> {
         /**
          * 最大容量
@@ -56,9 +77,55 @@ public class DemoTest_03_LRU {
 
         private static final float DEFAULT_LOAD_FACTOR = 0.75f;
 
+        /**
+         * 初始化指定 最大容量 和 负载因子
+         * 
+         * @param maxCapacity
+         */
+        public LRULinkedHashMap(int maxCapacity) {
+            /*
+            容量由用户指定
+            负载因子默认 0.75f
+            顺序是访问顺序
+             */
+            super(maxCapacity, DEFAULT_LOAD_FACTOR, true);
+            this.maxCapacity = maxCapacity;
+        }
+
+        /**
+         * 是否满足淘汰条件
+         * 
+         * @param eldest
+         * @return
+         */
+        @Override
+        protected boolean removeEldestEntry(java.util.Map.Entry<K, V> eldest) {
+            return size() > maxCapacity;
+        }
+    }
+
+    /**
+     * 默认的 LRU(LinkedHashMap) 是非线程安全的, 
+     * 所以如果想实现线程安全版本, 可以在所有操作上加锁
+     * 
+     * @param <K>
+     * @param <V>
+     */
+    public class ConcurrentLRULinkedHashMap<K, V> extends LinkedHashMap<K, V> {
+        /**
+         * 最大容量
+         * LRU淘汰的最大容量
+         */
+        private final int maxCapacity;
+
+        private static final float DEFAULT_LOAD_FACTOR = 0.75f;
+
+        /**
+         * 加个锁, 目的是实现线程安全的 LRU 数据结构
+         */
         private final Lock lock = new ReentrantLock();
 
-        public LRULinkedHashMap(int maxCapacity) {
+        public ConcurrentLRULinkedHashMap(int maxCapacity) {
             super(maxCapacity, DEFAULT_LOAD_FACTOR, true);
             this.maxCapacity = maxCapacity;
         }

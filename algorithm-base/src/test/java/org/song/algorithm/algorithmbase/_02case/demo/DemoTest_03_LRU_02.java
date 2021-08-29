@@ -2,7 +2,7 @@ package org.song.algorithm.algorithmbase._02case.demo;
 
 import java.util.HashMap;
 
-public class DemoTest_03_LRU02 {
+public class DemoTest_03_LRU_02 {
     
     
     
