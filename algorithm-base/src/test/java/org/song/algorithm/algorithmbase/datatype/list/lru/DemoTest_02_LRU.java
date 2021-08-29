@@ -1,8 +1,8 @@
-package org.song.algorithm.algorithmbase._02case.demo;
+package org.song.algorithm.algorithmbase.datatype.list.lru;
 
 import java.util.HashMap;
 
-public class DemoTest_03_LRU_02 {
+public class DemoTest_02_LRU {
     
     
     

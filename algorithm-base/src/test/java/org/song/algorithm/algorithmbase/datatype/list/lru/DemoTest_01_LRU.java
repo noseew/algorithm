@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase._02case.demo;
+package org.song.algorithm.algorithmbase.datatype.list.lru;
 
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class DemoTest_03_LRU {
+public class DemoTest_01_LRU {
 
     /*
     LRU 算法题目概述
