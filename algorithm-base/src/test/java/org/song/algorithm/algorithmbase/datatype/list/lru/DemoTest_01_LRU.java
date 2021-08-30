@@ -52,6 +52,31 @@ public class DemoTest_01_LRU {
         lru.put("4", 4);
         lru.put("3", 3);
         lru.put("8", 8);
+        System.out.println(lru); // 迭代顺序, 就是插入顺序, 排序越靠前就越 old, 越容易被删除
+        System.out.println(lru.get("1"));
+        
+        System.out.println(lru.get("3")); // 访问会调整它的顺序, 顺序会越靠后
+        System.out.println(lru);
+
+        lru.put("6", 6);
+        lru.put("2", 2);
+    }
+    @Test
+    public void test_02() {
+        // 并发安全
+        ConcurrentLRULinkedHashMap<String, Object> lru = new ConcurrentLRULinkedHashMap<>(5);
+        lru.put("1", 1);
+        new Thread(() -> {
+            lru.put("5", 5);
+        }).start();
+        new Thread(() -> {
+            lru.put("7", 7);
+        }).start();
+
+        System.out.println(lru);
+        lru.put("4", 4);
+        lru.put("3", 3);
+        lru.put("8", 8);
         lru.put("6", 6);
         lru.put("2", 2);
         
