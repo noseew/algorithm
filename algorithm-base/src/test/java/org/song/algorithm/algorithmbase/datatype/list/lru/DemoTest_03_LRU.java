@@ -3,6 +3,7 @@ package org.song.algorithm.algorithmbase.datatype.list.lru;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 public class DemoTest_03_LRU {
@@ -82,10 +83,17 @@ public class DemoTest_03_LRU {
 
         /**
          * 采样指定数量的key
+         * redis中随机获取entry采用的方式是, 对数组随机然后对链表随机, 获取到最终的entry, 调用一次获取一个entry
+         * java中无法直接获取到数组和链表, 且java中有红黑树的存在, 所以这里采用近似的方式获取
          */
         private List<CacheNode> sample(int size) {
+            // 随机位置
+            int randomSkip = ThreadLocalRandom.current().nextInt(cacheMaps.size() / 2);
             ArrayList<CacheNode> entrys = new ArrayList<>(size);
             for (Map.Entry<K, CacheNode> kCacheNodeEntry : cacheMaps.entrySet()) {
+                if (randomSkip-- > 0) {
+                    continue;
+                }
                 entrys.add(kCacheNodeEntry.getValue());
                 if (size-- <= 0) {
                     break;

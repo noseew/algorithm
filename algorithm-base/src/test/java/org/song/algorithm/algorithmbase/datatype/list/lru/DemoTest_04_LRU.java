@@ -1,8 +1,10 @@
 package org.song.algorithm.algorithmbase.datatype.list.lru;
 
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 public class DemoTest_04_LRU {
@@ -35,13 +37,12 @@ public class DemoTest_04_LRU {
     class LRUCache<K, V> {
 
         private int capacity;
-        private List<CacheNode> pool;
+        private Set<CacheNode> pool;
         private HashMap<K, CacheNode> cacheMaps;
 
         public LRUCache(int size) {
             this.capacity = size;
             cacheMaps = new HashMap<K, CacheNode>(size);
-            pool = new ArrayList<>(size);
         }
 
         public void put(K k, V v) {
@@ -67,17 +68,19 @@ public class DemoTest_04_LRU {
             return node.value;
         }
 
-        public Object remove(K k) {
-            return cacheMaps.remove(k);
-        }
-
-        public void clear() {
-            cacheMaps.clear();
-        }
-
         private void removeLast() {
-            CacheNode cacheNode = sample(capacity).get(0);
+            if (pool == null) {
+                pool = sample(capacity);
+            }
+            pool.addAll(sample(1));
+            if (pool.size() < capacity) {
+                return;
+            }
+            ArrayList<CacheNode> poolList = Lists.newArrayList(pool);
+            poolList.sort(Comparator.comparing(e -> e.lru));
+            CacheNode cacheNode = poolList.get(0);
             if (cacheNode != null) {
+                pool.remove(cacheNode);
                 cacheMaps.remove(cacheNode.key);
             }
         }
@@ -90,16 +93,22 @@ public class DemoTest_04_LRU {
 
         /**
          * 采样指定数量的key
+         * redis中随机获取entry采用的方式是, 对数组随机然后对链表随机, 获取到最终的entry, 调用一次获取一个entry
+         * java中无法直接获取到数组和链表, 且java中有红黑树的存在, 所以这里采用近似的方式获取
          */
-        private List<CacheNode> sample(int size) {
-            ArrayList<CacheNode> entrys = new ArrayList<>(size);
+        private Set<CacheNode> sample(int size) {
+            // 随机位置
+            int randomSkip = ThreadLocalRandom.current().nextInt(cacheMaps.size() / 2);
+            Set<CacheNode> entrys = new HashSet<>(size);
             for (Map.Entry<K, CacheNode> kCacheNodeEntry : cacheMaps.entrySet()) {
+                if (randomSkip-- > 0) {
+                    continue;
+                }
                 entrys.add(kCacheNodeEntry.getValue());
                 if (size-- <= 0) {
                     break;
                 }
             }
-            entrys.sort(Comparator.comparing(e -> e.lru));
             return entrys;
         }
 
