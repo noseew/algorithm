@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class DemoTest_03_LRU {
+public class DemoTest_04_LRU {
 
 
     /*
-    参考 redis 3.0- 实现 LRU
+    参考 redis 3.0+ 实现 LRU TODO
     
      */
     @Test
@@ -35,11 +35,13 @@ public class DemoTest_03_LRU {
     class LRUCache<K, V> {
 
         private int capacity;
+        private List<CacheNode> pool;
         private HashMap<K, CacheNode> cacheMaps;
 
         public LRUCache(int size) {
             this.capacity = size;
             cacheMaps = new HashMap<K, CacheNode>(size);
+            pool = new ArrayList<>(size);
         }
 
         public void put(K k, V v) {
@@ -77,6 +79,12 @@ public class DemoTest_03_LRU {
             CacheNode cacheNode = sample(capacity).get(0);
             if (cacheNode != null) {
                 cacheMaps.remove(cacheNode.key);
+            }
+        }
+
+        private void addPool(CacheNode node) {
+            if (pool.size() < capacity) {
+                
             }
         }
 
