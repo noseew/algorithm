@@ -1,6 +1,7 @@
 package org.song.algorithm.algorithmbase.datatype.list.lru;
 
 import org.assertj.core.util.Lists;
+import org.assertj.core.util.Sets;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -11,8 +12,9 @@ public class DemoTest_04_LRU {
 
 
     /*
-    参考 redis 3.0+ 实现 LRU TODO
-    
+    参考 redis 3.0+ 实现 LRU
+    https://www.jianshu.com/p/e0226aa946c4
+    https://zhuanlan.zhihu.com/p/34133067
      */
     @Test
     public void test_01() {
@@ -37,6 +39,11 @@ public class DemoTest_04_LRU {
     class LRUCache<K, V> {
 
         private int capacity;
+        /*
+        在 redis 3.0 以后对该算法进行了一个升级, 新的算法维护了一个候选池(pool), 
+        首次筛选出来的 key 会被全部放入到候选池中, 在后续的筛选过程中只有 lru 小于候选池中最小的 lru 才能被放入到候选池, 
+        直至候选池放满, 当候选池满了的时候, 如果有新的数据继续放入, 则需要将候选池中 lru 字段最大值取出
+         */
         private Set<CacheNode> pool;
         private HashMap<K, CacheNode> cacheMaps;
 
@@ -70,24 +77,33 @@ public class DemoTest_04_LRU {
 
         private void removeLast() {
             if (pool == null) {
-                pool = sample(capacity);
+                pool = Sets.newHashSet(sample(capacity));
             }
-            pool.addAll(sample(1));
+
+            ArrayList<CacheNode> poolList = Lists.newArrayList(pool);
+            poolList.sort(Comparator.comparing(e -> e.lru));
+            CacheNode last = poolList.get(0);
+            
+            // 随机一个 key 和 pool 合并
+            int max = 100;
+            for (int i = 0; i < max && pool.size() < capacity; i++) {
+                List<CacheNode> sample = sample(1);
+                if (sample.isEmpty()) {
+                    continue;
+                }
+                // 只选择 比 pool 最老的还老的 key
+                if (last.lru <= sample.get(0).lru) {
+                    continue;
+                }
+                pool.addAll(sample);
+            }
+            
             if (pool.size() < capacity) {
                 return;
             }
-            ArrayList<CacheNode> poolList = Lists.newArrayList(pool);
-            poolList.sort(Comparator.comparing(e -> e.lru));
-            CacheNode cacheNode = poolList.get(0);
-            if (cacheNode != null) {
-                pool.remove(cacheNode);
-                cacheMaps.remove(cacheNode.key);
-            }
-        }
-
-        private void addPool(CacheNode node) {
-            if (pool.size() < capacity) {
-                
+            if (last != null) {
+                pool.remove(last);
+                cacheMaps.remove(last.key);
             }
         }
 
@@ -96,10 +112,10 @@ public class DemoTest_04_LRU {
          * redis中随机获取entry采用的方式是, 对数组随机然后对链表随机, 获取到最终的entry, 调用一次获取一个entry
          * java中无法直接获取到数组和链表, 且java中有红黑树的存在, 所以这里采用近似的方式获取
          */
-        private Set<CacheNode> sample(int size) {
+        private List<CacheNode> sample(int size) {
             // 随机位置
-            int randomSkip = ThreadLocalRandom.current().nextInt(cacheMaps.size() / 2);
-            Set<CacheNode> entrys = new HashSet<>(size);
+            int randomSkip = ThreadLocalRandom.current().nextInt(cacheMaps.size());
+            List<CacheNode> entrys = new ArrayList<>(size);
             for (Map.Entry<K, CacheNode> kCacheNodeEntry : cacheMaps.entrySet()) {
                 if (randomSkip-- > 0) {
                     continue;

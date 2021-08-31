@@ -66,14 +66,6 @@ public class DemoTest_03_LRU {
             return node.value;
         }
 
-        public Object remove(K k) {
-            return cacheMaps.remove(k);
-        }
-
-        public void clear() {
-            cacheMaps.clear();
-        }
-
         private void removeLast() {
             CacheNode cacheNode = sample(capacity).get(0);
             if (cacheNode != null) {
