@@ -63,7 +63,7 @@ public class BitCount_01 {
      */
     public static int bitCountTraverse2(int n) {
         int c = 0;
-        while (n > 0) {
+        while (n != 0) {
             ++c;
             /*
             (n - 1) & n : 相当于将这个数去掉末尾的1, 当去掉所有的1之后 n==0 循环结束
