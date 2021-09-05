@@ -1,29 +1,18 @@
-/*
- * Copyright: 2018 www.noseew.com Inc. All rights reserved.
- * 注意：本内容仅限于公司内部传阅，禁止外泄以及用于其他的商业目的
- *
- * @Project: noseew-custom-carhailing2
- * @File: BoundingBox
- * @Package: com.noseew.carhailing.test.geo
- * @Date: 2019年01月29日
- * @Author:gq47193
- *
- */
-package org.song.algorithm.algorithmbase.datatype.geo.hexagon.geohash.demo3.geo;
+package org.song.algorithm.algorithmbase.datatype.geo.hexagon.geohash.demo4.test;
 
 import java.io.Serializable;
 
 /**
  * （矩形）有界区域
- *
- * @description:
- * @author: gq47193
- * @date: 2019年01月29日 13:17:14
  **/
 public class BoundingBox implements Serializable {
+    // 下(东北半球)
     private double minLat;
+    // 上(东北半球)
     private double maxLat;
+    // 左(东北半球)
     private double minLng;
+    // 右(东北半球)
     private double maxLng;
 
     public BoundingBox(Coordinate p1, Coordinate p2) {
@@ -45,8 +34,16 @@ public class BoundingBox implements Serializable {
         return new Coordinate(maxLat, minLng);
     }
 
+    public Coordinate getLowerLeft() {
+        return new Coordinate(minLat, minLng);
+    }
+
     public Coordinate getLowerRight() {
         return new Coordinate(minLat, maxLng);
+    }
+
+    public Coordinate getUpperRight() {
+        return new Coordinate(maxLat, maxLng);
     }
 
     public double getLatitudeSize() {
