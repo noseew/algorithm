@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase._02case.demo;
+package org.song.algorithm.algorithmbase._02case.pending;
 
 import org.junit.jupiter.api.Test;
 

@@ -1,14 +1,3 @@
-/*
- * Copyright: 2016 www.noseew.com Inc. All rights reserved.
- * 注意：本内容仅限于公司内部传阅，禁止外泄以及用于其他的商业目的
- *
- * @Project: labortory
- * @File: GeoHash
- * @Package: org.song.algorithm.hexagon.geohash
- * @Date: 2019年02月02日
- * @Author:jiali.song@song.com
- *
- */
 package org.song.algorithm.algorithmbase.datatype.geo.hexagon.geohash.demo1;
 
 import com.alibaba.fastjson.JSONObject;
