@@ -18,7 +18,7 @@ public class TestCase {
         double lat = 31.27732;
         int precisionLevel = PrecisionLevel.Level7.getCode();
 
-        GeoHash_base place = new GeoHash_base(lat, lng, precisionLevel);
+        GeoHash_base place = GeoHash_base.withPrecision(lat, lng, precisionLevel);
         System.out.println(place.getGeoCodeObj().getGeoCode());
         System.out.println(GeoHash_base.toGeoCode(place).getGeoCode());
         // wttcgtc
@@ -32,7 +32,7 @@ public class TestCase {
         double lng = 120.741271;
         double lat = 31.27732;
         int precisionLevel = PrecisionLevel.Level7.getCode();
-        GeoHash_base place = new GeoHash_base(lat, lng, precisionLevel);
+        GeoHash_base place = GeoHash_base.withPrecision(lat, lng, precisionLevel);
         GeoHash_base[] adjacent = place.getAdjacent();
         print(adjacent);
         GeoHash_base[] adjacentAndSelf = place.getAdjacentAndSelf();

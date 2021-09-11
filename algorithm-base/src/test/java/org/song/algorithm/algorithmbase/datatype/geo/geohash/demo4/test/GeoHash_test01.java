@@ -36,16 +36,19 @@ public class GeoHash_test01 implements Serializable {
      */
     private static final int MAX_BIT_PRECISION = 64;
     /**
-     * GeoHash算法支持的最大精度，即等价于decode之后的区域编码的字符长度
+     * GeoHash算法支持的最大精度, 即等价于decode之后的区域编码的字符长度
      */
     private static final int MAX_CHARACTER_PRECISION = 12;
     /**
-     * 对于base32，5个长度字节，对应一个base32字符
+     * 对于base32, 5个长度字节, 对应一个base32字符
      */
     private static final int BASE32_BITS = 5;
 
     private static final long FIRST_BIT_FLAGGED = 0x8000000000000000L;
 
+    /**
+     * 坐标所对应的 GEO Hash Code
+     */
     private long bits = 0;
 
     private byte significantBits = 0;
@@ -78,6 +81,8 @@ public class GeoHash_test01 implements Serializable {
     }
 
     /**
+     * 将给定的坐标, 按照给定的精度分装成 GEO 信息
+     * 
      * @param latitude         经度
      * @param longitude        纬度
      * @param desiredPrecision 预期精度

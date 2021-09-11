@@ -1,12 +1,26 @@
 package org.song.algorithm.algorithmbase.datatype.geo.geohash.demo4;
 
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.algorithmbase.datatype.geo.geohash.base.GeoHash_base;
 import org.song.algorithm.algorithmbase.datatype.geo.geohash.base.PrecisionLevel;
 import org.song.algorithm.algorithmbase.datatype.geo.geohash.demo4.test.GeoHash_test01;
 
 import java.util.List;
 
 public class TestCaseV2 {
+
+
+    @Test
+    public void getGEOHashCodeTest() {
+        double lng = 120.741271;
+        double lat = 31.27732;
+        int precisionLevel = PrecisionLevel.Level7.getCode();
+
+        GeoHash_test01 place = GeoHash_test01.withPrecision(lat, lng, precisionLevel);
+        System.out.println(place.getGeoCodeObj().getGeoCode());
+        System.out.println(GeoHash_test01.toGeoCode(place).getGeoCode());
+        // wttcgtc
+    }
 
 
     /**

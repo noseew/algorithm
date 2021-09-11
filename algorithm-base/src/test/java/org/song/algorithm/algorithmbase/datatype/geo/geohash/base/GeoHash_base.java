@@ -3,10 +3,14 @@ package org.song.algorithm.algorithmbase.datatype.geo.geohash.base;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.song.algorithm.algorithmbase.datatype.geo.geohash.demo4.test.GeoHash_test01;
 
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * 基础版 Geohash 算法, 采用 base 32 编码, 总共采用64bit存储 geohashcode
+ */
 public class GeoHash_base implements Serializable {
 
     private static Logger logger = LoggerFactory.getLogger(GeoHash_base.class);
@@ -59,7 +63,7 @@ public class GeoHash_base implements Serializable {
      * @param desiredPrecision 预期精度
      * @return
      */
-    public GeoHash_base(double latitude, double longitude, int desiredPrecision) {
+    private GeoHash_base(double latitude, double longitude, int desiredPrecision) {
         desiredPrecision = Math.min(desiredPrecision, MAX_BIT_PRECISION);
 
         // 维度范围
@@ -90,6 +94,25 @@ public class GeoHash_base implements Serializable {
         setBoundingBox(this, latitudeRange, longitudeRange);
         // 将坐标左移位取整, 右边补0
         this.bits <<= (MAX_BIT_PRECISION - desiredPrecision);
+    }
+
+    /**
+     * (按指定精度)对坐标计算geohash
+     *
+     * @param latitude       纬度
+     * @param longitude      经度
+     * @param precisionLevel 级数(或精度，取值范围：1~12)
+     * @return
+     */
+    public static GeoHash_base withPrecision(double latitude, double longitude, int precisionLevel) {
+        if (precisionLevel > MAX_CHARACTER_PRECISION) {
+            throw new IllegalArgumentException("A geohash can only be " + MAX_CHARACTER_PRECISION + " character long.");
+        }
+        if (Math.abs(latitude) > 90.0 || Math.abs(longitude) > 180.0) {
+            throw new IllegalArgumentException("Can't have lat/lon values out of (-90,90)/(-180/180)");
+        }
+        int desiredPrecision = Math.min(precisionLevel * BASE32_BITS, 60);
+        return new GeoHash_base(latitude, longitude, desiredPrecision);
     }
 
     /**
@@ -345,9 +368,9 @@ public class GeoHash_base implements Serializable {
      * @throws IllegalStateException when the number of significant bits is not a multiple of 5.
      */
     public GeoCode getGeoCodeObj() {
-//        if (this.significantBits % 5 != 0) {
-//            throw new IllegalStateException("Cannot convert a geohash to base32 if the precision is not a multiple of 5.");
-//        }
+        if (this.significantBits % 5 != 0) {
+            throw new IllegalStateException("Cannot convert a geohash to base32 if the precision is not a multiple of 5.");
+        }
 
         long firstFiveBitsMask = 0xf800000000000000L;
         long bitsCopy = this.bits;
