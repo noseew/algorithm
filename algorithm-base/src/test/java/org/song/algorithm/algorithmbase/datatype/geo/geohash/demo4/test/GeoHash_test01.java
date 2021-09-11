@@ -16,6 +16,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * 在基础版基础上, 新增了特性
+ * 1. 获取周边格子的时候, 可以根据半径获取多个
+ * 2. 获取周边格子的时候, 可以自动匹配合适的精度(仅测试使用)
+ */
 public class GeoHash_test01 implements Serializable {
 
     private static Logger logger = LoggerFactory.getLogger(GeoHash_test01.class);
