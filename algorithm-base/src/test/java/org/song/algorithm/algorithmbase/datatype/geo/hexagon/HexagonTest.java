@@ -1,15 +1,4 @@
-/*
- * Copyright: 2016 www.noseew.com Inc. All rights reserved.
- * 注意：本内容仅限于公司内部传阅，禁止外泄以及用于其他的商业目的
- *
- * @Project: labortory
- * @File: Demo
- * @Package: org.song.algorithm.hexagon.demo2
- * @Date: 2019年02月01日
- * @Author:jiali.song@song.com
- *
- */
-package org.song.algorithm.algorithmbase.datatype.geo.hexagon.demo2;
+package org.song.algorithm.algorithmbase.datatype.geo.hexagon;
 
 import java.util.Random;
 
@@ -18,7 +7,7 @@ import java.util.Random;
  * @author: jiali.song@song.com
  * @date: 2019年02月01日 19:03:46
  **/
-public class Demo {
+public class HexagonTest {
 
     public static void main(String[] args) {
         int[] ints = GetHexGridIndex(20, 20, 2, 1, 1, 3, 3, (byte) 1);

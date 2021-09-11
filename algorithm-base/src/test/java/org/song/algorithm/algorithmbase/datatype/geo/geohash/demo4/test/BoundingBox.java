@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase.datatype.geo.hexagon.geohash.demo4.test;
+package org.song.algorithm.algorithmbase.datatype.geo.geohash.demo4.test;
 
 import java.io.Serializable;
 

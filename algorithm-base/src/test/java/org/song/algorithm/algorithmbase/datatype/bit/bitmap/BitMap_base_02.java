@@ -149,7 +149,7 @@ public class BitMap_base_02 {
             定位元素: offset / bit
             定位偏移量: 1L << (offset % bit)
              */
-            return ((0x80000000_00000000L >>> (offset % bit)) & (bitMap[offset / bit])) > 0 ? 1 : 0;
+            return ((0x80000000_00000000L >>> (offset % bit)) & (bitMap[offset / bit])) != 0 ? 1 : 0;
         }
 
         /**

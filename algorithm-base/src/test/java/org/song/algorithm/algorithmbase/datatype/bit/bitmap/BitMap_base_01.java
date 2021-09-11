@@ -102,6 +102,17 @@ public class BitMap_base_01 {
         System.out.println(bitMap.consecutive());
     }
 
+    @Test
+    public void test_check() {
+//        MD5:key=3, code=46372
+//        SHA:key=3, code=1055
+        BitMap bitMap = new BitMap();
+        bitMap.setBit(46372);
+        System.out.println(bitMap.getBit(46372));
+        bitMap.setBit(1055);
+        System.out.println(bitMap.getBit(1055));
+    }
+
     /*
     bitmap
     1. 数据结构: 一维数组长度n, 子数组长度32(也可以用long类型, 64位)
@@ -230,7 +241,7 @@ public class BitMap_base_01 {
             定位元素: offset / bit
             定位偏移量: 1 << (offset % bit)
              */
-            return ((1 << (offset % bit)) & (bitMap[offset / bit])) > 0 ? 1 : 0;
+            return ((1 << (offset % bit)) & (bitMap[offset / bit])) != 0 ? 1 : 0;
         }
 
         /**

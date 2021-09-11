@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase.datatype.geo.hexagon.geohash.demo4.test;
+package org.song.algorithm.algorithmbase.datatype.geo.geohash.demo4.test;
 
 /**
  * 圆(半径)与矩形(GEO块)切割关系

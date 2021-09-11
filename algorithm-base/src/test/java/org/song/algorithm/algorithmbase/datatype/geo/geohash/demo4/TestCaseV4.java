@@ -1,8 +1,8 @@
-package org.song.algorithm.algorithmbase.datatype.geo.hexagon.geohash.demo4;
+package org.song.algorithm.algorithmbase.datatype.geo.geohash.demo4;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase.datatype.geo.hexagon.geohash.demo4.test.GeoHashV4;
-import org.song.algorithm.algorithmbase.datatype.geo.hexagon.geohash.demo4.test.PrecisionLevel;
+import org.song.algorithm.algorithmbase.datatype.geo.geohash.demo4.test.GeoHashV4;
+import org.song.algorithm.algorithmbase.datatype.geo.geohash.demo4.test.PrecisionLevel;
 
 import java.util.List;
 

@@ -1,10 +1,15 @@
-package org.song.algorithm.algorithmbase.datatype.geo.hexagon.geohash.demo4.test;
-
+package org.song.algorithm.algorithmbase.datatype.geo;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-public class DistanceUtil {
+/**
+ * @description:
+ * @author: jiali.song@song.com
+ * @date: 2019年02月02日 12:39:43
+ **/
+public class LocationUtils {
+
     private static final double EARTH_RADIUS = 6378137.0;
 
     /**
@@ -29,5 +34,18 @@ public class DistanceUtil {
         s = s * EARTH_RADIUS;
         s = new BigDecimal(s * 10000).divide(new BigDecimal(10000), RoundingMode.HALF_UP).doubleValue();
         return s;
+    }
+
+    public static void main(String[] args) {
+        double distance1 = getDistance(0, 0, 36.250914, 121.120858);
+        System.out.println(BigDecimal.valueOf(distance1).toPlainString() + "m");
+        double distance2 = getDistance(0, 0, 36.654677 , 121.410676);
+        System.out.println(BigDecimal.valueOf(distance2).toPlainString() + "m");
+
+        double v = distance2 - distance1;
+        System.out.println(v);
+
+        System.out.println(v / 30000);
+
     }
 }

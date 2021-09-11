@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase.datatype.geo.hexagon.geohash.demo4.test;
+package org.song.algorithm.algorithmbase.datatype.geo.geohash.demo4.test;
 
 public enum PrecisionLevel {
     Level1(1, 5009400, 4992600),
