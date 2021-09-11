@@ -72,7 +72,7 @@ public class GeoHash implements Serializable {
     /**
      * 上级
      */
-    private GeoHash parent;
+    private List<GeoHash> parents;
 
     private GeoHash() {
     }
@@ -126,29 +126,24 @@ public class GeoHash implements Serializable {
         if (geoHash.initLevel == null) {
             geoHash.initLevel = PrecisionLevel.getByLevelCode(precisionLevel);
         }
-        geoHash.parent = withParent(geoHash);
+        withParent(geoHash);
         return geoHash;
     }
 
-    private static GeoHash withParent(GeoHash geoHash) {
-        double latitude = geoHash.latitude;
-        double longitude = geoHash.longitude;
-        int precisionLevel = geoHash.level.getCode();
-        if (geoHash.level.getCode() > MAX_CHARACTER_PRECISION) {
-            throw new IllegalArgumentException("A geohash can only be " + MAX_CHARACTER_PRECISION + " character long.");
-        }
-        if (Math.abs(latitude) > 90.0 || Math.abs(longitude) > 180.0) {
-            throw new IllegalArgumentException("Can't have lat/lon values out of (-90,90)/(-180/180)");
-        }
-        int parentLevelCode = precisionLevel - 1;
-        int desiredPrecision = Math.min(parentLevelCode * BASE32_BITS, 60);
-        GeoHash parentGeoHash = new GeoHash(latitude, longitude, desiredPrecision);
-        parentGeoHash.initLevel = geoHash.initLevel;
-        if (parentLevelCode > PrecisionLevel.Level1.getCode()) {
+    private static void withParent(GeoHash geoHash) {
+
+        geoHash.parents = Lists.newArrayList(geoHash);
+        for (int i = geoHash.level.getCode(); i > PrecisionLevel.Level1.getCode(); i--) {
+            int parentLevelCode = i - 1;
+            int desiredPrecision = Math.min(parentLevelCode * BASE32_BITS, 60);
+
+            GeoHash parentGeoHash = new GeoHash(geoHash.latitude, geoHash.longitude, desiredPrecision);
+            parentGeoHash.initLevel = geoHash.initLevel;
             parentGeoHash.level = PrecisionLevel.getByLevelCode(parentLevelCode);
-            parentGeoHash.parent = withParent(parentGeoHash);
+            parentGeoHash.parents = geoHash.parents;
+
+            geoHash.parents.add(parentGeoHash);
         }
-        return parentGeoHash;
     }
 
     private void setBoundingBox(GeoHash hash, double[] latitudeRange, double[] longitudeRange) {
@@ -183,48 +178,6 @@ public class GeoHash implements Serializable {
         }
     }
 
-    /**
-     * returns the 8 adjacent hashes for this one. They are in the following
-     * order:<br>
-     * SELF, NW, N, NE, E, SE, S, SW, W
-     */
-    public GeoHash[] getAdjacentAndSelf() {
-        GeoHash northern = getNorthernNeighbour();
-        GeoHash eastern = getEasternNeighbour();
-        GeoHash southern = getSouthernNeighbour();
-        GeoHash western = getWesternNeighbour();
-        return new GeoHash[]{
-                this,
-                northern.getWesternNeighbour(),
-                northern,
-                northern.getEasternNeighbour(),
-                eastern,
-                southern.getEasternNeighbour(),
-                southern,
-                southern.getWesternNeighbour(),
-                western};
-    }
-
-    /**
-     * returns the 8 adjacent hashes for this one. They are in the following
-     * order:<br>
-     * NW, N, NE, E, SE, S, SW, W
-     */
-    public GeoHash[] getAdjacent() {
-        GeoHash northern = getNorthernNeighbour();
-        GeoHash eastern = getEasternNeighbour();
-        GeoHash southern = getSouthernNeighbour();
-        GeoHash western = getWesternNeighbour();
-        return new GeoHash[]{
-                northern.getWesternNeighbour(),
-                northern,
-                northern.getEasternNeighbour(),
-                eastern,
-                southern.getEasternNeighbour(),
-                southern,
-                southern.getWesternNeighbour(),
-                western};
-    }
 
     private GeoHash recombineLatLonBitsToHash(long[] latBits, long[] lonBits) {
         GeoHash hash = new GeoHash();
@@ -414,6 +367,14 @@ public class GeoHash implements Serializable {
         }
     }
 
+    public String toBinaryString() {
+        return Long.toBinaryString(bits);
+    }
+
+    public long getBits() {
+        return bits;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -431,61 +392,20 @@ public class GeoHash implements Serializable {
         return Objects.hash(getBoundingBox());
     }
 
-    /**
-     * 获取指定半径内所有的格子
-     * <p>
-     * 单位 m, 建议半径 (max * 4), 最大半径 (max * 6)
-     * <p>
-     * Level5(5, 4900, 4900),   // 建议半径 < 20000   最大 30000
-     * Level6(6, 1200, 609.4),  // 建议半径 < 4800    最大 7200
-     * Level7(7, 152.9, 152.4), // 建议半径 < 700     最大 900
-     * Level8(8, 38.2, 19),     // 建议半径 < 150     最大 240
-     * Level9(9, 4.8, 4.8),     // 建议半径 < 20      最大 30
-     *
-     * @param distanceRadius   半径 单位米
-     * @param isNearlyCircular 是否截取近似圆形, 默认:true (true: 圆形, false: 矩形)
-     * @param restrictGeoCount 是否限制区域数量(半径), 默认:true (true: 最大 13*13(6*2+1), false: 以半径为准)
-     * @return
-     */
-    public GeoHash[] getAdjacentAndSelf(int distanceRadius, Boolean isNearlyCircular, Boolean restrictGeoCount) {
-        isNearlyCircular = isNearlyCircular == null ? Boolean.TRUE : isNearlyCircular;
-        restrictGeoCount = restrictGeoCount == null ? Boolean.TRUE : restrictGeoCount;
-        GeoHash[] allGeoList = this.getAdjacentAndSelf(distanceRadius, restrictGeoCount);
-        if (allGeoList.length == 0 || !isNearlyCircular) {
-            return allGeoList;
-        }
-
-        List<GeoHash> geoHashes = Lists.newArrayList(allGeoList);
-        geoHashes.removeIf(e -> isInscribe(e.getBoundingBox(), distanceRadius));
-        logger.debug("范围内所有的格子 圆形 数量 = {}", geoHashes.size());
-        return geoHashes.toArray(new GeoHash[0]);
-    }
-
-    private GeoHash[] getAdjacentAndSelf(int distanceRadius, boolean restrictGeoCount) {
-        if (restrictGeoCount) {
-            distanceRadius = distanceRatioCheck(distanceRadius);
-        }
-
-        int circle = getCircle((int) Math.min(this.level.getWidth(), this.level.getHeight()), distanceRadius);
-        int side = (circle << 1) - 1;
-        logger.debug("层数circle = {}, 边长side = {}, 半径distanceRadius = {}", circle, side, distanceRadius);
-
-        GeoHash originalPoint = getOriginalPoint(side);
-        logger.debug("中心点: {} 左上角坐标原点: {}", this.getGeoCodeObj().getGeoCode(), originalPoint.getGeoCodeObj().getGeoCode());
-
-        List<GeoHash> allGeo = generateMatrix(side, originalPoint);
-        logger.debug("范围内所有的格子矩阵 矩形 数量 = {}", allGeo.size());
-        return allGeo.toArray(new GeoHash[0]);
+    public List<GeoHash> getParents() {
+        return parents;
     }
 
     /**
      * 生成矩阵, 以左上角为原点
+     * 过滤已存在 GEO 块
      *
      * @param side
      * @param originalPoint
+     * @param parentFilterList
      * @return
      */
-    private List<GeoHash> generateMatrix(int side, GeoHash originalPoint) {
+    private List<GeoHash> generateMatrix(int side, GeoHash originalPoint, List<GeoHash> parentFilterList) {
         List<GeoHash> allGeo = new ArrayList<>(side * side);
         GeoHash current = originalPoint;
         for (int x = 0; x < side; x++) {
@@ -498,7 +418,12 @@ public class GeoHash implements Serializable {
                     // 向上走
                     current = current.getNorthernNeighbour();
                 }
-                allGeo.add(current);
+
+                final GeoHash temp = current;
+                boolean contain = parentFilterList.parallelStream().anyMatch(e -> contain(e.boundingBox, temp.boundingBox));
+                if (!contain) {
+                    allGeo.add(current);
+                }
             }
             // 向右走
             current = current.getEasternNeighbour();
@@ -527,40 +452,6 @@ public class GeoHash implements Serializable {
     }
 
     /**
-     * 距离与等级比率限制
-     * <p>
-     * 层级差最大比率 = 8, 半径参考 4
-     * 半径 R <= max(格子边长) * 8 / 2 <= 最小边长 * 4
-     * 默认: 6
-     *
-     * @param distanceRadius
-     * @return
-     */
-    private int distanceRatioCheck(int distanceRadius) {
-        int maxMultiple = 6;
-        int mixMeter = 10;
-
-        if (this.level == null) {
-            logger.warn("GeoHash level 不能为空");
-            throw new IllegalArgumentException("param 'level' not null");
-        }
-        if (distanceRadius > Math.max(this.level.getWidth(), this.level.getHeight()) * maxMultiple) {
-            logger.warn("GeoHash distance 和 level 比率不能超过 {}倍, 建议上调level 设置最大默认{}, 半径 = {}, level = {}",
-                    maxMultiple, maxMultiple, distanceRadius, level.getCode());
-            return (int) Math.max(level.getWidth(), level.getHeight()) * maxMultiple;
-        }
-        if ((distanceRadius < Math.min(this.level.getWidth(), this.level.getHeight()))) {
-            logger.warn("GeoHash distance 小于level宽 建议下调level, 半径 = {}, level = {}", distanceRadius, level.getCode());
-
-        }
-        if (distanceRadius <= mixMeter) {
-            logger.warn("distance 最小 {}m, 设置默认 {}m", mixMeter, mixMeter);
-            return mixMeter;
-        }
-        return distanceRadius;
-    }
-
-    /**
      * 获取层数(覆盖半径的最小层数), 从1开始
      *
      * @param minUnitSide    单元格最小边长
@@ -573,32 +464,35 @@ public class GeoHash implements Serializable {
 
     /**
      * 获取指定距离内 自适应的 GEO
-     * 由小向大遍历, 小的多余删除
+     * 由大向小遍历, 对象数量较少, 自动限制最小级数
      *
      * @param distanceRadius
      * @return
      */
     public List<GeoHash> getAdjacentAdapt(int distanceRadius) {
         InciseStrategyEnum inciseStrategyEnum;
-        if (initLevel.equals(this.level)) {
-            // 初始外层使用 no_intersection
-            inciseStrategyEnum = InciseStrategyEnum.no_intersection;
-        } else {
-            // 上级使用 circle_contain_center
-            inciseStrategyEnum = InciseStrategyEnum.circle_contain_center;
-        }
-        List<GeoHash> geoHashes = this.getRadiusAround(distanceRadius, inciseStrategyEnum);
-        logger.info("level {}, 数量 {}", this.level, geoHashes.size());
-        if (this.parent != null && !geoHashes.isEmpty()) {
-            if (distanceRadius > Math.min(this.parent.level.getHeight(), this.parent.level.getWidth())) {
-                List<GeoHash> radiusAround = this.parent.getAdjacentAdapt(distanceRadius);
-                if (!radiusAround.isEmpty()) {
-                    geoHashes.removeIf(e -> radiusAround.stream().anyMatch(f -> contain(f.boundingBox, e.boundingBox)));
-                    geoHashes.addAll(radiusAround);
+
+        // 限制跨级最大3, 超过3数量会指数增长, 效率指数降低
+        int limitLevel = 3;
+
+        List<GeoHash> parentList = Lists.newArrayList();
+        for (int i = this.parents.size() - 1; i >= 0 && limitLevel >= 0; i--) {
+            GeoHash current = this.parents.get(i);
+            if (distanceRadius > Math.min(current.level.getHeight(), current.level.getWidth())) {
+                limitLevel--;
+                if (initLevel.equals(current.level)) {
+                    // 初始外层使用 no_intersection
+                    inciseStrategyEnum = InciseStrategyEnum.no_intersection;
+                } else {
+                    // 上级使用 circle_contain_center
+                    inciseStrategyEnum = InciseStrategyEnum.circle_contain_center;
                 }
+                List<GeoHash> geoHashes = current.getRadiusAround(distanceRadius, inciseStrategyEnum, parentList);
+                logger.info("level {}, 数量 {}", current.level, geoHashes.size());
+                parentList.addAll(geoHashes);
             }
         }
-        return geoHashes;
+        return parentList;
     }
 
     /**
@@ -608,7 +502,7 @@ public class GeoHash implements Serializable {
      * @param inciseStrategyEnum
      * @return
      */
-    private List<GeoHash> getRadiusAround(int distanceRadius, InciseStrategyEnum inciseStrategyEnum) {
+    private List<GeoHash> getRadiusAround(int distanceRadius, InciseStrategyEnum inciseStrategyEnum, List<GeoHash> parentFilterList) {
 
         int circle = getCircle((int) Math.min(this.level.getWidth(), this.level.getHeight()), distanceRadius);
         int side = (circle << 1) - 1;
@@ -617,7 +511,7 @@ public class GeoHash implements Serializable {
         GeoHash originalPoint = getOriginalPoint(side);
         logger.debug("中心点: {} 坐标原点: {}", this.getGeoCodeObj().getGeoCode(), originalPoint.getGeoCodeObj().getGeoCode());
 
-        List<GeoHash> allGeo = generateMatrix(side, originalPoint);
+        List<GeoHash> allGeo = generateMatrix(side, originalPoint, parentFilterList);
         logger.debug("矩形矩阵数量 = {}", allGeo.size());
         allGeo.removeIf(e -> isCircleBoxStrategy(e.getBoundingBox(), distanceRadius, inciseStrategyEnum));
         return allGeo;
@@ -718,4 +612,5 @@ public class GeoHash implements Serializable {
         }
         return true;
     }
+
 }

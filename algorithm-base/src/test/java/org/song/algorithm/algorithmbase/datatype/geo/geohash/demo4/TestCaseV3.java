@@ -1,7 +1,7 @@
 package org.song.algorithm.algorithmbase.datatype.geo.geohash.demo4;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase.datatype.geo.geohash.demo4.test.GeoHashV3;
+import org.song.algorithm.algorithmbase.datatype.geo.geohash.demo4.test.GeoHash;
 import org.song.algorithm.algorithmbase.datatype.geo.geohash.base.PrecisionLevel;
 
 import java.util.List;
@@ -20,31 +20,31 @@ public class TestCaseV3 {
         double lat = 31.27732;
         int precisionLevel = PrecisionLevel.Level7.getCode();
         long start = System.currentTimeMillis();
-        GeoHashV3 place = GeoHashV3.withPrecision(lat, lng, precisionLevel);
+        GeoHash place = GeoHash.withPrecision(lat, lng, precisionLevel);
 
         System.out.println(place.getGeoCodeObj().toString());
 
-        List<GeoHashV3> parentAllGeos = place.getAdjacentAdapt(5000);
+        List<GeoHash> parentAllGeos = place.getAdjacentAdapt(5000);
         long end = System.currentTimeMillis();
         System.out.println((end - start) + " ms");
         print(parentAllGeos);
         
     }
 
-    private static void print(GeoHashV3[] adjacentAndSelf) {
+    private static void print(GeoHash[] adjacentAndSelf) {
         StringBuilder sb = new StringBuilder();
-        for (GeoHashV3 geoHash : adjacentAndSelf) {
+        for (GeoHash geoHash : adjacentAndSelf) {
             sb.append(geoHash.getGeoCodeObj().getGeoCode()).append(",");
         }
         System.out.println(sb.substring(0, sb.length() - 1));
     }
 
-    private static void print(List<GeoHashV3> adjacentAndSelf) {
+    private static void print(List<GeoHash> adjacentAndSelf) {
         if (adjacentAndSelf.isEmpty()) {
             return;
         }
         StringBuilder sb = new StringBuilder();
-        for (GeoHashV3 geoHash : adjacentAndSelf) {
+        for (GeoHash geoHash : adjacentAndSelf) {
             sb.append(geoHash.getGeoCodeObj().getGeoCode()).append(",");
         }
         System.out.println(sb.substring(0, sb.length() - 1));

@@ -1,7 +1,7 @@
 package org.song.algorithm.algorithmbase.datatype.geo.geohash.demo4;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase.datatype.geo.geohash.demo4.test.GeoHashV4;
+import org.song.algorithm.algorithmbase.datatype.geo.geohash.demo4.test.GeoHashV2;
 import org.song.algorithm.algorithmbase.datatype.geo.geohash.base.PrecisionLevel;
 
 import java.util.List;
@@ -20,11 +20,11 @@ public class TestCaseV4 {
         double lat = 31.27732;
         int precisionLevel = PrecisionLevel.Level7.getCode();
         long start = System.currentTimeMillis();
-        GeoHashV4 place = GeoHashV4.withPrecision(lat, lng, precisionLevel);
+        GeoHashV2 place = GeoHashV2.withPrecision(lat, lng, precisionLevel);
 
         System.out.println(place.getGeoCodeObj().toString());
 
-        List<GeoHashV4> parentAllGeos = place.getAdjacentAdapt(500);
+        List<GeoHashV2> parentAllGeos = place.getAdjacentAdapt(500);
         long end = System.currentTimeMillis();
         System.out.println((end - start) + " ms");
         print(parentAllGeos);
@@ -37,7 +37,7 @@ public class TestCaseV4 {
         double lng = 120.741271;
         double lat = 31.27732;
         int precisionLevel = PrecisionLevel.Level1.getCode();
-        GeoHashV4 place = GeoHashV4.withPrecision(lat, lng, precisionLevel);
+        GeoHashV2 place = GeoHashV2.withPrecision(lat, lng, precisionLevel);
 
         System.out.println(place.toBinaryString());
         System.out.println(place.getNorthernNeighbour().toBinaryString());
@@ -54,7 +54,7 @@ public class TestCaseV4 {
         double lat = 31.27732;
 
         for (PrecisionLevel value : PrecisionLevel.values()) {
-            GeoHashV4 place = GeoHashV4.withPrecision(lat, lng, value.getCode());
+            GeoHashV2 place = GeoHashV2.withPrecision(lat, lng, value.getCode());
 
             System.out.println(place.toBinaryString());
             System.out.println(place.getNorthernNeighbour().toBinaryString());
@@ -66,20 +66,20 @@ public class TestCaseV4 {
     }
 
 
-    private static void print(GeoHashV4[] adjacentAndSelf) {
+    private static void print(GeoHashV2[] adjacentAndSelf) {
         StringBuilder sb = new StringBuilder();
-        for (GeoHashV4 geoHash : adjacentAndSelf) {
+        for (GeoHashV2 geoHash : adjacentAndSelf) {
             sb.append(geoHash.getGeoCodeObj().getGeoCode()).append(",");
         }
         System.out.println(sb.substring(0, sb.length() - 1));
     }
 
-    private static void print(List<GeoHashV4> adjacentAndSelf) {
+    private static void print(List<GeoHashV2> adjacentAndSelf) {
         if (adjacentAndSelf.isEmpty()) {
             return;
         }
         StringBuilder sb = new StringBuilder();
-        for (GeoHashV4 geoHash : adjacentAndSelf) {
+        for (GeoHashV2 geoHash : adjacentAndSelf) {
             sb.append(geoHash.getGeoCodeObj().getGeoCode()).append(",");
         }
         System.out.println(sb.substring(0, sb.length() - 1));
