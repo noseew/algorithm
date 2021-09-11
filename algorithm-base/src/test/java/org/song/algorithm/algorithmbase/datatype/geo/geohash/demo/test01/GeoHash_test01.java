@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase.datatype.geo.geohash.demo4.test;
+package org.song.algorithm.algorithmbase.datatype.geo.geohash.demo.test01;
 
 
 import com.google.common.collect.Lists;

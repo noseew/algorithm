@@ -3,7 +3,6 @@ package org.song.algorithm.algorithmbase.datatype.geo.geohash.base;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.song.algorithm.algorithmbase.datatype.geo.geohash.demo4.test.GeoHash_test01;
 
 import java.io.Serializable;
 import java.util.Objects;

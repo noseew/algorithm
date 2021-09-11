@@ -9,7 +9,10 @@ import java.math.RoundingMode;
  * @date: 2019年02月02日 12:39:43
  **/
 public class LocationUtils {
-
+    /**
+     * 地球半径: 6378137 单位米
+     * 地球周长: 40075017 单位米
+     */
     private static final double EARTH_RADIUS = 6378137.0;
 
     /**

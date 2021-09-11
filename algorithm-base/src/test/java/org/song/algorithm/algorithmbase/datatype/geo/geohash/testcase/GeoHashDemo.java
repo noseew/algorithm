@@ -391,8 +391,7 @@ public class GeoHashDemo {
         GeoHashDemo g = new GeoHashDemo(40.222012, 116.248283);
         g.sethashLength(12);
         System.out.println("当前坐标：" + g.getGeoHashBase32());
-        for (String str :
-                g.getGeoHashBase32For9()) {
+        for (String str : g.getGeoHashBase32For9()) {
             System.out.println(str);
         }
         System.out.println(System.currentTimeMillis() - time);
