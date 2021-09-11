@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase.datatype.geo.geohash.demo2;
+package org.song.algorithm.algorithmbase.datatype.geo.geohash.testcase;
 
 import java.util.ArrayList;
 import java.util.Arrays;

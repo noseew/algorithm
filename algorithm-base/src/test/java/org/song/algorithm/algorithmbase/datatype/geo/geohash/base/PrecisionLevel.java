@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase.datatype.geo.geohash.demo4.test;
+package org.song.algorithm.algorithmbase.datatype.geo.geohash.base;
 
 public enum PrecisionLevel {
     Level1(1, 5009400, 4992600),
@@ -21,8 +21,17 @@ public enum PrecisionLevel {
         this.height = height;
     }
 
+    /**
+     * 等级
+     */
     private int code;
+    /**
+     * 宽度, 经度间隔米
+     */
     private double width;
+    /**
+     * 高度, 纬度间隔米
+     */
     private double height;
 
     public static PrecisionLevel getByLevelCode(int code) {

@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase.datatype.geo.geohash.demo1;
+package org.song.algorithm.algorithmbase.datatype.geo.geohash.testcase;
 
 import com.alibaba.fastjson.JSONObject;
 

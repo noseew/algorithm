@@ -2,7 +2,7 @@ package org.song.algorithm.algorithmbase.datatype.geo.geohash.demo4;
 
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase.datatype.geo.geohash.demo4.test.GeoHashV2;
-import org.song.algorithm.algorithmbase.datatype.geo.geohash.demo4.test.PrecisionLevel;
+import org.song.algorithm.algorithmbase.datatype.geo.geohash.base.PrecisionLevel;
 
 import java.util.List;
 

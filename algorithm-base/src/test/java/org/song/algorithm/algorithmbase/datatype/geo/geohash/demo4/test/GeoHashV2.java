@@ -5,6 +5,10 @@ import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.song.algorithm.algorithmbase.datatype.geo.LocationUtils;
+import org.song.algorithm.algorithmbase.datatype.geo.geohash.base.BoundingBox;
+import org.song.algorithm.algorithmbase.datatype.geo.geohash.base.Coordinate;
+import org.song.algorithm.algorithmbase.datatype.geo.geohash.base.GeoCode;
+import org.song.algorithm.algorithmbase.datatype.geo.geohash.base.PrecisionLevel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
