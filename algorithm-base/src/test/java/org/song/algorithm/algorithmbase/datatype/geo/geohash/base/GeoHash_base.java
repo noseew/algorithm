@@ -345,9 +345,9 @@ public class GeoHash_base implements Serializable {
      * @throws IllegalStateException when the number of significant bits is not a multiple of 5.
      */
     public GeoCode getGeoCodeObj() {
-        if (this.significantBits % 5 != 0) {
-            throw new IllegalStateException("Cannot convert a geohash to base32 if the precision is not a multiple of 5.");
-        }
+//        if (this.significantBits % 5 != 0) {
+//            throw new IllegalStateException("Cannot convert a geohash to base32 if the precision is not a multiple of 5.");
+//        }
 
         long firstFiveBitsMask = 0xf800000000000000L;
         long bitsCopy = this.bits;

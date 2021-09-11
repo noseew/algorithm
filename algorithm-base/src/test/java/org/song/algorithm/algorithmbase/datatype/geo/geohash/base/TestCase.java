@@ -34,6 +34,7 @@ public class TestCase {
         int precisionLevel = PrecisionLevel.Level7.getCode();
         GeoHash_base place = new GeoHash_base(lat, lng, precisionLevel);
         GeoHash_base[] adjacent = place.getAdjacent();
+        print(adjacent);
         GeoHash_base[] adjacentAndSelf = place.getAdjacentAndSelf();
         print(adjacentAndSelf);
         // wttcgtc,wttcgw0,wttcgw1,wttcgw4,wttcgtf,wttcgtd,wttcgt9,wttcgt8,wttcgtb
