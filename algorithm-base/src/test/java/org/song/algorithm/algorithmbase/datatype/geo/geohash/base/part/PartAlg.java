@@ -21,10 +21,13 @@ public class PartAlg {
         GeoHashBits hash = new GeoHashBits(), fast_hash = new GeoHashBits();
 
         GeoHashRange lat_range = new GeoHashRange(), lon_range = new GeoHashRange();
+        // 地球 半周长 常量
         lat_range.max = 20037726.37;
         lat_range.min = -20037726.37;
         lon_range.max = 20037726.37;
         lon_range.min = -20037726.37;
+
+        // 具体坐标点(以米为单位)
         double latitude = 9741705.20;
         double longitude = 5417390.90;
 
@@ -142,15 +145,18 @@ public class PartAlg {
     }
 
     /**
+     * 将经纬度位置, 进行二分编码
+     * 注意经纬度并不是按照角度传入, 而是按照距离, 单位米
+     * <p>
      * 0:success
      * -1:failed
      *
-     * @param lat_range
-     * @param lon_range
-     * @param latitude
-     * @param longitude
-     * @param step
-     * @param hash
+     * @param lat_range 纬度距离范围, 单位米
+     * @param lon_range 精度距离范围, 单位米
+     * @param latitude  坐标纬度, 单位米
+     * @param longitude 坐标纬度, 单位米
+     * @param step      计算的步进, 精度
+     * @param hash      计算的结果记录
      * @return
      */
     public int geohashEncode(GeoHashRange lat_range, GeoHashRange lon_range,
@@ -166,8 +172,10 @@ public class PartAlg {
             return -1;
         }
 
+        // 循环步进/2, 计算次数
         for (; i < step; i++) {
             int lat_bit, lon_bit;
+            // 如果落入左边, 则标记0, 右边则标记1
             if (lat_range.max - latitude >= latitude - lat_range.min) {
                 lat_bit = 0;
                 lat_range.max = (lat_range.max + lat_range.min) / 2;
@@ -175,6 +183,7 @@ public class PartAlg {
                 lat_bit = 1;
                 lat_range.min = (lat_range.max + lat_range.min) / 2;
             }
+            // 如果落入下边, 则标记0, 上边则标记1
             if (lon_range.max - longitude >= longitude - lon_range.min) {
                 lon_bit = 0;
                 lon_range.max = (lon_range.max + lon_range.min) / 2;
@@ -182,6 +191,7 @@ public class PartAlg {
                 lon_bit = 1;
                 lon_range.min = (lon_range.max + lon_range.min) / 2;
             }
+            // bit编码交替记录经纬度的编码, 并向左移动
             hash.bits <<= 1;
             hash.bits += lon_bit;
             hash.bits <<= 1;
@@ -191,13 +201,16 @@ public class PartAlg {
     }
 
     /**
+     * 将二分编码进行二分解码成经纬度位置
+     * 注意经纬度并不是按照角度, 而是按照距离, 单位米
+     *
      * 0:success
      * -1:failed
      *
-     * @param lat_range
-     * @param lon_range
-     * @param hash
-     * @param area
+     * @param lat_range 纬度距离范围, 单位米
+     * @param lon_range 精度距离范围, 单位米
+     * @param hash 已经计算的结果记录
+     * @param area 将结果解码成区域
      * @return
      */
     public int geohashDecode(GeoHashRange lat_range, GeoHashRange lon_range,
@@ -205,21 +218,27 @@ public class PartAlg {
         if (null == area) {
             return -1;
         }
+        // 编码结果
         area.hash = hash;
         int i = 0;
         area.latitude.min = lat_range.min;
         area.latitude.max = lat_range.max;
         area.longitude.min = lon_range.min;
         area.longitude.max = lon_range.max;
+
+        // 按照步进, 循环*2
         for (; i < hash.step; i++) {
-            int lat_bit, lon_bit;
-            lon_bit = getBit(hash.bits, (hash.step - i) * 2 - 1);
-            lat_bit = getBit(hash.bits, (hash.step - i) * 2 - 2);
+            // 获取指定位置的编码, 0/1
+            int lon_bit = getBit(hash.bits, (hash.step - i) * 2 - 1);
+            int lat_bit = getBit(hash.bits, (hash.step - i) * 2 - 2);
+
+            // 纬度: 不断地获取二分结果, 并判断属于哪个区域, 最终将区域赋值给 area
             if (lat_bit == 0) {
                 area.latitude.max = (area.latitude.max + area.latitude.min) / 2;
             } else {
                 area.latitude.min = (area.latitude.max + area.latitude.min) / 2;
             }
+            // 精度: 不断地获取二分结果, 并判断属于哪个区域, 最终将区域赋值给 area
             if (lon_bit == 0) {
                 area.longitude.max = (area.longitude.max + area.longitude.min) / 2;
             } else {
@@ -230,14 +249,19 @@ public class PartAlg {
     }
 
     /**
+     * 将经纬度位置, 进行二分编码
+     * 注意经纬度并不是按照角度传入, 而是按照距离, 单位米
+     *
+     * 快速版本
+     *
      * Fast encode/decode version, more magic in implementation.
      *
-     * @param lat_range
-     * @param lon_range
-     * @param latitude
-     * @param longitude
-     * @param step
-     * @param hash
+     * @param lat_range 纬度距离范围, 单位米
+     * @param lon_range 精度距离范围, 单位米
+     * @param latitude 坐标纬度, 单位米
+     * @param longitude 坐标纬度, 单位米
+     * @param step 计算的步进, 精度
+     * @param hash 计算的结果记录
      * @return
      */
     public int geohashFastEncode(GeoHashRange lat_range, GeoHashRange lon_range, double latitude,
@@ -252,32 +276,43 @@ public class PartAlg {
             return -1;
         }
 
+        /*
+        该算法计算范围内的geohash位置的morton代码, 使用以下代码可以更有效地完成
+         */
         // The algorithm computes the morton code for the geohash location within
         // the range this can be done MUCH more efficiently using the following code
 
-        //compute the coordinate in the range 0-1
+        // 计算范围为0-1的坐标
+        // compute the coordinate in the range 0-1
         double lat_offset = (latitude - lat_range.min) / (lat_range.max - lat_range.min);
         double lon_offset = (longitude - lon_range.min) / (lon_range.max - lon_range.min);
 
-        //convert it to fixed point based on the step size
+        // 根据步长将其转换为定点
+        // convert it to fixed point based on the step size
         lat_offset *= (1L << step);
         lon_offset *= (1L << step);
 
         int ilato = (int) lat_offset;
         int ilono = (int) lon_offset;
 
-        //interleave the bits to create the morton code.  No branching and no bounding
+        // 交错位创建莫顿代码. 没有分支, 没有边界
+        // interleave the bits to create the morton code.  No branching and no bounding
         hash.bits = interleave(ilato, ilono);
         return 0;
     }
 
     /**
+     * 将二分编码进行二分解码成经纬度位置
+     * 注意经纬度并不是按照角度, 而是按照距离, 单位米
+     * 
+     * 快速版本
+     * 
      * Fast encode/decode version, more magic in implementation.
      *
-     * @param lat_range
-     * @param lon_range
-     * @param hash
-     * @param area
+     * @param lat_range 纬度距离范围, 单位米
+     * @param lon_range 精度距离范围, 单位米
+     * @param hash 已经计算的结果记录
+     * @param area 将结果解码成区域
      * @return
      */
     public int geohashFastDecode(GeoHashRange lat_range, GeoHashRange lon_range, GeoHashBits hash, GeoHashArea area) {
@@ -294,19 +329,23 @@ public class PartAlg {
         int ilato = (int) xyhilo;        //get back the original integer coordinates
         int ilono = (int) (xyhilo >> 32);
 
-        //double lat_offset=ilato;
-        //double lon_offset=ilono;
-        //lat_offset /= (1<<step);
-        //lon_offset /= (1<<step);
+        // double lat_offset=ilato;
+        // double lon_offset=ilono;
+        // lat_offset /= (1<<step);
+        // lon_offset /= (1<<step);
 
-        //the ldexp call converts the integer to a double,then divides by 2**step to get the 0-1 coordinate, which is then multiplied times scale and added to the min to get the absolute coordinate
+        /*
+        ldexp调用将整数转换为双精度数, 然后除以2**步得到0-1坐标, 然后将其乘以scale并加到最小值得到绝对坐标
+         */
+        // the ldexp call converts the integer to a double,then divides by 2**step to get the 0-1 coordinate, which is then multiplied times scale and added to the min to get the absolute coordinate
 //    area.latitude.min = lat_range.min + ldexp(ilato, -step) * lat_scale;
 //    area.latitude.max = lat_range.min + ldexp(ilato + 1, -step) * lat_scale;
 //    area.longitude.min = lon_range.min + ldexp(ilono, -step) * lon_scale;
 //    area.longitude.max = lon_range.min + ldexp(ilono + 1, -step) * lon_scale;
 
         /*
-         * much faster than 'ldexp'
+        比ldexp快得多
+        much faster than 'ldexp'
          */
         area.latitude.min = lat_range.min + (ilato * 1.0 / (1 << step)) * lat_scale;
         area.latitude.max = lat_range.min + ((ilato + 1) * 1.0 / (1 << step)) * lat_scale;
@@ -545,10 +584,13 @@ public class PartAlg {
     }
 
     static class GeoHashBits {
+        // 编码的bit
         long bits;
+        // 计算步进(精度/次数)
         int step;
     }
 
+    // 经纬度距离的范围, 单位米
     static class GeoHashRange {
         double max;
         double min;
