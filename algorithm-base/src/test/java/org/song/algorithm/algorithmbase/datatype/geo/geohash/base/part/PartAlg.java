@@ -277,6 +277,18 @@ public class PartAlg {
         }
 
         /*
+        纬度为例
+            1. (当前坐标 - 最小值)/(最大值-最小值) 得到 当前坐标在范围中的具体比例, 经度偏移量 lon_offset
+            2. 1左移步进 得到 步进的2次幂数, 
+            3. 经度偏移量*次幂数 得到 将比例偏移量放大具体倍数
+            4. 经度偏移量取整 得到 最终的经度结果
+        
+        快速版公式
+            lonCode = (cLon-lonMin)/(lonMax-lonMin)
+            lonCode = lonCode*2^step
+            
+        普通版采用循环step计算, 效率O(step), 快速版本直接采用浮点数相乘, 直接得到指定位置, 效率O(1)
+        
         该算法计算范围内的geohash位置的morton代码, 使用以下代码可以更有效地完成
          */
         // The algorithm computes the morton code for the geohash location within
