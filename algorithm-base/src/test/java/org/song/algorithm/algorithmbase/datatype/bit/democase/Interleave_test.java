@@ -6,9 +6,9 @@ import org.song.algorithm.algorithmbase.utils.BinaryUtils;
 import java.util.Random;
 
 public class Interleave_test {
-    
+
     @Test
-    public void test() {
+    public void test01() {
         Random random = new Random(Integer.MAX_VALUE);
         int x = random.nextInt();
         int y = random.nextInt();
@@ -21,10 +21,22 @@ public class Interleave_test {
 
     }
 
+    @Test
+    public void test02() {
+        Random random = new Random(Long.MAX_VALUE);
+        long deinterleave = deinterleave(random.nextLong());
+        System.out.println("end");
+        System.out.println(BinaryUtils.binaryPretty(deinterleave));
+
+//        System.out.println(BinaryUtils.binaryPretty(0x0000_0000_ffff_ffffL & deinterleave));
+//        System.out.println(BinaryUtils.binaryPretty(0x0000_0000_ffff_ffffL & (deinterleave >>> 32)));
+
+    }
+
     /**
      * 将两个32位的数, 按照bit位交叉成64bit的数
      * 效率O(logn), n = 总bit位数, 由于固定是64位, 所以可以理解为O(1)
-     * 
+     *
      * @param xOlg
      * @param yOlg
      * @return
@@ -36,7 +48,7 @@ public class Interleave_test {
         long _4 = 0x0F0F_0F0F_0F0F_0F0FL; // 00001111_00001111 00001111_00001111 00001111_00001111 00001111_00001111
         long _2 = 0x3333_3333_3333_3333L; // 00110011_00110011 00110011_00110011 00110011_00110011 00110011_00110011
         long _1 = 0x5555_5555_5555_5555L; // 01010101_01010101 01010101_01010101 01010101_01010101 01010101_01010101
-        
+
         long x = xOlg;
         x &= _32;
         long y = yOlg;
@@ -50,9 +62,9 @@ public class Interleave_test {
             | x       = 1111_1111 1111_1111 1111_1111 1111_1111
             & _16     = 0000_0000 0000_0000 1111_1111 1111_1111
          */
-        System.out.println(BinaryUtils.binaryPretty(x));
+        //        System.out.println(BinaryUtils.binaryPretty(x);
         x = ((x << 16) | x) & _16;
-        System.out.println(BinaryUtils.binaryPretty(x));
+        //        System.out.println(BinaryUtils.binaryPretty(x);
         y = ((y << 16) | y) & _16;
 
         /*
@@ -65,7 +77,7 @@ public class Interleave_test {
         
          */
         x = ((x << 8) | x) & _8;
-//        System.out.println(BinaryUtils.binaryPretty(x));
+        //        System.out.println(BinaryUtils.binaryPretty(x);
         y = ((y << 8) | y) & _8;
 
         /*
@@ -77,15 +89,15 @@ public class Interleave_test {
             & _4      = 0000_1111 0000_1111 0000_1111 0000_1111
          */
         x = ((x << 4) | x) & _4;
-//        System.out.println(BinaryUtils.binaryPretty(x));
+        //        System.out.println(BinaryUtils.binaryPretty(x);
         y = ((y << 4) | y) & _4;
 
         x = ((x << 2) | x) & _2;
-//        System.out.println(BinaryUtils.binaryPretty(x));
+        //        System.out.println(BinaryUtils.binaryPretty(x);
         y = ((y << 2) | y) & _2;
 
         x = ((x << 1) | x) & _1;
-//        System.out.println(BinaryUtils.binaryPretty(x));
+        //        System.out.println(BinaryUtils.binaryPretty(x);
         y = ((y << 1) | y) & _1;
         /*
         以此类推, 最终将原始32bit均匀的分在64bit中, 同时间隔补0
@@ -96,7 +108,7 @@ public class Interleave_test {
 
     /**
      * 将一个64位的数, 按照bit位交叉换成两个32位的数, 并前后拼成64bit的数
-     * 
+     *
      * @param xOlg
      * @return
      */
@@ -110,7 +122,32 @@ public class Interleave_test {
 
         long x = xOlg;
         long y = xOlg >>> 1;
+        System.out.println(BinaryUtils.binaryPretty(x));
 
-        return 0;
+        x = (x | (x >>> 0) & _1);
+        System.out.println(BinaryUtils.binaryPretty(x));
+        y = (y | (y >>> 0) & _1);
+
+        x = (x | (x >>> 1) & _2);
+        System.out.println(BinaryUtils.binaryPretty(x));
+        y = (y | (y >>> 1) & _2);
+
+        x = (x | (x >>> 2) & _4);
+        System.out.println(BinaryUtils.binaryPretty(x));
+        y = (y | (y >>> 2) & _4);
+
+        x = (x | (x >>> 4) & _8);
+        System.out.println(BinaryUtils.binaryPretty(x));
+        y = (y | (y >>> 4) & _8);
+
+        x = (x | (x >>> 8) & _16);
+        System.out.println(BinaryUtils.binaryPretty(x));
+        y = (y | (y >>> 8) & _16);
+
+        x = (x | (x >>> 16) & _32);
+        System.out.println(BinaryUtils.binaryPretty(x));
+        y = (y | (y >>> 16) & _32);
+
+        return x | (y << 32);
     }
 }

@@ -462,23 +462,23 @@ public class PartAlg {
         long x = interleaved; ///reverse the interleave process (http://stackoverflow.com/questions/4909263/how-to-efficiently-de-interleave-bits-inverse-morton)
         long y = interleaved >> 1;
 
-        x = (x | (x >> S[0])) & B[0];
-        y = (y | (y >> S[0])) & B[0];
+        x = (x | (x >>> S[0])) & B[0];
+        y = (y | (y >>> S[0])) & B[0];
 
-        x = (x | (x >> S[1])) & B[1];
-        y = (y | (y >> S[1])) & B[1];
+        x = (x | (x >>> S[1])) & B[1];
+        y = (y | (y >>> S[1])) & B[1];
 
-        x = (x | (x >> S[2])) & B[2];
-        y = (y | (y >> S[2])) & B[2];
+        x = (x | (x >>> S[2])) & B[2];
+        y = (y | (y >>> S[2])) & B[2];
 
-        x = (x | (x >> S[3])) & B[3];
-        y = (y | (y >> S[3])) & B[3];
+        x = (x | (x >>> S[3])) & B[3];
+        y = (y | (y >>> S[3])) & B[3];
 
-        x = (x | (x >> S[4])) & B[4];
-        y = (y | (y >> S[4])) & B[4];
+        x = (x | (x >>> S[4])) & B[4];
+        y = (y | (y >>> S[4])) & B[4];
 
-        x = (x | (x >> S[5])) & B[5];
-        y = (y | (y >> S[5])) & B[5];
+        x = (x | (x >>> S[5])) & B[5];
+        y = (y | (y >>> S[5])) & B[5];
 
         return x | (y << 32);
     }
