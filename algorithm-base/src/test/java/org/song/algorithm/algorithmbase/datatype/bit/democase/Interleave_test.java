@@ -3,11 +3,22 @@ package org.song.algorithm.algorithmbase.datatype.bit.democase;
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase.utils.BinaryUtils;
 
+import java.util.Random;
+
 public class Interleave_test {
     
     @Test
     public void test() {
-        System.out.println(BinaryUtils.binaryPretty(0x0000_FFFF_0000_FFFFL));
+        Random random = new Random(Integer.MAX_VALUE);
+        int x = random.nextInt();
+        int y = random.nextInt();
+        System.out.println(BinaryUtils.binaryPretty(x));
+        System.out.println(BinaryUtils.binaryPretty(y));
+        System.out.println("start");
+        long interleave = interleave(x, y);
+        System.out.println("end");
+        System.out.println(BinaryUtils.binaryPretty(interleave));
+
     }
 
     /**
@@ -19,6 +30,7 @@ public class Interleave_test {
      * @return
      */
     public long interleave(int xOlg, int yOlg) {
+        long _32 = 0x0000_0000_FFFF_FFFFL; // 00000000_00000000 00000000_00000000 11111111_11111111 11111111_11111111
         long _16 = 0x0000_FFFF_0000_FFFFL; // 00000000_00000000 11111111_11111111 00000000_00000000 11111111_11111111
         long _8 = 0x00FF_00FF_00FF_00FFL; // 00000000_11111111 00000000_11111111 00000000_11111111 00000000_11111111
         long _4 = 0x0F0F_0F0F_0F0F_0F0FL; // 00001111_00001111 00001111_00001111 00001111_00001111 00001111_00001111
@@ -26,7 +38,9 @@ public class Interleave_test {
         long _1 = 0x5555_5555_5555_5555L; // 01010101_01010101 01010101_01010101 01010101_01010101 01010101_01010101
         
         long x = xOlg;
+        x &= _32;
         long y = yOlg;
+        y &= _32;
 
         /*
         原始数据从每16位开始二分, 左边左移到32位开始(从低位计算)
@@ -36,7 +50,9 @@ public class Interleave_test {
             | x       = 1111_1111 1111_1111 1111_1111 1111_1111
             & _16     = 0000_0000 0000_0000 1111_1111 1111_1111
          */
+        System.out.println(BinaryUtils.binaryPretty(x));
         x = ((x << 16) | x) & _16;
+        System.out.println(BinaryUtils.binaryPretty(x));
         y = ((y << 16) | y) & _16;
 
         /*
@@ -49,6 +65,7 @@ public class Interleave_test {
         
          */
         x = ((x << 8) | x) & _8;
+//        System.out.println(BinaryUtils.binaryPretty(x));
         y = ((y << 8) | y) & _8;
 
         /*
@@ -60,18 +77,20 @@ public class Interleave_test {
             & _4      = 0000_1111 0000_1111 0000_1111 0000_1111
          */
         x = ((x << 4) | x) & _4;
+//        System.out.println(BinaryUtils.binaryPretty(x));
         y = ((y << 4) | y) & _4;
 
         x = ((x << 2) | x) & _2;
+//        System.out.println(BinaryUtils.binaryPretty(x));
         y = ((y << 2) | y) & _2;
 
         x = ((x << 1) | x) & _1;
+//        System.out.println(BinaryUtils.binaryPretty(x));
         y = ((y << 1) | y) & _1;
         /*
         以此类推, 最终将原始32bit均匀的分在64bit中, 同时间隔补0
         其中一个数, 左移一位然后拼接
          */
-
         return x | (y << 1);
     }
 
