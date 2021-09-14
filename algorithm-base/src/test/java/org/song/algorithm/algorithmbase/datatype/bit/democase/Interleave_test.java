@@ -8,6 +8,11 @@ import java.util.Random;
 public class Interleave_test {
 
     @Test
+    public void test() {
+        System.out.println(BinaryUtils.binaryPretty(0xaaaaaaaaaaaaaaaaL));
+    }
+
+    @Test
     public void test01() {
         System.out.println(BinaryUtils.binaryPretty(-1));
         System.out.println(BinaryUtils.binaryPretty(0));

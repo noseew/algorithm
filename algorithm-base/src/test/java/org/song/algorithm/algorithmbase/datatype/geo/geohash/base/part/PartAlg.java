@@ -367,12 +367,18 @@ public class PartAlg {
         return 0;
     }
 
+    /**
+     * 
+     * @param hash
+     * @param d
+     * @return
+     */
     public int geohashMoveX(GeoHashBits hash, int d) {
         if (d == 0) {
             return 0;
         }
-        long x = hash.bits & 0xaaaaaaaaaaaaaaaaL;
-        long y = hash.bits & 0x5555555555555555L;
+        long x = hash.bits & 0xaaaaaaaaaaaaaaaaL; // 10101010_10101010
+        long y = hash.bits & 0x5555555555555555L; // 01010101_01010101
 
         long zz = 0x5555555555555555L >> (64 - hash.step * 2);
         if (d > 0) {
@@ -502,41 +508,49 @@ public class PartAlg {
         neighbor = hash;
         switch (direction) {
             case GEOHASH_NORTH: {
+                // 上北
                 geohashMoveX(neighbor, 0);
                 geohashMoveY(neighbor, 1);
                 break;
             }
             case GEOHASH_SOUTH: {
+                // 下南
                 geohashMoveX(neighbor, 0);
                 geohashMoveY(neighbor, -1);
                 break;
             }
             case GEOHASH_EAST: {
+                // 左西
                 geohashMoveX(neighbor, 1);
                 geohashMoveY(neighbor, 0);
                 break;
             }
             case GEOHASH_WEST: {
+                // 右东
                 geohashMoveX(neighbor, -1);
                 geohashMoveY(neighbor, 0);
                 break;
             }
             case GEOHASH_SOUTH_WEST: {
+                // 东南
                 geohashMoveX(neighbor, -1);
                 geohashMoveY(neighbor, -1);
                 break;
             }
             case GEOHASH_SOUTH_EAST: {
+                // 西南
                 geohashMoveX(neighbor, 1);
                 geohashMoveY(neighbor, -1);
                 break;
             }
             case GEOHASH_NORT_WEST: {
+                // 西北
                 geohashMoveX(neighbor, -1);
                 geohashMoveY(neighbor, 1);
                 break;
             }
             case GEOHASH_NORT_EAST: {
+                // 东北
                 geohashMoveX(neighbor, 1);
                 geohashMoveY(neighbor, 1);
                 break;
@@ -549,14 +563,14 @@ public class PartAlg {
     }
 
     public GeoHashBits geohashNextLeftbottom(GeoHashBits bits) {
-        GeoHashBits newbits = bits;
+        GeoHashBits newbits = GeoHashBits.copy(bits);
         newbits.step++;
         newbits.bits <<= 2;
         return newbits;
     }
 
     public GeoHashBits geohashNextRightbottom(GeoHashBits bits) {
-        GeoHashBits newbits = bits;
+        GeoHashBits newbits = GeoHashBits.copy(bits);
         newbits.step++;
         newbits.bits <<= 2;
         newbits.bits += 2;
@@ -564,7 +578,7 @@ public class PartAlg {
     }
 
     public GeoHashBits geohashNextLefttop(GeoHashBits bits) {
-        GeoHashBits newbits = bits;
+        GeoHashBits newbits = GeoHashBits.copy(bits);
         newbits.step++;
         newbits.bits <<= 2;
         newbits.bits += 1;
@@ -572,7 +586,7 @@ public class PartAlg {
     }
 
     public GeoHashBits geohashNextRighttop(GeoHashBits bits) {
-        GeoHashBits newbits = bits;
+        GeoHashBits newbits = GeoHashBits.copy(bits);
         newbits.step++;
         newbits.bits <<= 2;
         newbits.bits += 3;
@@ -600,6 +614,13 @@ public class PartAlg {
         long bits;
         // 计算步进(精度/次数)
         int step;
+
+        public static GeoHashBits copy(GeoHashBits bits) {
+            GeoHashBits newBits = new GeoHashBits();
+            newBits.bits = bits.bits;
+            newBits.step = bits.step;
+            return newBits;
+        }
     }
 
     // 经纬度距离的范围, 单位米
