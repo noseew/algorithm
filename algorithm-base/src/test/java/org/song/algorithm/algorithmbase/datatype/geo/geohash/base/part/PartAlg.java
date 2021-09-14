@@ -396,8 +396,8 @@ public class PartAlg {
         if (d == 0) {
             return 0;
         }
-        long x = hash.bits & 0xaaaaaaaaaaaaaaaaL;
-        long y = hash.bits & 0x5555555555555555L;
+        long x = hash.bits & 0xaaaaaaaaaaaaaaaaL; // 10101010_10101010
+        long y = hash.bits & 0x5555555555555555L; // 01010101_01010101
 
         long zz = 0xaaaaaaaaaaaaaaaaL >> (64 - hash.step * 2);
         if (d > 0) {
@@ -413,6 +413,9 @@ public class PartAlg {
 
     /**
      * 将两个32位的数交错成64位的数
+     * y在高位, x在低位, 
+     * y表示南北, x表示东西
+     * 下0上1, 左0右1
      *
      * @param xlo
      * @param ylo
@@ -452,6 +455,10 @@ public class PartAlg {
     /**
      * 将一个已经交错的数拆开, 并拼装返回
      * 拼成 x|y 返回
+     * 
+     * y在高位, x在低位, 
+     * y表示南北, x表示东西
+     * 下0上1, 左0右1
      *
      * @param interleaved
      * @return
@@ -501,6 +508,23 @@ public class PartAlg {
         return 0;
     }
 
+    /*
+    y高位
+    x低位
+    
+    ?
+           |     |
+       1 -1| 1 0 | 1 1
+    -----------------------
+           |     |
+       0 -1| 0 0 | 1 0
+           |     |
+    -----------------------
+      -1 -1| -1 0|-1 1
+           |     |
+    
+    
+     */
     public int geohashGetNeighbor(GeoHashBits hash, GeoDirection direction, GeoHashBits neighbor) {
         if (null == neighbor) {
             return -1;
@@ -519,26 +543,26 @@ public class PartAlg {
                 geohashMoveY(neighbor, -1);
                 break;
             }
-            case GEOHASH_EAST: {
-                // 左西
-                geohashMoveX(neighbor, 1);
-                geohashMoveY(neighbor, 0);
-                break;
-            }
             case GEOHASH_WEST: {
-                // 右东
+                // 左西
                 geohashMoveX(neighbor, -1);
                 geohashMoveY(neighbor, 0);
                 break;
             }
+            case GEOHASH_EAST: {
+                // 右东
+                geohashMoveX(neighbor, 1);
+                geohashMoveY(neighbor, 0);
+                break;
+            }
             case GEOHASH_SOUTH_WEST: {
-                // 东南
+                // 西南
                 geohashMoveX(neighbor, -1);
                 geohashMoveY(neighbor, -1);
                 break;
             }
             case GEOHASH_SOUTH_EAST: {
-                // 西南
+                // 东南
                 geohashMoveX(neighbor, 1);
                 geohashMoveY(neighbor, -1);
                 break;
