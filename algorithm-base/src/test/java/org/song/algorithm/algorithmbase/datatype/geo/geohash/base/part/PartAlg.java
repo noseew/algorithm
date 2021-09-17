@@ -1,6 +1,7 @@
 package org.song.algorithm.algorithmbase.datatype.geo.geohash.base.part;
 
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.algorithmbase.utils.BinaryUtils;
 
 /**
  * 组成 GEO hash 的具体部分算法
@@ -144,9 +145,39 @@ public class PartAlg {
         }
     }
 
+    @Test
+    public void neighborsTest() {
+
+        GeoHashBits fast_hash = new GeoHashBits();
+
+        GeoHashRange lat_range = new GeoHashRange(), lon_range = new GeoHashRange();
+        lat_range.max = 10.0;
+        lat_range.min = -10.0;
+        lon_range.max = 20.0;
+        lon_range.min = -20.0;
+
+        double latitude = 15;
+        double longitude = 7;
+
+        geohashFastEncode(lat_range, lon_range, latitude, longitude, 2, fast_hash);
+        System.out.println(String.format("fast encode   (%d): %s\n", 2, fast_hash.bits));
+
+        GeoHashNeighbors neighbors = new GeoHashNeighbors();
+        geohashGetNeighbors(fast_hash, neighbors);
+        System.out.println(String.format("原点: %s\n", BinaryUtils.binaryPretty(fast_hash.bits)));
+        System.out.println(String.format("东: %s\n", BinaryUtils.binaryPretty(neighbors.east.bits)));
+        System.out.println(String.format("西: %s\n", BinaryUtils.binaryPretty(neighbors.west.bits)));
+        System.out.println(String.format("南: %s\n", BinaryUtils.binaryPretty(neighbors.south.bits)));
+        System.out.println(String.format("北: %s\n", BinaryUtils.binaryPretty(neighbors.north.bits)));
+        System.out.println(String.format("西北: %s\n", BinaryUtils.binaryPretty(neighbors.north_west.bits)));
+        System.out.println(String.format("东北: %s\n", BinaryUtils.binaryPretty(neighbors.north_east.bits)));
+        System.out.println(String.format("东南: %s\n", BinaryUtils.binaryPretty(neighbors.south_east.bits)));
+        System.out.println(String.format("西南: %s\n", BinaryUtils.binaryPretty(neighbors.south_west.bits)));
+    }
+
     /**
      * 将经纬度位置, 进行二分编码
-     * 注意经纬度并不是按照角度传入, 而是按照距离, 单位米
+     * 
      * <p>
      * 0:success
      * -1:failed
@@ -250,7 +281,7 @@ public class PartAlg {
 
     /**
      * 将经纬度位置, 进行二分编码
-     * 注意经纬度并不是按照角度传入, 而是按照距离, 单位米
+     * 
      *
      * 快速版本
      *
@@ -379,16 +410,27 @@ public class PartAlg {
         }
         long x = hash.bits & 0xaaaaaaaaaaaaaaaaL; // 10101010_10101010
         long y = hash.bits & 0x5555555555555555L; // 01010101_01010101
+        
+        System.out.println(String.format("[debug] d=%s, hash.bits=%s", d, BinaryUtils.binaryPretty(hash.bits)));
+        System.out.println(String.format("[debug] d=%s, x=%s", d, BinaryUtils.binaryPretty(x)));
+        System.out.println(String.format("[debug] d=%s, y=%s", d, BinaryUtils.binaryPretty(y)));
+
 
         long zz = 0x5555555555555555L >> (64 - hash.step * 2);
+        System.out.println(String.format("[debug] d=%s, zz=%s, (64 - hash.step * 2)=%s", d, BinaryUtils.binaryPretty(zz), (64 - hash.step * 2)));
         if (d > 0) {
             x = x + (zz + 1);
+            System.out.println(String.format("[debug] d=%s, x + (zz + 1)=%s", d, BinaryUtils.binaryPretty(x)));
         } else {
             x = x | zz;
+            System.out.println(String.format("[debug] d=%s, x | zz=%s", d, BinaryUtils.binaryPretty(x)));
             x = x - (zz + 1);
+            System.out.println(String.format("[debug] d=%s, x - (zz + 1)=%s", d, BinaryUtils.binaryPretty(x)));
         }
         x &= (0xaaaaaaaaaaaaaaaaL >> (64 - hash.step * 2));
+        System.out.println(String.format("[debug] d=%s, x=%s", d, BinaryUtils.binaryPretty(x)));
         hash.bits = (x | y);
+        System.out.println(String.format("[debug] d=%s, (x | y)=%s", d, BinaryUtils.binaryPretty(hash.bits)));
         return 0;
     }
 
