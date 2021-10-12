@@ -114,9 +114,20 @@ public class RateLimit_01_fixed_win {
         private final AtomicInteger[] countWin;
         private final int maxLimit;
 
+        /**
+         * @param maxLimit 最大限流数量
+         * @param seconds  单位秒, 必须 > 0
+         */
         public RateLimitFixedWindow02(int maxLimit, int seconds) {
             this.maxLimit = maxLimit;
             seconds = seconds <= 0 ? 1 : seconds;
+            /*
+            限流最小窗口固定1s, 数组长度为限流单位秒+1, 多出的1是为了腾出空间为下一秒做准备, 同时只要到下一秒, 则最早的那一秒就失效了
+            示例:
+                假设限流 2s 10次
+                数组为: |_0_|_1_|_2_|
+                计算2s内的访问次数只需要连续的两个数组item, 比如 0和1, 1和2, 2和0, 那么剩下的那个需要清空, 并为下一秒做准备
+             */
             countWin = new AtomicInteger[seconds + 1];
             for (int i = 0; i < countWin.length; i++) {
                 countWin[i] = new AtomicInteger();
@@ -129,17 +140,19 @@ public class RateLimit_01_fixed_win {
          * @return
          */
         public boolean get() {
-            // 当前秒
-            int s = (int)(System.currentTimeMillis() / 1000);
-            // 清空下一个窗口计数
+            // 当前秒, 当前秒的访问会落到指定位置的数组中
+            int s = (int) (System.currentTimeMillis() / 1000);
+            // 清空下一个窗口计数,
             countWin[(s + 1) % countWin.length].set(0);
 
+            // 统计 seconds 范围内的所有计数,
             int last = s;
             long count = 0;
             for (int i = 0; i < countWin.length - 1; i++) {
                 count += countWin[(last -= i) % countWin.length].get();
             }
             if (count >= maxLimit) {
+                // 如果计数超了, 则返回限流
                 return false;
             }
             // 当前窗口计数+1
