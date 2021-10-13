@@ -1,6 +1,7 @@
 package org.song.algorithm.algorithmbase._02case.leetcode.simple;
 
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.algorithmbase.datatype.bit.bitmap.BitMap_base_01;
 
 import java.util.*;
 
@@ -68,5 +69,80 @@ public class Leetcode_136_singleNumber {
         return single;
     }
 
+    @Test
+    public void testExt() {
+        System.out.println(Arrays.toString(singleNumberExt(new int[]{1, 2, 2, 3, 33})));
+    }
+
+    /**
+     * 海量int数组中, 只出现一次的数字
+     * 
+     * 上面的题目有限制
+     * 1. 数据最多只有一个单独的数字
+     * 2. 重复的数字只能重复2的倍数次
+     * 
+     * 这个拓展题目放开了上面的两个限制
+     * 这里增加其他限制
+     * 1. 数组中不允许出现负数, 这里不考虑负数, 防止位图溢出, 如果考虑负数, 则要使用long类型位图
+     * 
+     * 解决思路, 采用 位图, 从而降低内存限制
+     * 1. 采用两个相同大小的位图
+     * 2. bitmap1用于记录只出现一次的数字, bitmap2用来记录出现多次的数字
+     * 3. 将数字放入bitmap1中, 
+     * 如果该数字已存在(bitmap1中值为1 或者 bitmap2中值为1), 则将bitmap1该位置设置为0, 同时将bitmap2中该位置设置为1, 表示该数字出现多次
+     * 如果该数字不存在(bitmap1中值为0 且 bitmap2中值为0), 则将bitmap1中值为1
+     * 4. 统计bitmap1中值为1的对应的int数字, 就是只出现一次的数据
+     * 
+     * @param nums
+     * @return
+     */
+    public int[] singleNumberExt(int[] nums) {
+        // 找到数组中最大值和最小值, 这里不考虑负数, 防止位图溢出, 如果考虑负数, 则要使用long类型位图
+        // 最小值和最大值, 来确定位图的大小, 并将最小值映射成位图的第一位, 减小位图的大小
+        int min = nums[0], max = nums[0];
+        for (int n : nums) {
+            if (n < min) {
+                min = n;
+            }
+            if (n > max) {
+                max = n;
+            }
+        }
+
+        // 定义两个位图
+        BitMap_base_01.BitMap bitmap1 = new BitMap_base_01.BitMap(max - min + 1);
+        BitMap_base_01.BitMap bitmap2 = new BitMap_base_01.BitMap(max - min + 1);
+
+        // 将数组数据放入位图
+        for (int n : nums) {
+            int bitmapValue = n - min;
+            // 如果数字不存在
+            if (bitmap1.getBit(bitmapValue) == 0 && bitmap2.getBit(bitmapValue) == 0) {
+                bitmap1.setBit(bitmapValue);
+                continue;
+            }
+            // 如果数字已存在, 但只出现1次
+            if (bitmap1.getBit(bitmapValue) == 1) {
+                // 将 bitmap1 设为0, 说明该数据有重复的
+                bitmap1.removeBit(bitmapValue);
+                // 将 bitmap2 设为1, 说明该数据有重复, 不限次数 >1
+                bitmap2.setBit(bitmapValue);
+                continue;
+            }
+            // 如果数字已存在, 有重复, 不限次数 >1
+            if (bitmap2.getBit(bitmapValue) == 1) {
+                // 不做任何处理
+            }
+        }
+
+        // bitmap1中的数据就是, 只出现1次的数据
+        int[] values = bitmap1.getValues();
+        for (int i = 0; i < values.length; i++) {
+            // 弥补偏差
+            values[i] += min;
+        }
+        return values;
+
+    }
 
 }

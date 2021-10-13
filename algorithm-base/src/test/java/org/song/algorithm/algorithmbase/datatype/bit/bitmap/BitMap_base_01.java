@@ -3,6 +3,9 @@ package org.song.algorithm.algorithmbase.datatype.bit.bitmap;
 import org.junit.Test;
 import org.song.algorithm.algorithmbase.utils.BinaryUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 基于 int 32位, 大端序存储(也是int默认存储方式) 实现的bitmap
  */
@@ -12,6 +15,8 @@ public class BitMap_base_01 {
     public void test_01_start() {
         BitMap bitMap = new BitMap(32);
 
+        bitMap.setBit(0);
+        bitMap.setBit(1);
         bitMap.setBit(2);
         bitMap.setBit(4);
 
@@ -166,7 +171,7 @@ public class BitMap_base_01 {
 
     /**
      * BitMap 位图
-     * 偏移量从0开始
+     * 偏移量从0开始, 一个元素存储的数据是0, 0到31
      * 每个数组元素就是一个32位的元素, 采用小端序,
      * 每个数组元素就是一个int元素
      */
@@ -213,6 +218,7 @@ public class BitMap_base_01 {
 
         /**
          * 设置指定偏移量位置为1
+         * 从0开始, 第一位是0, 最高位是31
          * 会自动进行数组扩容
          * <p>
          * 时间复杂度 O(1)
@@ -225,7 +231,27 @@ public class BitMap_base_01 {
             定位元素: offset / bit
             定位偏移量: 1 << (offset % bit)
              */
+//            bitMap[offset / bit] = (0x8000_0000 >>> (bit - (offset % bit))) | (bitMap[offset / bit]);
             bitMap[offset / bit] = (1 << (offset % bit)) | (bitMap[offset / bit]);
+        }
+
+        /**
+         * 设置指定偏移量位置为0
+         * 会自动进行数组扩容
+         * <p>
+         * 时间复杂度 O(1)
+         *
+         * @param offset 偏移量从0开始
+         */
+        public void removeBit(int offset) {
+            ensureCapacity(offset);
+            /*
+            定位元素: offset / bit
+            定位偏移量: 1 << (offset % bit)
+            
+            将指定位置设为0
+             */
+            bitMap[offset / bit] = ~(1 << (offset % bit)) & bitMap[offset / bit];
         }
 
         /**
@@ -242,6 +268,52 @@ public class BitMap_base_01 {
             定位偏移量: 1 << (offset % bit)
              */
             return ((1 << (offset % bit)) & (bitMap[offset / bit])) != 0 ? 1 : 0;
+        }
+
+        /**
+         * 获取位图所有的数据, 并返回数组
+         *
+         * @return
+         */
+        public int[] getValues() {
+            List<Integer> list = new ArrayList<>();
+            for (int i = 0; i < bitMap.length; i++) {
+                int[] itemValues = getItemValues(i);
+                for (int value : itemValues) {
+                    list.add(value);
+                }
+            }
+            return list.stream().mapToInt(Integer::valueOf).toArray();
+        }
+
+        /**
+         * 获取指定位置的元素对应的int值数组
+         * <p>
+         * 时间复杂度 O(n)
+         *
+         * @param index bitmap中元素的下标
+         * @return 该元素中bit位所表示的实际的值
+         */
+        private int[] getItemValues(int index) {
+            // 基础值前面有, 由于数据从0开始, 所以-1
+            int baseValue = (bit * index) - 1;
+            baseValue = Math.max(baseValue, 0);
+            
+            // 当前下标的元素
+            int n = bitMap[index];
+            // 有多少个1, 该数组就有多大
+            int[] values = new int[bitCountByTable(n)];
+
+            // values中的数下标
+            int valuesIndex = 0;
+            // offset表示当前bit位对应的数的值, + baseValue 之后, 就是表示在位图中的值
+            for (int offset = 0; offset < bit && valuesIndex < values.length; offset++) {
+                if ((n & 0B1) == 1) {
+                    values[valuesIndex++] = baseValue + offset;
+                }
+                n = n >>> 1;
+            }
+            return values;
         }
 
         /**
@@ -660,6 +732,25 @@ public class BitMap_base_01 {
             n = n >>> start;
             int c = 0;
             for (int i = start; i <= end + tableBit; i += tableBit) {
+                // 每8位一组, 通过 table 查找 bitCount 数
+                c += bitCountTable[tableBitTag & n];
+                n = n >>> tableBit;
+            }
+            return c;
+        }
+
+        /**
+         * 计算int类型中1的数量,
+         * 注意: 并不是计算int中所有的1, 而是以大端序限制起止下标, 左开右闭
+         * <p>
+         * 时间复杂度 O(n), n指的是int位数
+         *
+         * @param n
+         * @return
+         */
+        private int bitCountByTable(int n) {
+            int c = 0;
+            for (int i = 0; i <= bit + tableBit; i += tableBit) {
                 // 每8位一组, 通过 table 查找 bitCount 数
                 c += bitCountTable[tableBitTag & n];
                 n = n >>> tableBit;
