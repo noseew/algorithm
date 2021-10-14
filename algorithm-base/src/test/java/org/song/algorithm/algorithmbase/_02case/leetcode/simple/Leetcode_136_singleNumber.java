@@ -72,6 +72,7 @@ public class Leetcode_136_singleNumber {
     @Test
     public void testExt() {
         System.out.println(Arrays.toString(singleNumberExt(new int[]{1, 2, 2, 2, 3, 33})));
+        System.out.println(Arrays.toString(singleNumberExt2(new int[]{1, 2, 2, 2, 3, 33})));
     }
 
     /**
