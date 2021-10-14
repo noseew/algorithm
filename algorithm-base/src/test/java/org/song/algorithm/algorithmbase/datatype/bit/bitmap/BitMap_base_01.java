@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.song.algorithm.algorithmbase.utils.BinaryUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -13,12 +14,16 @@ public class BitMap_base_01 {
 
     @Test
     public void test_01_start() {
-        BitMap bitMap = new BitMap(32);
+        BitMap bitMap = new BitMap(1);
 
         bitMap.setBit(0);
+        System.out.println(bitMap.getBit(0));
         bitMap.setBit(1);
-        bitMap.setBit(2);
-        bitMap.setBit(4);
+        System.out.println(bitMap.getBit(1));
+        bitMap.setBit(31);
+        System.out.println(bitMap.getBit(31));
+        bitMap.setBit(32);
+        System.out.println(bitMap.getBit(32));
 
         System.out.println(bitMap.getBit(4)); // 1
         System.out.println(bitMap.getBit(5)); // 0
@@ -116,6 +121,23 @@ public class BitMap_base_01 {
         System.out.println(bitMap.getBit(46372));
         bitMap.setBit(1055);
         System.out.println(bitMap.getBit(1055));
+    }
+
+    @Test
+    public void test_getValue() {
+        BitMap bitMap = new BitMap();
+        bitMap.setBit(0);
+        System.out.println(Arrays.toString(bitMap.getValues()));
+        bitMap.setBit(1);
+        System.out.println(Arrays.toString(bitMap.getValues()));
+        bitMap.setBit(31);
+        System.out.println(Arrays.toString(bitMap.getValues()));
+        bitMap.setBit(32);
+        System.out.println(Arrays.toString(bitMap.getValues()));
+        bitMap.setBit(63);
+        System.out.println(Arrays.toString(bitMap.getValues()));
+        bitMap.setBit(64);
+        System.out.println(Arrays.toString(bitMap.getValues()));
     }
 
     /*
@@ -231,7 +253,6 @@ public class BitMap_base_01 {
             定位元素: offset / bit
             定位偏移量: 1 << (offset % bit)
              */
-//            bitMap[offset / bit] = (0x8000_0000 >>> (bit - (offset % bit))) | (bitMap[offset / bit]);
             bitMap[offset / bit] = (1 << (offset % bit)) | (bitMap[offset / bit]);
         }
 
@@ -296,8 +317,7 @@ public class BitMap_base_01 {
          */
         private int[] getItemValues(int index) {
             // 基础值前面有, 由于数据从0开始, 所以-1
-            int baseValue = (bit * index) - 1;
-            baseValue = Math.max(baseValue, 0);
+            int baseValue = bit * index;
             
             // 当前下标的元素
             int n = bitMap[index];

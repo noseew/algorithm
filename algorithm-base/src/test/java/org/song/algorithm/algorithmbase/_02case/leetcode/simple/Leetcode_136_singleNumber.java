@@ -71,7 +71,7 @@ public class Leetcode_136_singleNumber {
 
     @Test
     public void testExt() {
-        System.out.println(Arrays.toString(singleNumberExt(new int[]{1, 2, 2, 3, 33})));
+        System.out.println(Arrays.toString(singleNumberExt(new int[]{1, 2, 2, 2, 3, 33})));
     }
 
     /**
@@ -97,6 +97,46 @@ public class Leetcode_136_singleNumber {
      * @return
      */
     public int[] singleNumberExt(int[] nums) {
+        // 找到数组中最大值和最小值, 这里不考虑负数, 防止位图溢出, 如果考虑负数, 则要使用long类型位图
+        // 最小值和最大值, 来确定位图的大小, 并将最小值映射成位图的第一位, 减小位图的大小
+        int min = nums[0], max = nums[0];
+        for (int n : nums) {
+            if (n > max) {
+                max = n;
+            }
+        }
+
+        // 定义两个位图
+        BitMap_base_01.BitMap bitmap1 = new BitMap_base_01.BitMap(max);
+        BitMap_base_01.BitMap bitmap2 = new BitMap_base_01.BitMap(max);
+
+        // 将数组数据放入位图
+        for (int n : nums) {
+            // 如果数字不存在
+            if (bitmap1.getBit(n) == 0 && bitmap2.getBit(n) == 0) {
+                bitmap1.setBit(n);
+                continue;
+            }
+            // 如果数字已存在, 但只出现1次
+            if (bitmap1.getBit(n) == 1) {
+                // 将 bitmap1 设为0, 说明该数据有重复的
+                bitmap1.removeBit(n);
+                // 将 bitmap2 设为1, 说明该数据有重复, 不限次数 >1
+                bitmap2.setBit(n);
+                continue;
+            }
+            // 如果数字已存在, 有重复, 不限次数 >1
+            if (bitmap2.getBit(n) == 1) {
+                // 不做任何处理
+            }
+        }
+
+        // bitmap1中的数据就是, 只出现1次的数据
+        return bitmap1.getValues();
+
+    }
+
+    public int[] singleNumberExt2(int[] nums) {
         // 找到数组中最大值和最小值, 这里不考虑负数, 防止位图溢出, 如果考虑负数, 则要使用long类型位图
         // 最小值和最大值, 来确定位图的大小, 并将最小值映射成位图的第一位, 减小位图的大小
         int min = nums[0], max = nums[0];
