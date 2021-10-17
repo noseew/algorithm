@@ -8,7 +8,11 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class RateLimit_01_fixed_win {
+/**
+ * 限流算法
+ * 窗口限流, 固定窗口, 或者滑动窗口
+ */
+public class RateLimit_01_window {
 
     @Test
     public void test01() throws InterruptedException {
@@ -41,6 +45,33 @@ public class RateLimit_01_fixed_win {
     @Test
     public void test02() throws InterruptedException {
         RateLimitFixedWindow02 rateLimitFixedWindow = new RateLimitFixedWindow02(10, 1);
+
+        TestReporter reporter = new TestReporter();
+
+        for (int i = 0; i < 50; i++) {
+            Thread thread = new Thread(() -> {
+                if (rateLimitFixedWindow.get()) {
+                    reporter.success.getAndIncrement();
+
+                    System.out.println(Thread.currentThread().getName() + "获取到锁");
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(200);
+                    } catch (InterruptedException e) {
+                    }
+                } else {
+                    reporter.fail.getAndIncrement();
+                    System.out.println(Thread.currentThread().getName() + "被限流");
+                }
+            }, "T" + i);
+            thread.start();
+        }
+        TimeUnit.SECONDS.sleep(5);
+        System.out.println(reporter);
+    }
+
+    @Test
+    public void test03() throws InterruptedException {
+        RateLimitFixedWindow03 rateLimitFixedWindow = new RateLimitFixedWindow03(10, 1);
 
         TestReporter reporter = new TestReporter();
 
@@ -111,6 +142,49 @@ public class RateLimit_01_fixed_win {
      */
     static class RateLimitFixedWindow02 {
 
+        private AtomicInteger counter = new AtomicInteger();
+        private int maxLimit;
+        /**
+         * 窗口大小, 单位秒
+         */
+        private int winSecond;
+        /**
+         * 上次窗口时间
+         */
+        private long lastTime = System.currentTimeMillis();
+
+        RateLimitFixedWindow02(int maxLimit, int winSecond) {
+            this.maxLimit = maxLimit;
+            this.winSecond = winSecond;
+        }
+
+        /**
+         * 是否通过
+         *
+         * @return
+         */
+        public boolean get() {
+            long now = System.currentTimeMillis();
+            /*
+            如果在窗口之外, 则重置
+             */
+            if (((now - lastTime) / 1000) > winSecond) {
+                lastTime = now;
+                counter.set(1);
+                return true;
+            }
+            // 如果在窗口之内, 则判断次数
+            return counter.incrementAndGet() <= maxLimit;
+        }
+    }
+
+    /**
+     * 固定窗口,
+     * 采用 计数器 + 时间戳分组的数组
+     * 向滑动窗口迈进,
+     */
+    static class RateLimitFixedWindow03 {
+
         private final AtomicInteger[] countWin;
         private final int maxLimit;
 
@@ -118,7 +192,7 @@ public class RateLimit_01_fixed_win {
          * @param maxLimit 最大限流数量
          * @param seconds  单位秒, 必须 > 0
          */
-        public RateLimitFixedWindow02(int maxLimit, int seconds) {
+        public RateLimitFixedWindow03(int maxLimit, int seconds) {
             this.maxLimit = maxLimit;
             seconds = seconds <= 0 ? 1 : seconds;
             /*
@@ -160,5 +234,9 @@ public class RateLimit_01_fixed_win {
 
             return true;
         }
+    }
+
+    static class RateLimitSlidingWindow {
+        
     }
 }
