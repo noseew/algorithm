@@ -142,6 +142,8 @@ public class LoadBalancing {
 
     /**
      * 获取数组中最小元素的下标
+     * 注意这里采用简单的O(n)算法, 
+     * 在Linux中的CFS调度算法中, 也是一种步进调度, 此数据结构采用的是红黑树, 可以更快的找到指定的最小时间片, 从而执行
      */
     private int minIndex(int[] steps) {
         int min = steps[0];
