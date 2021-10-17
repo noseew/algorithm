@@ -1,6 +1,7 @@
 package org.song.algorithm.algorithmbase._02case.ratelimit;
 
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.algorithmbase.utils.ThreadUtils;
 
 import java.math.BigDecimal;
 import java.util.concurrent.Executors;
@@ -10,27 +11,29 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 限流算法
- * 窗口限流, 固定窗口, 或者滑动窗口
+ * 窗口限流
+ * - 固定窗口
+ * - 滑动窗口
  */
-public class RateLimit_01_window {
+public class RateLimit_01 {
 
     @Test
     public void test01() throws InterruptedException {
-
+        /*
+        总数:1000, 成功:11, 失败:989, 通过率:0.0110
+         */
         RateLimitFixedWindow rateLimitFixedWindow = new RateLimitFixedWindow(10, 1);
 
         TestReporter reporter = new TestReporter();
 
-        for (int i = 0; i < 50; i++) {
+        int tryTimes = 1000;
+
+        for (int i = 0; i < tryTimes; i++) {
             Thread thread = new Thread(() -> {
+                ThreadUtils.sleepRandom(TimeUnit.MILLISECONDS, 400);
                 if (rateLimitFixedWindow.get()) {
                     reporter.success.getAndIncrement();
-
                     System.out.println(Thread.currentThread().getName() + "获取到锁");
-                    try {
-                        TimeUnit.MILLISECONDS.sleep(200);
-                    } catch (InterruptedException e) {
-                    }
                 } else {
                     reporter.fail.getAndIncrement();
                     System.out.println(Thread.currentThread().getName() + "被限流");
@@ -44,20 +47,21 @@ public class RateLimit_01_window {
 
     @Test
     public void test02() throws InterruptedException {
+        /*
+        总数:1000, 成功:10, 失败:990, 通过率:0.0100
+         */
         RateLimitFixedWindow02 rateLimitFixedWindow = new RateLimitFixedWindow02(10, 1);
 
         TestReporter reporter = new TestReporter();
 
-        for (int i = 0; i < 50; i++) {
+        int tryTimes = 1000;
+
+        for (int i = 0; i < tryTimes; i++) {
             Thread thread = new Thread(() -> {
+                ThreadUtils.sleepRandom(TimeUnit.MILLISECONDS, 400);
                 if (rateLimitFixedWindow.get()) {
                     reporter.success.getAndIncrement();
-
                     System.out.println(Thread.currentThread().getName() + "获取到锁");
-                    try {
-                        TimeUnit.MILLISECONDS.sleep(200);
-                    } catch (InterruptedException e) {
-                    }
                 } else {
                     reporter.fail.getAndIncrement();
                     System.out.println(Thread.currentThread().getName() + "被限流");
@@ -71,20 +75,21 @@ public class RateLimit_01_window {
 
     @Test
     public void test03() throws InterruptedException {
+        /*
+        总数:1000, 成功:10, 失败:990, 通过率:0.0100
+         */
         RateLimitFixedWindow03 rateLimitFixedWindow = new RateLimitFixedWindow03(10, 1);
 
         TestReporter reporter = new TestReporter();
 
-        for (int i = 0; i < 50; i++) {
+        int tryTimes = 1000;
+
+        for (int i = 0; i < tryTimes; i++) {
             Thread thread = new Thread(() -> {
+                ThreadUtils.sleepRandom(TimeUnit.MILLISECONDS, 400);
                 if (rateLimitFixedWindow.get()) {
                     reporter.success.getAndIncrement();
-
                     System.out.println(Thread.currentThread().getName() + "获取到锁");
-                    try {
-                        TimeUnit.MILLISECONDS.sleep(200);
-                    } catch (InterruptedException e) {
-                    }
                 } else {
                     reporter.fail.getAndIncrement();
                     System.out.println(Thread.currentThread().getName() + "被限流");
@@ -96,7 +101,35 @@ public class RateLimit_01_window {
         System.out.println(reporter);
     }
 
-    static class TestReporter {
+    @Test
+    public void test04() throws InterruptedException {
+        /*
+        总数:1000, 成功:10, 失败:990, 通过率:0.0100
+         */
+        RateLimitSlidingWindow rateLimitSlidingWindow = new RateLimitSlidingWindow(10, 2, 5);
+
+        TestReporter reporter = new TestReporter();
+        
+        int tryTimes = 1000;
+
+        for (int i = 0; i < tryTimes; i++) {
+            Thread thread = new Thread(() -> {
+                ThreadUtils.sleepRandom(TimeUnit.MILLISECONDS, 400);
+                if (rateLimitSlidingWindow.get()) {
+                    reporter.success.getAndIncrement();
+                    System.out.println(Thread.currentThread().getName() + "获取到锁");
+                } else {
+                    reporter.fail.getAndIncrement();
+                    System.out.println(Thread.currentThread().getName() + "被限流");
+                }
+            }, "T" + i);
+            thread.start();
+        }
+        TimeUnit.SECONDS.sleep(5);
+        System.out.println(reporter);
+    }
+
+    public static class TestReporter {
         AtomicInteger success = new AtomicInteger();
         AtomicInteger fail = new AtomicInteger();
 
@@ -104,7 +137,7 @@ public class RateLimit_01_window {
         public String toString() {
             return String.format("总数:%s, 成功:%s, 失败:%s, 通过率:%s", success.get() + fail.get(), success.get(), fail.get(),
                     BigDecimal.valueOf(success.get())
-                            .divide(BigDecimal.valueOf(success.get() + fail.get()), 2, BigDecimal.ROUND_HALF_UP));
+                            .divide(BigDecimal.valueOf(success.get() + fail.get()), 4, BigDecimal.ROUND_HALF_UP));
         }
     }
 
@@ -112,7 +145,7 @@ public class RateLimit_01_window {
      * 固定窗口,
      * 采用 计数器 + 定时器
      */
-    static class RateLimitFixedWindow {
+    public static class RateLimitFixedWindow {
 
         private final AtomicInteger count = new AtomicInteger();
         private final int maxLimit;
@@ -140,7 +173,7 @@ public class RateLimit_01_window {
      * 固定窗口,
      * 采用 计数器 + 时间戳分组的数组
      */
-    static class RateLimitFixedWindow02 {
+    public static class RateLimitFixedWindow02 {
 
         private AtomicInteger counter = new AtomicInteger();
         private int maxLimit;
@@ -183,7 +216,7 @@ public class RateLimit_01_window {
      * 采用 计数器 + 时间戳分组的数组
      * 向滑动窗口迈进,
      */
-    static class RateLimitFixedWindow03 {
+    public static class RateLimitFixedWindow03 {
 
         private final AtomicInteger[] countWin;
         private final int maxLimit;
@@ -236,7 +269,64 @@ public class RateLimit_01_window {
         }
     }
 
-    static class RateLimitSlidingWindow {
-        
+    /**
+     * 滑动窗口, 
+     * RateLimitFixedWindow03 的优化版本, 可以自定义窗口大小, 和窗口精度
+     */
+    public static class RateLimitSlidingWindow {
+        /**
+         * 窗口数量
+         */
+        private AtomicInteger[] countWin;
+        /**
+         * 限流窗口次数
+         */
+        private int maxLimit;
+
+        /**
+         * @param maxLimit 最大限流数量
+         * @param seconds  单位限流窗口, 单位秒, 必须 > 0
+         * @param winCount 单位窗口数量
+         */
+        public RateLimitSlidingWindow(int maxLimit, int seconds, int winCount) {
+            // 转换成每秒限流大小
+            this.maxLimit = maxLimit / seconds;
+            // 转换成每秒窗口大小
+            int secondsCount = winCount / seconds;
+            /*
+            将限流范围 
+             */
+            countWin = new AtomicInteger[secondsCount + 1];
+            for (int i = 0; i < countWin.length; i++) {
+                countWin[i] = new AtomicInteger();
+            }
+        }
+
+        /**
+         * 是否通过
+         *
+         * @return
+         */
+        public boolean get() {
+            // 当前秒, 当前秒的访问会落到指定位置的数组中
+            int s = (int) (System.currentTimeMillis() / 1000);
+            // 清空下一个窗口计数,
+            countWin[(s + 1) % countWin.length].set(0);
+
+            // 统计 seconds 范围内的所有计数,
+            int last = s;
+            long count = 0;
+            for (int i = 0; i < countWin.length - 1; i++) {
+                count += countWin[(last -= i) % countWin.length].get();
+            }
+            if (count >= maxLimit) {
+                // 如果计数超了, 则返回限流
+                return false;
+            }
+            // 当前窗口计数+1
+            countWin[s % countWin.length].getAndIncrement();
+
+            return true;
+        }
     }
 }
