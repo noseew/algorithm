@@ -109,13 +109,40 @@ public class RateLimit_01 {
         RateLimitSlidingWindow rateLimitSlidingWindow = new RateLimitSlidingWindow(10, 2, 5);
 
         TestReporter reporter = new TestReporter();
-        
+
         int tryTimes = 1000;
 
         for (int i = 0; i < tryTimes; i++) {
             Thread thread = new Thread(() -> {
                 ThreadUtils.sleepRandom(TimeUnit.MILLISECONDS, 400);
                 if (rateLimitSlidingWindow.get()) {
+                    reporter.success.getAndIncrement();
+                    System.out.println(Thread.currentThread().getName() + "获取到锁");
+                } else {
+                    reporter.fail.getAndIncrement();
+                    System.out.println(Thread.currentThread().getName() + "被限流");
+                }
+            }, "T" + i);
+            thread.start();
+        }
+        TimeUnit.SECONDS.sleep(5);
+        System.out.println(reporter);
+    }
+
+    @Test
+    public void test05() throws InterruptedException {
+        /*
+         */
+        RateLimitLeakyBucket limit = new RateLimitLeakyBucket(10, 2);
+
+        TestReporter reporter = new TestReporter();
+
+        int tryTimes = 1000;
+
+        for (int i = 0; i < tryTimes; i++) {
+            Thread thread = new Thread(() -> {
+                ThreadUtils.sleepRandom(TimeUnit.MILLISECONDS, 400);
+                if (limit.get()) {
                     reporter.success.getAndIncrement();
                     System.out.println(Thread.currentThread().getName() + "获取到锁");
                 } else {
@@ -327,6 +354,102 @@ public class RateLimit_01 {
             countWin[s % countWin.length].getAndIncrement();
 
             return true;
+        }
+    }
+
+    /**
+     * 漏桶算法
+     */
+    public static class RateLimitLeakyBucket {
+
+        /**
+         * 桶的容量
+         */
+        private int capacity;
+        /**
+         * 漏出速率
+         */
+        private int permitsPerSecond;
+        /**
+         * 剩余水量
+         */
+        private long leftWater;
+        /**
+         * 上次注入时间
+         */
+        private long timeStamp = System.currentTimeMillis();
+
+        public RateLimitLeakyBucket(int permitsPerSecond, int capacity) {
+            this.capacity = capacity;
+            this.permitsPerSecond = permitsPerSecond;
+        }
+
+        public synchronized boolean get() {
+            // 1. 计算剩余水量
+            long now = System.currentTimeMillis();
+            // 上次请求截止到目前的秒数
+            long timeGap = (now - timeStamp) / 1000;
+            leftWater = Math.max(0, leftWater - timeGap * permitsPerSecond);
+            timeStamp = now;
+
+            // 如果未满, 则放行, 否则限流
+            if (leftWater < capacity) {
+                leftWater += 1;
+                return true;
+            }
+            return false;
+        }
+    }
+
+    /**
+     * 令牌桶
+     */
+    public static class RateLimitTokenBucket {
+        /**
+         * 令牌桶的容量「限流器允许的最大突发流量」
+         */
+        private final long capacity;
+        /**
+         * 令牌发放速率
+         */
+        private final long generatedPerSeconds;
+        /**
+         * 最后一个令牌发放的时间
+         */
+        long lastTokenTime = System.currentTimeMillis();
+        /**
+         * 当前令牌数量
+         */
+        private long currentTokens;
+
+        public RateLimitTokenBucket(long generatedPerSeconds, int capacity) {
+            this.generatedPerSeconds = generatedPerSeconds;
+            this.capacity = capacity;
+        }
+
+        /**
+         * 尝试获取令牌
+         *
+         * @return true表示获取到令牌，放行；否则为限流
+         */
+        public synchronized boolean get() {
+            /**
+             * 计算令牌当前数量
+             * 请求时间在最后令牌是产生时间相差大于等于额1s（为啥时1s？因为生成令牌的最小时间单位时s），则
+             * 1. 重新计算令牌桶中的令牌数
+             * 2. 将最后一个令牌发放时间重置为当前时间
+             */
+            long now = System.currentTimeMillis();
+            if (now - lastTokenTime >= 1000) {
+                long newPermits = (now - lastTokenTime) / 1000 * generatedPerSeconds;
+                currentTokens = Math.min(currentTokens + newPermits, capacity);
+                lastTokenTime = now;
+            }
+            if (currentTokens > 0) {
+                currentTokens--;
+                return true;
+            }
+            return false;
         }
     }
 }
