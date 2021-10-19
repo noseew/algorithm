@@ -359,6 +359,9 @@ public class RateLimit_01 {
 
     /**
      * 漏桶算法
+     * 
+     * 这个实现似乎无法做到恒定速度流出, 至少在1s内速度并不恒定, 效果等价于1秒的固定窗口
+     * 待研究
      */
     public static class RateLimitLeakyBucket {
 
@@ -367,7 +370,7 @@ public class RateLimit_01 {
          */
         private int capacity;
         /**
-         * 漏出速率
+         * 漏出速率, 每秒数量
          */
         private int permitsPerSecond;
         /**
@@ -384,11 +387,25 @@ public class RateLimit_01 {
             this.permitsPerSecond = permitsPerSecond;
         }
 
+        /*
+        漏出速率 permitsPerSecond, 每秒许可数量
+        桶容量 capacity, 许可的上限, 超出则限流
+        
+        timeGap * permitsPerSecond 随着时间的前进, 应该提供的许可越来越多
+        leftWater 实际上使用的许可, 如果不使用, 则永远是0
+            也就是 (leftWater - timeGap * permitsPerSecond) <= 0
+            只要使用了许可, 许可就会+1, 
+            如果许可 >= 桶容量 capacity, 则限流
+        leftWater 许可会如何发生变化呢?
+            1. 时间每前进一秒, 已访问次数就减少 permitsPerSecond (增加了 permitsPerSecond 个许可)
+            2. 时间在同一秒内, 每访问一次许可就 + 1, 同一秒内 (timeGap * permitsPerSecond) 这时候等于0
+         */
         public synchronized boolean get() {
             // 1. 计算剩余水量
             long now = System.currentTimeMillis();
             // 上次请求截止到目前的秒数
             long timeGap = (now - timeStamp) / 1000;
+            // leftWater会随着时间秒的前进, 逐渐减少 permitsPerSecond, 
             leftWater = Math.max(0, leftWater - timeGap * permitsPerSecond);
             timeStamp = now;
 
