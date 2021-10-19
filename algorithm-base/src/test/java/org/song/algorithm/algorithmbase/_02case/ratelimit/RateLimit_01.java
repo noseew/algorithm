@@ -4,10 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase.utils.ThreadUtils;
 
 import java.math.BigDecimal;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.LockSupport;
 
 /**
  * 限流算法
@@ -133,7 +132,7 @@ public class RateLimit_01 {
     public void test05() throws InterruptedException {
         /*
          */
-        RateLimitLeakyBucket limit = new RateLimitLeakyBucket(10, 2);
+        RateLimitLeakyBucket limit = new RateLimitLeakyBucket(2, 5);
 
         TestReporter reporter = new TestReporter();
 
@@ -359,59 +358,49 @@ public class RateLimit_01 {
 
     /**
      * 漏桶算法
-     * 
-     * 这个实现似乎无法做到恒定速度流出, 至少在1s内速度并不恒定, 效果等价于1秒的固定窗口
-     * 待研究
+     * 和固定窗口相比, 
+     * 1. 流入无速率, 流出有速率, 使用定时器实现
+     * 2. 流入的请求被阻挡了一阵子, 需要阻塞线程, 使用 LockSupport 实现
      */
     public static class RateLimitLeakyBucket {
 
         /**
+         * 当前水位
+         */
+        private AtomicInteger waterLevel = new AtomicInteger();
+        /**
          * 桶的容量
          */
-        private int capacity;
+        private volatile int capacity;
         /**
-         * 漏出速率, 每秒数量
+         * 队列就是桶, 队列的容量就是桶的容量
          */
-        private int permitsPerSecond;
-        /**
-         * 剩余水量
-         */
-        private long leftWater;
-        /**
-         * 上次注入时间
-         */
-        private long timeStamp = System.currentTimeMillis();
+        private BlockingQueue<Thread> queue;
 
-        public RateLimitLeakyBucket(int permitsPerSecond, int capacity) {
+        private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+
+        public RateLimitLeakyBucket(int permitsPerSeconds, int capacity) {
+            // 漏出窗口
+            int win = 1000 / permitsPerSeconds;
+            // 桶容量
             this.capacity = capacity;
-            this.permitsPerSecond = permitsPerSecond;
+            queue = new ArrayBlockingQueue<>(capacity);
+            scheduledExecutorService.scheduleAtFixedRate(() -> {
+                Thread thread = queue.poll();
+                LockSupport.unpark(thread);
+                this.waterLevel.decrementAndGet();
+            }, 0, win, TimeUnit.MILLISECONDS);
         }
 
         /*
-        漏出速率 permitsPerSecond, 每秒许可数量
-        桶容量 capacity, 许可的上限, 超出则限流
-        
-        timeGap * permitsPerSecond 随着时间的前进, 应该提供的许可越来越多
-        leftWater 实际上使用的许可, 如果不使用, 则永远是0
-            也就是 (leftWater - timeGap * permitsPerSecond) <= 0
-            只要使用了许可, 许可就会+1, 
-            如果许可 >= 桶容量 capacity, 则限流
-        leftWater 许可会如何发生变化呢?
-            1. 时间每前进一秒, 已访问次数就减少 permitsPerSecond (增加了 permitsPerSecond 个许可)
-            2. 时间在同一秒内, 每访问一次许可就 + 1, 同一秒内 (timeGap * permitsPerSecond) 这时候等于0
          */
-        public synchronized boolean get() {
-            // 1. 计算剩余水量
-            long now = System.currentTimeMillis();
-            // 上次请求截止到目前的秒数
-            long timeGap = (now - timeStamp) / 1000;
-            // leftWater会随着时间秒的前进, 逐渐减少 permitsPerSecond, 
-            leftWater = Math.max(0, leftWater - timeGap * permitsPerSecond);
-            timeStamp = now;
-
-            // 如果未满, 则放行, 否则限流
-            if (leftWater < capacity) {
-                leftWater += 1;
+        public boolean get() {
+            Thread thread = Thread.currentThread();
+            // 这两部非原子性, 待优化
+            if (queue.size() < capacity) {
+                queue.add(thread);
+                waterLevel.incrementAndGet();
+                LockSupport.park(thread);
                 return true;
             }
             return false;
