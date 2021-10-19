@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase.utils.ThreadUtils;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.LockSupport;
@@ -132,7 +133,7 @@ public class RateLimit_01 {
     public void test05() throws InterruptedException {
         /*
          */
-        RateLimitLeakyBucket limit = new RateLimitLeakyBucket(2, 5);
+        RateLimitLeakyBucket limit = new RateLimitLeakyBucket(2, 10);
 
         TestReporter reporter = new TestReporter();
 
@@ -143,7 +144,7 @@ public class RateLimit_01 {
                 ThreadUtils.sleepRandom(TimeUnit.MILLISECONDS, 400);
                 if (limit.get()) {
                     reporter.success.getAndIncrement();
-                    System.out.println(Thread.currentThread().getName() + "获取到锁");
+                    System.out.println(Thread.currentThread().getName() + "获取到锁 " + LocalDateTime.now());
                 } else {
                     reporter.fail.getAndIncrement();
                     System.out.println(Thread.currentThread().getName() + "被限流");
@@ -386,8 +387,10 @@ public class RateLimit_01 {
             this.capacity = capacity;
             queue = new ArrayBlockingQueue<>(capacity);
             scheduledExecutorService.scheduleAtFixedRate(() -> {
+                // 每固定窗口时间, 执行一次, 将线程取出并运行, 解除阻塞
                 Thread thread = queue.poll();
                 LockSupport.unpark(thread);
+                // 同时水位降低
                 this.waterLevel.decrementAndGet();
             }, 0, win, TimeUnit.MILLISECONDS);
         }
@@ -396,13 +399,15 @@ public class RateLimit_01 {
          */
         public boolean get() {
             Thread thread = Thread.currentThread();
-            // 这两部非原子性, 待优化
-            if (queue.size() < capacity) {
+            // 增加水位并判断水位是否超出
+            if (waterLevel.incrementAndGet() < capacity) {
+                // 未超出桶容量, 添加同步队列, 等待定时器调度, 同时阻塞线程
                 queue.add(thread);
-                waterLevel.incrementAndGet();
                 LockSupport.park(thread);
                 return true;
             }
+            // 水位超出桶容量, 降低水位, 直接限流
+            waterLevel.decrementAndGet();
             return false;
         }
     }
