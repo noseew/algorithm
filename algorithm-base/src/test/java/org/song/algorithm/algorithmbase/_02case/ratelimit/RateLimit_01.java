@@ -31,11 +31,11 @@ public class RateLimit_01 {
 
         TestReporter reporter = new TestReporter();
 
-        int tryTimes = 1000;
+        int tryTimes = 100;
 
         for (int i = 0; i < tryTimes; i++) {
             Thread thread = new Thread(() -> {
-                ThreadUtils.sleepRandom(TimeUnit.MILLISECONDS, 400);
+                ThreadUtils.sleepRandom(TimeUnit.MILLISECONDS, 2000);
                 if (rateLimitFixedWindow.get()) {
                     reporter.success.getAndIncrement();
                     System.out.println(Thread.currentThread().getName() + "获取到锁");
@@ -59,11 +59,11 @@ public class RateLimit_01 {
 
         TestReporter reporter = new TestReporter();
 
-        int tryTimes = 1000;
+        int tryTimes = 100;
 
         for (int i = 0; i < tryTimes; i++) {
             Thread thread = new Thread(() -> {
-                ThreadUtils.sleepRandom(TimeUnit.MILLISECONDS, 400);
+                ThreadUtils.sleepRandom(TimeUnit.MILLISECONDS, 2000);
                 if (rateLimitFixedWindow.get()) {
                     reporter.success.getAndIncrement();
                     System.out.println(Thread.currentThread().getName() + "获取到锁");
@@ -87,11 +87,11 @@ public class RateLimit_01 {
 
         TestReporter reporter = new TestReporter();
 
-        int tryTimes = 1000;
+        int tryTimes = 100;
 
         for (int i = 0; i < tryTimes; i++) {
             Thread thread = new Thread(() -> {
-                ThreadUtils.sleepRandom(TimeUnit.MILLISECONDS, 400);
+                ThreadUtils.sleepRandom(TimeUnit.MILLISECONDS, 2000);
                 if (rateLimitFixedWindow.get()) {
                     reporter.success.getAndIncrement();
                     System.out.println(Thread.currentThread().getName() + "获取到锁");
@@ -111,15 +111,15 @@ public class RateLimit_01 {
         /*
         总数:1000, 成功:10, 失败:990, 通过率:0.0100
          */
-        RateLimitSlidingWindow rateLimitSlidingWindow = new RateLimitSlidingWindow(10, 2, 5);
+        RateLimitSlidingWindow rateLimitSlidingWindow = new RateLimitSlidingWindow(10, 1, 5);
 
         TestReporter reporter = new TestReporter();
 
-        int tryTimes = 1000;
+        int tryTimes = 100;
 
         for (int i = 0; i < tryTimes; i++) {
             Thread thread = new Thread(() -> {
-                ThreadUtils.sleepRandom(TimeUnit.MILLISECONDS, 400);
+                ThreadUtils.sleepRandom(TimeUnit.MILLISECONDS, 2000);
                 if (rateLimitSlidingWindow.get()) {
                     reporter.success.getAndIncrement();
                     System.out.println(Thread.currentThread().getName() + "获取到锁");
@@ -339,21 +339,24 @@ public class RateLimit_01 {
         public boolean get() {
             // 当前秒, 当前秒的访问会落到指定位置的数组中
             int s = (int) (System.currentTimeMillis() / 1000);
-            // 清空下一个窗口计数,
-            countWin[(s + 1) % countWin.length].set(0);
+            int currentIndex = s % countWin.length;
+            int nextIndex = (s + 1) % countWin.length;
 
             // 统计 seconds 范围内的所有计数,
-            int last = s;
             long count = 0;
-            for (int i = 0; i < countWin.length - 1; i++) {
-                count += countWin[(last -= i) % countWin.length].get();
+            for (int i = 0; i < countWin.length; i++) {
+                if (nextIndex != i) {
+                    count += countWin[i].get();
+                }
             }
             if (count >= maxLimit) {
                 // 如果计数超了, 则返回限流
                 return false;
             }
             // 当前窗口计数+1
-            countWin[s % countWin.length].getAndIncrement();
+            countWin[currentIndex].incrementAndGet();
+            // 清空下一个窗口计数,
+            countWin[nextIndex].set(0);
 
             return true;
         }
@@ -400,21 +403,24 @@ public class RateLimit_01 {
         public boolean get() {
             // 当前秒, 当前秒的访问会落到指定位置的数组中
             int s = (int) (System.currentTimeMillis() / 1000);
-            // 清空下一个窗口计数,
-            countWin[(s + 1) % countWin.length].set(0);
+            int currentIndex = s % countWin.length;
+            int nextIndex = (s + 1) % countWin.length;
 
             // 统计 seconds 范围内的所有计数,
-            int last = s;
             long count = 0;
             for (int i = 0; i < countWin.length - 1; i++) {
-                count += countWin[(last -= i) % countWin.length].get();
+                if (nextIndex != i) {
+                    count += countWin[i].get();
+                }
             }
             if (count >= maxLimit) {
                 // 如果计数超了, 则返回限流
                 return false;
             }
             // 当前窗口计数+1
-            countWin[s % countWin.length].getAndIncrement();
+            countWin[currentIndex].incrementAndGet();
+            // 清空下一个窗口计数,
+            countWin[nextIndex].set(0);
 
             return true;
         }
