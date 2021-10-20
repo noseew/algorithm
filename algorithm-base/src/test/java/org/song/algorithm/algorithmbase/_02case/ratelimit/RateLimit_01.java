@@ -190,6 +190,35 @@ public class RateLimit_01 {
         System.out.println(reporter);
     }
 
+    @Test
+    public void test07() throws InterruptedException {
+        /*
+         */
+        RateLimitTokenBucket2 limit = new RateLimitTokenBucket2(2, 10);
+
+        // 等待攒够一定量的令牌
+        ThreadUtils.sleepRandom(TimeUnit.SECONDS, 5);
+        TestReporter reporter = new TestReporter();
+
+        int tryTimes = 1000;
+
+        for (int i = 0; i < tryTimes; i++) {
+            Thread thread = new Thread(() -> {
+                ThreadUtils.sleepRandom(TimeUnit.MILLISECONDS, 400);
+                if (limit.get()) {
+                    reporter.success.getAndIncrement();
+                    System.out.println(Thread.currentThread().getName() + "获取到锁 " + LocalDateTime.now());
+                } else {
+                    reporter.fail.getAndIncrement();
+                    System.out.println(Thread.currentThread().getName() + "被限流");
+                }
+            }, "T" + i);
+            thread.start();
+        }
+        TimeUnit.SECONDS.sleep(5);
+        System.out.println(reporter);
+    }
+
     public static class TestReporter {
         AtomicInteger success = new AtomicInteger();
         AtomicInteger fail = new AtomicInteger();
@@ -455,7 +484,7 @@ public class RateLimit_01 {
 
     /**
      * 令牌桶
-     * TODO song 待完成
+     * 使用了阻塞队列, 获取不到令牌先排队
      */
     public static class RateLimitTokenBucket {
 
@@ -512,6 +541,59 @@ public class RateLimit_01 {
             // 令牌数量不够, 判断队列有没有满, 如果没有满就排队, offer()如果满了, 返回false
             if (queue.offer(thread)) {
                 LockSupport.park(thread);
+                return true;
+            }
+            // 令牌数量不够, 先归还, 确保数量一致
+            waterLevel.incrementAndGet();
+            // 直接限流
+            return false;
+        }
+    }
+
+    /**
+     * 令牌桶
+     * 没有使用阻塞队列, 获取不到令牌, 直接限流
+     */
+    public static class RateLimitTokenBucket2 {
+
+        /**
+         * 当前水位
+         */
+        private AtomicInteger waterLevel = new AtomicInteger();
+
+        private ScheduledExecutorService scheduledExecutorService;
+
+        /**
+         *
+         * @param permitsPerSeconds 每秒生产令牌数量(控制每秒最大并发数)
+         * @param capacity          桶的容量(控制排队等待数)
+         */
+        public RateLimitTokenBucket2(double permitsPerSeconds, int capacity) {
+            // 放入窗口, 多长时间放入一个, 单位毫秒
+            int win = (int) (1000d / permitsPerSeconds);
+
+            scheduledExecutorService = new ScheduledThreadPoolExecutor(1, r -> {
+                Thread thread = new Thread(r);
+                thread.setDaemon(true);
+                thread.setName("RateLimitLeakyBucket");
+                return thread;
+            });
+
+            scheduledExecutorService.scheduleAtFixedRate(() -> {
+                if (this.waterLevel.get() < capacity) {
+                    // 固定速率放入令牌
+                    this.waterLevel.incrementAndGet();
+                }
+            }, 0, win, TimeUnit.MILLISECONDS);
+        }
+
+        /**
+         *
+         */
+        public boolean get() {
+            int permits = waterLevel.decrementAndGet();
+            if (permits > 0) {
+                // 没有多余的 令牌数量足够, 获取到自后直接放行
                 return true;
             }
             // 令牌数量不够, 先归还, 确保数量一致
