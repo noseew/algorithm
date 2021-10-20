@@ -5,12 +5,7 @@ import org.song.algorithm.algorithmbase.utils.ThreadUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.LockSupport;
 
@@ -56,34 +51,6 @@ public class RateLimit_01 {
         总数:1000, 成功:10, 失败:990, 通过率:0.0100
          */
         RateLimitFixedWindow02 rateLimitFixedWindow = new RateLimitFixedWindow02(10, 1);
-
-        TestReporter reporter = new TestReporter();
-
-        int tryTimes = 100;
-
-        for (int i = 0; i < tryTimes; i++) {
-            Thread thread = new Thread(() -> {
-                ThreadUtils.sleepRandom(TimeUnit.MILLISECONDS, 2000);
-                if (rateLimitFixedWindow.get()) {
-                    reporter.success.getAndIncrement();
-                    System.out.println(Thread.currentThread().getName() + "获取到锁");
-                } else {
-                    reporter.fail.getAndIncrement();
-                    System.out.println(Thread.currentThread().getName() + "被限流");
-                }
-            }, "T" + i);
-            thread.start();
-        }
-        TimeUnit.SECONDS.sleep(5);
-        System.out.println(reporter);
-    }
-
-    @Test
-    public void test03() throws InterruptedException {
-        /*
-        总数:1000, 成功:10, 失败:990, 通过率:0.0100
-         */
-        RateLimitFixedWindow03 rateLimitFixedWindow = new RateLimitFixedWindow03(10, 1);
 
         TestReporter reporter = new TestReporter();
 
@@ -300,68 +267,6 @@ public class RateLimit_01 {
             return counter.incrementAndGet() <= maxLimit;
         }
     }
-
-    /**
-     * 固定窗口, 采用滑动窗口模拟
-     * 采用 计数器 + 时间戳分组的数组
-     * 向滑动窗口迈进,
-     */
-    public static class RateLimitFixedWindow03 {
-
-        private final AtomicInteger[] countWin;
-        private final int maxLimit;
-
-        /**
-         * @param maxLimit 最大限流数量
-         * @param seconds  单位秒, 必须 > 0
-         */
-        public RateLimitFixedWindow03(int maxLimit, int seconds) {
-            this.maxLimit = maxLimit;
-            seconds = seconds <= 0 ? 1 : seconds;
-            /*
-            限流最小窗口固定1s, 数组长度为限流单位秒+1, 多出的1是为了腾出空间为下一秒做准备, 同时只要到下一秒, 则最早的那一秒就失效了
-            示例:
-                假设限流 2s 10次
-                数组为: |_0_|_1_|_2_|
-                计算2s内的访问次数只需要连续的两个数组item, 比如 0和1, 1和2, 2和0, 那么剩下的那个需要清空, 并为下一秒做准备
-             */
-            countWin = new AtomicInteger[seconds + 1];
-            for (int i = 0; i < countWin.length; i++) {
-                countWin[i] = new AtomicInteger();
-            }
-        }
-
-        /**
-         * 是否通过
-         *
-         * @return
-         */
-        public boolean get() {
-            // 当前秒, 当前秒的访问会落到指定位置的数组中
-            int s = (int) (System.currentTimeMillis() / 1000);
-            int currentIndex = s % countWin.length;
-            int nextIndex = (s + 1) % countWin.length;
-
-            // 统计 seconds 范围内的所有计数,
-            long count = 0;
-            for (int i = 0; i < countWin.length; i++) {
-                if (nextIndex != i) {
-                    count += countWin[i].get();
-                }
-            }
-            if (count >= maxLimit) {
-                // 如果计数超了, 则返回限流
-                return false;
-            }
-            // 当前窗口计数+1
-            countWin[currentIndex].incrementAndGet();
-            // 清空下一个窗口计数,
-            countWin[nextIndex].set(0);
-
-            return true;
-        }
-    }
-
     /**
      * 滑动窗口,
      * RateLimitFixedWindow03 的优化版本, 可以自定义窗口大小, 和窗口精度
@@ -375,21 +280,30 @@ public class RateLimit_01 {
          * 限流窗口次数
          */
         private int maxLimit;
+        // 每秒窗口数量
+        private int secondsCount;
+        // 窗口大小
+        private int win;
+        /**
+         * 上一次请求通过的时间
+         */
+        private long last;
 
         /**
          * @param maxLimit 最大限流数量
          * @param seconds  单位限流窗口, 单位秒, 必须 > 0
-         * @param winCount 单位窗口数量
          */
-        public RateLimitSlidingWindow(int maxLimit, int seconds, int winCount) {
+        public RateLimitSlidingWindow(int maxLimit, int seconds, int secondsCount) {
             // 转换成每秒限流大小
             this.maxLimit = maxLimit / seconds;
-            // 转换成每秒窗口大小
-            int secondsCount = winCount / seconds;
+            // 每秒窗口数量
+            this.secondsCount = secondsCount;
+            // 窗口大小
+            this.win = 1000 / secondsCount;
             /*
             将限流范围 
              */
-            countWin = new AtomicInteger[secondsCount + 1];
+            countWin = new AtomicInteger[secondsCount * 2];
             for (int i = 0; i < countWin.length; i++) {
                 countWin[i] = new AtomicInteger();
             }
@@ -402,26 +316,32 @@ public class RateLimit_01 {
          */
         public boolean get() {
             // 当前秒, 当前秒的访问会落到指定位置的数组中
-            int s = (int) (System.currentTimeMillis() / 1000);
-            int currentIndex = s % countWin.length;
-            int nextIndex = (s + 1) % countWin.length;
-
-            // 统计 seconds 范围内的所有计数,
+            long now = System.currentTimeMillis();
+            // 当前请求落点下标
+            int currentIndex =  (int) (now % this.win % countWin.length);
+            // 计算总数开始下标, currentIndex > i < startIndex, i都要清零
+            int startIndex = (currentIndex + this.secondsCount) % countWin.length;
+            // 上一次成功请求的下标, lastIndex > i < currentIndex, i都要清零
+            int lastIndex = (int) (last % this.win % countWin.length);
+            
+            // 统计总数
             long count = 0;
-            for (int i = 0; i < countWin.length - 1; i++) {
-                if (nextIndex != i) {
+            for (int i = 0; i < countWin.length; i++) {
+                if (currentIndex > i && i < startIndex) {
+                    countWin[i].set(0);
+                } else if (lastIndex > i && i < currentIndex) {
+                    countWin[i].set(0);
+                } else {
+                    // 计算各个窗口的总和
                     count += countWin[i].get();
                 }
             }
-            if (count >= maxLimit) {
-                // 如果计数超了, 则返回限流
+            if (count >= this.maxLimit) {
+                // 限流
                 return false;
             }
-            // 当前窗口计数+1
             countWin[currentIndex].incrementAndGet();
-            // 清空下一个窗口计数,
-            countWin[nextIndex].set(0);
-
+            last = now;
             return true;
         }
     }
