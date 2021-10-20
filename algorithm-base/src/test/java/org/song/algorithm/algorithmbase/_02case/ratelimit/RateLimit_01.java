@@ -395,14 +395,6 @@ public class RateLimit_01 {
     public static class RateLimitLeakyBucket {
 
         /**
-         * 当前水位
-         */
-        private AtomicInteger waterLevel = new AtomicInteger();
-        /**
-         * 桶的容量
-         */
-        private volatile int capacity;
-        /**
          * 队列就是桶, 队列的容量就是桶的容量
          */
         private BlockingQueue<Thread> queue;
@@ -410,10 +402,9 @@ public class RateLimit_01 {
         private ScheduledExecutorService scheduledExecutorService;
 
         public RateLimitLeakyBucket(int permitsPerSeconds, int capacity) {
-            // 漏出窗口
+            // 漏出窗口, 时间, 单位毫秒
             int win = 1000 / permitsPerSeconds;
             // 桶容量
-            this.capacity = capacity;
             this.queue = new ArrayBlockingQueue<>(capacity);
 
             scheduledExecutorService = new ScheduledThreadPoolExecutor(1, new ThreadFactory() {
@@ -427,27 +418,31 @@ public class RateLimit_01 {
             });
             
             scheduledExecutorService.scheduleAtFixedRate(() -> {
-                // 每固定窗口时间, 执行一次, 将线程取出并运行, 解除阻塞
-                Thread thread = queue.poll();
-                LockSupport.unpark(thread);
-                // 同时水位降低
-                this.waterLevel.decrementAndGet();
+                try {
+                    /*
+                    每固定窗口时间, 执行一次, 将线程取出并运行, 解除阻塞
+                    take() 如果空的 取出阻塞
+                     */
+                    Thread thread = queue.take();
+                    LockSupport.unpark(thread);
+                } catch (InterruptedException e) {
+                }
             }, 0, win, TimeUnit.MILLISECONDS);
         }
 
         /*
+
          */
         public boolean get() {
             Thread thread = Thread.currentThread();
-            // 增加水位并判断水位是否超出
-            if (waterLevel.incrementAndGet() < capacity) {
-                // 未超出桶容量, 添加同步队列, 等待定时器调度, 同时阻塞线程
-                queue.add(thread); // TODO 并发问题
+            /*
+            容量是否已满, 添加同步队列, 等待定时器调度, 同时阻塞线程
+            offer() 如果满了 返回false
+             */
+            if (queue.offer(thread)) {
                 LockSupport.park(thread);
                 return true;
             }
-            // 水位超出桶容量, 降低水位, 直接限流
-            waterLevel.decrementAndGet();
             return false;
         }
     }
@@ -478,14 +473,11 @@ public class RateLimit_01 {
             this.capacity = capacity;
             this.queue = new ArrayBlockingQueue<>(capacity);
 
-            scheduledExecutorService = new ScheduledThreadPoolExecutor(1, new ThreadFactory() {
-                @Override
-                public Thread newThread(Runnable r) {
-                    Thread thread = new Thread(r);
-                    thread.setDaemon(true);
-                    thread.setName("RateLimitLeakyBucket");
-                    return thread;
-                }
+            scheduledExecutorService = new ScheduledThreadPoolExecutor(1, r -> {
+                Thread thread = new Thread(r);
+                thread.setDaemon(true);
+                thread.setName("RateLimitLeakyBucket");
+                return thread;
             });
 
             scheduledExecutorService.scheduleAtFixedRate(() -> {
@@ -493,8 +485,9 @@ public class RateLimit_01 {
                     // 固定速率放入令牌
                     this.waterLevel.incrementAndGet();
                 }
-                if (!queue.isEmpty()) {
-                    Thread thread = queue.poll();
+                // 取出阻塞的任务, 如果存在则解阻塞
+                Thread thread = queue.poll();
+                if (thread != null) {
                     LockSupport.unpark(thread);
                 }
                 
@@ -508,10 +501,9 @@ public class RateLimit_01 {
                 // 令牌数量足够, 获取到自后直接放行
                 return true;
             }
+            Thread thread = Thread.currentThread();
             // 令牌数量不够, 判断队列有没有满, 如果没有满, 就排队
-            if (queue.size() < this.capacity) {
-                Thread thread = Thread.currentThread();
-                queue.add(thread);
+            if (queue.offer(thread)) {
                 LockSupport.park(thread);
                 return true;
             }
