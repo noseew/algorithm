@@ -5,6 +5,7 @@ import org.song.algorithm.algorithmbase.utils.ThreadUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.LockSupport;
@@ -336,6 +337,7 @@ public class RateLimit_01 {
                     count += countWin[i].get();
                 }
             }
+            System.out.println(this);
             if (count >= this.maxLimit) {
                 // 限流
                 return false;
@@ -343,6 +345,17 @@ public class RateLimit_01 {
             countWin[currentIndex].incrementAndGet();
             last = now;
             return true;
+        }
+
+        @Override
+        public String toString() {
+            long now = System.currentTimeMillis();
+            StringBuilder sb = new StringBuilder();
+            for (int i = (int)(now % this.win); i < countWin.length; i++) {
+                countWin[i% countWin.length].get();
+                sb.append("i=").append(i).append(" count=").append(countWin[i % countWin.length].get()).append("\r\n");
+            }
+            return sb.toString();
         }
     }
 
