@@ -1,5 +1,6 @@
 package org.song.algorithm.algorithmbase._02case.ratelimit;
 
+import com.alibaba.fastjson.JSON;
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase.utils.ThreadUtils;
 
@@ -94,6 +95,34 @@ public class RateLimit_01 {
                 } else {
                     reporter.fail.getAndIncrement();
                     System.out.println(Thread.currentThread().getName() + "被限流");
+                }
+            }, "T" + i);
+            thread.start();
+        }
+        TimeUnit.SECONDS.sleep(5);
+        System.out.println(reporter);
+    }
+
+    @Test
+    public void test04_2() throws InterruptedException {
+        /*
+        总数:1000, 成功:10, 失败:990, 通过率:0.0100
+         */
+        RateLimitSlidingWindow2 rateLimitSlidingWindow = new RateLimitSlidingWindow2(10, 1, 5);
+
+        TestReporter reporter = new TestReporter();
+
+        int tryTimes = 1000;
+
+        for (int i = 0; i < tryTimes; i++) {
+            Thread thread = new Thread(() -> {
+                ThreadUtils.sleepRandom(TimeUnit.MILLISECONDS, 5000);
+                if (rateLimitSlidingWindow.get()) {
+                    reporter.success.getAndIncrement();
+//                    System.out.println(Thread.currentThread().getName() + "获取到锁");
+                } else {
+                    reporter.fail.getAndIncrement();
+//                    System.out.println(Thread.currentThread().getName() + "被限流");
                 }
             }, "T" + i);
             thread.start();
@@ -268,6 +297,7 @@ public class RateLimit_01 {
             return counter.incrementAndGet() <= maxLimit;
         }
     }
+
     /**
      * 滑动窗口,
      * RateLimitFixedWindow03 的优化版本, 可以自定义窗口大小, 和窗口精度
@@ -356,6 +386,114 @@ public class RateLimit_01 {
                 sb.append("i=").append(i).append(" count=").append(countWin[i % countWin.length].get()).append("\r\n");
             }
             return sb.toString();
+        }
+    }
+
+    /**
+     * 滑动窗口,
+     * RateLimitFixedWindow03 的优化版本, 可以自定义窗口大小, 和窗口精度
+     */
+    public static class RateLimitSlidingWindow2 {
+        /**
+         * 窗口数量
+         */
+        private Node[] countWin;
+        /**
+         * 限流窗口次数
+         */
+        private int maxLimit;
+        // 每秒窗口数量
+        private int secondsCount;
+        // 窗口大小
+        private int win;
+
+        /**
+         * @param maxLimit 最大限流数量
+         * @param seconds  单位限流窗口, 单位秒, 必须 > 0
+         */
+        public RateLimitSlidingWindow2(int maxLimit, int seconds, int secondsCount) {
+            // 转换成每秒限流大小
+            this.maxLimit = maxLimit / seconds;
+            // 每秒窗口数量
+            this.secondsCount = secondsCount;
+            // 窗口大小
+            this.win = 1000 / secondsCount;
+            /*
+            将限流范围
+             */
+            countWin = new Node[secondsCount * 2];
+            for (int i = 0; i < countWin.length; i++) {
+                Node node = new Node();
+                node.counter = new AtomicInteger();
+                countWin[i] = node;
+            }
+        }
+
+        /**
+         * 是否通过
+         *
+         * @return
+         */
+        public boolean get() {
+            // 当前秒, 当前秒的访问会落到指定位置的数组中
+            long now = System.currentTimeMillis();
+            // 当前请求落点下标
+            int currentIndex =  (int) (now % this.win % countWin.length);
+            // 计算总数开始下标, currentIndex > i < startIndex, i都要清零
+            int startIndex = (currentIndex + this.secondsCount) % countWin.length;
+
+            // 统计总数
+            long count = 0;
+            for (int i = 0; i < countWin.length; i++) {
+                Node node = countWin[i];
+                if (currentIndex > i && i < startIndex) {
+                    node.counter.set(0);
+                    node.last = now;
+                } else if (node.last < now - 1000) {
+                    node.counter.set(0);
+                    node.last = now;
+                } else {
+                    // 计算各个窗口的总和
+                    count += node.counter.get();
+                }
+            }
+            System.out.println(toString(this, now));
+            if (count >= this.maxLimit) {
+                // 限流
+                return false;
+            }
+            countWin[currentIndex].counter.incrementAndGet();
+            countWin[currentIndex].last = now;
+            return true;
+        }
+
+        public static String toString(RateLimitSlidingWindow2 win, long now) {
+            // 当前请求落点下标
+            int currentIndex =  (int) (now % win.win % win.countWin.length);
+            // 计算总数开始下标, currentIndex > i < startIndex, i都要清零
+            int startIndex = (currentIndex + win.secondsCount) % win.countWin.length;
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < win.countWin.length; i++) {
+                Node node = win.countWin[i];
+                sb.append(" ").append(i).append("=").append(node.toString());
+                if (currentIndex == i) {
+                    sb.append("\033[32m(E)\033[m");
+                }
+                if (startIndex == i) {
+                    sb.append("\033[32m(S)\033[m");
+                }
+            }
+            return sb.toString();
+        }
+
+        static class Node {
+            AtomicInteger counter;
+            long last;
+
+            @Override
+            public String toString() {
+                return String.valueOf(counter.get());
+            }
         }
     }
 
