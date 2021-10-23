@@ -1,12 +1,11 @@
 package org.song.algorithm.algorithmbase._02case.ratelimit;
 
-import com.alibaba.fastjson.JSON;
+import lombok.Data;
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase.utils.ThreadUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.LockSupport;
@@ -407,6 +406,13 @@ public class RateLimit_01 {
         // 窗口大小
         private int win;
 
+        private static ExecutorService executorService = Executors.newSingleThreadExecutor();
+        private static BlockingQueue<RateLimitWrapper> queue = new LinkedBlockingQueue<>();
+
+        public RateLimitSlidingWindow2() {
+
+        }
+
         /**
          * @param maxLimit 最大限流数量
          * @param seconds  单位限流窗口, 单位秒, 必须 > 0
@@ -427,6 +433,16 @@ public class RateLimit_01 {
                 node.counter = new AtomicInteger();
                 countWin[i] = node;
             }
+
+            executorService.execute(() -> {
+                while (true) {
+                    try {
+                        RateLimitWrapper wrapper = queue.take();
+                        System.out.println(wrapper.toString());
+                    } catch (InterruptedException e) {
+                    }
+                }
+            });
         }
 
         /**
@@ -434,11 +450,11 @@ public class RateLimit_01 {
          *
          * @return
          */
-        public boolean get() {
+        public synchronized boolean get() {
             // 当前秒, 当前秒的访问会落到指定位置的数组中
             long now = System.currentTimeMillis();
             // 当前请求落点下标
-            int currentIndex =  (int) (now % this.win % countWin.length);
+            int currentIndex = (int) (now % this.win % countWin.length);
             // 计算总数开始下标, currentIndex > i < startIndex, i都要清零
             int startIndex = (currentIndex + this.secondsCount) % countWin.length;
 
@@ -457,35 +473,18 @@ public class RateLimit_01 {
                     count += node.counter.get();
                 }
             }
-            System.out.println(toString(this, now));
             if (count >= this.maxLimit) {
                 // 限流
+                queue.add(new RateLimitWrapper(this, now, false));
                 return false;
             }
+            queue.add(new RateLimitWrapper(this, now, true));
             countWin[currentIndex].counter.incrementAndGet();
             countWin[currentIndex].last = now;
             return true;
         }
 
-        public static String toString(RateLimitSlidingWindow2 win, long now) {
-            // 当前请求落点下标
-            int currentIndex =  (int) (now % win.win % win.countWin.length);
-            // 计算总数开始下标, currentIndex > i < startIndex, i都要清零
-            int startIndex = (currentIndex + win.secondsCount) % win.countWin.length;
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < win.countWin.length; i++) {
-                Node node = win.countWin[i];
-                sb.append(" ").append(i).append("=").append(node.toString());
-                if (currentIndex == i) {
-                    sb.append("\033[32m(E)\033[m");
-                }
-                if (startIndex == i) {
-                    sb.append("\033[32m(S)\033[m");
-                }
-            }
-            return sb.toString();
-        }
-
+        @Data
         static class Node {
             AtomicInteger counter;
             long last;
@@ -493,6 +492,51 @@ public class RateLimit_01 {
             @Override
             public String toString() {
                 return String.valueOf(counter.get());
+            }
+        }
+
+        @Data
+        static class RateLimitWrapper {
+            RateLimitSlidingWindow2 rateLimit;
+            long now;
+            boolean pass;
+
+            public RateLimitWrapper(RateLimitSlidingWindow2 rateLimit, long now, boolean pass) {
+                this.rateLimit = new RateLimitSlidingWindow2();
+                this.rateLimit.maxLimit = rateLimit.maxLimit;
+                this.rateLimit.secondsCount = rateLimit.secondsCount;
+                this.rateLimit.win = rateLimit.win;
+
+                Node[] countWin = new Node[rateLimit.countWin.length];
+                System.arraycopy(rateLimit.countWin, 0, countWin, 0, rateLimit.countWin.length);
+                this.rateLimit.countWin = countWin;
+                this.now = now;
+                this.pass = pass;
+            }
+
+            public String toString() {
+                // 当前请求落点下标
+                int currentIndex = (int) (now % rateLimit.win % rateLimit.countWin.length);
+                // 计算总数开始下标, currentIndex > i < startIndex, i都要清零
+                int startIndex = (currentIndex + rateLimit.secondsCount) % rateLimit.countWin.length;
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < rateLimit.countWin.length; i++) {
+                    Node node = rateLimit.countWin[i];
+                    sb.append(" ");
+                    if (startIndex < currentIndex && (startIndex <= i && i <= currentIndex)) {
+                        sb.append("\033[32m")
+                                .append(i).append("=").append(node.toString())
+                                .append("\033[m");
+                    } else if (startIndex > currentIndex && (startIndex <= i || i <= currentIndex)) {
+                        sb.append("\033[32m")
+                                .append(i).append("=").append(node.toString())
+                                .append("\033[m");
+                    } else {
+                        sb.append(i).append("=").append(node.toString());
+                    }
+                }
+                sb.append(" ").append(this.pass);
+                return sb.toString();
             }
         }
     }
