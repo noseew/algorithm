@@ -27,21 +27,10 @@ public class LoadBalancing {
 
     private static List<Task> tasks = Lists.newArrayList(task1(), task2());
 
-    @Test
-    public void test01() {
-//        polling();
-//        random();
-//        weightRandom();
-        weightPolling();
-    }
-
-    /**
-     * 轮询的方式
-     * 需要有全局变量来记住轮询的状态
-     */
     private AtomicInteger count = new AtomicInteger();
 
-    public void polling() {
+    @Test
+    public void pollingLoadBalance() {
         IntStream.range(1, 50).forEach(e -> {
             Task task = tasks.get(count.getAndIncrement() % tasks.size());
             task.invoke(e);
@@ -52,7 +41,8 @@ public class LoadBalancing {
      * 随机的方式
      * 要有随机数发生器, 但是不需要全局状态
      */
-    public void random() {
+    @Test
+    public void randomLoadBalance1() {
         Random random = new Random();
         IntStream.range(1, 50).forEach(e -> {
             Task task = tasks.get(random.nextInt(tasks.size()));
@@ -64,7 +54,8 @@ public class LoadBalancing {
      * 带有权重的随机的方式
      * 类似于彩票算法, 各种叫法不同
      */
-    public void weightRandom() {
+    @Test
+    public void randomLoadBalance2() {
         Random random = new Random();
         // 假设 Task 的权重
         int[] weight = new int[]{10, 20};
@@ -103,7 +94,8 @@ public class LoadBalancing {
      * 1. CPU进程调度算法
      * 由于CPU简称调度有时间片的概念(这里就可以对应步长), 且最好不要出现用户任务长时间不执行的情况, 所以步长算法比随机权重轮询有一定优势
      */
-    public void weightPolling() {
+    @Test
+    public void roundRobinLoadBalance() {
         // 假设 Task 的权重
         int[] weight = new int[]{20, 40};
         /*
@@ -145,7 +137,7 @@ public class LoadBalancing {
      * 注意这里采用简单的O(n)算法, 
      * 在Linux中的CFS调度算法中, 也是一种步进调度, 此数据结构采用的是红黑树, 可以更快的找到指定的最小时间片, 从而执行
      */
-    private int minIndex(int[] steps) {
+    private static int minIndex(int[] steps) {
         int min = steps[0];
         int minIndex = 0;
         for (int i = 0; i < steps.length; i++) {
