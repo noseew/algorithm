@@ -26,7 +26,7 @@ public class LoadBalancing {
     static class Task {
         private String name;
         private int wight;
-        void invoke(Object o) {System.out.println(this.name + o);}
+        void invoke(Object o) {System.out.println(this.name +" "+ o);}
     }
     static List<Task> tasks = Lists.newArrayList( new Task("task1", 40),  new Task("task2", 20));
 
@@ -204,25 +204,20 @@ public class LoadBalancing {
         public Task select(List<Task> tasks) {
             int totalWeight = 0;
             long maxCurrent = Long.MIN_VALUE;
-            long now = System.currentTimeMillis();
             Task selectedInvoker = null;
             WeightedRoundRobin selectedWRR = null;
 
-            for (int i = 0; i < tasks.size(); i++) {
-                Task invoker = tasks.get(i);
-                int weight = tasks.get(i).getWight();
-                // 如果val(权重)已存在, 则直接使用已存在的
+            for (Task invoker : tasks) {
+                int weight = invoker.getWight();
+                // 初始化或记录权重信息
                 WeightedRoundRobin weightedRoundRobin = methodWeightMap.computeIfAbsent(invoker.getName(), k -> {
                     WeightedRoundRobin wrr = new WeightedRoundRobin();
                     wrr.setWeight(weight);
                     return wrr;
                 });
-                if (weight != weightedRoundRobin.getWeight()) {
-                    //weight changed
-                    weightedRoundRobin.setWeight(weight);
-                }
+                // 每走一步, 增加自己的步进(按照权重单位)
                 long cur = weightedRoundRobin.increaseCurrent();
-                weightedRoundRobin.setLastUpdate(now);
+                // 标记出步进走的步数最快的那个任务
                 if (cur > maxCurrent) {
                     maxCurrent = cur;
                     selectedInvoker = invoker;
@@ -230,10 +225,8 @@ public class LoadBalancing {
                 }
                 totalWeight += weight;
             }
-            if (tasks.size() != methodWeightMap.size()) {
-                methodWeightMap.entrySet().removeIf(item -> now - item.getValue().getLastUpdate() > 60000);
-            }
             if (selectedInvoker != null) {
+                // 将走得最快的那个任务步进归零
                 selectedWRR.sel(totalWeight);
                 return selectedInvoker;
             }
@@ -247,8 +240,6 @@ public class LoadBalancing {
             private int weight;
             // 执行次数
             private AtomicLong current = new AtomicLong(0);
-            // 最后更新时间
-            private long lastUpdate;
 
             public int getWeight() {
                 return weight;
@@ -265,14 +256,6 @@ public class LoadBalancing {
 
             public void sel(int total) {
                 current.addAndGet(-1 * total);
-            }
-
-            public long getLastUpdate() {
-                return lastUpdate;
-            }
-
-            public void setLastUpdate(long lastUpdate) {
-                this.lastUpdate = lastUpdate;
             }
         }
     }
