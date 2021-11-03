@@ -285,6 +285,13 @@ public class LoadBalancing {
         }
     }
 
+    /*
+    0___64___128___192___256
+    Node01 [0-63]
+    Node02 [64-127]
+    Node02 [128-191]
+    Node02 [182-256]
+     */
     static class ConsistencyHashLoadBalance implements LoadBalancer {
 
         private final int range = 1 << 10;
@@ -305,6 +312,21 @@ public class LoadBalancing {
                 }
                 hashRangeMap.put(start, node);
             }
+        }
+
+        public synchronized void removeNode(Node node) {
+            Map.Entry<Integer, Node> preNodeEntry = hashRangeMap.ceilingEntry(node.getStart() - 1);
+            Map.Entry<Integer, Node> nextNodeEntry = hashRangeMap.ceilingEntry(node.getEnd() + 1);
+            if (preNodeEntry != null) {
+                preNodeEntry.getValue().setEnd(node.getEnd());
+            } else if (nextNodeEntry != null) {
+                nextNodeEntry.getValue().setStart(node.getStart());
+            } else {
+                // 初始化 hashRangeMap
+            }
+        }
+
+        public synchronized void addNode(Node node) {
         }
 
         /**
