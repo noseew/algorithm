@@ -186,99 +186,96 @@ public class LoadBalancing {
         }
     }
 
-    private ConcurrentMap<String, WeightedRoundRobin> methodWeightMap = new ConcurrentHashMap<>();
     /**
      * 轮询调度
      * 和其类似的调度有: 补偿调度, 随机调度, 都可以有权重和没有权重
      */
     @Test
     public void roundRobinLoadBalance2() {
+        RoundRobinLoadBalance2 roundRobinLoadBalance2 = new RoundRobinLoadBalance2();
         for (int e : IntStream.range(1, 50).toArray()) {
-            doRoundRobinLoadBalance().invoke(e);
+            roundRobinLoadBalance2.select(tasks).invoke(e);
         }
     }
 
-    private Task doRoundRobinLoadBalance() {
+    static class RoundRobinLoadBalance2 implements LoadBalancer {
+        private ConcurrentMap<String, WeightedRoundRobin> methodWeightMap = new ConcurrentHashMap<>();
+        @Override
+        public Task select(List<Task> tasks) {
+            int totalWeight = 0;
+            long maxCurrent = Long.MIN_VALUE;
+            long now = System.currentTimeMillis();
+            Task selectedInvoker = null;
+            WeightedRoundRobin selectedWRR = null;
 
-        int[] weights = new int[]{20, 40};
-        int totalWeight = 0;
-        long maxCurrent = Long.MIN_VALUE;
-        long now = System.currentTimeMillis();
-        Task selectedInvoker = null;
-        WeightedRoundRobin selectedWRR = null;
-
-        for (int i = 0; i < tasks.size(); i++) {
-            Task invoker = tasks.get(i);
-            int weight = weights[i];
-            // 如果val(权重)已存在, 则直接使用已存在的
-            WeightedRoundRobin weightedRoundRobin = methodWeightMap.computeIfAbsent(invoker.getName(), k -> {
-                WeightedRoundRobin wrr = new WeightedRoundRobin();
-                wrr.setWeight(weight);
-                return wrr;
-            });
-            if (weight != weightedRoundRobin.getWeight()) {
-                //weight changed
-                weightedRoundRobin.setWeight(weight);
+            for (int i = 0; i < tasks.size(); i++) {
+                Task invoker = tasks.get(i);
+                int weight = tasks.get(i).getWight();
+                // 如果val(权重)已存在, 则直接使用已存在的
+                WeightedRoundRobin weightedRoundRobin = methodWeightMap.computeIfAbsent(invoker.getName(), k -> {
+                    WeightedRoundRobin wrr = new WeightedRoundRobin();
+                    wrr.setWeight(weight);
+                    return wrr;
+                });
+                if (weight != weightedRoundRobin.getWeight()) {
+                    //weight changed
+                    weightedRoundRobin.setWeight(weight);
+                }
+                long cur = weightedRoundRobin.increaseCurrent();
+                weightedRoundRobin.setLastUpdate(now);
+                if (cur > maxCurrent) {
+                    maxCurrent = cur;
+                    selectedInvoker = invoker;
+                    selectedWRR = weightedRoundRobin;
+                }
+                totalWeight += weight;
             }
-            long cur = weightedRoundRobin.increaseCurrent();
-            weightedRoundRobin.setLastUpdate(now);
-            if (cur > maxCurrent) {
-                maxCurrent = cur;
-                selectedInvoker = invoker;
-                selectedWRR = weightedRoundRobin;
+            if (tasks.size() != methodWeightMap.size()) {
+                methodWeightMap.entrySet().removeIf(item -> now - item.getValue().getLastUpdate() > 60000);
             }
-            totalWeight += weight;
-        }
-        if (tasks.size() != methodWeightMap.size()) {
-            methodWeightMap.entrySet().removeIf(item -> now - item.getValue().getLastUpdate() > 60000);
-        }
-        if (selectedInvoker != null) {
-            selectedWRR.sel(totalWeight);
-            return selectedInvoker;
-        }
-        // should not happen here
-        return tasks.get(0);
-    }
-
-    @Data
-    protected static class WeightedRoundRobin {
-        // 当前资源的权重
-        private int weight;
-        // 执行次数
-        private AtomicLong current = new AtomicLong(0);
-        // 最后更新时间
-        private long lastUpdate;
-
-        public int getWeight() {
-            return weight;
+            if (selectedInvoker != null) {
+                selectedWRR.sel(totalWeight);
+                return selectedInvoker;
+            }
+            // should not happen here
+            return tasks.get(0);
         }
 
-        public void setWeight(int weight) {
-            this.weight = weight;
-            current.set(0);
-        }
+        @Data
+        static class WeightedRoundRobin {
+            // 当前资源的权重
+            private int weight;
+            // 执行次数
+            private AtomicLong current = new AtomicLong(0);
+            // 最后更新时间
+            private long lastUpdate;
 
-        public long increaseCurrent() {
-            return current.addAndGet(weight);
-        }
+            public int getWeight() {
+                return weight;
+            }
 
-        public void sel(int total) {
-            current.addAndGet(-1 * total);
-        }
+            public void setWeight(int weight) {
+                this.weight = weight;
+                current.set(0);
+            }
 
-        public long getLastUpdate() {
-            return lastUpdate;
-        }
+            public long increaseCurrent() {
+                return current.addAndGet(weight);
+            }
 
-        public void setLastUpdate(long lastUpdate) {
-            this.lastUpdate = lastUpdate;
+            public void sel(int total) {
+                current.addAndGet(-1 * total);
+            }
+
+            public long getLastUpdate() {
+                return lastUpdate;
+            }
+
+            public void setLastUpdate(long lastUpdate) {
+                this.lastUpdate = lastUpdate;
+            }
         }
     }
 
-
-    private static int getWeight() {
-        int weight = 0;
-        return Math.max(weight, 0);
-    }
 
 }
