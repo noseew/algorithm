@@ -212,63 +212,54 @@ public class LoadBalancing {
      * 和其类似的调度有: 补偿调度, 随机调度, 都可以有权重和没有权重
      */
     static class RoundRobinLoadBalance2 implements LoadBalancer {
-        private ConcurrentMap<String, WeightedRoundRobin> methodWeightMap = new ConcurrentHashMap<>();
+        private ConcurrentMap<String, TaskInfo> taskProgress = new ConcurrentHashMap<>();
         @Override
         public Task select(List<Task> tasks) {
             int totalWeight = 0;
             long maxCurrent = Long.MIN_VALUE;
-            Task selectedInvoker = null;
-            WeightedRoundRobin selectedWRR = null;
+            Task selected = null;
+            TaskInfo selectedTP = null;
 
             for (Task invoker : tasks) {
                 int weight = invoker.getWight();
                 // 初始化或记录权重信息
-                WeightedRoundRobin weightedRoundRobin = methodWeightMap.computeIfAbsent(invoker.getName(), k -> {
-                    WeightedRoundRobin wrr = new WeightedRoundRobin();
-                    wrr.setWeight(weight);
-                    return wrr;
+                TaskInfo taskInfo = taskProgress.computeIfAbsent(invoker.getName(), k -> {
+                    TaskInfo ti = new TaskInfo();
+                    ti.setWeight(weight);
+                    return ti;
                 });
                 // 每走一步, 增加自己的步进(按照权重单位)
-                long cur = weightedRoundRobin.increaseCurrent();
+                long cur = taskInfo.forward();
                 // 标记出步进走的步数最快的那个任务
                 if (cur > maxCurrent) {
                     maxCurrent = cur;
-                    selectedInvoker = invoker;
-                    selectedWRR = weightedRoundRobin;
+                    selected = invoker;
+                    selectedTP = taskInfo;
                 }
                 totalWeight += weight;
             }
-            if (selectedInvoker != null) {
+            if (selected != null) {
                 // 将走得最快的那个任务步进归零
-                selectedWRR.sel(totalWeight);
-                return selectedInvoker;
+                selectedTP.reset(totalWeight);
+                return selected;
             }
             // should not happen here
             return tasks.get(0);
         }
 
         @Data
-        static class WeightedRoundRobin {
+        static class TaskInfo {
             // 当前资源的权重
             private int weight;
             // 执行次数
-            private AtomicLong current = new AtomicLong(0);
+            private AtomicLong step = new AtomicLong(0);
 
-            public int getWeight() {
-                return weight;
+            public long forward() {
+                return step.addAndGet(weight);
             }
 
-            public void setWeight(int weight) {
-                this.weight = weight;
-                current.set(0);
-            }
-
-            public long increaseCurrent() {
-                return current.addAndGet(weight);
-            }
-
-            public void sel(int total) {
-                current.addAndGet(-1 * total);
+            public void reset(int total) {
+                step.addAndGet(-1 * total);
             }
         }
     }
