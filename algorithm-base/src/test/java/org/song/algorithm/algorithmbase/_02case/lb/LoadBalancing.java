@@ -1,19 +1,23 @@
 package org.song.algorithm.algorithmbase._02case.lb;
 
+import com.google.common.collect.Sets;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -31,7 +35,12 @@ public class LoadBalancing {
     static List<Task> tasks = Lists.newArrayList( new Task("task1", 40),  new Task("task2", 20));
 
     interface LoadBalancer {
-        Task select(List<Task> tasks);
+        default Task select(List<Task> tasks) {
+            return null;
+        }
+        default Task select(List<Task> tasks, Object param) {
+            return select(tasks);
+        }
     }
 
 
@@ -260,5 +269,83 @@ public class LoadBalancing {
         }
     }
 
+    @Test
+    public void hashLoadBalance() {
+        HashLoadBalance loadBalance = new HashLoadBalance();
+        for (int e : IntStream.range(1, 50).toArray()) {
+            loadBalance.select(tasks, e).invoke(e);
+        }
+    }
+
+    static class HashLoadBalance implements LoadBalancer {
+        @Override
+        public Task select(List<Task> tasks, Object param) {
+            int i = System.identityHashCode(param) % tasks.size();
+            return tasks.get(i);
+        }
+    }
+
+    static class ConsistencyHashLoadBalance implements LoadBalancer {
+
+        private final int range = 1 << 10;
+        private TreeMap<Integer, Node> hashRangeMap;
+
+        public void initRing(List<Task> tasks) {
+            if (hashRangeMap != null) {
+                return;
+            }
+            hashRangeMap = new TreeMap<>();
+
+            int step = range / tasks.size();
+            int start = 0;
+            for (Task task : tasks) {
+                Node node = new Node(task.getName(), start, start += step);
+                if (range - node.getEnd() <= step) {
+                    node.setEnd(range - node.getStart());
+                }
+                hashRangeMap.put(start, node);
+            }
+        }
+
+        /**
+         * TODO 未完成
+         *
+         * @param newTaskSet
+         */
+        public synchronized void adjustNode(Set<String> newTaskSet) {
+            Set<String> ringNodeSet = hashRangeMap.values().stream().map(Node::getKey).collect(Collectors.toSet());
+
+            Set<String> removeSet = Sets.difference(ringNodeSet, newTaskSet);
+            Set<String> addSet = Sets.difference(newTaskSet, ringNodeSet);
+
+            if (!removeSet.isEmpty()) {
+                for (Map.Entry<Integer, Node> nodeEntry : hashRangeMap.entrySet()) {
+                    if (removeSet.contains(nodeEntry.getValue().getKey())) {
+                        hashRangeMap.remove(nodeEntry.getKey());
+                    }
+                }
+            }
+        }
+
+        @Override
+        public Task select(List<Task> tasks, Object param) {
+            initRing(tasks);
+
+            int i = System.identityHashCode(param) % range;
+            Node node = hashRangeMap.ceilingEntry(i).getValue();
+
+            Map<String, Task> taskMap = tasks.stream()
+                    .collect(Collectors.toMap(Task::getName, Function.identity(), (k1, k2) -> k1));
+            return taskMap.get(node.getKey());
+        }
+
+        @Data
+        @AllArgsConstructor
+        static class Node {
+            private String key;
+            private int start;
+            private int end;
+        }
+    }
 
 }
