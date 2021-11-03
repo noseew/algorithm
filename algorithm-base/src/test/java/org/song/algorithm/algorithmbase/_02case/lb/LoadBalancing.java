@@ -43,9 +43,6 @@ public class LoadBalancing {
         }
     }
 
-    /**
-     * 轮询
-     */
     @Test
     public void pollingLoadBalance() {
         PollingLoadBalance pollingLoadBalance = new PollingLoadBalance();
@@ -54,6 +51,9 @@ public class LoadBalancing {
         });
     }
 
+    /**
+     * 轮询调度
+     */
     static class PollingLoadBalance implements  LoadBalancer {
         private AtomicInteger count = new AtomicInteger();
         @Override
@@ -62,10 +62,6 @@ public class LoadBalancing {
         }
     }
 
-    /**
-     * 随机的方式
-     * 要有随机数发生器, 但是不需要全局状态
-     */
     @Test
     public void randomLoadBalance1() {
         RandomLoadBalance randomLoadBalance = new RandomLoadBalance();
@@ -74,6 +70,10 @@ public class LoadBalancing {
         });
     }
 
+    /**
+     * 随机调度
+     * 要有随机数发生器, 但是不需要全局状态
+     */
     static class RandomLoadBalance implements LoadBalancer {
         private Random random = new Random();
         @Override
@@ -82,10 +82,6 @@ public class LoadBalancing {
         }
     }
 
-    /**
-     * 带有权重的随机的方式
-     * 类似于彩票算法, 各种叫法不同
-     */
     @Test
     public void randomLoadBalance2() {
         RandomLoadBalance2 randomLoadBalance = new RandomLoadBalance2();
@@ -94,6 +90,11 @@ public class LoadBalancing {
         });
     }
 
+    /**
+     * 随机权重调度
+     * 带有权重的随机的方式
+     * 类似于彩票算法, 各种叫法不同
+     */
     static class RandomLoadBalance2 implements LoadBalancer {
         private Random random = new Random();
         @Override
@@ -118,19 +119,6 @@ public class LoadBalancing {
         }
     }
 
-    /**
-     * 带有权重的轮询方式
-     * 步长算法
-     * 思路: 将权重划分成行进的步数, 相同的距离, 权重越高步数也就越高, 同时步长也就越短
-     * 执行的时候, 就选择行进最慢的那个执行, 这样就永远不会出现在一定范围内某些任务执行次数极少另一些任务极多的不平衡现象
-     * 
-     * 和权重随机相比, 随机权重只是在统计意义上满足权重的分配, 同时在统计意义上比较均匀, 特别情况, 还会出现极端的极少或者极多的情况
-     * 缺点: 实现稍显复杂, 需要保存全局状态
-     * 
-     * 使用场景: 
-     * 1. CPU进程调度算法
-     * 由于CPU简称调度有时间片的概念(这里就可以对应步长), 且最好不要出现用户任务长时间不执行的情况, 所以步长算法比随机权重轮询有一定优势
-     */
     @Test
     public void roundRobinLoadBalance() {
         RoundRobinLoadBalance randomLoadBalance = new RoundRobinLoadBalance();
@@ -139,6 +127,20 @@ public class LoadBalancing {
         });
     }
 
+    /**
+     * 权重轮询调度步长
+     * 带有权重的轮询方式
+     * 步长算法
+     * 思路: 将权重划分成行进的步数, 相同的距离, 权重越高步数也就越高, 同时步长也就越短
+     * 执行的时候, 就选择行进最慢的那个执行, 这样就永远不会出现在一定范围内某些任务执行次数极少另一些任务极多的不平衡现象
+     *
+     * 和权重随机相比, 随机权重只是在统计意义上满足权重的分配, 同时在统计意义上比较均匀, 特别情况, 还会出现极端的极少或者极多的情况
+     * 缺点: 实现稍显复杂, 需要保存全局状态
+     *
+     * 使用场景: 
+     * 1. CPU进程调度算法
+     * 由于CPU简称调度有时间片的概念(这里就可以对应步长), 且最好不要出现用户任务长时间不执行的情况, 所以步长算法比随机权重轮询有一定优势
+     */
     static class RoundRobinLoadBalance implements LoadBalancer {
 
         /*
@@ -197,10 +199,6 @@ public class LoadBalancing {
         }
     }
 
-    /**
-     * 轮询调度
-     * 和其类似的调度有: 补偿调度, 随机调度, 都可以有权重和没有权重
-     */
     @Test
     public void roundRobinLoadBalance2() {
         RoundRobinLoadBalance2 roundRobinLoadBalance2 = new RoundRobinLoadBalance2();
@@ -209,6 +207,10 @@ public class LoadBalancing {
         }
     }
 
+    /**
+     * 权重轮询调度
+     * 和其类似的调度有: 补偿调度, 随机调度, 都可以有权重和没有权重
+     */
     static class RoundRobinLoadBalance2 implements LoadBalancer {
         private ConcurrentMap<String, WeightedRoundRobin> methodWeightMap = new ConcurrentHashMap<>();
         @Override
@@ -271,9 +273,6 @@ public class LoadBalancing {
         }
     }
 
-    /**
-     * Hash 调度
-     */
     @Test
     public void hashLoadBalance() {
         HashLoadBalance loadBalance = new HashLoadBalance();
@@ -290,6 +289,9 @@ public class LoadBalancing {
         }
     }
 
+    /**
+     * Hash 调度
+     */
     static class HashLoadBalance implements LoadBalancer {
         @Override
         public Task select(List<Task> tasks, Object param) {
@@ -298,9 +300,6 @@ public class LoadBalancing {
         }
     }
 
-    /**
-     * 一致性 Hash 调度
-     */
     @Test
     public void consistencyHashLoadBalance() {
         ConsistencyHashLoadBalance loadBalance = new ConsistencyHashLoadBalance();
@@ -328,6 +327,9 @@ public class LoadBalancing {
     Node02 [64-127]
     Node02 [128-191]
     Node02 [182-256]
+     */
+    /**
+     * 一致性 Hash 调度
      */
     static class ConsistencyHashLoadBalance implements LoadBalancer {
         /**
