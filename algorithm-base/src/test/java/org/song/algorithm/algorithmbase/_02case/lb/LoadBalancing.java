@@ -290,6 +290,16 @@ public class LoadBalancing {
     public void consistencyHashLoadBalance() {
         ConsistencyHashLoadBalance loadBalance = new ConsistencyHashLoadBalance();
         for (int e : IntStream.range(1, 50).toArray()) {
+            if (e % 5 == 0) {
+                tasks.add(new Task("task" + e, 0));
+            }
+            loadBalance.select(tasks, e).invoke(e);
+        }
+        System.out.println("*******************************************");
+        for (int e : IntStream.range(1, 50).toArray()) {
+            if (e % 5 == 0) {
+                tasks.removeIf(t -> t.getName().endsWith(String.valueOf(e)));
+            }
             loadBalance.select(tasks, e).invoke(e);
         }
     }
@@ -359,6 +369,9 @@ public class LoadBalancing {
         }
 
         private synchronized void removeNode(Node node) {
+            if (node == null) {
+                return;
+            }
             Map.Entry<Integer, Node> preNodeEntry = hashRangeMap.ceilingEntry(node.getStart() - 1);
             Map.Entry<Integer, Node> nextNodeEntry = hashRangeMap.ceilingEntry(node.getEnd() + 1);
             if (preNodeEntry != null) {
@@ -387,7 +400,7 @@ public class LoadBalancing {
             Node node = hashRangeMap.ceilingEntry(i).getValue();
             Map<String, Task> taskMap = tasks.stream()
                     .collect(Collectors.toMap(Task::getName, Function.identity(), (k1, k2) -> k1));
-            return taskMap.get(node.getKey());
+            return taskMap.getOrDefault(node.getKey(), tasks.get(0));
         }
 
         @Data
