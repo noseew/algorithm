@@ -6,6 +6,7 @@ import lombok.Data;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -297,7 +298,7 @@ public class LoadBalancing {
         private final int range = 1 << 10;
         private TreeMap<Integer, Node> hashRangeMap;
 
-        public void initRing(List<Task> tasks) {
+        private void initRing(List<Task> tasks) {
             if (hashRangeMap != null) {
                 return;
             }
@@ -314,7 +315,7 @@ public class LoadBalancing {
             }
         }
 
-        public synchronized void removeNode(Node node) {
+        private synchronized void removeNode(Node node) {
             Map.Entry<Integer, Node> preNodeEntry = hashRangeMap.ceilingEntry(node.getStart() - 1);
             Map.Entry<Integer, Node> nextNodeEntry = hashRangeMap.ceilingEntry(node.getEnd() + 1);
             if (preNodeEntry != null) {
@@ -326,7 +327,14 @@ public class LoadBalancing {
             }
         }
 
-        public synchronized void addNode(Node node) {
+        private synchronized void addNode(Node node) {
+            Node maxRange = hashRangeMap.values().stream().max(Comparator.comparing(e -> e.getEnd() - e.getStart())).get();
+            int middle = (maxRange.getEnd() - maxRange.getStart()) / 2;
+            int oldEnd = maxRange.getEnd();
+            maxRange.setEnd(maxRange.getStart() + middle);
+            node.setStart(maxRange.getEnd());
+            node.setEnd(oldEnd);
+            hashRangeMap.put(node.getStart(), node);
         }
 
         /**
