@@ -286,6 +286,14 @@ public class LoadBalancing {
         }
     }
 
+    @Test
+    public void consistencyHashLoadBalance() {
+        ConsistencyHashLoadBalance loadBalance = new ConsistencyHashLoadBalance();
+        for (int e : IntStream.range(1, 50).toArray()) {
+            loadBalance.select(tasks, e).invoke(e);
+        }
+    }
+
     /*
     0___64___128___192___256
     Node01 [0-63]
@@ -297,13 +305,18 @@ public class LoadBalancing {
 
         private final int range = 1 << 10;
         private TreeMap<Integer, Node> hashRangeMap;
+        private Map<String, Node> hashKeyMap;
+
+        private void ensure(List<Task> tasks) {
+            if (hashRangeMap == null) {
+                initRing(tasks);
+            } else if (hashRangeMap.size() != tasks.size()){
+                adjustNode(tasks);
+            }
+        }
 
         private void initRing(List<Task> tasks) {
-            if (hashRangeMap != null) {
-                return;
-            }
             hashRangeMap = new TreeMap<>();
-
             int step = range / tasks.size();
             int start = 0;
             for (Task task : tasks) {
@@ -312,6 +325,36 @@ public class LoadBalancing {
                     node.setEnd(range - node.getStart());
                 }
                 hashRangeMap.put(start, node);
+            }
+            updateMap();
+        }
+
+        private void updateMap() {
+            hashKeyMap = hashRangeMap.values().stream().collect(Collectors.toMap(Node::getKey, Function.identity(), (k1, k2) -> k1));
+        }
+
+        /**
+         */
+        public synchronized void adjustNode(List<Task> tasks) {
+            Set<String> newTaskSet = tasks.stream().map(Task::getName).collect(Collectors.toSet());
+            Set<String> ringNodeSet = hashRangeMap.values().stream().map(Node::getKey).collect(Collectors.toSet());
+
+            Set<String> removeSet = Sets.difference(ringNodeSet, newTaskSet);
+            Set<String> addSet = Sets.difference(newTaskSet, ringNodeSet);
+
+            if (!removeSet.isEmpty()) {
+                if (removeSet.size() == hashRangeMap.size()) {
+                    initRing(tasks);
+                    return;
+                }
+                for (String key : removeSet) {
+                    removeNode(hashKeyMap.get(key));
+                }
+            }
+            if (!addSet.isEmpty()) {
+                for (String key : addSet) {
+                    addNode(new Node(key, 0, 0));
+                }
             }
         }
 
@@ -337,33 +380,11 @@ public class LoadBalancing {
             hashRangeMap.put(node.getStart(), node);
         }
 
-        /**
-         * TODO 未完成
-         *
-         * @param newTaskSet
-         */
-        public synchronized void adjustNode(Set<String> newTaskSet) {
-            Set<String> ringNodeSet = hashRangeMap.values().stream().map(Node::getKey).collect(Collectors.toSet());
-
-            Set<String> removeSet = Sets.difference(ringNodeSet, newTaskSet);
-            Set<String> addSet = Sets.difference(newTaskSet, ringNodeSet);
-
-            if (!removeSet.isEmpty()) {
-                for (Map.Entry<Integer, Node> nodeEntry : hashRangeMap.entrySet()) {
-                    if (removeSet.contains(nodeEntry.getValue().getKey())) {
-                        hashRangeMap.remove(nodeEntry.getKey());
-                    }
-                }
-            }
-        }
-
         @Override
         public Task select(List<Task> tasks, Object param) {
-            initRing(tasks);
-
+            ensure(tasks);
             int i = System.identityHashCode(param) % range;
             Node node = hashRangeMap.ceilingEntry(i).getValue();
-
             Map<String, Task> taskMap = tasks.stream()
                     .collect(Collectors.toMap(Task::getName, Function.identity(), (k1, k2) -> k1));
             return taskMap.get(node.getKey());
