@@ -43,6 +43,9 @@ public class LoadBalancing {
         }
     }
 
+    /**
+     * 轮询
+     */
     @Test
     public void pollingLoadBalance() {
         PollingLoadBalance pollingLoadBalance = new PollingLoadBalance();
