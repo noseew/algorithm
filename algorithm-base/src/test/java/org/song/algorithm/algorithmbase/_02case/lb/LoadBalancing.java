@@ -320,8 +320,10 @@ public class LoadBalancing {
         private void ensure(List<Task> tasks) {
             if (hashRangeMap == null) {
                 initRing(tasks);
+                updateMap();
             } else if (hashRangeMap.size() != tasks.size()){
                 adjustNode(tasks);
+                updateMap();
             }
         }
 
@@ -330,13 +332,13 @@ public class LoadBalancing {
             int step = range / tasks.size();
             int start = 0;
             for (Task task : tasks) {
-                Node node = new Node(task.getName(), start, start += step);
-                if (range - node.getEnd() <= step) {
-                    node.setEnd(range - node.getStart());
+                Node node = new Node(task.getName(), start, start + step);
+                if (range - node.getEnd() < step) {
+                    node.setEnd(range);
                 }
                 hashRangeMap.put(start, node);
+                start += step;
             }
-            updateMap();
         }
 
         private void updateMap() {
@@ -372,8 +374,8 @@ public class LoadBalancing {
             if (node == null) {
                 return;
             }
-            Map.Entry<Integer, Node> preNodeEntry = hashRangeMap.ceilingEntry(node.getStart() - 1);
-            Map.Entry<Integer, Node> nextNodeEntry = hashRangeMap.ceilingEntry(node.getEnd() + 1);
+            Map.Entry<Integer, Node> preNodeEntry = hashRangeMap.floorEntry(node.getStart() - 1);
+            Map.Entry<Integer, Node> nextNodeEntry = hashRangeMap.floorEntry(node.getEnd() + 1);
             if (preNodeEntry != null) {
                 preNodeEntry.getValue().setEnd(node.getEnd());
             } else if (nextNodeEntry != null) {
@@ -397,7 +399,7 @@ public class LoadBalancing {
         public Task select(List<Task> tasks, Object param) {
             ensure(tasks);
             int i = System.identityHashCode(param) % range;
-            Node node = hashRangeMap.ceilingEntry(i).getValue();
+            Node node = hashRangeMap.floorEntry(i).getValue();
             Map<String, Task> taskMap = tasks.stream()
                     .collect(Collectors.toMap(Task::getName, Function.identity(), (k1, k2) -> k1));
             return taskMap.getOrDefault(node.getKey(), tasks.get(0));
