@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.algorithmbase.utils.DispatchUtils;
 import org.springframework.util.StopWatch;
 
 import java.util.*;
@@ -32,7 +33,18 @@ public class LoadBalancing {
     static List<Task> tasks = Lists.newArrayList( new Task("task1", 40),  new Task("task2", 20));
 
     @Test
-    public void test_RR() {
+    public void test_RR_1() {
+        RR_1 rr1 = new RR_1();
+        DispatchUtils instance = DispatchUtils.getInstance();
+        IntStream.range(1, 100).forEach(e -> {
+            Task task = rr1.select(tasks);
+            instance.increment(task.getName(), 1);
+            task.invoke(e);
+        });
+        System.out.println(instance.toPrettyString());
+    }
+    @Test
+    public void test_RR_2() {
         RR_1 rr1 = new RR_1();
         RR_2 rr2 = new RR_2();
         StopWatch stopWatch = new StopWatch();
@@ -76,19 +88,27 @@ public class LoadBalancing {
     @Test
     public void test_SWRR() {
         SmoothWRRLB_1 lb = new SmoothWRRLB_1();
+        DispatchUtils instance = DispatchUtils.getInstance();
         tasks.add(new Task("task3", 30));
         for (int e : IntStream.range(1, 50).toArray()) {
-            lb.select(tasks).invoke(e);
+            Task task = lb.select(tasks);
+            instance.increment(task.getName(), 1);
+            task.invoke(e);
         }
+        System.out.println(instance.toPrettyString());
     }
 
     @Test
-    public void roundRobinLoadBalance3() {
+    public void test_SWRR2() {
         SmoothWRRLB_2 lb = new SmoothWRRLB_2();
+        DispatchUtils instance = DispatchUtils.getInstance();
         tasks.add(new Task("task3", 30));
         for (int e : IntStream.range(1, 50).toArray()) {
-            lb.select(tasks).invoke(e);
+            Task task = lb.select(tasks);
+            instance.increment(task.getName(), 1);
+            task.invoke(e);
         }
+        System.out.println(instance.toPrettyString());
     }
     
     @Test
@@ -373,6 +393,8 @@ public class LoadBalancing {
     权重轮询
     RoundRobinLoadBalance2 的简化版本
     
+    https://mp.weixin.qq.com/s/HQTpiEdbIC-OgMJTMIc3oQ
+    
     思路
     1. 轮询每个任务, 每个任务记录一个行程pass, 每一次轮询都会向前行进, 步长等于各自的权重
     2. 每一轮选出一个行程最大的任务, 作为执行任务, 同时将其行程归零
@@ -390,13 +412,13 @@ public class LoadBalancing {
         public Task select(List<Task> tasks) {
             Task selected = null;
             int maxStep = Integer.MIN_VALUE;
-            AtomicInteger totalWight = new AtomicInteger(0);
+            int totalWight = 0;
 
             for (Task task : tasks) {
                 AtomicInteger pass = wightMap.computeIfAbsent(task.getName(), k -> new AtomicInteger(task.getWight()));
                 // 每个任务向前行进自己的步进, 步长=权重
                 int current = pass.addAndGet(task.getWight());
-                totalWight.addAndGet(task.getWight());
+                totalWight += task.getWight();
                 // 行程比较长的任务, 得到此次的执行权
                 if (current > maxStep) {
                     selected = task;
@@ -406,10 +428,7 @@ public class LoadBalancing {
 
             if (selected != null) {
                 // 得到此次执行权的任务, 行程归零
-                wightMap.computeIfPresent(selected.getName(), (k, v) -> {
-                    v.addAndGet(-totalWight.get());
-                    return v;
-                });
+                wightMap.get(selected.getName()).addAndGet(-totalWight);
                 return selected;
             }
             return tasks.get(0);
