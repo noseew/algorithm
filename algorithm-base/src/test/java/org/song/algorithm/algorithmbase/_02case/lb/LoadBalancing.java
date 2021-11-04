@@ -33,7 +33,7 @@ public class LoadBalancing {
     static List<Task> tasks = Lists.newArrayList( new Task("task1", 40),  new Task("task2", 20));
 
     @Test
-    public void test_RR_1() {
+    public void test_RR1() {
         RR_1 rr1 = new RR_1();
         DispatchUtils instance = DispatchUtils.getInstance();
         IntStream.range(1, 100).forEach(e -> {
@@ -44,7 +44,7 @@ public class LoadBalancing {
         System.out.println(instance.toPrettyString());
     }
     @Test
-    public void test_RR_2() {
+    public void test_RR2() {
         RR_1 rr1 = new RR_1();
         RR_2 rr2 = new RR_2();
         StopWatch stopWatch = new StopWatch();
@@ -70,7 +70,7 @@ public class LoadBalancing {
     }
 
     @Test
-    public void randomLoadBalance2() {
+    public void test_WR() {
         WR_1 wr_1 = new WR_1();
         IntStream.range(1, 50).forEach(e -> {
             wr_1.select(tasks).invoke(e);
@@ -78,7 +78,7 @@ public class LoadBalancing {
     }
 
     @Test
-    public void test_WRR_1() {
+    public void test_WRR1() {
         WRR_1 wrr_1 = new WRR_1();
         IntStream.range(1, 50).forEach(e -> {
             wrr_1.select(tasks).invoke(e);
