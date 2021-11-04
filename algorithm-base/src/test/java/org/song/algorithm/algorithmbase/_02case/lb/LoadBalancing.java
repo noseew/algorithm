@@ -154,8 +154,8 @@ public class LoadBalancing {
     1. 轮询 RR RoundRobin
     2. 随机 Random
     3. 权重随机 WR WeightRandom
-    4. 权重轮询 WRR WeightRoundRobin
-    5. 平滑权重轮询 SWRR SmoothWeightRoundRobin
+    4. 权重轮询 WRR WeightRoundRobin: 轮询+权重, 不会出现随机权重那样的极端情况, 适用于CPU时间片调度
+    5. 平滑权重轮询 SWRR SmoothWeightRoundRobin: 轮询+权重+平滑, 不会出现权重轮询那样连续多次调度同一个任务的情况, 适用于请求负载均衡
     6. Hash
     7. 一致性Hash
      */
