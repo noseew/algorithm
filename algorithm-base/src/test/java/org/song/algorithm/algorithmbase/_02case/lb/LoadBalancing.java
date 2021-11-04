@@ -3,15 +3,12 @@ package org.song.algorithm.algorithmbase._02case.lb;
 import com.google.common.collect.Sets;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
+import org.springframework.util.StopWatch;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -34,266 +31,85 @@ public class LoadBalancing {
     }
     static List<Task> tasks = Lists.newArrayList( new Task("task1", 40),  new Task("task2", 20));
 
-    interface LoadBalancer {
-        default Task select(List<Task> tasks) {
-            return null;
-        }
-        default Task select(List<Task> tasks, Object param) {
-            return select(tasks);
-        }
+    @Test
+    public void test_RR() {
+        RR_1 rr1 = new RR_1();
+        RR_2 rr2 = new RR_2();
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start("rr1");
+        IntStream.range(1, 100).forEach(e -> {
+            rr1.select(tasks).invoke(e);
+        });
+        stopWatch.stop();
+        stopWatch.start("rr2");
+        IntStream.range(1, 100).forEach(e -> {
+            rr2.select(tasks).invoke(e);
+        });
+        stopWatch.stop();
+        System.out.println(stopWatch.prettyPrint());
     }
 
     @Test
-    public void pollingLoadBalance() {
-        PollingLoadBalance pollingLoadBalance = new PollingLoadBalance();
+    public void test_Random() {
+        Random_1 random1 = new Random_1();
         IntStream.range(1, 50).forEach(e -> {
-            pollingLoadBalance.select(tasks).invoke(e);
+            random1.select(tasks).invoke(e);
         });
-    }
-
-    /**
-     * 轮询调度
-     */
-    static class PollingLoadBalance implements  LoadBalancer {
-        private AtomicInteger count = new AtomicInteger();
-        @Override
-        public Task select(List<Task> tasks) {
-            return tasks.get(count.getAndIncrement() % tasks.size());
-        }
-    }
-
-    @Test
-    public void randomLoadBalance1() {
-        RandomLoadBalance randomLoadBalance = new RandomLoadBalance();
-        IntStream.range(1, 50).forEach(e -> {
-            randomLoadBalance.select(tasks).invoke(e);
-        });
-    }
-
-    /**
-     * 随机调度
-     * 要有随机数发生器, 但是不需要全局状态
-     */
-    static class RandomLoadBalance implements LoadBalancer {
-        private Random random = new Random();
-        @Override
-        public Task select(List<Task> tasks) {
-            return tasks.get(random.nextInt(tasks.size()));
-        }
     }
 
     @Test
     public void randomLoadBalance2() {
-        RandomLoadBalance2 randomLoadBalance = new RandomLoadBalance2();
+        WR_1 wr_1 = new WR_1();
         IntStream.range(1, 50).forEach(e -> {
-            randomLoadBalance.select(tasks).invoke(e);
+            wr_1.select(tasks).invoke(e);
         });
     }
 
-    /**
-     * 随机权重调度
-     * 带有权重的随机的方式
-     * 类似于彩票算法, 各种叫法不同
-     */
-    static class RandomLoadBalance2 implements LoadBalancer {
-        private Random random = new Random();
-        @Override
-        public Task select(List<Task> tasks) {
-            int weightCount = 0;
-            for (Task task : tasks) {
-                weightCount += task.getWight();
-            }
-            // 随机范围, 0~30, 其中 0~10属于 第一个 task, 10~30属于第二个task
-            int nextInt = random.nextInt(weightCount);
-            for (Task task : tasks) {
-                // 判断这个随机数落到了哪个范围,
-                if (nextInt > task.getWight()) {
-                    // 不是这个范围, 减去后继续判断
-                    nextInt -= task.getWight();
-                } else {
-                    // 是这个范围, 执行
-                    return task;
-                }
-            }
-            return tasks.get(0);
-        }
-    }
-
     @Test
-    public void roundRobinLoadBalance() {
-        RoundRobinLoadBalance randomLoadBalance = new RoundRobinLoadBalance();
+    public void test_WRR_1() {
+        WRR_1 wrr_1 = new WRR_1();
         IntStream.range(1, 50).forEach(e -> {
-            randomLoadBalance.select(tasks).invoke(e);
+            wrr_1.select(tasks).invoke(e);
         });
     }
 
-    /**
-     * 权重轮询调度步长
-     * 带有权重的轮询方式
-     * 步长算法
-     * 思路: 将权重划分成行进的步数, 相同的距离, 权重越高步数也就越高, 同时步长也就越短
-     * 执行的时候, 就选择行进最慢的那个执行, 这样就永远不会出现在一定范围内某些任务执行次数极少另一些任务极多的不平衡现象
-     *
-     * 和权重随机相比, 随机权重只是在统计意义上满足权重的分配, 同时在统计意义上比较均匀, 特别情况, 还会出现极端的极少或者极多的情况
-     * 缺点: 实现稍显复杂, 需要保存全局状态
-     *
-     * 使用场景: 
-     * 1. CPU进程调度算法
-     * 由于CPU简称调度有时间片的概念(这里就可以对应步长), 且最好不要出现用户任务长时间不执行的情况, 所以步长算法比随机权重轮询有一定优势
-     */
-    static class RoundRobinLoadBalance implements LoadBalancer {
-
-        /*
-        步长
-        参考数 800, 他们的一个公倍数
-        假设他们的步长 = 参考数 / 权重
-        得到他们的步长分别为 {40, 20}
-
-        步长的作用是, 在task行进的过程中, 各自task走各自的步长, 由于是公倍数, 所以他们最终在某些次数之后再次相遇齐头并进
-         */
-        private int[] steps;
-        /*
-        行程, 表示每个task行进的距离,
-            行程 = 步长 * 前进次数
-            这里的前进次数, 实际上就等于任务的执行次数, 其次数和权重成正比, 从而实现带有权重的轮训
-        默认从0开始, 当他们都相同时, 等价于再次从0开始
-        找到行程最短的那个task位置, 行驶他的行程
-         */
-        private int[] pass;
-
-
-        @Override
-        public Task select(List<Task> tasks) {
-            if (steps == null || steps.length == 0 || steps.length != tasks.size()) {
-                steps = new int[tasks.size()];
-                for (int i = 0; i < steps.length; i++) {
-                    steps[i] = (100 * tasks.size())  / tasks.get(i).getWight();
-                }
-            }
-            if (pass == null || pass.length == 0 || pass.length != tasks.size()) {
-                pass = new int[tasks.size()];
-            }
-            // 获取到最短行程的下标
-            int index = minIndex(pass);
-            // 跑的最慢的那个向前行驶一个步长
-            pass[index] += steps[index];
-            // 执行跑的最慢的那个
-            return tasks.get(index);
-        }
-
-        /**
-         * 获取数组中最小元素的下标
-         * 注意这里采用简单的O(n)算法,
-         * 在Linux中的CFS调度算法中, 也是一种步进调度, 此数据结构采用的是红黑树, 可以更快的找到指定的最小时间片, 从而执行
-         */
-        private static int minIndex(int[] steps) {
-            int min = steps[0];
-            int minIndex = 0;
-            for (int i = 0; i < steps.length; i++) {
-                if (steps[i] < min) {
-                    min = steps[i];
-                    minIndex = i;
-                }
-            }
-            return minIndex;
-        }
-    }
-
     @Test
-    public void roundRobinLoadBalance2() {
-        RoundRobinLoadBalance2 roundRobinLoadBalance2 = new RoundRobinLoadBalance2();
+    public void test_SWRR() {
+        SmoothWRRLB_1 lb = new SmoothWRRLB_1();
+        tasks.add(new Task("task3", 30));
         for (int e : IntStream.range(1, 50).toArray()) {
-            roundRobinLoadBalance2.select(tasks).invoke(e);
-        }
-    }
-
-    /**
-     * 权重轮询调度
-     * 和其类似的调度有: 补偿调度, 随机调度, 都可以有权重和没有权重
-     */
-    static class RoundRobinLoadBalance2 implements LoadBalancer {
-        private ConcurrentMap<String, TaskInfo> taskProgress = new ConcurrentHashMap<>();
-        @Override
-        public Task select(List<Task> tasks) {
-            int totalWeight = 0;
-            long maxCurrent = Long.MIN_VALUE;
-            Task selected = null;
-            TaskInfo selectedTP = null;
-
-            for (Task invoker : tasks) {
-                int weight = invoker.getWight();
-                // 初始化或记录权重信息
-                TaskInfo taskInfo = taskProgress.computeIfAbsent(invoker.getName(), k -> {
-                    TaskInfo ti = new TaskInfo();
-                    ti.setWeight(weight);
-                    return ti;
-                });
-                // 每走一步, 增加自己的步进(按照权重单位)
-                long cur = taskInfo.forward();
-                // 标记出步进走的步数最快的那个任务
-                if (cur > maxCurrent) {
-                    maxCurrent = cur;
-                    selected = invoker;
-                    selectedTP = taskInfo;
-                }
-                totalWeight += weight;
-            }
-            if (selected != null) {
-                // 将走得最快的那个任务步进归零
-                selectedTP.reset(totalWeight);
-                return selected;
-            }
-            // should not happen here
-            return tasks.get(0);
-        }
-
-        @Data
-        static class TaskInfo {
-            // 当前资源的权重
-            private int weight;
-            // 执行次数
-            private AtomicLong step = new AtomicLong(0);
-
-            public long forward() {
-                return step.addAndGet(weight);
-            }
-
-            public void reset(int total) {
-                step.addAndGet(-1 * total);
-            }
+            lb.select(tasks).invoke(e);
         }
     }
 
     @Test
-    public void hashLoadBalance() {
-        HashLoadBalance loadBalance = new HashLoadBalance();
-        for (int e : IntStream.range(1, 5).toArray()) {
-            loadBalance.select(tasks, e).invoke(e);
-        }
-        System.out.println("********************************");
-        for (int e : IntStream.range(1, 5).toArray()) {
-            loadBalance.select(tasks, e).invoke(e);
-        }
-        System.out.println("********************************");
-        for (int e : IntStream.range(1, 5).toArray()) {
-            loadBalance.select(tasks, e).invoke(e);
+    public void roundRobinLoadBalance3() {
+        SmoothWRRLB_2 lb = new SmoothWRRLB_2();
+        tasks.add(new Task("task3", 30));
+        for (int e : IntStream.range(1, 50).toArray()) {
+            lb.select(tasks).invoke(e);
         }
     }
-
-    /**
-     * Hash 调度
-     */
-    static class HashLoadBalance implements LoadBalancer {
-        @Override
-        public Task select(List<Task> tasks, Object param) {
-            int i = System.identityHashCode(param) % tasks.size();
-            return tasks.get(i);
+    
+    @Test
+    public void test_hash() {
+        Hash_1 hash_1 = new Hash_1();
+        for (int e : IntStream.range(1, 5).toArray()) {
+            hash_1.select(tasks, e).invoke(e);
+        }
+        System.out.println("********************************");
+        for (int e : IntStream.range(1, 5).toArray()) {
+            hash_1.select(tasks, e).invoke(e);
+        }
+        System.out.println("********************************");
+        for (int e : IntStream.range(1, 5).toArray()) {
+            hash_1.select(tasks, e).invoke(e);
         }
     }
 
     @Test
-    public void consistencyHashLoadBalance() {
-        ConsistencyHashLoadBalance loadBalance = new ConsistencyHashLoadBalance();
+    public void test_consistencyHash() {
+        ConsistencyHash_1 loadBalance = new ConsistencyHash_1();
         System.out.println("*********************1**********************");
         for (int e : IntStream.range(1, 10).toArray()) {
             loadBalance.select(tasks, e).invoke(e);
@@ -312,6 +128,305 @@ public class LoadBalancing {
         }
     }
 
+
+    /*
+    调度算法(负载均衡算法)
+    1. 轮询 RR RoundRobin
+    2. 随机 Random
+    3. 权重随机 WR WeightRandom
+    4. 权重轮询 WRR WeightRoundRobin
+    5. 平滑权重轮询 SWRR SmoothWeightRoundRobin
+    6. Hash
+    7. 一致性Hash
+     */
+    interface LoadBalancer {
+        default Task select(List<Task> tasks) {
+            return null;
+        }
+        default Task select(List<Task> tasks, Object param) {
+            return select(tasks);
+        }
+    }
+
+    /**
+     * 轮询 RR RoundRobin
+     * 优点: 1)属于公平调度, 2)实现简单
+     * 缺点: 1)无法将被调度者按性能区分, 也就是没有权重的概念; 2)需要有个全局状态记录上次调度的任务
+     */
+    static class RR_1 implements  LoadBalancer {
+        private final AtomicInteger count = new AtomicInteger();
+        @Override
+        public Task select(List<Task> tasks) {
+            return tasks.get(count.getAndIncrement() % tasks.size());
+        }
+    }
+
+    /**
+     * 轮询调度
+     * 如果任务数量是2的次幂数, 可以优化算法使用位运算替换%运算, 提高效率
+     * 摘自 Netty 源码
+     */
+    static class RR_2 implements  LoadBalancer {
+        private final AtomicInteger count = new AtomicInteger();
+        @Override
+        public Task select(List<Task> tasks) {
+            // tasks.size() 必须是2的次幂数
+            return tasks.get(count.getAndIncrement() & (tasks.size() - 1));
+        }
+    }
+
+    /**
+     * 随机 Random
+     * 优点: 1) 实现简单, 2) 和RR相比, 不需要全局状态
+     * 缺点: 1) 不公平, 调度者不确定, 仅仅在统计上具有公平性 2) 没有权重
+     */
+    static class Random_1 implements LoadBalancer {
+        private final Random random = new Random();
+        @Override
+        public Task select(List<Task> tasks) {
+            return tasks.get(random.nextInt(tasks.size()));
+        }
+    }
+
+    /**
+     * 权重随机 WR WeightRandom
+     * 带有权重的随机的方式
+     * 类似于彩票算法, 各种叫法不同
+     */
+    static class WR_1 implements LoadBalancer {
+        private final Random random = new Random();
+        @Override
+        public Task select(List<Task> tasks) {
+            int totalWeight = 0;
+            for (Task task : tasks) {
+                totalWeight += task.getWight();
+            }
+            // 随机范围, 0~30, 其中 0~10属于 第一个 task, 10~30属于第二个task
+            int nextInt = random.nextInt(totalWeight);
+            for (Task task : tasks) {
+                // 判断这个随机数落到了哪个范围,
+                if (nextInt > task.getWight()) {
+                    // 不是这个范围, 减去后继续判断
+                    nextInt -= task.getWight();
+                } else {
+                    // 是这个范围, 执行
+                    return task;
+                }
+            }
+            return tasks.get(0);
+        }
+    }
+
+    /**
+     * 权重轮询调度步长
+     * 带有权重的轮询方式
+     * 步长算法
+     * 思路: 将权重划分成行进的步数, 相同的距离, 权重越高步数也就越高, 同时步长也就越短
+     * 执行的时候, 就选择行进最慢的那个执行, 这样就永远不会出现在一定范围内某些任务执行次数极少另一些任务极多的不平衡现象
+     *
+     * 和权重随机相比, 随机权重只是在统计意义上满足权重的分配, 同时在统计意义上比较均匀, 特别情况, 还会出现极端的极少或者极多的情况
+     * 缺点: 
+     * 1. 实现稍显复杂, 需要保存全局状态
+     * 2. 适用于CPU调度, 也就是不会频繁切换CPU, 但是对于负载均衡来说, 并不平滑, 因为会连续多次调度会分配给同一个调度者
+     *
+     * 使用场景: 
+     * 1. CPU进程调度算法
+     * 由于CPU简称调度有时间片的概念(这里就可以对应步长), 且最好不要出现用户任务长时间不执行的情况, 所以步长算法比随机权重轮询有一定优势
+     */
+    static class WRR_1 implements LoadBalancer {
+
+        private volatile List<TaskInfo> taskInfos;
+
+        @Override
+        public Task select(List<Task> tasks) {
+            initStep(tasks);
+            // 获取到最短行程的下标
+            int index = minIndexAndForward();
+            // 执行跑的最慢的那个
+            return tasks.get(index);
+        }
+
+        /**
+         * 初始化步长
+         * 
+         * @param tasks
+         */
+        private void initStep(List<Task> tasks) {
+            boolean needInit = taskInfos == null || taskInfos.size() == 0 || taskInfos.size() != tasks.size();
+            if (needInit) {
+                synchronized (this){
+                    // 每个任务的 步长
+                    taskInfos = new ArrayList<>(tasks.size());
+                    long totalWeight = 0;
+                    for (Task task : tasks) {
+                        totalWeight += task.getWight();
+                    }
+                    totalWeight = totalWeight < 0 ? Long.MAX_VALUE : totalWeight;
+                    for (Task task : tasks) {
+                        /*
+                        权重越大, 步长越小, 权重和步长成反比
+                        为了步长能够得到整数, 
+                        step = sum(weight) / weight
+                        为什么这样算? 每个任务都有前进的机会, 前进的最慢的获得执行机会, 同时获得前进一次的机会, 从而达到权重轮询的效果
+                         */
+                        int step = (int)(totalWeight / (long) task.getWight());
+                        taskInfos.add(new TaskInfo(step, new AtomicLong(0)));
+                    }
+                }
+            }
+        }
+
+        /**
+         * 获取数组中最小元素的下标
+         * 注意这里采用简单的O(n)算法,
+         * 在Linux中的CFS调度算法中, 也是一种步进调度, 此数据结构采用的是红黑树, 可以更快的找到指定的最小时间片, 从而执行
+         */
+        private int minIndexAndForward() {
+            TaskInfo minPass = taskInfos.get(0);
+            int minIndex = 0;
+            for (int i = 0; i < taskInfos.size(); i++) {
+                if (taskInfos.get(i).getPass().get() < minPass.getPass().get()) {
+                    minIndex = i;
+                }
+            }
+            // 获取行程最小的
+            minPass = taskInfos.get(minIndex);
+            // 前进一步
+            minPass.getPass().addAndGet(minPass.getStep());
+            return minIndex;
+        }
+
+        @Data
+        @AllArgsConstructor
+        @NoArgsConstructor
+        static class TaskInfo {
+            /*
+            步长
+            参考数 800, 他们的一个公倍数
+            假设他们的步长 = 参考数 / 权重
+            得到他们的步长分别为 {40, 20}
+    
+            步长的作用是, 在task行进的过程中, 各自task走各自的步长, 由于是公倍数, 所以他们最终在某些次数之后再次相遇齐头并进
+             */
+            private int step;
+            /*
+            行程, 表示每个task行进的距离,
+                行程 = 步长 * 前进次数
+                这里的前进次数, 实际上就等于任务的执行次数, 其次数和权重成正比, 从而实现带有权重的轮训
+            默认从0开始, 当他们都相同时, 等价于再次从0开始
+            找到行程最短的那个task位置, 行驶他的行程
+             */
+            private AtomicLong pass;
+        }
+    }
+
+    /**
+     * 权重轮询调度
+     * 算法摘自 dubbo 的权重轮询
+     */
+    static class SmoothWRRLB_1 implements LoadBalancer {
+        private final ConcurrentMap<String, TaskInfo> taskProgress = new ConcurrentHashMap<>();
+        @Override
+        public Task select(List<Task> tasks) {
+            int totalWeight = 0;
+            long maxCurrent = Long.MIN_VALUE;
+            Task selected = null;
+
+            for (Task invoker : tasks) {
+                int weight = invoker.getWight();
+                // 初始化或记录权重信息
+                TaskInfo taskInfo = taskProgress.computeIfAbsent(invoker.getName(), k -> new TaskInfo());
+                // 每走一步, 增加自己的步进(按照权重单位)
+                long cur = taskInfo.forward(weight);
+                // 标记出步进走的步数最快的那个任务
+                if (cur > maxCurrent) {
+                    maxCurrent = cur;
+                    selected = invoker;
+                }
+                totalWeight += weight;
+            }
+            if (selected != null) {
+                // 将走得最快的那个任务步进归零
+                taskProgress.get(selected.getName()).reset(totalWeight);
+                return selected;
+            }
+            // should not happen here
+            return tasks.get(0);
+        }
+
+        @Data
+        static class TaskInfo {
+            // 执行次数
+            private AtomicLong step = new AtomicLong(0);
+
+            public long forward(int weight) {
+                return step.addAndGet(weight);
+            }
+
+            public void reset(int total) {
+                step.addAndGet(-1 * total);
+            }
+        }
+    }
+    
+    /*
+    权重轮询
+    RoundRobinLoadBalance2 的简化版本
+    
+    思路
+    1. 轮询每个任务, 每个任务记录一个行程pass, 每一次轮询都会向前行进, 步长等于各自的权重
+    2. 每一轮选出一个行程最大的任务, 作为执行任务, 同时将其行程归零
+    3. 由此: 由于行程可以累加, 
+        任务执行条件 = (步长 * 次数) > 比该任务步长都大的所有任务之和
+        任务执行的次数如何计算?
+     */
+    static class SmoothWRRLB_2 implements LoadBalancer {
+        /**
+         * key=任务标识
+         * val=任务的行程
+         */
+        private final Map<String, AtomicInteger> wightMap = new HashMap<>();
+
+        public Task select(List<Task> tasks) {
+            Task selected = null;
+            int maxStep = Integer.MIN_VALUE;
+            AtomicInteger totalWight = new AtomicInteger(0);
+
+            for (Task task : tasks) {
+                AtomicInteger pass = wightMap.computeIfAbsent(task.getName(), k -> new AtomicInteger(task.getWight()));
+                // 每个任务向前行进自己的步进, 步长=权重
+                int current = pass.addAndGet(task.getWight());
+                totalWight.addAndGet(task.getWight());
+                // 行程比较长的任务, 得到此次的执行权
+                if (current > maxStep) {
+                    selected = task;
+                    maxStep = current;
+                }
+            }
+
+            if (selected != null) {
+                // 得到此次执行权的任务, 行程归零
+                wightMap.computeIfPresent(selected.getName(), (k, v) -> {
+                    v.addAndGet(-totalWight.get());
+                    return v;
+                });
+                return selected;
+            }
+            return tasks.get(0);
+        }
+    }
+
+    /**
+     * Hash 调度
+     */
+    static class Hash_1 implements LoadBalancer {
+        @Override
+        public Task select(List<Task> tasks, Object param) {
+            int i = System.identityHashCode(param) % tasks.size();
+            return tasks.get(i);
+        }
+    }
+
     /*
     0___64___128___192___256
     Node01 [0-63]
@@ -322,7 +437,7 @@ public class LoadBalancing {
     /**
      * 一致性 Hash 调度
      */
-    static class ConsistencyHashLoadBalance implements LoadBalancer {
+    static class ConsistencyHash_1 implements LoadBalancer {
         /**
          * Hash环大小, 默认1024
          */
@@ -339,7 +454,7 @@ public class LoadBalancing {
 
         /**
          * 确保Hash环是否需要调整
-         * 
+         *
          * @param tasks
          */
         private void ensure(List<Task> tasks) {
@@ -353,7 +468,7 @@ public class LoadBalancing {
 
         /**
          * 初始化Hash环和节点
-         * 
+         *
          * @param tasks
          */
         private synchronized void initRing(List<Task> tasks) {
@@ -416,7 +531,7 @@ public class LoadBalancing {
 
         /**
          * 删除Hash环中的节点
-         * 
+         *
          * @param node
          */
         private void removeNode(Node node) {
@@ -443,7 +558,7 @@ public class LoadBalancing {
 
         /**
          * 插入一个节点
-         * 
+         *
          * @param node
          */
         private synchronized void insertNode(Node node) {
@@ -481,5 +596,4 @@ public class LoadBalancing {
             private int end;
         }
     }
-
 }
