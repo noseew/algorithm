@@ -343,6 +343,7 @@ public class LoadBalancing {
     /**
      * 权重轮询调度
      * 算法摘自 dubbo 的权重轮询
+     * NGINX默认的负载均衡算法也是基于此
      */
     static class SmoothWRRLB_1 implements LoadBalancer {
         private final ConcurrentMap<String, TaskInfo> taskProgress = new ConcurrentHashMap<>();
@@ -520,7 +521,7 @@ public class LoadBalancing {
             if (hashRingRange == null) {
                 initRing(tasks);
             }
-            if (hashRingRange.size() != tasks.size()){
+            if (hashRingRange.size() != tasks.size()) {
                 adjustNode(tasks);
             }
         }
@@ -639,9 +640,12 @@ public class LoadBalancing {
             ensure(tasks);
             int i = System.identityHashCode(param) % range;
             Node node = hashRingRange.floorEntry(i).getValue();
-            Map<String, Task> taskMap = tasks.stream()
-                    .collect(Collectors.toMap(Task::getName, Function.identity(), (k1, k2) -> k1));
-            return taskMap.getOrDefault(node.getKey(), tasks.get(0));
+            for (Task task : tasks) {
+                if (task.getName().equals(node.getKey())) {
+                    return task;
+                }
+            }
+            return tasks.get(0);
         }
 
         @Data
