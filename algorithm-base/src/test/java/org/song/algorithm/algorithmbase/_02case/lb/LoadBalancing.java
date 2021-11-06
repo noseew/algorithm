@@ -44,6 +44,7 @@ public class LoadBalancing {
         });
         System.out.println(instance.toPrettyString());
     }
+    
     @Test
     public void test_RR2() {
         RR_1 rr1 = new RR_1();
