@@ -1,22 +1,64 @@
-package org.song.algorithm.algorithmbase._01base;
+package org.song.algorithm.algorithmbase.utils;
 
 import java.util.Arrays;
 import java.util.Random;
 
 public class AlgorithmUtils {
+
+    public static final Random random = new Random();
     
     private AlgorithmUtils() {
         
     }
 
     public static void main(String[] args) {
-//        System.out.println(Arrays.toString(generateIntArrAsc(20, 1, 100)));
-//        System.out.println(Arrays.toString(generateIntArrDesc(20, 1, 100)));
-//        System.out.println(Arrays.toString(generateIntArr(20, 1, 100)));
-        System.out.println(Arrays.toString(generateDoubleArr(20, 5)));
+        int gcd = 10;
+        for (int i = 10; i < 30; i+=5) {
+            gcd = gcdEuclidean(gcd, i);
+        }
+        System.out.println(gcd);
+        
     }
 
-    public static Random random = new Random();
+    /**
+     * 欧几里得算法求最大公约数
+     */
+    public static int gcdEuclidean(int a, int b) {
+        if (a == 0) {
+            return b;
+        }
+        return gcdEuclidean(b % a, a);
+    }
+
+    /**
+     * 暴力算法求最大公约数
+     *
+     * @param p
+     * @param q
+     * @return
+     */
+    public static int gcd(int p, int q) {
+        // num 用来存放最大公约数, 默认为1
+        int num = 1;
+        if (p <= q) {
+            int k = q;
+            q = p;
+            p = k;
+        }
+        for (int i = 1; i < Math.sqrt(q); i++) {
+            // i是否是q的约数, 如果是, 在判断是否是p的约数
+            if (q % i == 0) {
+                if (p % i == 0) {
+                    num = i;
+                }
+                if (p % (q / i) == 0) {
+                    num = q / i;
+                    return num;
+                }
+            }
+        }
+        return num;
+    }
 
     /**
      * 指定范围指定数量的升序序列

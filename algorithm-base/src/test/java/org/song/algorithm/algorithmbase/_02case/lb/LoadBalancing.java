@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.algorithmbase.utils.AlgorithmUtils;
 import org.song.algorithm.algorithmbase.utils.DispatchUtils;
 import org.springframework.util.StopWatch;
 
@@ -101,6 +102,19 @@ public class LoadBalancing {
     @Test
     public void test_SWRR2() {
         SmoothWRRLB_2 lb = new SmoothWRRLB_2();
+        DispatchUtils instance = DispatchUtils.getInstance();
+        tasks.add(new Task("task3", 30));
+        for (int e : IntStream.range(1, 50).toArray()) {
+            Task task = lb.select(tasks);
+            instance.increment(task.getName(), 1);
+            task.invoke(e);
+        }
+        System.out.println(instance.toPrettyString());
+    }
+
+    @Test
+    public void test_SWRR3() {
+        SmoothWRRLB_3 lb = new SmoothWRRLB_3();
         DispatchUtils instance = DispatchUtils.getInstance();
         tasks.add(new Task("task3", 30));
         for (int e : IntStream.range(1, 50).toArray()) {
@@ -473,6 +487,97 @@ public class LoadBalancing {
                 return selected;
             }
             return tasks.get(0);
+        }
+    }
+    
+    /*
+    LVS中负载均衡采用的算法
+    
+    http://kb.linuxvirtualserver.org/wiki/Weighted_Round-Robin_Scheduling
+    
+    加权轮询调度是为了更好地处理具有不同处理能力的服务器. 每个服务器都可以分配一个权重, 这是一个表示处理能力的整数值. 
+    权重较高的服务器比权重较低的服务器优先接收新连接, 权重较高的服务器比权重较低的服务器获得更多的连接, 权重相等的服务器获得相同的连接. 
+    加权轮循调度的伪代码如下:
+    
+        设有一个服务器集S = {S0, S1, ..., Sn-1};
+        W(Si)表示Si的权重;
+        I表示上次选择的服务器, I初始化为-1;
+        Cw为调度中的当前权重, Cw初始化为零;
+        max(S)为S中所有服务器的最大权值;
+        gcd(S)是S中所有服务器权重的最大公约数;
+        
+        while (true) {
+            i = (i + 1) mod n;
+            if (i == 0) {
+                cw = cw - gcd(S); 
+                if (cw <= 0) {
+                    cw = max(S);
+                    if (cw == 0)
+                    return NULL;
+                }
+            } 
+            if (W(Si) >= cw) 
+                return Si;
+        }
+
+        
+    例如实服务器A/实服务器B/实服务器C的权值分别为4/3/2, 则在一个调度周期内, 调度顺序为AABABCABC (mod sum(Wi)). 
+    在优化的加权轮循调度实现中, 修改IPVS规则后, 会根据服务器权重生成一个调度顺序. 网络连接按照调度顺序依次连接到不同的实服务器. 
+    当实服务器处理能力不同时, 加权轮询调度优于轮询调度. 但是, 如果请求的负载差异很大, 可能会导致实服务器之间的动态负载不平衡. 简而言之, 需要大量响应的大多数请求可能被定向到同一台实服务器. 
+    实际上, 轮循调度是加权轮循调度的一个特殊实例, 其中所有权值相等. 
+    
+    LVS 算法对比 NGINX 算法
+    如果服务器的权重差别很大, 出于平滑的考虑, 避免短时间内会对服务器造成冲击, 你可以选择Nginx的算法, 
+    如果服务器的差别不是很大, 可以考虑使用LVS的算法, 因为测试可以看到它的性能要好于Nginx的算法:
+     */
+    static class SmoothWRRLB_3 implements LoadBalancer {
+        /**
+         * 权重的最大公约数
+         */
+        private int divisor = 0;
+        /**
+         * 最大的权重
+         */
+        private int maxWeight = 0;
+        /**
+         * 上次选中的下标
+         */
+        private int i = -1;
+        /**
+         * 上次选中的权重
+         */
+        int currWeight = 0;
+        
+        private void init(List<Task> tasks) {
+            divisor = tasks.get(0).getWight();
+            for (Task task : tasks) {
+                if (task.getWight() > maxWeight) {
+                    maxWeight = task.getWight();
+                }
+                // 计算最大公约数
+                divisor = AlgorithmUtils.gcdEuclidean(divisor, task.getWight());
+            }
+        }
+        
+        @Override
+        public Task select(List<Task> tasks) {
+            init(tasks);
+            while (true) {
+                i = (i + 1) % tasks.size();
+                if (i == 0) {
+                    currWeight = currWeight - divisor;
+                    if (currWeight <= 0) {
+                        currWeight = maxWeight;
+                        if (currWeight == 0) {
+                            return null;
+                        }
+                    }
+                }
+                Task task = tasks.get(i);
+                if (task.getWight() >= currWeight) {
+                    return task;
+                }
+            }
         }
     }
 
