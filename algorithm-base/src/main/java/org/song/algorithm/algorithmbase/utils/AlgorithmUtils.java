@@ -1,6 +1,5 @@
 package org.song.algorithm.algorithmbase.utils;
 
-import java.util.Arrays;
 import java.util.Random;
 
 public class AlgorithmUtils {
@@ -14,50 +13,28 @@ public class AlgorithmUtils {
     public static void main(String[] args) {
         int gcd = 10;
         for (int i = 10; i < 30; i+=5) {
-            gcd = gcdEuclidean(gcd, i);
+            gcd = gcd(gcd, i);
         }
         System.out.println(gcd);
         
     }
 
     /**
-     * 欧几里得算法求最大公约数
+     * 最小公倍数
+     * 
      */
-    public static int gcdEuclidean(int a, int b) {
-        if (a == 0) {
-            return b;
-        }
-        return gcdEuclidean(b % a, a);
+    public static int lcm(int a, int b) {
+        return a * b / gcd(a, b);
     }
 
     /**
-     * 暴力算法求最大公约数
-     *
-     * @param p
-     * @param q
-     * @return
+     * 欧几里得算法求最大公约数
      */
-    public static int gcd(int p, int q) {
-        // num 用来存放最大公约数, 默认为1
-        int num = 1;
-        if (p <= q) {
-            int k = q;
-            q = p;
-            p = k;
+    public static int gcd(int a, int b) {
+        if (a == 0) {
+            return b;
         }
-        for (int i = 1; i < Math.sqrt(q); i++) {
-            // i是否是q的约数, 如果是, 在判断是否是p的约数
-            if (q % i == 0) {
-                if (p % i == 0) {
-                    num = i;
-                }
-                if (p % (q / i) == 0) {
-                    num = q / i;
-                    return num;
-                }
-            }
-        }
-        return num;
+        return gcd(b % a, a);
     }
 
     /**
