@@ -215,7 +215,7 @@ public class RateLimit_01 {
         System.out.println(reporter);
     }
 
-    public static class TestReporter {
+    static class TestReporter {
         AtomicInteger success = new AtomicInteger();
         AtomicInteger fail = new AtomicInteger();
 
@@ -231,7 +231,7 @@ public class RateLimit_01 {
      * 固定窗口,
      * 采用 计数器 + 定时器
      */
-    public static class RateLimitFixedWindow {
+    static class RateLimitFixedWindow {
 
         private final AtomicInteger count = new AtomicInteger();
         private final int maxLimit;
@@ -259,7 +259,7 @@ public class RateLimit_01 {
      * 固定窗口,
      * 采用 计数器 + 时间戳分组的数组
      */
-    public static class RateLimitFixedWindow02 {
+    static class RateLimitFixedWindow02 {
 
         private AtomicInteger counter = new AtomicInteger();
         private int maxLimit;
@@ -301,7 +301,7 @@ public class RateLimit_01 {
      * 滑动窗口,
      * RateLimitFixedWindow03 的优化版本, 可以自定义窗口大小, 和窗口精度
      */
-    public static class RateLimitSlidingWindow {
+    static class RateLimitSlidingWindow {
         /**
          * 窗口数量
          */
@@ -392,7 +392,7 @@ public class RateLimit_01 {
      * 滑动窗口,
      * RateLimitFixedWindow03 的优化版本, 可以自定义窗口大小, 和窗口精度
      */
-    public static class RateLimitSlidingWindow2 {
+    static class RateLimitSlidingWindow2 {
         /**
          * 窗口数量
          */
@@ -547,7 +547,7 @@ public class RateLimit_01 {
      * 1. 流入无速率, 流出有速率, 使用定时器实现
      * 2. 流入的请求被阻挡了一阵子, 需要阻塞线程, 使用 LockSupport 实现
      */
-    public static class RateLimitLeakyBucket {
+    static class RateLimitLeakyBucket {
 
         /**
          * 队列就是桶, 队列的容量就是桶的容量
@@ -607,7 +607,7 @@ public class RateLimit_01 {
      * 令牌桶
      * 使用了阻塞队列, 获取不到令牌先排队
      */
-    public static class RateLimitTokenBucket {
+    static class RateLimitTokenBucket {
 
         /**
          * 当前水位
@@ -675,7 +675,7 @@ public class RateLimit_01 {
      * 令牌桶
      * 没有使用阻塞队列, 获取不到令牌, 直接限流
      */
-    public static class RateLimitTokenBucket2 {
+    static class RateLimitTokenBucket2 {
 
         /**
          * 当前水位
