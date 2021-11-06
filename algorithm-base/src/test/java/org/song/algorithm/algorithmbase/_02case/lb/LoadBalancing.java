@@ -356,6 +356,13 @@ public class LoadBalancing {
     /*
     LVS中负载均衡采用的算法
     
+    算法思路:
+    1. 找出一个标记, 等于最大的权重数
+    2. 在所有任务重一次对比, 满足任务重的权重数>=标记的权重数的任务, 则依次执行
+    3. 每次轮询调用, 这个标记都会减去(所有权重)最大公约数
+    4. 直到这个标记为0, 一切从头开始, 回到任务1
+    在轮询的过程中, 这个标记数会逐渐减少, 也就是能满足调用执行的任务就越来越多, 也就对应着不同任务的权重不同
+    
     http://kb.linuxvirtualserver.org/wiki/Weighted_Round-Robin_Scheduling
     
     加权轮询调度是为了更好地处理具有不同处理能力的服务器. 每个服务器都可以分配一个权重, 这是一个表示处理能力的整数值. 
@@ -396,6 +403,9 @@ public class LoadBalancing {
     LVS 性能更高
     NGINX 平滑性更好
      */
+    /**
+     * 权重轮询调度
+     */
     static class WRR_2 implements LoadBalancer {
         /**
          * 权重的最大公约数
@@ -412,7 +422,8 @@ public class LoadBalancing {
         /**
          * 上次选中的权重
          */
-        int currWeight = 0;
+        private int currWeight = 0;
+        private int size;
 
         private void init(List<Task> tasks) {
             divisor = tasks.get(0).getWight();
@@ -423,20 +434,24 @@ public class LoadBalancing {
                 // 计算最大公约数
                 divisor = AlgorithmUtils.gcd(divisor, task.getWight());
             }
+            size = tasks.size();
         }
 
         @Override
         public Task select(List<Task> tasks) {
-            init(tasks);
+            if (tasks.size() != size) {
+                init(tasks);
+            }
             while (true) {
                 // 轮询所有的资源, 并记住上一次调用的资源下标
                 lastIndex = (lastIndex + 1) % tasks.size();
                 if (lastIndex == 0) {
                     /*
                     1. 刚开始轮询
-                    currWeight = maxWeight
+                        currWeight = maxWeight
                     2. 当轮询一圈后
-                    currWeight = maxWeight - divisor
+                        currWeight = maxWeight - divisor
+                        表示上次执行的任务的权重减去公约数后再次计算(也就是已经执行了一个公约数的机会)
                      */
                     currWeight = currWeight - divisor;
                     if (currWeight <= 0) {
@@ -448,6 +463,10 @@ public class LoadBalancing {
                 }
                 Task task = tasks.get(lastIndex);
                 if (task.getWight() >= currWeight) {
+                    /*
+                     1. 只有当前任务的权重 >= 上次调用的, 才会返回
+                     2. 上次调用的权重随着每次的执行会减去一个公约数
+                     */
                     return task;
                 }
             }
@@ -455,7 +474,7 @@ public class LoadBalancing {
     }
 
     /**
-     * 权重轮询调度
+     * 平滑权重轮询调度
      * 算法摘自 dubbo 的权重轮询
      * NGINX默认的负载均衡算法也是基于此
      */
@@ -556,6 +575,9 @@ public class LoadBalancing {
     如果这t轮刚好是最开始的t轮, 则必定存在另一个结点j的值为xj*t, 所以有
         wi+xi<=1<1*t<xj*t
     所以下一轮肯定不会选中x. 
+     */
+    /**
+     * 平滑权重轮询调度
      */
     static class SmoothWRR_2 implements LoadBalancer {
         /**
