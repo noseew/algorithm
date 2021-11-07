@@ -82,9 +82,14 @@ public class LoadBalancing {
     @Test
     public void test_WRR1() {
         WRR_1 wrr_1 = new WRR_1();
-        IntStream.range(1, 50).forEach(e -> {
-            wrr_1.select(tasks).invoke(e);
+        DispatchUtils instance = DispatchUtils.getInstance();
+        tasks.add(new Task("task3", 30));
+        IntStream.range(1, 500).forEach(e -> {
+            Task task = wrr_1.select(tasks);
+            instance.increment(task.getName(), 1);
+            task.invoke(e);
         });
+        System.out.println(instance.toPrettyString());
     }
 
     @Test
@@ -92,7 +97,7 @@ public class LoadBalancing {
         WRR_2 lb = new WRR_2();
         DispatchUtils instance = DispatchUtils.getInstance();
         tasks.add(new Task("task3", 30));
-        for (int e : IntStream.range(1, 50).toArray()) {
+        for (int e : IntStream.range(1, 500).toArray()) {
             Task task = lb.select(tasks);
             instance.increment(task.getName(), 1);
             task.invoke(e);
