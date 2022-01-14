@@ -1,6 +1,7 @@
 package org.song.algorithm.algorithmbase._01base.sort.compare;
 
 import org.junit.Test;
+import org.song.algorithm.algorithmbase._01base.sort.AbstractSort;
 
 import java.util.Arrays;
 
@@ -19,35 +20,50 @@ public class Sort_03_Insert {
         System.out.println(Arrays.toString(sort_01(arr)));
     }
 
+    /*
+    等价示例: 接扑克牌, 从一堆乱序的扑克牌中一张一张的揭牌, 并按一定顺序插入手中, 当扑克牌接完后, 手中的扑克牌将全部有序
+    
+    平均情况下插入排序需要～N2/4次比较以及～N2/4次交换。最坏情况下需要～N2/2次比较和～N2/2次交换，最好情况下需要N-1次比较和0次交换。
+     */
+    public static class InsertSort extends AbstractSort {
+
+        @Override
+        public void sort(Comparable[] cs) {
+            for (int i = 1; i < cs.length; i++) {
+                int cindex = i;
+                Comparable cdata = cs[i];
+                for (int j = i - 1; j >= 0; j--) {
+                    if (less(cdata, cs[j])) {
+                        exch(cs, cindex, j);
+                        cindex = j;
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+        }
+    }
+
     /**
      *
      */
-    public static int[] sort_01(int[] data) {
-        int count = 0;
-        int countOuter = 0;
-
-        for (int i = 1; i < data.length; i++) {
-            int countInner = 0;
-            System.out.println(String.format("外部循环: 次数 %s, 结果: %s", countOuter++, Arrays.toString(data)));
-
+    public static int[] sort_01(int[] cs) {
+        for (int i = 1; i < cs.length; i++) {
             int cindex = i;
-            int cdata = data[i];
+            int cdata = cs[i];
             for (int j = i - 1; j >= 0; j--) {
-                if (cdata < data[j]) {
-                    int temp = data[j];
-                    data[j] = cdata;
-                    data[cindex] = temp;
+                if (cdata < cs[j]) {
+                    int temp = cs[j];
+                    cs[j] = cdata;
+                    cs[cindex] = temp;
                     cindex = j;
-
-                    count++;
-                    System.out.println(String.format("\t内部循环: 次数 %s, 结果: %s", countInner++, Arrays.toString(data)));
                 } else {
                     break;
                 }
             }
         }
-        System.out.println(String.format("总次数 %s", count));
-        return data;
+        return cs;
     }
 
 
