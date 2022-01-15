@@ -21,84 +21,75 @@ public class Sort_Heap {
 
     @Test
     public void test() {
-        int[] arr = new int[]{3, 0, 4, 2, 1};
-        System.out.println(Arrays.toString(sort_01(arr)));
     }
-
-    /**
-     */
-    public int[] sort_01(int[] data) {
-
-        // 将数组原地建堆(小堆)
-        HeapLittle heapLittle = new HeapLittle(data);
-        for (int i = 0; i < data.length; i++) {
-            heapLittle.push(data[i]);
-        }
-        // 依次取出, 并原地排序
-        for (int i = 0; i < data.length; i++) {
-            data[data.length - i - 1] = heapLittle.pop();
-        }
-        return data;
-    }
-
-    static class HeapLittle {
-
-        int[] datas;
-        int size;
-
-        public HeapLittle(int[] datas) {
-            this.datas = datas;
-        }
-
-        public int pop() {
-            int data = datas[0];
-            datas[0] = datas[size - 1];
-            datas[size - 1] = 0;
-            size--;
-            shiftDown();
-            return data;
-        }
-
-        public void push(int val) {
-            datas[size++] = val;
-            if (size == 1) {
-                return;
+    
+    public static class HeapSort extends AbstractSort {
+        @Override
+        public void sort(Comparable[] cs) {
+            // 将数组原地建堆(小堆)
+            HeapLittle heapLittle = new HeapLittle(cs);
+            for (int i = 0; i < cs.length; i++) {
+                heapLittle.push(cs[i]);
             }
-            shiftUp(size - 1);
+            // 依次取出, 并原地排序
+            for (int i = 0; i < cs.length; i++) {
+                cs[cs.length - i - 1] = heapLittle.pop();
+            }
         }
 
-        private void shiftUp(int i) {
-            int child = i;
-            int parent;
-            while ((parent = (child - 1) >> 1) >= 0) {
-                if (datas[parent] > datas[child]) {
-                    exchange(parent, child);
-                    child = parent;
-                } else {
-                    break;
+        static class HeapLittle {
+
+            Comparable[] datas;
+            int size;
+
+            public HeapLittle(Comparable[] datas) {
+                this.datas = datas;
+            }
+
+            public Comparable pop() {
+                Comparable cs = datas[0];
+                datas[0] = datas[size - 1];
+                datas[size - 1] = 0;
+                size--;
+                shiftDown();
+                return cs;
+            }
+
+            public void push(Comparable val) {
+                datas[size++] = val;
+                if (size == 1) {
+                    return;
+                }
+                shiftUp(size - 1);
+            }
+
+            private void shiftUp(int i) {
+                int child = i;
+                int parent;
+                while ((parent = (child - 1) >> 1) >= 0) {
+                    if (less(datas[child], datas[parent])) {
+                        exch(datas, parent, child);
+                        child = parent;
+                    } else {
+                        break;
+                    }
                 }
             }
-        }
 
-        private void shiftDown() {
-            int parent = 0;
-            int left;
-            while ((left = ((parent << 1) + 1)) < size) {
-                int child = datas[left] <= datas[left + 1] || left + 1 >= size ? left : left + 1;
-                if (datas[parent] > datas[child] && child < size) {
-                    exchange(parent, child);
-                    parent = child;
-                } else {
-                    break;
+            private void shiftDown() {
+                int parent = 0;
+                int left;
+                while ((left = ((parent << 1) + 1)) < size) {
+                    int child = lessEq(datas[left], datas[left + 1]) || left + 1 >= size ? left : left + 1;
+                    if (less(datas[child], datas[parent]) && child < size) {
+                        exch(datas, parent, child);
+                        parent = child;
+                    } else {
+                        break;
+                    }
                 }
             }
-        }
 
-        private void exchange(int parentIndex, int childIndex) {
-            int parent = datas[parentIndex];
-            datas[parentIndex] = datas[childIndex];
-            datas[childIndex] = parent;
         }
-
     }
 }

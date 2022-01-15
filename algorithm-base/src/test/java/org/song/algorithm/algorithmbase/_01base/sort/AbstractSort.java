@@ -6,11 +6,15 @@ public abstract class AbstractSort {
 
     private static Random random = new Random();
 
-    public boolean less(Comparable c1, Comparable c2) {
+    public static boolean less(Comparable c1, Comparable c2) {
         return c1.compareTo(c2) < 0;
     }
 
-    public boolean isSorted(Comparable[] cs) {
+    public static boolean lessEq(Comparable c1, Comparable c2) {
+        return c1.compareTo(c2) <= 0;
+    }
+
+    public static boolean isSorted(Comparable[] cs) {
         for (int i = 1; i < cs.length; i++) {
             if (less(cs[i], cs[i - 1])) {
                 return false;
@@ -19,13 +23,13 @@ public abstract class AbstractSort {
         return true;
     }
 
-    public void exch(Comparable[] cs, int i1, int i2) {
+    public static void exch(Comparable[] cs, int i1, int i2) {
         Comparable temp = cs[i1];
         cs[i1] = cs[i2];
         cs[i2] = temp;
     }
     
-    public void toString(Comparable[] cs) {
+    public static void toString(Comparable[] cs) {
         for (Comparable c : cs) {
             System.out.print(c + ", ");
         }
