@@ -1,6 +1,7 @@
-package org.song.algorithm.algorithmbase._01base.sort;
+package org.song.algorithm.algorithmbase._01base.sort.alg;
 
 import org.junit.Test;
+import org.song.algorithm.algorithmbase._01base.sort.AbstractSort;
 
 import java.util.Arrays;
 

@@ -1,9 +1,7 @@
-package org.song.algorithm.algorithmbase._01base.sort.compare;
+package org.song.algorithm.algorithmbase._01base.sort.alg;
 
 import org.junit.Test;
 import org.song.algorithm.algorithmbase._01base.sort.AbstractSort;
-
-import java.util.Arrays;
 
 public class Sort_02_Selection {
 

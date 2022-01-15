@@ -1,10 +1,7 @@
-package org.song.algorithm.algorithmbase._01base.sort.compare;
+package org.song.algorithm.algorithmbase._01base.sort.alg;
 
 import org.junit.Test;
 import org.song.algorithm.algorithmbase._01base.sort.AbstractSort;
-import org.song.algorithm.algorithmbase._01base.sort.CommonUtils;
-
-import java.util.Arrays;
 
 /**
  * 冒泡排序: 两两比较和交换, 将最小(大)的移动到一边
