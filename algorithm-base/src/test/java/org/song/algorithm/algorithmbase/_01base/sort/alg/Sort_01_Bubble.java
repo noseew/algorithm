@@ -13,7 +13,13 @@ public class Sort_01_Bubble {
 
     @Test
     public void test() {
+        Comparable[] build = AbstractSort.build(10);
 
+        new BubbleSort1().sort(build);
+
+        AbstractSort.toString(build);
+
+        assert AbstractSort.isSorted(build);
     }
 
     /*

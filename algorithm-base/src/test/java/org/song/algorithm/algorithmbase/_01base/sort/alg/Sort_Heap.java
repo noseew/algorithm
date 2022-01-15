@@ -22,19 +22,27 @@ public class Sort_Heap {
 
     @Test
     public void test() {
+        Comparable[] build = AbstractSort.build(10);
+
+        new HeapSort().sort(build);
+
+        AbstractSort.toString(build);
+
+        assert AbstractSort.isSorted(build);
     }
     
     public static class HeapSort extends AbstractSort {
         @Override
         public void sort(Comparable[] cs) {
-            // 将数组原地建堆(小堆)
-            HeapLittle heapLittle = new HeapLittle(cs);
+            // 将数组建堆(小堆)
+            HeapLittle heapLittle = new HeapLittle(cs.length);
             for (int i = 0; i < cs.length; i++) {
                 heapLittle.push(cs[i]);
             }
             // 依次取出, 并原地排序
             for (int i = 0; i < cs.length; i++) {
-                cs[cs.length - i - 1] = heapLittle.pop();
+//                cs[cs.length - i - 1] = heapLittle.pop();
+                cs[i] = heapLittle.pop();
             }
         }
 
@@ -43,8 +51,8 @@ public class Sort_Heap {
             Comparable[] datas;
             int size;
 
-            public HeapLittle(Comparable[] datas) {
-                this.datas = datas;
+            public HeapLittle(int capacity) {
+                this.datas = new Comparable[capacity];
             }
 
             public Comparable pop() {

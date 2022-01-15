@@ -16,8 +16,13 @@ public class Sort_03_Insert {
 
     @Test
     public void test() {
-        int[] arr = new int[]{1, 4, 5, 2, 0, 3};
-        System.out.println(Arrays.toString(sort_01(arr)));
+        Comparable[] build = AbstractSort.build(10);
+
+        new InsertSort().sort(build);
+
+        AbstractSort.toString(build);
+
+        assert AbstractSort.isSorted(build);
     }
 
     /*
@@ -44,27 +49,5 @@ public class Sort_03_Insert {
 
         }
     }
-
-    /**
-     *
-     */
-    public static int[] sort_01(int[] cs) {
-        for (int i = 1; i < cs.length; i++) {
-            int cindex = i;
-            int cdata = cs[i];
-            for (int j = i - 1; j >= 0; j--) {
-                if (cdata < cs[j]) {
-                    int temp = cs[j];
-                    cs[j] = cdata;
-                    cs[cindex] = temp;
-                    cindex = j;
-                } else {
-                    break;
-                }
-            }
-        }
-        return cs;
-    }
-
 
 }

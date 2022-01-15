@@ -8,10 +8,12 @@ public class Sort_02_Selection {
     @Test
     public void test() {
         Comparable[] build = AbstractSort.build(10);
-        SelectionSort selectionSort = new SelectionSort();
-        selectionSort.sort(build);
-        selectionSort.toString(build);
-        assert selectionSort.isSorted(build);
+
+        new SelectionSort().sort(build);
+
+        AbstractSort.toString(build);
+
+        assert AbstractSort.isSorted(build);
     }
 
     /*

@@ -14,6 +14,13 @@ public class Sort_04_Shell {
 
     @Test
     public void test() {
+        Comparable[] build = AbstractSort.build(10);
+
+        new ShellSort().sort(build);
+
+        AbstractSort.toString(build);
+
+        assert AbstractSort.isSorted(build);
     }
 
     /*
@@ -41,7 +48,7 @@ public class Sort_04_Shell {
                 // 将数组变为h有序
                 for (int i = h; i < n; i++) {
                     // 将 [j] 插入到 [i-h], [i-2*h], [i-3*h]...
-                    for (int j = i; j >= h && less(cs[j], cs[j - h]); j++) {
+                    for (int j = i; j >= h && less(cs[j], cs[j - h]); j-=h) {
                         exch(cs, j, j - h);
                     }
                 }
