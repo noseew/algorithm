@@ -23,7 +23,7 @@ public abstract class AbstractSort {
         return true;
     }
 
-    public static void exch(Comparable[] cs, int i1, int i2) {
+    public static void exchange(Comparable[] cs, int i1, int i2) {
         Comparable temp = cs[i1];
         cs[i1] = cs[i2];
         cs[i2] = temp;

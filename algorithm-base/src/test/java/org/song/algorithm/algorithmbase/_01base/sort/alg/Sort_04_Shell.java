@@ -49,7 +49,7 @@ public class Sort_04_Shell {
                 for (int i = h; i < n; i++) {
                     // 将 [j] 插入到 [i-h], [i-2*h], [i-3*h]...
                     for (int j = i; j >= h && less(cs[j], cs[j - h]); j-=h) {
-                        exch(cs, j, j - h);
+                        exchange(cs, j, j - h);
                     }
                 }
                 h = h / 3;

@@ -31,7 +31,7 @@ public class Sort_02_Selection {
             for (int i = 0; i < cs.length - 1; i++) {
                 for (int j = i + 1; j < cs.length; j++) {
                     if (less(cs[j], cs[i])) {
-                        exch(cs, j, i);
+                        exchange(cs, j, i);
                     }
                 }
             }

@@ -3,8 +3,6 @@ package org.song.algorithm.algorithmbase._01base.sort.alg;
 import org.junit.Test;
 import org.song.algorithm.algorithmbase._01base.sort.AbstractSort;
 
-import java.util.Arrays;
-
 /**
  * 堆排序
  * 非比较排序, 而是利用额外工具 堆(也可以将数组原地变堆), 进行排序,
@@ -77,7 +75,7 @@ public class Sort_Heap {
                 int parent;
                 while ((parent = (child - 1) >> 1) >= 0) {
                     if (less(datas[child], datas[parent])) {
-                        exch(datas, parent, child);
+                        exchange(datas, parent, child);
                         child = parent;
                     } else {
                         break;
@@ -91,7 +89,7 @@ public class Sort_Heap {
                 while ((left = ((parent << 1) + 1)) < size) {
                     int child = lessEq(datas[left], datas[left + 1]) || left + 1 >= size ? left : left + 1;
                     if (less(datas[child], datas[parent]) && child < size) {
-                        exch(datas, parent, child);
+                        exchange(datas, parent, child);
                         parent = child;
                     } else {
                         break;

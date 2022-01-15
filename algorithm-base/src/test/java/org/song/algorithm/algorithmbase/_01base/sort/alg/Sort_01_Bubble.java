@@ -32,7 +32,7 @@ public class Sort_01_Bubble {
             for (int i = 0; i < cs.length - 1; i++) {
                 for (int j = 0; j < cs.length - i - 1; j++) {
                     if (less(cs[j + 1], cs[j])) {
-                        exch(cs, j + 1, j);
+                        exchange(cs, j + 1, j);
                     }
                 }
             }
@@ -52,7 +52,7 @@ public class Sort_01_Bubble {
                 change = false;
                 for (int j = 0; j < cs.length - i - 1; j++) {
                     if (less(cs[j + 1], cs[j])) {
-                        exch(cs, j + 1, j);
+                        exchange(cs, j + 1, j);
                         change = true;
                     }
                 }
@@ -72,7 +72,7 @@ public class Sort_01_Bubble {
                 int maxJ = lastSwapIndex < 0 ? cs.length - i - 1 : lastSwapIndex;
                 for (int j = 0; j < maxJ; j++) {
                     if (less(cs[j + 1], cs[j])) {
-                        exch(cs, j + 1, j);
+                        exchange(cs, j + 1, j);
                         lastSwapIndex = j;
                     }
                 }
