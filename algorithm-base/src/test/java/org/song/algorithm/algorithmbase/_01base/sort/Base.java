@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase._01base;
+package org.song.algorithm.algorithmbase._01base.sort;
 
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +14,7 @@ public class Base {
      */
 
     /**
-     * 将换两个数的方式
+     * 交换两个数的方式
      */
     @Test
     public void swap_test() {
@@ -59,14 +59,5 @@ public class Base {
         
         arr[i2] = arr[i1] ^ arr[i2]; // i1又和i2异或了一次, 返回结果等于 i1本身, 将i1的值赋值给i2
         arr[i1] = arr[i1] ^ arr[i2]; // 此时的 i2=i1, i2又和i1异或了一次, 结果等于i2本身, 将i2赋值给i1
-    }
-
-    /**
-     * 二分法
-     * 
-     */
-    @Test
-    public void dichotomy_test() {
-        
     }
 }

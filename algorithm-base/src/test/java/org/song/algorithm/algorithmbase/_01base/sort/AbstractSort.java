@@ -2,6 +2,10 @@ package org.song.algorithm.algorithmbase._01base.sort;
 
 import java.util.Random;
 
+/*
+排序效率对比
+doc/img/排序对比.png
+ */
 public abstract class AbstractSort {
 
     private static Random random = new Random();
