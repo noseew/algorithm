@@ -1,7 +1,7 @@
-package org.song.algorithm.algorithmbase.datatype._01base._05tree;
+package org.song.algorithm.algorithmbase.datatype._01base._04tree;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase.datatype._01base._05tree.model.BSTree_base;
+import org.song.algorithm.algorithmbase.datatype._01base._04tree.model.BSTree_base;
 
 public class BSTree_test {
 

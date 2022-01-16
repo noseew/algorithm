@@ -1,8 +1,8 @@
-package org.song.algorithm.algorithmbase.datatype._01base._05tree.algrithm;
+package org.song.algorithm.algorithmbase.datatype._01base._04tree.algrithm;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase.datatype._01base._05tree.model.AVLTree_base;
-import org.song.algorithm.algorithmbase.datatype._01base._05tree.model.TreeNode;
+import org.song.algorithm.algorithmbase.datatype._01base._04tree.model.AVLTree_base;
+import org.song.algorithm.algorithmbase.datatype._01base._04tree.model.TreeNode;
 
 import java.util.Stack;
 

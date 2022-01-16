@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase.datatype._01base._05tree.model;
+package org.song.algorithm.algorithmbase.datatype._01base._04tree.model;
 
 public class TreeNode<V> {
 
