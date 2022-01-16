@@ -65,20 +65,27 @@ public class Sort_Merge {
         }
 
         private void merge(Comparable[] cs, int low, int mid, int hi) {
-            int i = low, j = mid + 1;
             for (int k = low; k <= hi; k++) {
                 // 复制到临时数组, [low~hi]
                 temp[k] = cs[k];
             }
+            /*
+            两个指针, 分别指的是两个有序数组的起始 index
+             */
+            int i = low, j = mid + 1;
             for (int k = low; k <= hi; k++) {
                 // 归并到 cs
                 if (i > mid) {
+                    // 
                     cs[k] = temp[j++];
                 } else if (j > hi) {
+                    // 
                     cs[k] = temp[i++];
                 } else if (less(temp[j], temp[i])) {
+                    // j < i, 则将j合并, 同时j前进一步
                     cs[k] = temp[j++];
                 } else {
+                    // 否则 i <= j, 将i合并, 同时i前进一步
                     cs[k] = temp[i++];
                 }
             }
