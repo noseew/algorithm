@@ -26,7 +26,10 @@ public class Sort_Merge {
 
         assert AbstractSort.isSorted(build);
     }
-    
+
+    /**
+     * 归并排序的核心, 合并
+     */
     public static abstract class AbstractMergeSort extends AbstractSort {
 
         protected Comparable[] temp;
