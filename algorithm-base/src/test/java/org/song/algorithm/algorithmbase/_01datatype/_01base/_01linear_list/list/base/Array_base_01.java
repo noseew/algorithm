@@ -1,6 +1,9 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._01linear_list.list.base;
 
+import org.song.algorithm.algorithmbase._01datatype._01base._01linear_list.AbsList;
+
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * 基于数组的链表
@@ -16,26 +19,74 @@ import java.util.Arrays;
  *
  * @param <T>
  */
-public class Array_base_01<T> {
+public class Array_base_01<T> extends AbsList<T> {
 
     private T[] datas;
 
     private int size;
 
-    public Array_base_01(int capacity) {
-        datas = (T[]) new Object[capacity];
-    }
-
     public Array_base_01() {
         this(10);
     }
 
-    public void add(T data) {
-        ensureCapacity();
-        datas[++size - 1] = data;
+    public Array_base_01(int capacity) {
+        datas = (T[]) new Object[capacity];
     }
 
-    public T remove(int index) {
+    @Override
+    public void clean() {
+        for (int i = 0; i < size; i++) {
+            datas[i] = null;
+        }
+        size = 0;
+        shrink();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    @Override
+    public int length() {
+        return size;
+    }
+
+    @Override
+    public T get(int index) {
+        if (datas.length - 1 < index || index < 0) {
+            throw new ArrayIndexOutOfBoundsException(index);
+        }
+        return datas[index];
+    }
+
+    @Override
+    public int indexOf(T v) {
+        for (int i = 0; i < datas.length; i++) {
+            if (Objects.equals(datas[i], v)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    public void insert(T v, int index) {
+        if (datas.length - 1 < index || index < 0) {
+            throw new ArrayIndexOutOfBoundsException(index);
+        }
+        ensureCapacity();
+        for (int i = size - 1; i >= index; i--) {
+            datas[i + 1] = datas[i];
+            if (i == index) {
+                datas[i] = v;
+            }
+        }
+        size++;
+    }
+
+    @Override
+    public T delete(int index) {
         if (index <= size - 1) {
             T oldVal = datas[index];
             for (int j = index; j < size; j++) {
@@ -51,7 +102,8 @@ public class Array_base_01<T> {
         return null;
     }
 
-    public T remove(T value) {
+    @Override
+    public T delete(T value) {
         if (value == null) {
             for (int i = 0; i < size; i++) {
                 if (datas[i] == null) {
@@ -87,13 +139,9 @@ public class Array_base_01<T> {
         }
     }
 
-    public void clear() {
-        for (int i = 0; i < size; i++) {
-            datas[i] = null;
-        }
-        size = 0;
-        shrink();
-
+    public void add(T data) {
+        ensureCapacity();
+        datas[++size - 1] = data;
     }
 
     /**

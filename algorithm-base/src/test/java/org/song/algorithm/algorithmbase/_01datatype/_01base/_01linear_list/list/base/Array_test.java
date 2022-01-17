@@ -18,7 +18,7 @@ public class Array_test {
         list.add(4);
         list.add(5);
         System.out.println(list.toString());
-        list.remove(2);
+        list.delete(2);
         System.out.println(list.toString());
         list.clear();
         System.out.println(list.toString());

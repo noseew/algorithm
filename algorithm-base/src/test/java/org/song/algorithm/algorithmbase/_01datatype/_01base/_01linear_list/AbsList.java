@@ -12,14 +12,16 @@ public abstract class AbsList<T> {
 
     protected abstract boolean isEmpty();
 
-    protected abstract void length();
+    protected abstract int length();
 
-    protected abstract void get(int index);
+    protected abstract T get(int index);
 
     protected abstract int indexOf(T v);
 
     protected abstract void insert(T v, int index);
 
     protected abstract T delete(int index);
+    
+    protected abstract T delete(T v);
 
 }
