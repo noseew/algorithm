@@ -18,9 +18,11 @@ public class Array_test {
         list.add(4);
         list.add(5);
         System.out.println(list.toString());
+        list.insert(3, 4);
+        System.out.println(list.toString());
         list.delete(2);
         System.out.println(list.toString());
-        list.clear();
+        list.clean();
         System.out.println(list.toString());
 
     }

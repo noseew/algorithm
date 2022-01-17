@@ -178,7 +178,6 @@ public class Array_base_01<T> extends AbsList<T> {
 
     @Override
     public String toString() {
-        return "size=" + size +
-                "\r\ndatas=" + Arrays.toString(datas);
+        return "size=" + size + ", datas=" + Arrays.toString(datas);
     }
 }
