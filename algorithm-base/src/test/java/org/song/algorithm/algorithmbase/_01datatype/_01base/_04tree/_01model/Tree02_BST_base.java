@@ -12,7 +12,7 @@ public class Tree02_BST_base<V> {
 
     public void push(V v) {
         if (root == null) {
-            root = new TreeNode<>(null, null, null, v);
+            root = new TreeNode<>( null, null, v);
             size++;
             return;
         }
@@ -44,7 +44,7 @@ public class Tree02_BST_base<V> {
     }
 
     private void put(TreeNode<V> parent, V v) {
-        TreeNode<V> newNode = new TreeNode<>(parent, null, null, v);
+        TreeNode<V> newNode = new TreeNode<>( null, null, v);
         if (comparator != null) {
             if (comparator.compare(v, parent.v) < 0) {
                 parent.left = newNode;

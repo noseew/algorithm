@@ -49,7 +49,7 @@ public class Tree03_AVL_base<V> {
     private TreeNode<V> insert_recursive(TreeNode<V> parent, V v) {
         if (parent == null) {
             // 新建节点, 高度默认1
-            parent = new TreeNode<>(parent, null, null, v);
+            parent = new TreeNode<>(null, null, v);
             parent.height = 1;
             size++;
             return parent;

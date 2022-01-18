@@ -2,7 +2,6 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
 
 public class TreeNode<V> {
 
-    public TreeNode<V> parent;
     public TreeNode<V> left;
     public TreeNode<V> right;
     public V v;
@@ -12,10 +11,8 @@ public class TreeNode<V> {
      有的定义是从1开始
      */
     public int height;
-    public int balanceFactor;
 
-    TreeNode(TreeNode<V> parent, TreeNode<V> left, TreeNode<V> right, V v) {
-        this.parent = parent;
+    public TreeNode(TreeNode<V> left, TreeNode<V> right, V v) {
         this.left = left;
         this.right = right;
         this.v = v;
