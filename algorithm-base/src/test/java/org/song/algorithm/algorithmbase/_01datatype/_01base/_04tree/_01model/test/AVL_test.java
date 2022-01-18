@@ -1,9 +1,10 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.test;
 
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreePrinter2;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03_AVL_base;
 
-public class AVLTree_test {
+public class AVL_test {
 
     @Test
     public void test_01_start() {
@@ -11,12 +12,14 @@ public class AVLTree_test {
         for (int i = 0; i < 10; i++) {
             tree.insert(i);
         }
-        BTreePrinter.printNode(tree.root);
+//        BTreePrinter.printNode(tree.root);
+        BTreePrinter2.print(tree.root);
         System.out.println(tree.toString());
 
         System.out.println(tree.search(9));
 
         tree.remove(3);
-        BTreePrinter.printNode(tree.root);
+//        BTreePrinter.printNode(tree.root);
+        BTreePrinter2.print(tree.root);
     }
 }

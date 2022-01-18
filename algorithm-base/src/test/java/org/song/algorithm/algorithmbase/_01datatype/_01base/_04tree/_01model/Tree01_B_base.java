@@ -9,7 +9,7 @@ public class Tree01_B_base<V> {
 
     private int size;
 
-    private TreeNode<V> root;
+    public TreeNode<V> root;
 
     /*
     二叉树由于没有 比较/排序, 所以插入并没有具体的规则要插到哪个节点下
