@@ -1,13 +1,13 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.test;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.BSTree_base;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02_BST_base;
 
 public class BSTree_test {
 
     @Test
     public void test_start() {
-        BSTree_base<Integer> tree = new BSTree_base<>();
+        Tree02_BST_base<Integer> tree = new Tree02_BST_base<>();
         tree.push(5);
         tree.push(3);
         tree.push(6);

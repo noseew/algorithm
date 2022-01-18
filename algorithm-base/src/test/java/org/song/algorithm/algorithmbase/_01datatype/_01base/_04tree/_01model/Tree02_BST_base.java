@@ -2,7 +2,7 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
 
 import java.util.Comparator;
 
-public class BSTree_base<V> {
+public class Tree02_BST_base<V> {
 
     private int size;
 

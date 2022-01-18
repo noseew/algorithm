@@ -9,7 +9,7 @@ import java.util.Comparator;
  *
  * @param <V>
  */
-public class AVLTree_base<V> {
+public class Tree03_AVL_base<V> {
 
     private int size;
     /**

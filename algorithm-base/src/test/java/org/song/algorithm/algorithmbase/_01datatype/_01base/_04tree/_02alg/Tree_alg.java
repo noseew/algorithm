@@ -1,7 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._02alg;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.AVLTree_base;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03_AVL_base;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.TreeNode;
 
 import java.util.Stack;
@@ -9,7 +9,7 @@ import java.util.Stack;
 public class Tree_alg {
 
     private TreeNode<Integer> initALVBinaryTree(int count) {
-        AVLTree_base<Integer> tree = new AVLTree_base<>();
+        Tree03_AVL_base<Integer> tree = new Tree03_AVL_base<>();
         for (int i = 0; i < count; i++) {
             tree.insert(i);
         }
