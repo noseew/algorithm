@@ -110,13 +110,21 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
             TreeNode<V> next;
             if (less(v, parent.val)) {
                 next = parent.left;
-            } else if (greater(v, parent.val) && parent.right != null && greater(v, parent.right.val)) {
-                next = parent.right;
+            } else if (greater(v, parent.val)) {
+                next = parent;
+
+                TreeNode<V> right = next.right;
+                if (right == null) {
+                    return parent.val;
+                }
+                if (less(v, right.val) || (right.left != null && less(v, right.left.val))) {
+                    next = right;
+                }
             } else {
                 return parent.val;
             }
             if (next == null) {
-                return null;
+                return parent.val;
             }
             parent = next;
         }
