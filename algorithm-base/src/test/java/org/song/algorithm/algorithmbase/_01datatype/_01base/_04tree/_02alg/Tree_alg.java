@@ -98,13 +98,13 @@ public class Tree_alg {
      *
      * @param node 二叉树节点
      */
-    public static void preOrderTraveral(TreeNode node) {
+    public static void preOrderTraversal(TreeNode node) {
         if (node == null) {
             return;
         }
         System.out.print(node.val + " ");
-        preOrderTraveral(node.left);
-        preOrderTraveral(node.right);
+        preOrderTraversal(node.left);
+        preOrderTraversal(node.right);
     }
 
     /**
@@ -112,13 +112,13 @@ public class Tree_alg {
      *
      * @param node 二叉树节点
      */
-    public static void inOrderTraveral(TreeNode node) {
+    public static void inOrderTraversal(TreeNode node) {
         if (node == null) {
             return;
         }
-        inOrderTraveral(node.left);
+        inOrderTraversal(node.left);
         System.out.print(node.val + " ");
-        inOrderTraveral(node.right);
+        inOrderTraversal(node.right);
     }
 
     /**
@@ -126,12 +126,12 @@ public class Tree_alg {
      *
      * @param node 二叉树节点
      */
-    public static void postOrderTraveral(TreeNode node) {
+    public static void postOrderTraversal(TreeNode node) {
         if (node == null) {
             return;
         }
-        postOrderTraveral(node.left);
-        postOrderTraveral(node.right);
+        postOrderTraversal(node.left);
+        postOrderTraversal(node.right);
         System.out.print(node.val + " ");
     }
 
@@ -141,7 +141,7 @@ public class Tree_alg {
      *
      * @param node
      */
-    public static void preOrderTraveralWithStack(TreeNode node) {
+    public static void preOrderTraversalWithStack(TreeNode node) {
         Stack<TreeNode> stack = new Stack<TreeNode>();
         TreeNode treeNode = node;
         while (treeNode != null || !stack.isEmpty()) {
@@ -164,7 +164,7 @@ public class Tree_alg {
      *
      * @param node
      */
-    public static void inOrderTraveralWithStack(TreeNode node) {
+    public static void inOrderTraversalWithStack(TreeNode node) {
         Stack<TreeNode> stack = new Stack<TreeNode>();
         TreeNode treeNode = node;
         while (treeNode != null || !stack.isEmpty()) {
@@ -186,7 +186,7 @@ public class Tree_alg {
      *
      * @param node
      */
-    public static void postOrderTraveralWithStack(TreeNode node) {
+    public static void postOrderTraversalWithStack(TreeNode node) {
         Stack<TreeNode> stack = new Stack<TreeNode>();
         TreeNode treeNode = node;
         TreeNode lastVisit = null;   //标记每次遍历最后一次访问的节点
