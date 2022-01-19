@@ -9,15 +9,17 @@ import java.util.Comparator;
 public class BST_test {
 
     @Test
-    public void test_start() {
-        Tree02_BST_base<Integer> tree = new Tree02_BST_base<>(Comparator.comparing(Integer::intValue));
+    public void test_start1() {
+        Tree02_BST_base<Integer> tree = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
         tree.push(5);
         tree.push(3);
-        tree.push(6);
-        tree.push(4);
-        tree.push(8);
+        tree.push(11);
+        tree.push(9);
+        tree.push(13);
         tree.push(7);
-        System.out.println();
+        tree.push(1);
         BTreePrinter.print(tree.root);
+        System.out.println(tree.floor(8));
+        System.out.println(tree.ceiling(8));
     }
 }

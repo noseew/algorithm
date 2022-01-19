@@ -104,12 +104,42 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
 
     @Override
     public V floor(V v) {
-        return null;
+        // TODO
+        TreeNode<V> parent = root;
+        while (true) {
+            TreeNode<V> next;
+            if (less(v, parent.val)) {
+                next = parent.left;
+            } else if (greater(v, parent.val) && parent.right != null && greater(v, parent.right.val)) {
+                next = parent.right;
+            } else {
+                return parent.val;
+            }
+            if (next == null) {
+                return null;
+            }
+            parent = next;
+        }
     }
 
     @Override
     public V ceiling(V v) {
-        return null;
+        // TODO
+        TreeNode<V> parent = root;
+        while (true) {
+            TreeNode<V> next;
+            if (greater(v, parent.val)) {
+                next = parent.right;
+            } else if (less(v, parent.val) && parent.left != null && less(v, parent.left.val)) {
+                next = parent.left;
+            } else {
+                return parent.val;
+            }
+            if (next == null) {
+                return null;
+            }
+            parent = next;
+        }
     }
 
     @Override

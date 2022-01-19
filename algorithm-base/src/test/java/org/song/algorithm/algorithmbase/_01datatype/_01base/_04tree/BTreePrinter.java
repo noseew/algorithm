@@ -27,7 +27,11 @@ public class BTreePrinter {
             int beginIndex = (int) Math.pow(2, level - 1);
             int endIndex = beginIndex * 2 - 1;
             for (int i = beginIndex; i <= endIndex; ++i) {
-                System.out.print(getNodeText(nodes[i], nodeWidth));
+                try {
+                    System.out.print(getNodeText(nodes[i], nodeWidth));
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
             }
             System.out.println();
 
