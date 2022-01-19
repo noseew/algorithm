@@ -17,5 +17,13 @@ public abstract class _02BSTTreeBase<V> extends _01TreeBase<V> {
     public abstract V ceiling(V v);
     public abstract int rank(V v);
     public abstract List<V> range(V min, V max);
+
+    public boolean less(V v1, V v2) {
+        return comparator.compare(v1, v2) < 0;
+    }
+
+    public boolean greater(V v1, V v2) {
+        return comparator.compare(v1, v2) > 0;
+    }
     
 }

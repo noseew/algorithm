@@ -27,7 +27,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
         TreeNode<V> parent = root;
         while (true) {
             TreeNode<V> next;
-            if (comparator.compare(v, parent.val) < 0) {
+            if (less(v, parent.val)) {
                 next = parent.left;
             } else {
                 next = parent.right;
@@ -51,9 +51,9 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
         TreeNode<V> parent = root;
         while (true) {
             TreeNode<V> next;
-            if (comparator.compare(v, parent.val) < 0) {
+            if (less(v, parent.val)) {
                 next = parent.left;
-            } else if (comparator.compare(v, parent.val) > 0) {
+            } else if (greater(v, parent.val)) {
                 next = parent.right;
             } else {
                 return parent.val;
