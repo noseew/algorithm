@@ -46,7 +46,7 @@ public class BTreePrinter {
 
     private static String getNodeText(TreeNode node, int nodeWidth) {
         int leftLength = nodeWidth / 2;
-        String val = (node == null ? "" : String.valueOf(node.v));
+        String val = (node == null ? "" : String.valueOf(node.val));
         int rightLeght = nodeWidth - leftLength - val.length();
 
         String left = String.join("", Collections.nCopies(leftLength, " "));

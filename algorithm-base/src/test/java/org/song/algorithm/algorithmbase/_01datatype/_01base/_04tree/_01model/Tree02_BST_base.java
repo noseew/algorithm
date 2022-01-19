@@ -21,13 +21,13 @@ public class Tree02_BST_base<V> {
         while (true) {
             TreeNode<V> next;
             if (comparator != null) {
-                if (comparator.compare(v, parent.v) < 0) {
+                if (comparator.compare(v, parent.val) < 0) {
                     next = parent.left;
                 } else {
                     next = parent.right;
                 }
             } else {
-                if (((Comparable) v).compareTo(((Comparable) parent.v)) < 0) {
+                if (((Comparable) v).compareTo(((Comparable) parent.val)) < 0) {
                     next = parent.left;
                 } else {
                     next = parent.right;
@@ -46,13 +46,13 @@ public class Tree02_BST_base<V> {
     private void put(TreeNode<V> parent, V v) {
         TreeNode<V> newNode = new TreeNode<>( null, null, v);
         if (comparator != null) {
-            if (comparator.compare(v, parent.v) < 0) {
+            if (comparator.compare(v, parent.val) < 0) {
                 parent.left = newNode;
             } else {
                 parent.right = newNode;
             }
         } else {
-            if (((Comparable) v).compareTo(((Comparable) parent.v)) < 0) {
+            if (((Comparable) v).compareTo(((Comparable) parent.val)) < 0) {
                 parent.left = newNode;
             } else {
                 parent.right = newNode;

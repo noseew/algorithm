@@ -28,7 +28,7 @@ public class Tree03_AVL_base<V> {
     public V search(V v) {
         TreeNode<V> treeNode = search_recursive(root, v);
         if (treeNode != null) {
-            return treeNode.v;
+            return treeNode.val;
         }
         return null;
     }
@@ -57,9 +57,9 @@ public class Tree03_AVL_base<V> {
 
         int com;
         if (comparator != null) {
-            com = comparator.compare(v, parent.v);
+            com = comparator.compare(v, parent.val);
         } else {
-            com = ((Comparable) v).compareTo(parent.v);
+            com = ((Comparable) v).compareTo(parent.val);
         }
 
         if (com < 0) {
@@ -90,9 +90,9 @@ public class Tree03_AVL_base<V> {
         }
         int com;
         if (comparator != null) {
-            com = comparator.compare(v, parent.v);
+            com = comparator.compare(v, parent.val);
         } else {
-            com = ((Comparable) v).compareTo(parent.v);
+            com = ((Comparable) v).compareTo(parent.val);
         }
         if (com < 0) {
             return search_recursive(parent.left, v);
@@ -118,9 +118,9 @@ public class Tree03_AVL_base<V> {
 
         int com;
         if (comparator != null) {
-            com = comparator.compare(v, parent.v);
+            com = comparator.compare(v, parent.val);
         } else {
-            com = ((Comparable) v).compareTo(parent.v);
+            com = ((Comparable) v).compareTo(parent.val);
         }
 
         //小于当前根节点
@@ -131,9 +131,9 @@ public class Tree03_AVL_base<V> {
             parent.right = remove_recursive(parent.left, v);
         } else if (parent.left != null && parent.right != null) {
             //找到右边最小的节点
-            parent.v = minNode(parent.right).v;
+            parent.val = minNode(parent.right).val;
             //当前节点的右边等于原节点右边删除已经被选为的替代节点
-            parent.right = remove_recursive(parent.right, parent.v);
+            parent.right = remove_recursive(parent.right, parent.val);
         } else {
             parent = (parent.left != null) ? parent.left : parent.right;
         }
