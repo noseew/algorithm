@@ -12,7 +12,7 @@ public class Tree_alg {
     private TreeNode<Integer> initALVBinaryTree(int count) {
         Tree03_AVL_base<Integer> tree = new Tree03_AVL_base<>();
         for (int i = 0; i < count; i++) {
-            tree.insert(i);
+            tree.push(i);
         }
         return tree.root;
     }

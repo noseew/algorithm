@@ -10,13 +10,13 @@ public class AVL_test {
     public void test_01_start() {
         Tree03_AVL_base<Integer> tree = new Tree03_AVL_base<>();
         for (int i = 0; i < 10; i++) {
-            tree.insert(i);
+            tree.push(i);
         }
 //        BTreePrinter.printNode(tree.root);
         BTreePrinter.print(tree.root);
         System.out.println(tree.toString());
 
-        System.out.println(tree.search(9));
+        System.out.println(tree.get(9));
 
         tree.remove(3);
 //        BTreePrinter.printNode(tree.root);

@@ -21,11 +21,11 @@ public class Tree03_AVL_base<V> {
 
     public TreeNode<V> root;
 
-    public void insert(V v) {
+    public void push(V v) {
         root = insert_recursive(root, v);
     }
 
-    public V search(V v) {
+    public V get(V v) {
         TreeNode<V> treeNode = search_recursive(root, v);
         if (treeNode != null) {
             return treeNode.val;

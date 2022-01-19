@@ -5,7 +5,7 @@ import java.util.Random;
 /*
 二叉树
  */
-public class Tree01_B_base<V> {
+public class Tree01_B_base<V> extends _01TreeBase<V> {
 
     private int size;
 
@@ -19,6 +19,7 @@ public class Tree01_B_base<V> {
     private Random r = new Random();
     private int maxDeep = 8;
 
+    @Override
     public void push(V v) {
         if (root == null) {
             root = new TreeNode<>(null, null, v);
@@ -56,6 +57,21 @@ public class Tree01_B_base<V> {
         if (added) {
             size++;
         }
+    }
+
+    @Override
+    public V get(V v) {
+        return null;
+    }
+
+    @Override
+    public V remove(V v) {
+        return null;
+    }
+
+    @Override
+    public int size() {
+        return size;
     }
 
 }

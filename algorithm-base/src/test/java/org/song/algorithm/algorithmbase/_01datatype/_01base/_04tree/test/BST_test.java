@@ -4,11 +4,13 @@ import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreePrinter;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02_BST_base;
 
+import java.util.Comparator;
+
 public class BST_test {
 
     @Test
     public void test_start() {
-        Tree02_BST_base<Integer> tree = new Tree02_BST_base<>();
+        Tree02_BST_base<Integer> tree = new Tree02_BST_base<>(Comparator.comparing(Integer::intValue));
         tree.push(5);
         tree.push(3);
         tree.push(6);
