@@ -1,6 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree.test;
 
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreePrinter;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02_BST_base;
 
 public class BST_test {
@@ -15,7 +16,6 @@ public class BST_test {
         tree.push(8);
         tree.push(7);
         System.out.println();
-        BTreePrinter.printNode(tree.root);
-        BTreePrinter.show(tree.root);
+        BTreePrinter.print(tree.root);
     }
 }
