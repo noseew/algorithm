@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.test;
+package org.song.algorithm.algorithmbase._01datatype._01base._04tree.test;
 
 import org.junit.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Heap_base_01;
