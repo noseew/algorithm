@@ -2,6 +2,7 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 
 public abstract class _02BSTTreeBase<V> extends _01TreeBase<V> {
 
@@ -25,5 +26,20 @@ public abstract class _02BSTTreeBase<V> extends _01TreeBase<V> {
     public boolean greater(V v1, V v2) {
         return comparator.compare(v1, v2) > 0;
     }
-    
+
+    /**
+     * 二叉树遍历
+     * 
+     * @param node 节点
+     * @param order 顺序 0-前序, 1-中序, 2-后序
+     * @param stop 执行操作, true-继续遍历, false-终止遍历
+     */
+    public void traverse(TreeNode<V> node, int order, Predicate<V> stop) {
+        if (node == null) return;
+        if (order == 0 && !stop.test(node.val)) return;
+        traverse(node.left, order, stop);
+        if (order == 1 && !stop.test(node.val)) return;
+        traverse(node.right, order, stop);
+        if (order == 2 && !stop.test(node.val)) return;
+    }
 }
