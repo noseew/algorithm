@@ -18,9 +18,11 @@ public class BST_test {
         tree.push(13);
         tree.push(7);
         tree.push(1);
+        tree.push(2);
         BTreePrinter.print(tree.root);
         System.out.println("floor(8) = " + tree.floor(8));
         System.out.println("floor(6) = " + tree.floor(6));
-//        System.out.println(tree.ceiling(8));
+        System.out.println("ceiling(8) = " + tree.ceiling(8));
+        System.out.println("ceiling(6) = " + tree.ceiling(6));
     }
 }
