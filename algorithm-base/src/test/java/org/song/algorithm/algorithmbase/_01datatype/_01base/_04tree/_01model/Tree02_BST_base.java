@@ -106,27 +106,24 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
 
     @Override
     public V floor(V v) {
-        // TODO
-
         Stack_base_01<TreeNode<V>> stack = new Stack_base_01<>();
-
         TreeNode<V> parent = root;
         while (true) {
             if (parent.val == v) {
-                // == 当前
+                // v == 当前
                 return parent.val;
             } else if (less(v, parent.val)) {
-                // < 当前
+                // v < 当前
                 if (parent.left == null) {
-//                    return parent.val;
                     break;
                 }
+                // 向左移动, 等待下次判断
                 parent = parent.left;
             } else if (parent.right != null && less(parent.right.val, v)) {
-                // 向右移动, 等待下次判断
+                // v > 当前.right, 向右移动, 等待下次判断
                 parent = parent.right;
             } else {
-                // floor 介于 parent 和 parent.right 之间
+                // floor 介于 parent 和 parent.right 之间, 将满足条件的 node 放入队列, 然后单独比较
                 stack.push(parent);
                 parent = parent.right;
             }
@@ -137,14 +134,11 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
         if (stack.isEmpty()) {
             return null;
         }
-        TreeNode<V> floor = null;
+        // 取出距离v最近的node
+        TreeNode<V> floor = stack.pop();
         while (!stack.isEmpty()) {
             TreeNode<V> pop = stack.pop();
             if (greater(pop.val, v)) {
-                continue;
-            }
-            if (floor == null) {
-                floor = pop;
                 continue;
             }
             if (greater(pop.val, floor.val)) {
