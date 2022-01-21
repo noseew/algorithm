@@ -1,5 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
 
+import org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack.stack.Stack_base_01;
+
 import java.util.Comparator;
 import java.util.List;
 
@@ -105,39 +107,51 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
     @Override
     public V floor(V v) {
         // TODO
+
+        Stack_base_01<TreeNode<V>> stack = new Stack_base_01<>();
+
         TreeNode<V> parent = root;
         while (true) {
-            TreeNode<V> next;
-            if (parent == null) {
-                return null;
-            }
             if (parent.val == v) {
+                // == 当前
                 return parent.val;
-            }
-            if (less(v, parent.val)) {
-                next = parent.left;
-            } else if (parent.right == null) {
-                return parent.val;
-            } else if (greater(v, parent.right.val)) {
-                next = parent.right;
-            } 
-            // 特殊情况
-            else  {
-                if (parent.right.left == null) {
-                    return parent.val;
+            } else if (less(v, parent.val)) {
+                // < 当前
+                if (parent.left == null) {
+//                    return parent.val;
+                    break;
                 }
-                // TODO
-                if (less(parent.val, parent.right.left.val) && less(v, parent.right.left.val)) {
-                    next = parent.right;
-                } else  {
-                    return parent.val;
-                }
+                parent = parent.left;
+            } else if (parent.right != null && less(parent.right.val, v)) {
+                // 向右移动, 等待下次判断
+                parent = parent.right;
+            } else {
+                // floor 介于 parent 和 parent.right 之间
+                stack.push(parent);
+                parent = parent.right;
             }
-            if (next == null) {
-                return parent.val;
+            if (parent == null) {
+                break;
             }
-            parent = next;
         }
+        if (stack.isEmpty()) {
+            return null;
+        }
+        TreeNode<V> floor = null;
+        while (!stack.isEmpty()) {
+            TreeNode<V> pop = stack.pop();
+            if (greater(pop.val, v)) {
+                continue;
+            }
+            if (floor == null) {
+                floor = pop;
+                continue;
+            }
+            if (greater(pop.val, floor.val)) {
+                floor = pop;
+            }
+        }
+        return floor.val;
     }
 
     @Override

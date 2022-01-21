@@ -24,6 +24,10 @@ public class Stack_base_01<T> {
         size--;
         return val;
     }
+    
+    public boolean isEmpty() {
+        return size == 0;
+    }
 
 
     class Node<T> {
