@@ -152,26 +152,23 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
 
     @Override
     public V ceiling(V v) {
-        // TODO
         Stack_base_01<TreeNode<V>> stack = new Stack_base_01<>();
         TreeNode<V> parent = root;
         while (true) {
             if (parent.val == v) {
                 // v == 当前
                 return parent.val;
-            } else if (greater(v, parent.val)) {
-                // v > 当前
-                if (parent.right == null) {
-                    break;
-                }
-                // 向右移动, 等待下次判断
+            } else if (greater(v, parent.val) && parent.right != null) {
+                // v > 当前, 向右移动, 等待下次判断
                 parent = parent.right;
-            } else if (parent.left != null && less(parent.left.val, v)) {
+            } else if (parent.left != null && greater(parent.left.val, v)) {
                 // v < 当前.left, 向左移动, 等待下次判断
                 parent = parent.left;
             } else {
                 // floor 介于 parent 和 parent.left 之间, 将满足条件的 node 放入队列, 然后单独比较
-                stack.push(parent);
+                if (greater(parent.val, v)) {
+                    stack.push(parent);
+                }
                 parent = parent.left;
             }
             if (parent == null) {

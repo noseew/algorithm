@@ -73,18 +73,32 @@ public class BST_test {
     }
 
     @Test
-    public void test_start3_ceiling() {
-        Tree02_BST_base<Integer> tree = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
+    public void test_start3_ceiling_AutoTest() {
+        int max = 1000;
+        int size = 100;
 
+        List<Integer> list = new ArrayList<>(size);
+
+        Tree02_BST_base<Integer> tree = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
-        for (int i = 0; i < 10; i++) {
-            tree.push(random.nextInt(20));
+        for (int i = 0; i < size; i++) {
+            int v = random.nextInt(max);
+            tree.push(v);
+            list.add(v);
         }
         BTreePrinter.print(tree.root);
-        
-        System.out.println("floor(5) = " + tree.floor(5));
-        System.out.println("floor(8) = " + tree.floor(8));
-        System.out.println("ceiling(5 = " + tree.ceiling(5));
-        System.out.println("ceiling(8) = " + tree.ceiling(8));
+
+        for (int i = 0; i < size; i++) {
+            int val = i;
+            Integer ceiling = tree.ceiling(val);
+            if (ceiling == null && list.stream().filter(e-> e >= val).min(Comparator.comparing(Integer::doubleValue)).orElse(null) == null) {
+                continue;
+            }
+            // >= v 的 最小的那个
+            if (ceiling == list.stream().filter(e-> e >= val).min(Comparator.comparing(Integer::doubleValue)).orElse(null)) {
+                continue;
+            }
+            System.out.println("error " + i);
+        }
     }
 }
