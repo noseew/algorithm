@@ -14,8 +14,8 @@ public class AVL_test {
         Tree03_AVL_base<Integer> tree = new Tree03_AVL_base<>(Comparator.comparing(Integer::doubleValue));
 
         Random random = new Random();
-        for (int i = 0; i < 20; i++) {
-            tree.push(random.nextInt(50));
+        for (int i = 0; i < 30; i++) {
+            tree.push(random.nextInt(100));
         }
         BTreePrinter.print(tree.root, true);
     }

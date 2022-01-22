@@ -64,9 +64,8 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
             // 向右插入
             parent.right = insert_recursive(parent.right, v);
         } else {
-            // 重复元素不处理
-//            return parent; // 会产生循环引用
-            parent.val = v; // 直接替换值
+            parent.val = v; // 重复元素不处理 直接替换值
+            return parent;
         }
         // 平衡处理, 每个节点都要判断并处理
         parent = balance(parent);
@@ -178,10 +177,10 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
     /**
      * 处理 < LR
      *
-     * @param node
+     * @param p
      * @return
      */
-    protected TreeNode<V> leftRightRotate4LR(TreeNode<V> node) {
+    protected TreeNode<V> leftRightRotate4LR(TreeNode<V> p) {
         /*
          LR型 <: (M左旋, P右旋)
                 P
@@ -200,17 +199,17 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
               /  \
              M    P
          */
-        node.left = leftRotation4RR(node.left);
-        return rightRotate4LL(node);
+        p.left = leftRotation4RR(p.left);
+        return rightRotate4LL(p);
     }
 
     /**
      * 处理 > RL
      *
-     * @param node
+     * @param p
      * @return
      */
-    protected TreeNode<V> rightLeftRotate4RL(TreeNode<V> node) {
+    protected TreeNode<V> rightLeftRotate4RL(TreeNode<V> p) {
         /*
          RL型 >: (M右旋, P左旋)
                 P
@@ -229,8 +228,8 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
               /  \
              P    M
          */
-        node.left = rightRotate4LL(node.right);
-        return leftRotation4RR(node);
+        p.right = rightRotate4LL(p.right);
+        return leftRotation4RR(p);
     }
 
     /**
