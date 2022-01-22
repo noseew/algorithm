@@ -380,12 +380,4 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
 
         return newParent;
     }
-
-    @Override
-    public String toString() {
-        return "AVLTree_base{" +
-                "size=" + size +
-                ", rotateTimes=" + rotateTimes +
-                '}';
-    }
 }

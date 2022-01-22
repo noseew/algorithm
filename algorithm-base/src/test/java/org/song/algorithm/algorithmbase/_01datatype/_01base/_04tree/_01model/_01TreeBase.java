@@ -5,5 +5,5 @@ public abstract class _01TreeBase<V> {
     public abstract void push(V v);
     public abstract V get(V v);
     public abstract int size();
-    
+
 }
