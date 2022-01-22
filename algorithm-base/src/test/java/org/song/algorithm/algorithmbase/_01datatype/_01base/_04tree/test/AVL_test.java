@@ -17,6 +17,6 @@ public class AVL_test {
         for (int i = 0; i < 30; i++) {
             tree.push(random.nextInt(100));
         }
-        BTreePrinter.print(tree.root, true);
+        System.out.println(tree.toString());
     }
 }

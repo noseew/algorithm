@@ -67,7 +67,11 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
             parent.val = v; // 重复元素不处理 直接替换值
             return parent;
         }
-        // 平衡处理, 每个节点都要判断并处理
+        /*
+        平衡处理, 每个节点都要判断并处理
+        由于插入是递归操作, 所以每插入一个元素, 都会进行一次平衡调整
+        平衡调整由插入的叶子结点的父节点开始, 递归向上逐个判断, 一直判断到根节点
+         */
         parent = balance(parent);
         return parent;
     }
@@ -310,5 +314,10 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
         rotateTimes++;
 
         return newParent;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "\r\n" + "调整次数: " + rotateTimes;
     }
 }
