@@ -57,17 +57,10 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
             return parent;
         }
 
-        int com;
-        if (comparator != null) {
-            com = comparator.compare(v, parent.val);
-        } else {
-            com = ((Comparable) v).compareTo(parent.val);
-        }
-
-        if (com < 0) {
+        if (less(v, parent.val)) {
             // 向左插入
             parent.left = insert_recursive(parent.left, v);
-        } else if (com > 0) {
+        } else if (greater(v, parent.val)) {
             // 向右插入
             parent.right = insert_recursive(parent.right, v);
         } else {
@@ -90,15 +83,9 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
         if (parent == null) {
             return null;
         }
-        int com;
-        if (comparator != null) {
-            com = comparator.compare(v, parent.val);
-        } else {
-            com = ((Comparable) v).compareTo(parent.val);
-        }
-        if (com < 0) {
+        if (less(v, parent.val)) {
             return search_recursive(parent.left, v);
-        } else if (com > 0) {
+        } else if (greater(v, parent.val)) {
             return search_recursive(parent.right, v);
         } else {
             return parent;
@@ -118,17 +105,10 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
             return parent;
         }
 
-        int com;
-        if (comparator != null) {
-            com = comparator.compare(v, parent.val);
-        } else {
-            com = ((Comparable) v).compareTo(parent.val);
-        }
-
         //小于当前根节点
-        if (com < 0) {
+        if (less(v, parent.val)) {
             parent.left = remove_recursive(parent.left, v);
-        } else if (com > 0) {
+        } else if (greater(v, parent.val)) {
             //大于当前根节点
             parent.right = remove_recursive(parent.left, v);
         } else if (parent.left != null && parent.right != null) {
