@@ -127,10 +127,10 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
 
     /*
          平衡二叉树的平衡分为
-         RR: 单向右型 \ : 处理方式需要 左旋转
-         LR: 左右型   < : 先旋转成 RR, 先左旋转再右旋转
-         LL: 单向左型 / : 处理方式需要 右旋转
-         RL: 右左型   > : 先旋转成 LL, 先右旋转再左旋转
+         LL: 单向左型 / : 处理方式需要 parent 右旋转
+         RR: 单向右型 \ : 处理方式需要 parent 左旋转
+         LR: 左右型   < : 先旋转成 LL, 先左旋转再右旋转
+         RL: 右左型   > : 先旋转成 RR, 先右旋转再左旋转
      */
 
     /**
@@ -199,7 +199,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
                     旋转成
                       p.left
                       /  \
-                     v    p
+                     p    v
                 
                  */
                 node = leftRotation(node);
@@ -236,37 +236,6 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
         /*
          LR型 <:
                 p
-                 \
-                p.left
-                  /
-                v
-
-             先旋转成
-                p
-                 \
-                p.left
-                   \
-                    v
-
-            再旋转成
-              p.left
-              /  \
-             p    v
-         */
-        node.left = leftRotation(node.left);
-        return rightRotate(node);
-    }
-
-    /**
-     * 处理 > RL
-     *
-     * @param node
-     * @return
-     */
-    protected TreeNode<V> rightLeftRotate(TreeNode<V> node) {
-        /*
-         RL型 >:
-                p
                /
             p.left
                 \
@@ -285,6 +254,37 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
               p.left
               /  \
              v    p
+         */
+        node.left = leftRotation(node.left);
+        return rightRotate(node);
+    }
+
+    /**
+     * 处理 > RL
+     *
+     * @param node
+     * @return
+     */
+    protected TreeNode<V> rightLeftRotate(TreeNode<V> node) {
+        /*
+         RL型 >:
+                p
+                 \
+                p.left
+                  /
+                v
+
+             先旋转成
+                p
+                 \
+                p.left
+                   \
+                    v
+
+            再旋转成
+              p.left
+              /  \
+             p    v
 
          */
         node.left = rightRotate(node.right);
