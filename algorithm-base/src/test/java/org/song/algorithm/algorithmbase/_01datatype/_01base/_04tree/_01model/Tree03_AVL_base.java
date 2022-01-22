@@ -132,8 +132,8 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
         M 子节点
         S 孙节点
     3个节点形成的关系
-        LL型(左左) /, M在P左, S在M左, 调整方式 P右旋 M成为新的 P父节点 (P右旋)
-        RR型(右右) \, M在P右, S在M右, 调整方式 P左旋 M成为新的 P父节点 (P左旋)
+        LL型(左左) /, M在P左, S在M左, 调整方式 P右旋, M成为新的, P父节点 (P右旋)
+        RR型(右右) \, M在P右, S在M右, 调整方式 P左旋, M成为新的, P父节点 (P左旋)
         LR型(左右) <, M在P左, S在M右, 调整方式 M左旋, S成为新的M节点, M成为新的S节点, 此时完全变为LL, 接着旋转P (M左旋, P右旋)
         RL型(右左) >, M在P右, S在M左, 调整方式 M右旋, S成为新的M节点, M成为新的S节点, 此时完全成为RR, 接着旋转P (M右旋, P左旋)
      */
