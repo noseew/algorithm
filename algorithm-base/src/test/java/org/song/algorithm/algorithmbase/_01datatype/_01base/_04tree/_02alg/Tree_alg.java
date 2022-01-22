@@ -4,13 +4,14 @@ import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03_AVL_base;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.TreeNode;
 
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Stack;
 
 public class Tree_alg {
 
     private TreeNode<Integer> initALVBinaryTree(int count) {
-        Tree03_AVL_base<Integer> tree = new Tree03_AVL_base<>();
+        Tree03_AVL_base<Integer> tree = new Tree03_AVL_base<>(Comparator.comparing(Integer::doubleValue));
         for (int i = 0; i < count; i++) {
             tree.push(i);
         }

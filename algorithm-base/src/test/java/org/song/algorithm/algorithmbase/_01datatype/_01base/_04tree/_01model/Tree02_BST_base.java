@@ -6,11 +6,13 @@ import java.util.Comparator;
 import java.util.List;
 
 /*
-一棵二叉查找树（BST）是一棵二叉树，其中每个结点都含有一个Comparable的键（以及相关联的值）且每个结点的键都大于其左子树中的任意结点的键而小于右子树的任意结点的键。
+一棵二叉查找树(BST)是一棵二叉树, 
+其中每个结点都含有一个Comparable的键(以及相关联的值)且每个结点的键都大于其左子树中的任意结点的键而小于右子树的任意结点的键
+没有平衡功能
  */
 public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> {
 
-    private int size;
+    public int size;
 
     public TreeNode<V> root;
 
@@ -31,8 +33,10 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
             TreeNode<V> next;
             if (less(v, parent.val)) {
                 next = parent.left;
-            } else {
+            } else if (greater(v, parent.val)) {
                 next = parent.right;
+            } else {
+                return;
             }
             if (next == null) {
                 break;
@@ -112,12 +116,8 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
             if (parent.val == v) {
                 // v == 当前
                 return parent.val;
-            } else if (less(v, parent.val)) {
-                // v < 当前
-                if (parent.left == null) {
-                    break;
-                }
-                // 向左移动, 等待下次判断
+            } else if (less(v, parent.val) && parent.left != null) {
+                // v < 当前, 向左移动, 等待下次判断
                 parent = parent.left;
             } else if (parent.right != null && less(parent.right.val, v)) {
                 // v > 当前.right, 向右移动, 等待下次判断
@@ -201,6 +201,33 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
     @Override
     public List<V> range(V min, V max) {
         return null;
+    }
+
+
+    /***************************************** 工具 *****************************************************/
+
+    /**
+     * 查找最小结点
+     */
+    protected TreeNode<V> min(TreeNode<V> tree) {
+        if (tree == null) {
+            return null;
+        }
+
+        while (tree.left != null) {
+            tree = tree.left;
+        }
+        return tree;
+    }
+
+    /**
+     * 获取树的高度
+     */
+    protected int getHeight(TreeNode<V> node) {
+        if (node == null) {
+            return 0;
+        }
+        return node.height;
     }
 
     private void put(TreeNode<V> parent, V v) {

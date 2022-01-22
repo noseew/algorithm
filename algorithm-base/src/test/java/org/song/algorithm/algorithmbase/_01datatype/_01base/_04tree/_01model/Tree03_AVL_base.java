@@ -9,32 +9,35 @@ import java.util.Comparator;
  *
  * @param <V>
  */
-public class Tree03_AVL_base<V> {
+public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V> {
 
-    private int size;
     /**
      * 旋转次数
      */
     private int rotateTimes;
 
-    private Comparator<V> comparator;
+    public Tree03_AVL_base(Comparator<V> comparator) {
+        super(comparator);
+    }
 
-    public TreeNode<V> root;
-
+    @Override
     public void push(V v) {
         root = insert_recursive(root, v);
     }
 
-    public V get(V v) {
-        TreeNode<V> treeNode = search_recursive(root, v);
-        if (treeNode != null) {
-            return treeNode.val;
-        }
-        return null;
-    }
+//    @Override
+//    public V get(V v) {
+//        TreeNode<V> treeNode = search_recursive(root, v);
+//        if (treeNode != null) {
+//            return treeNode.val;
+//        }
+//        return null;
+//    }
 
-    public void remove(V v) {
+    @Override
+    public V remove(V v) {
         root = remove_recursive(root, v);
+        return null;
     }
 
     /***************************************** 增删查-递归 *****************************************************/
@@ -131,7 +134,7 @@ public class Tree03_AVL_base<V> {
             parent.right = remove_recursive(parent.left, v);
         } else if (parent.left != null && parent.right != null) {
             //找到右边最小的节点
-            parent.val = minNode(parent.right).val;
+            parent.val = min(parent.right).val;
             //当前节点的右边等于原节点右边删除已经被选为的替代节点
             parent.right = remove_recursive(parent.right, parent.val);
         } else {
@@ -156,7 +159,7 @@ public class Tree03_AVL_base<V> {
      * @param node
      * @return
      */
-    private TreeNode<V> balance(TreeNode<V> node) {
+    protected TreeNode<V> balance(TreeNode<V> node) {
         if (node == null) {
             return node;
         }
@@ -241,7 +244,7 @@ public class Tree03_AVL_base<V> {
      * @param node
      * @return
      */
-    private TreeNode<V> leftRightRotate(TreeNode<V> node) {
+    protected TreeNode<V> leftRightRotate(TreeNode<V> node) {
         /*
          LR型 <:
                 p
@@ -272,7 +275,7 @@ public class Tree03_AVL_base<V> {
      * @param node
      * @return
      */
-    private TreeNode<V> rightLeftRotate(TreeNode<V> node) {
+    protected TreeNode<V> rightLeftRotate(TreeNode<V> node) {
         /*
          RL型 >:
                 p
@@ -306,7 +309,7 @@ public class Tree03_AVL_base<V> {
      * @param node 不平衡的节点, isBalanced(node) = false
      * @return 新的 parent 节点
      */
-    private TreeNode<V> leftLeftRotate(TreeNode<V> node) {
+    protected TreeNode<V> leftLeftRotate(TreeNode<V> node) {
         /*
          右旋: 需要操作两个节点
              node: 不平衡的节点
@@ -346,7 +349,7 @@ public class Tree03_AVL_base<V> {
      * @param node 不平衡的节点, isBalanced(node) = false
      * @return 新的 parent 节点
      */
-    private TreeNode<V> rightRightRotation(TreeNode<V> node) {
+    protected TreeNode<V> rightRightRotation(TreeNode<V> node) {
         /*
          左旋: 需要操作两个节点
              node: 不平衡的节点
@@ -377,30 +380,6 @@ public class Tree03_AVL_base<V> {
         rotateTimes++;
 
         return newParent;
-    }
-
-
-    /***************************************** 工具 *****************************************************/
-
-    /**
-     * 查找最小结点
-     */
-    private TreeNode<V> minNode(TreeNode<V> tree) {
-        if (tree == null) {
-            return null;
-        }
-
-        while (tree.left != null) {
-            tree = tree.left;
-        }
-        return tree;
-    }
-
-    private int getHeight(TreeNode<V> node) {
-        if (node == null) {
-            return 0;
-        }
-        return node.height;
     }
 
     @Override
