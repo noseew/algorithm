@@ -252,7 +252,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
               /  \
              p    v
          */
-        node.left = leftRotation(node);
+        node.left = leftRotation(node.left);
         return rightRotate(node);
     }
 
@@ -286,7 +286,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
              v    p
 
          */
-        node.left = rightRotate(node);
+        node.left = rightRotate(node.right);
         return leftRotation(node);
     }
 

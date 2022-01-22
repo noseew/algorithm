@@ -1,5 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
 
+import java.util.Objects;
+
 public class TreeNode<V> {
 
     public TreeNode<V> left;
@@ -16,5 +18,18 @@ public class TreeNode<V> {
         this.left = left;
         this.right = right;
         this.val = val;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TreeNode)) return false;
+        TreeNode<?> treeNode = (TreeNode<?>) o;
+        return Objects.equals(val, treeNode.val);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(val);
     }
 }

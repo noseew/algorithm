@@ -3,12 +3,16 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.TreeNode;
 
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public class BTreePrinter {
     
     public static String print(TreeNode root, boolean print) {
+        CycleRecursionCheck<TreeNode> check = new CycleRecursionCheck<>();
+                
         StringBuilder sb = new StringBuilder();
-        final int maxLevel = getDepth(root);
+        final int maxLevel = getDepth(root, check);
         sb.append("maxLevel: " + maxLevel).append("\r\n");
         if (print) {
             System.out.println("maxLevel: " + maxLevel);
@@ -16,7 +20,8 @@ public class BTreePrinter {
 
         // 满二叉树节点数为 2^maxLevel - 1;
         TreeNode[] nodes = new TreeNode[(int) Math.pow(2, maxLevel)];
-        traverse(root, 1, nodes);
+        check = new CycleRecursionCheck<>();
+        traverse(root, 1, nodes, check);
 
 
         // 定义，叶子节点的宽度
@@ -127,9 +132,9 @@ public class BTreePrinter {
         return left + "┴" + right;
     }
 
-    public static int getDepth(TreeNode root) {
-        if (root == null) return 0;
-        return Math.max(getDepth(root.left), getDepth(root.right)) + 1;
+    public static int getDepth(TreeNode root, CycleRecursionCheck<TreeNode> check) {
+        if (root == null || !check.add(root)) return 0;
+        return Math.max(getDepth(root.left, check), getDepth(root.right, check)) + 1;
     }
 
     public static void traverse(TreeNode root, int index, TreeNode[] nodes) {
@@ -138,5 +143,42 @@ public class BTreePrinter {
         nodes[index] = root;
         traverse(root.left, index * 2, nodes);
         traverse(root.right, index * 2 + 1, nodes);
+    }
+
+    private static void traverse(TreeNode root, int index, TreeNode[] nodes, CycleRecursionCheck<TreeNode> check) {
+        if (root == null || !check.add(root)) return;
+        // System.out.println("index:" + index);
+        nodes[index] = root;
+        traverse(root.left, index * 2, nodes, check);
+        if (!check.parentPrint) {
+            System.err.println(String.format("出现循环: parent = %s, left = %s", root.val, root.left));
+            check.parentPrint = true;
+        }
+        traverse(root.right, index * 2 + 1, nodes, check);
+        if (!check.parentPrint) {
+            System.err.println(String.format("出现循环: parent = %s, right = %s", root.val, root.right));
+            check.parentPrint = true;
+        }
+    }
+    
+    static class CycleRecursionCheck<V> {
+        Set<V> set = new HashSet<>();
+        boolean parentPrint = false;
+
+        /**
+         * return false, 说明 V 已存在
+         * 
+         * @param v
+         * @return false, 说明 V 已存在
+         */
+        public boolean add(V v) {
+            boolean check = set.add(v);
+            if (!check) {
+//                set.clear();
+//                cycle = true;
+            }
+            return check;
+        }
+        
     }
 }
