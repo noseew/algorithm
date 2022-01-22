@@ -126,11 +126,16 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
     /***************************************** 平衡处理-旋转 *****************************************************/
 
     /*
-         平衡二叉树的平衡分为
-         LL: 单向左型 / : 处理方式需要 parent 右旋转
-         RR: 单向右型 \ : 处理方式需要 parent 左旋转
-         LR: 左右型   < : 先旋转成 LL, 先左旋转再右旋转
-         RL: 右左型   > : 先旋转成 RR, 先右旋转再左旋转
+    节点的关系
+    有3个节点, 分别为: 
+        P 父节点
+        M 子节点
+        S 孙节点
+    3个节点形成的关系
+        LL型(左左) /, M在P左, S在M左, 调整方式 P右旋 M成为新的 P父节点 (P右旋)
+        RR型(右右) \, M在P右, S在M右, 调整方式 P左旋 M成为新的 P父节点 (P左旋)
+        LR型(左右) <, M在P左, S在M右, 调整方式 M左旋, S成为新的M节点, M成为新的S节点, 此时完全变为LL, 接着旋转P (M左旋, P右旋)
+        RL型(右左) >, M在P右, S在M左, 调整方式 M右旋, S成为新的M节点, M成为新的S节点, 此时完全成为RR, 接着旋转P (M右旋, P左旋)
      */
 
     /**
@@ -144,79 +149,23 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
             return node;
         }
 
-        // 新节点如果不平衡 左高右低
+        // 左高右低
         if (getHeight(node.left) - getHeight(node.right) > 1) {
-                /*
-                  判断不平衡类型
-                  这里是向左插入节点, 不平衡有两种
-                 */
             if (getHeight(node.left.left) >= getHeight(node.left.right)) {
-                /*
-                LL 需要 右旋转
-                  1. LL型 /:
-                            p
-                           /
-                        p.left
-                         /
-                       v
-                    旋转成
-                      p.left
-                      /  \
-                     v    p
-                 */
+                // LL型 / 右旋转
                 node = rightRotate(node);
             } else {
-                /*
-                LR 需要 先左旋转再右旋转
-                  2. LR型 <:
-                            p
-                           /
-                        p.left
-                            \
-                             v
-                    旋转成
-                      p.left
-                      /  \
-                     v    p
-                 */
+                // LR型 < 先左旋转再右旋转
                 node = leftRightRotate(node);
             }
         }
-        // 新节点如果不平衡 右高左低
+        // 右高左低
         else if (getHeight(node.right) - getHeight(node.left) > 1) {
-                /*
-                  判断不平衡类型
-                 */
             if (getHeight(node.right.right) >= getHeight(node.right.left)) {
-                /*
-                RR 需要 左旋转
-                  1. RR型 \:
-                        p
-                         \
-                        p.left
-                           \
-                            v
-                    旋转成
-                      p.left
-                      /  \
-                     p    v
-                
-                 */
+                // RR型 \ 左旋转
                 node = leftRotation(node);
             } else {
-                /*
-                RL 需要 先右旋转再左旋转
-                  2. RL型 >:
-                        p
-                         \
-                        p.left
-                          /
-                        v
-                    旋转成
-                      p.left
-                      /  \
-                     p    v
-                 */
+                // RL型 > 先右旋转再左旋转
                 node = rightLeftRotate(node);
             }
         }
@@ -234,26 +183,22 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
      */
     protected TreeNode<V> leftRightRotate(TreeNode<V> node) {
         /*
-         LR型 <:
-                p
+         LR型 <: (M左旋, P右旋)
+                P
                /
-            p.left
+               M
                 \
-                 v
-
-             先旋转成
-
-                    p
+                 S
+             先M左旋转成
+                    P
                    /
-                p.left
+                  S
                  /
-               v
-
-            再旋转成
-
-              p.left
+                M
+            再P右旋转成
+                S
               /  \
-             v    p
+             M    P
          */
         node.left = leftRotation(node.left);
         return rightRotate(node);
@@ -267,25 +212,22 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
      */
     protected TreeNode<V> rightLeftRotate(TreeNode<V> node) {
         /*
-         RL型 >:
-                p
+         RL型 >: (M右旋, P左旋)
+                P
                  \
-                p.left
+                  M
                   /
-                v
-
-             先旋转成
-                p
+                 S
+             先M右旋转成
+                P
                  \
-                p.left
+                  S
                    \
-                    v
-
-            再旋转成
-              p.left
+                    M
+            再P左旋转成
+                S
               /  \
-             p    v
-
+             P    M
          */
         node.left = rightRotate(node.right);
         return leftRotation(node);
@@ -313,11 +255,11 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
                    /
                newParent
                  /
-               v
+               S
             旋转成
              newParent
               /    \
-             v     node
+             S     node
          */
         TreeNode<V> newParent = node.left;
         node.left = newParent.right;
@@ -352,11 +294,11 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
                  \
                 newParent
                    \
-                    v
+                    S
             旋转成
               newParent
                /    \
-             node    v
+             node    S
          */
         TreeNode<V> newParent = node.right;
         node.right = newParent.left;
