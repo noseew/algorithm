@@ -19,7 +19,7 @@ public class BST_test {
         for (int i = 0; i < 20; i++) {
             tree.push(random.nextInt(50));
         }
-        BTreePrinter.print(tree.root);
+        BTreePrinter.print(tree.root, true);
     }
 
     @Test
@@ -30,7 +30,7 @@ public class BST_test {
         for (int i = 0; i < 10; i++) {
             tree.push(random.nextInt(20));
         }
-        BTreePrinter.print(tree.root);
+        BTreePrinter.print(tree.root, true);
         
         System.out.println("floor(5) = " + tree.floor(5));
         System.out.println("floor(8) = " + tree.floor(8));
@@ -56,7 +56,7 @@ public class BST_test {
             tree.push(v);
             list.add(v);
         }
-        BTreePrinter.print(tree.root);
+        BTreePrinter.print(tree.root, true);
 
         for (int i = 0; i < size; i++) {
             int val = i;
@@ -86,7 +86,7 @@ public class BST_test {
             tree.push(v);
             list.add(v);
         }
-        BTreePrinter.print(tree.root);
+        BTreePrinter.print(tree.root, true);
 
         for (int i = 0; i < size; i++) {
             int val = i;

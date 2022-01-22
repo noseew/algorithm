@@ -12,6 +12,6 @@ public class B_test {
         for (int i = 0; i < 20; i++) {
             tree.push(i);
         }
-        BTreePrinter.print(tree.root);
+        BTreePrinter.print(tree.root, true);
     }
 }

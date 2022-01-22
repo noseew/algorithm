@@ -197,6 +197,11 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
         return null;
     }
 
+    @Override
+    public String toString() {
+        return BTreePrinter.print(root, false);
+    }
+
     /***************************************** 工具 *****************************************************/
 
     /**

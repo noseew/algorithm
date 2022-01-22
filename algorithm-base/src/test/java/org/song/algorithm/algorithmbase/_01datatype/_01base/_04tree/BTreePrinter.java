@@ -5,10 +5,14 @@ import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tre
 import java.util.Collections;
 
 public class BTreePrinter {
-
-    public static void print(TreeNode root) {
+    
+    public static String print(TreeNode root, boolean print) {
+        StringBuilder sb = new StringBuilder();
         final int maxLevel = getDepth(root);
-        System.out.println("maxLevel: " + maxLevel);
+        sb.append("maxLevel: " + maxLevel).append("\r\n");
+        if (print) {
+            System.out.println("maxLevel: " + maxLevel);
+        }
 
         // 满二叉树节点数为 2^maxLevel - 1;
         TreeNode[] nodes = new TreeNode[(int) Math.pow(2, maxLevel)];
@@ -21,31 +25,52 @@ public class BTreePrinter {
             // level 层节点的宽度 = 2^(maxLevel - level) * 叶子节点的宽度
             int nodeWidth = (int) Math.pow(2, maxLevel - level) * leafNodeWidth;
             String levelInfo = String.format("level[%s] 节点宽度[%3d]", level, nodeWidth);
-            System.out.print(levelInfo);
-            System.out.print("===|  ");
+            sb.append(levelInfo).append("===|  ");
+            if (print) {
+                System.out.print(levelInfo);
+                System.out.print("===|  ");
+            }
 
             int beginIndex = (int) Math.pow(2, level - 1);
             int endIndex = beginIndex * 2 - 1;
             for (int i = beginIndex; i <= endIndex; ++i) {
                 try {
-                    System.out.print(getNodeText(nodes[i], nodeWidth));
+                    sb.append(getNodeText(nodes[i], nodeWidth));
+                    if (print) {
+                        System.out.print(getNodeText(nodes[i], nodeWidth));
+                    }
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
             }
-            System.out.println();
+            sb.append("\r\n");
+            if (print) {
+                System.out.println();
+            }
 
             // 最后一层不需要 edge 了
             if (level == maxLevel) break;
 
             // 中文比英文更宽，所以多加 3 个空格，以便对齐
-            System.out.print(String.join("", Collections.nCopies(levelInfo.length() + 3, " ")));
-            System.out.print("===|  ");
-            for (int i = beginIndex; i <= endIndex; ++i) {
-                System.out.print(getEdgeText(nodeWidth, nodes, i));
+
+            sb.append(String.join("", Collections.nCopies(levelInfo.length() + 3, " ")));
+            sb.append("===|  ");
+            if (print) {
+                System.out.print(String.join("", Collections.nCopies(levelInfo.length() + 3, " ")));
+                System.out.print("===|  ");
             }
-            System.out.println();
+            for (int i = beginIndex; i <= endIndex; ++i) {
+                sb.append(getEdgeText(nodeWidth, nodes, i));
+                if (print) {
+                    System.out.print(getEdgeText(nodeWidth, nodes, i));
+                }
+            }
+            sb.append("\r\n");
+            if (print) {
+                System.out.println();
+            }
         }
+        return sb.toString();
     }
 
     private static String getNodeText(TreeNode node, int nodeWidth) {
