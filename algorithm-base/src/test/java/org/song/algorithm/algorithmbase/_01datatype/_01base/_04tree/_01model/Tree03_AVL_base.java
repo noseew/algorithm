@@ -153,20 +153,20 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
         if (getHeight(node.left) - getHeight(node.right) > 1) {
             if (getHeight(node.left.left) >= getHeight(node.left.right)) {
                 // LL型 / 右旋转
-                node = rightRotate(node);
+                node = rightRotate4LL(node);
             } else {
                 // LR型 < 先左旋转再右旋转
-                node = leftRightRotate(node);
+                node = leftRightRotate4LR(node);
             }
         }
         // 右高左低
         else if (getHeight(node.right) - getHeight(node.left) > 1) {
             if (getHeight(node.right.right) >= getHeight(node.right.left)) {
                 // RR型 \ 左旋转
-                node = leftRotation(node);
+                node = leftRotation4RR(node);
             } else {
                 // RL型 > 先右旋转再左旋转
-                node = rightLeftRotate(node);
+                node = rightLeftRotate4RL(node);
             }
         }
 
@@ -181,7 +181,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
      * @param node
      * @return
      */
-    protected TreeNode<V> leftRightRotate(TreeNode<V> node) {
+    protected TreeNode<V> leftRightRotate4LR(TreeNode<V> node) {
         /*
          LR型 <: (M左旋, P右旋)
                 P
@@ -200,8 +200,8 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
               /  \
              M    P
          */
-        node.left = leftRotation(node.left);
-        return rightRotate(node);
+        node.left = leftRotation4RR(node.left);
+        return rightRotate4LL(node);
     }
 
     /**
@@ -210,7 +210,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
      * @param node
      * @return
      */
-    protected TreeNode<V> rightLeftRotate(TreeNode<V> node) {
+    protected TreeNode<V> rightLeftRotate4RL(TreeNode<V> node) {
         /*
          RL型 >: (M右旋, P左旋)
                 P
@@ -229,8 +229,8 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
               /  \
              P    M
          */
-        node.left = rightRotate(node.right);
-        return leftRotation(node);
+        node.left = rightRotate4LL(node.right);
+        return leftRotation4RR(node);
     }
 
     /**
@@ -239,7 +239,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
      * @param node 不平衡的节点, isBalanced(node) = false
      * @return 新的 parent 节点
      */
-    protected TreeNode<V> rightRotate(TreeNode<V> node) {
+    protected TreeNode<V> rightRotate4LL(TreeNode<V> node) {
         /*
          右旋: 需要操作两个节点
              node: 不平衡的节点
@@ -279,7 +279,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
      * @param node 不平衡的节点, isBalanced(node) = false
      * @return 新的 parent 节点
      */
-    protected TreeNode<V> leftRotation(TreeNode<V> node) {
+    protected TreeNode<V> leftRotation4RR(TreeNode<V> node) {
         /*
          左旋: 需要操作两个节点
              node: 不平衡的节点
