@@ -226,7 +226,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
     }
 
     /**
-     * 处理 <
+     * 处理 < LR
      *
      * @param node
      * @return
@@ -257,7 +257,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
     }
 
     /**
-     * 处理 >
+     * 处理 > RL
      *
      * @param node
      * @return
@@ -291,7 +291,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
     }
 
     /**
-     * 处理 /
+     * 处理 / LL
      *
      * @param node 不平衡的节点, isBalanced(node) = false
      * @return 新的 parent 节点
@@ -331,7 +331,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
     }
 
     /**
-     * 处理 \
+     * 处理 \ RR
      *
      * @param node 不平衡的节点, isBalanced(node) = false
      * @return 新的 parent 节点
