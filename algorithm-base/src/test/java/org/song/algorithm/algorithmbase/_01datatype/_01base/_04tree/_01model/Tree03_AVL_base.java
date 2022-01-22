@@ -126,10 +126,10 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
 
     /*
          平衡二叉树的平衡分为
-         RR: 单向右型 \ : rightRightRotation(旋转方向: 左旋转, 右上左下)
-         LR: 左右型   < : 先旋转成 RR
-         LL: 单向左型 / : leftLeftRotate(旋转方向: 右旋转, 左上右下)
-         RL: 右左型   > : 先旋转成 LL
+         RR: 单向右型 \ : 处理方式需要 左旋转
+         LR: 左右型   < : 先旋转成 RR, 先左旋转再右旋转
+         LL: 单向左型 / : 处理方式需要 右旋转
+         RL: 右左型   > : 先旋转成 LL, 先右旋转再左旋转
      */
 
     /**
@@ -145,9 +145,13 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
 
         // 新节点如果不平衡 左高右低
         if (getHeight(node.left) - getHeight(node.right) > 1) {
-                /* LL 或者 LR 旋转
+                /*
                   判断不平衡类型
                   这里是向左插入节点, 不平衡有两种
+                 */
+            if (getHeight(node.left.left) >= getHeight(node.left.right)) {
+                /*
+                LL 需要 右旋转
                   1. LL型 /:
                             p
                            /
@@ -158,7 +162,11 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
                       p.left
                       /  \
                      v    p
-
+                 */
+                node = rightRotate(node);
+            } else {
+                /*
+                LR 需要 先左旋转再右旋转
                   2. LR型 <:
                             p
                            /
@@ -169,20 +177,18 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
                       p.left
                       /  \
                      v    p
-
                  */
-            if (getHeight(node.left.left) >= getHeight(node.left.right)) {
-                node = leftLeftRotate(node);
-            } else {
                 node = leftRightRotate(node);
             }
         }
-
         // 新节点如果不平衡 右高左低
         else if (getHeight(node.right) - getHeight(node.left) > 1) {
-                /* RR 或者 RL 旋转
+                /*
                   判断不平衡类型
-                  这里是向左插入节点, 不平衡有两种
+                 */
+            if (getHeight(node.right.right) >= getHeight(node.right.left)) {
+                /*
+                RR 需要 左旋转
                   1. RR型 \:
                         p
                          \
@@ -193,8 +199,13 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
                       p.left
                       /  \
                      v    p
-
-                  2. LR型 <:
+                
+                 */
+                node = leftRotation(node);
+            } else {
+                /*
+                RL 需要 先右旋转再左旋转
+                  2. RL型 >:
                         p
                          \
                         p.left
@@ -205,9 +216,6 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
                       /  \
                      p    v
                  */
-            if (getHeight(node.right.right) >= getHeight(node.right.left)) {
-                node = rightRightRotation(node);
-            } else {
                 node = rightLeftRotate(node);
             }
         }
@@ -244,8 +252,8 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
               /  \
              p    v
          */
-        node.left = rightRightRotation(node);
-        return leftLeftRotate(node);
+        node.left = leftRotation(node);
+        return rightRotate(node);
     }
 
     /**
@@ -278,8 +286,8 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
              v    p
 
          */
-        node.left = leftLeftRotate(node);
-        return rightRightRotation(node);
+        node.left = rightRotate(node);
+        return leftRotation(node);
     }
 
     /**
@@ -288,7 +296,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
      * @param node 不平衡的节点, isBalanced(node) = false
      * @return 新的 parent 节点
      */
-    protected TreeNode<V> leftLeftRotate(TreeNode<V> node) {
+    protected TreeNode<V> rightRotate(TreeNode<V> node) {
         /*
          右旋: 需要操作两个节点
              node: 不平衡的节点
@@ -328,7 +336,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
      * @param node 不平衡的节点, isBalanced(node) = false
      * @return 新的 parent 节点
      */
-    protected TreeNode<V> rightRightRotation(TreeNode<V> node) {
+    protected TreeNode<V> leftRotation(TreeNode<V> node) {
         /*
          左旋: 需要操作两个节点
              node: 不平衡的节点
