@@ -65,11 +65,6 @@ public class Tree01_B_base<V> extends _01TreeBase<V> {
     }
 
     @Override
-    public V remove(V v) {
-        return null;
-    }
-
-    @Override
     public int size() {
         return size;
     }

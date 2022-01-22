@@ -34,7 +34,6 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
 //        return null;
 //    }
 
-    @Override
     public V remove(V v) {
         root = remove_recursive(root, v);
         return null;

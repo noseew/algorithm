@@ -72,12 +72,6 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
     }
 
     @Override
-    public V remove(V v) {
-        // TODO
-        return null;
-    }
-
-    @Override
     public int size() {
         return size;
     }
