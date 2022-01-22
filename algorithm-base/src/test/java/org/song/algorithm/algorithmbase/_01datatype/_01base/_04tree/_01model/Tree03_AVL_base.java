@@ -65,7 +65,8 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
             parent.right = insert_recursive(parent.right, v);
         } else {
             // 重复元素不处理
-            return parent;
+//            return parent; // 会产生循环引用
+            parent.val = v; // 直接替换值
         }
         // 平衡处理, 每个节点都要判断并处理
         parent = balance(parent);

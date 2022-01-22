@@ -150,13 +150,13 @@ public class BTreePrinter {
         // System.out.println("index:" + index);
         nodes[index] = root;
         traverse(root.left, index * 2, nodes, check);
-        if (!check.parentPrint) {
-            System.err.println(String.format("出现循环: parent = %s, left = %s", root.val, root.left));
+        if (!check.parentPrint && check.cycle) {
+            System.err.println(String.format("出现循环: parent = %s, left = %s", root.val, root.left.val));
             check.parentPrint = true;
         }
         traverse(root.right, index * 2 + 1, nodes, check);
-        if (!check.parentPrint) {
-            System.err.println(String.format("出现循环: parent = %s, right = %s", root.val, root.right));
+        if (!check.parentPrint && check.cycle) {
+            System.err.println(String.format("出现循环: parent = %s, right = %s", root.val, root.right.val));
             check.parentPrint = true;
         }
     }
@@ -164,6 +164,7 @@ public class BTreePrinter {
     static class CycleRecursionCheck<V> {
         Set<V> set = new HashSet<>();
         boolean parentPrint = false;
+        boolean cycle = false;
 
         /**
          * return false, 说明 V 已存在
@@ -175,7 +176,7 @@ public class BTreePrinter {
             boolean check = set.add(v);
             if (!check) {
 //                set.clear();
-//                cycle = true;
+                cycle = true;
             }
             return check;
         }
