@@ -251,15 +251,15 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
          树节点的变更, 至少要操作2个指针才能确定位置安全和线程安全, 因此无法使用CAS操作来保证线程安全
 
           1. LL 型 /:
-                   node
+                    P
                    /
-               newParent
+                  M
                  /
-               S
-            旋转成
-             newParent
-              /    \
-             S     node
+                S
+            P右旋转成
+               M
+              /  \
+             S    P
          */
         TreeNode<V> newParent = node.left;
         node.left = newParent.right;
@@ -276,10 +276,10 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
     /**
      * 处理 \ RR
      *
-     * @param node 不平衡的节点, isBalanced(node) = false
+     * @param p 不平衡的节点, isBalanced(node) = false
      * @return 新的 parent 节点
      */
-    protected TreeNode<V> leftRotation4RR(TreeNode<V> node) {
+    protected TreeNode<V> leftRotation4RR(TreeNode<V> p) {
         /*
          左旋: 需要操作两个节点
              node: 不平衡的节点
@@ -290,21 +290,22 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
             3. 更新高度
          树节点的变更, 至少要操作2个指针才能确定位置安全和线程安全, 因此无法使用CAS操作来保证线程安全
 
-               node
+            RR 型 \:
+                P
                  \
-                newParent
+                  M
                    \
                     S
-            旋转成
-              newParent
-               /    \
-             node    S
+            P左旋转成
+                 M
+               /   \
+              P     S
          */
-        TreeNode<V> newParent = node.right;
-        node.right = newParent.left;
-        newParent.left = node;
+        TreeNode<V> newParent = p.right;
+        p.right = newParent.left;
+        newParent.left = p;
 
-        node.height = Math.max(getHeight(node.left), getHeight(node.right)) + 1;
+        p.height = Math.max(getHeight(p.left), getHeight(p.right)) + 1;
         newParent.height = Math.max(getHeight(newParent.left), getHeight(newParent)) + 1;
 
         rotateTimes++;
