@@ -124,7 +124,9 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
                 parent = parent.right;
             } else {
                 // floor 介于 parent 和 parent.right 之间, 将满足条件的 node 放入队列, 然后单独比较
-                stack.push(parent);
+                if (less(parent.val, v)) {
+                    stack.push(parent);
+                } 
                 parent = parent.right;
             }
             if (parent == null) {
