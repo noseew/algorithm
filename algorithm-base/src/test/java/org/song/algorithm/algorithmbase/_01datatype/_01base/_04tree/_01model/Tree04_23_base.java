@@ -24,7 +24,7 @@ public class Tree04_23_base<V extends Comparable<V>> {
     private int itemNum = 0;
 
     /**
-     * 查找含有key的键值对
+     * 查找含有v的键值对
      *
      * @param v
      * @return 返回键值对中的value
@@ -36,7 +36,7 @@ public class Tree04_23_base<V extends Comparable<V>> {
             if ((childNum = curNode.findItem(v)) != -1) {
                 return curNode.values[childNum];
             }
-            // 假如到了叶子节点还没有找到, 则树中不包含key
+            // 假如到了叶子节点还没有找到, 则树中不包含v
             else if (curNode.isLeaf()) {
                 return null;
             } else {
@@ -59,7 +59,7 @@ public class Tree04_23_base<V extends Comparable<V>> {
             } else {
                 curNode = getNextChild(curNode, v);
                 for (int i = 0; i < curNode.itemNum; i++) {
-                    // 假如key在node中则进行更新
+                    // 假如v在node中则进行更新
                     if (curNode.values[i].compareTo(v) == 0) {
                         curNode.values[i] = v;
                         return;
@@ -68,7 +68,7 @@ public class Tree04_23_base<V extends Comparable<V>> {
             }
         }
 
-        // 若插入key的结点已经满了, 即3-结点插入
+        // 若插入v的结点已经满了, 即3-结点插入
         if (curNode.isFull()) {
             split(curNode, v);
         }
@@ -134,9 +134,9 @@ public class Tree04_23_base<V extends Comparable<V>> {
     }
 
     /**
-     * 寻找key在结点的位置
+     * 寻找v在结点的位置
      *
-     * @return 结点没有key则放回-1
+     * @return 结点没有v则放回-1
      */
     private int findItem(V v) {
         for (int i = 0; i < itemNum; i++) {
@@ -185,11 +185,11 @@ public class Tree04_23_base<V extends Comparable<V>> {
     }
 
     /**
-     * 在key的条件下获得结点的子节点（可能为左子结点, 中间子节点, 右子节点）
+     * 在v的条件下获得结点的子节点（可能为左子结点, 中间子节点, 右子节点）
      *
      * @param node
      * @param v
-     * @return 返回子节点, 若结点包含key,则返回传参结点
+     * @return 返回子节点, 若结点包含v,则返回传参结点
      */
     private Tree04_23_base<V> getNextChild(Tree04_23_base<V> node, V v) {
         for (int i = 0; i < node.itemNum; i++) {
@@ -213,7 +213,7 @@ public class Tree04_23_base<V extends Comparable<V>> {
         Tree04_23_base<V> parent = node.getParent();
         // newNode用来保存最大的键值对
         Tree04_23_base<V> newNode = new Tree04_23_base<V>();
-        // newNode2用来保存中间key的键值对
+        // newNode2用来保存中间v的键值对
         Tree04_23_base<V> newNode2 = new Tree04_23_base<V>();
         V mid;
 
