@@ -122,12 +122,19 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
      */
     @Override
     public V floor(V v) {
-        TreeNode<V> parent = root;
+        TreeNode<V> floor = floor(root, v);
+        return floor != null ? floor.val : null;
+    }
+
+    private TreeNode<V> floor(TreeNode<V> parent, V v) {
         TreeNode<V> floor = null;
         while (true) {
+            if (parent == null) {
+                break;
+            }
             if (parent.val == v) {
                 // v == 当前
-                return parent.val;
+                return parent;
             } else if (less(v, parent.val) && parent.left != null) {
                 // v < 当前, 向左移动, 等待下次判断
                 parent = parent.left;
@@ -143,11 +150,8 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
                 }
                 parent = parent.right;
             }
-            if (parent == null) {
-                break;
-            }
         }
-        return floor != null ? floor.val : null;
+        return floor;
     }
 
     /**
@@ -158,12 +162,19 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
      */
     @Override
     public V ceiling(V v) {
-        TreeNode<V> parent = root;
+        TreeNode<V> ceiling = ceiling(root, v);
+        return ceiling != null ? ceiling.val : null;
+    }
+
+    private TreeNode<V> ceiling(TreeNode<V> parent, V v) {
         TreeNode<V> ceiling = null;
         while (true) {
+            if (parent == null) {
+                break;
+            }
             if (parent.val == v) {
                 // v == 当前
-                return parent.val;
+                return parent;
             } else if (greater(v, parent.val) && parent.right != null) {
                 // v > 当前, 向右移动, 等待下次判断
                 parent = parent.right;
@@ -179,11 +190,8 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
                 }
                 parent = parent.left;
             }
-            if (parent == null) {
-                break;
-            }
         }
-        return ceiling != null ? ceiling.val : null;
+        return ceiling;
     }
 
     /**
@@ -230,7 +238,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
     /**
      * 查找最小结点
      */
-    private TreeNode<V> min(TreeNode<V> tree) {
+    protected TreeNode<V> min(TreeNode<V> tree) {
         if (tree == null) {
             return null;
         }
@@ -244,7 +252,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
     /**
      * 获取树的高度
      */
-    private int getHeight(TreeNode<V> node) {
+    protected int getHeight(TreeNode<V> node) {
         if (node == null) {
             return 0;
         }
