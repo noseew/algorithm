@@ -1,6 +1,5 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
 
-import org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack.stack.Stack_base_01;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreePrinter;
 
 import java.util.Comparator;
@@ -79,6 +78,11 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
         return size;
     }
 
+    /**
+     * 最大值
+     *
+     * @return
+     */
     @Override
     public V max() {
         if (root == null) {
@@ -92,6 +96,11 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
         return max.val;
     }
 
+    /**
+     * 最小值
+     *
+     * @return
+     */
     @Override
     public V min() {
         if (root == null) {
@@ -105,6 +114,12 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
         return max.val;
     }
 
+    /**
+     * 地板
+     *
+     * @param v
+     * @return
+     */
     @Override
     public V floor(V v) {
         TreeNode<V> parent = root;
@@ -125,7 +140,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
                     if (floor == null || less(floor.val, parent.val)) {
                         floor = parent;
                     }
-                } 
+                }
                 parent = parent.right;
             }
             if (parent == null) {
@@ -135,6 +150,12 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
         return floor != null ? floor.val : null;
     }
 
+    /**
+     * 天花板
+     *
+     * @param v
+     * @return
+     */
     @Override
     public V ceiling(V v) {
         TreeNode<V> parent = root;
@@ -165,9 +186,16 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
         return ceiling != null ? ceiling.val : null;
     }
 
+    /**
+     * 排名
+     *
+     * @param v
+     * @return
+     */
     @Override
     public int rank(V v) {
         AtomicInteger rank = new AtomicInteger(1);
+        // 采用中序遍历, 并计数
         traverse(root, Order.MidOrder, e -> {
             if (greater(v, e)) {
                 rank.incrementAndGet();
@@ -178,8 +206,17 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
         return rank.get();
     }
 
+    /**
+     * 范围
+     * 左开右闭
+     * 
+     * @param min >= min
+     * @param max < max
+     * @return
+     */
     @Override
     public List<V> range(V min, V max) {
+        
         return null;
     }
 
@@ -193,7 +230,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
     /**
      * 查找最小结点
      */
-    protected TreeNode<V> min(TreeNode<V> tree) {
+    private TreeNode<V> min(TreeNode<V> tree) {
         if (tree == null) {
             return null;
         }
@@ -207,7 +244,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
     /**
      * 获取树的高度
      */
-    protected int getHeight(TreeNode<V> node) {
+    private int getHeight(TreeNode<V> node) {
         if (node == null) {
             return 0;
         }
