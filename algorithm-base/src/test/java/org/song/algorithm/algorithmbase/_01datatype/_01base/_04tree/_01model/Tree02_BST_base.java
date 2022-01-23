@@ -5,6 +5,7 @@ import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreePrinter
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /*
 一棵二叉查找树(BST)是一棵二叉树, 
@@ -22,11 +23,11 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
     }
 
     @Override
-    public void push(V v) {
+    public boolean push(V v) {
         if (root == null) {
             root = new TreeNode<>( null, null, v);
             size++;
-            return;
+            return true;
         }
 
         TreeNode<V> parent = root;
@@ -37,7 +38,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
             } else if (greater(v, parent.val)) {
                 next = parent.right;
             } else {
-                return;
+                return false;
             }
             if (next == null) {
                 break;
@@ -47,6 +48,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
 
         put(parent, v);
         size++;
+        return true;
     }
 
     @Override
@@ -165,7 +167,15 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
 
     @Override
     public int rank(V v) {
-        return 0;
+        AtomicInteger rank = new AtomicInteger(1);
+        traverse(root, Order.MidOrder, e -> {
+            if (greater(v, e)) {
+                rank.incrementAndGet();
+                return true;
+            }
+            return false;
+        });
+        return rank.get();
     }
 
     @Override

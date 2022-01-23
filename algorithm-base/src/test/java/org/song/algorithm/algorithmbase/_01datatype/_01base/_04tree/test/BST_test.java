@@ -101,4 +101,32 @@ public class BST_test {
             System.out.println("error " + i);
         }
     }
+
+    @Test
+    public void test_start3_rank_AutoTest() {
+        int max = 20;
+        int size = 10;
+
+        List<Integer> list = new ArrayList<>(size);
+
+        Tree02_BST_base<Integer> tree = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
+        Random random = new Random();
+        for (int i = 0; i < size; i++) {
+            int v = random.nextInt(max);
+            if (tree.push(v)) {
+                list.add(v);
+            }
+        }
+        BTreePrinter.print(tree.root, true);
+
+        for (int val : list) {
+            int rank = tree.rank(val);
+            long realRank = list.stream().filter(e -> e < val).count() + 1;
+            if (rank == realRank) {
+                continue;
+            }
+            System.out.println(String.format("error realRank=%s, rank=%s", realRank, rank));
+            
+        }
+    }
 }

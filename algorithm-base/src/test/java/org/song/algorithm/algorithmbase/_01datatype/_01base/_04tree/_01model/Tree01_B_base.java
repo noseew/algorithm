@@ -20,11 +20,11 @@ public class Tree01_B_base<V> extends _01TreeBase<V> {
     private int maxDeep = 8;
 
     @Override
-    public void push(V v) {
+    public boolean push(V v) {
         if (root == null) {
             root = new TreeNode<>(null, null, v);
             size++;
-            return;
+            return true;
         }
 
         boolean added = false;
@@ -56,7 +56,9 @@ public class Tree01_B_base<V> extends _01TreeBase<V> {
         }
         if (added) {
             size++;
+            return true;
         }
+        return false;
     }
 
     @Override
