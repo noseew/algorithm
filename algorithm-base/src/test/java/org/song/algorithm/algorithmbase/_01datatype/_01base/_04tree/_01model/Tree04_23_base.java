@@ -6,6 +6,8 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
 2-3查找树的原理很简单, 甚至说代码实现起来难度都不是很大, 但是却很繁琐, 因为它有很多种情况, 而在红黑树中, 用巧妙的方法使用了2个结点解决了3个结点的问题. 
 
 这里放入23树的原因是, 红黑树是23树的一个变种, 23树的一些特性可以更好的理解红黑树的特性比如, 变色旋转等
+
+具体不做测试
  */
 public class Tree04_23_base<V extends Comparable<V>> {
 
