@@ -1,7 +1,14 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.Objects;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class TreeNode<V> {
 
     public TreeNode<V> left;

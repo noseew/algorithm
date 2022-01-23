@@ -241,10 +241,10 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
     /**
      * 处理 / LL
      *
-     * @param node 不平衡的节点, isBalanced(node) = false
+     * @param p 不平衡的节点, isBalanced(node) = false
      * @return 新的 parent 节点
      */
-    protected TreeNode<V> rightRotate4LL(TreeNode<V> node) {
+    protected TreeNode<V> rightRotate4LL(TreeNode<V> p) {
         /*
          右旋: 需要操作两个节点
              node: 不平衡的节点
@@ -266,11 +266,11 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
               /  \
              S    P
          */
-        TreeNode<V> newParent = node.left;
-        node.left = newParent.right;
-        newParent.right = node;
+        TreeNode<V> newParent = p.left;
+        p.left = newParent.right;
+        newParent.right = p;
 
-        node.height = Math.max(getHeight(node.left), getHeight(node.right)) + 1;
+        p.height = Math.max(getHeight(p.left), getHeight(p.right)) + 1;
         newParent.height = Math.max(getHeight(newParent.left), getHeight(newParent)) + 1;
 
         rotateTimes++;
