@@ -43,7 +43,7 @@ public abstract class _02BSTTreeBase<V> extends _01TreeBase<V> {
         if (order == Order.PostOrder && !stop.test(node.val)) return;
     }
     
-    protected enum Order {
+    public enum Order {
         PreOrder, MidOrder, PostOrder,;
     }
 }

@@ -2,8 +2,10 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
 
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreePrinter;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /*
@@ -126,7 +128,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
         return floor != null ? floor.val : null;
     }
 
-    private TreeNode<V> floor(TreeNode<V> parent, V v) {
+    protected TreeNode<V> floor(TreeNode<V> parent, V v) {
         TreeNode<V> floor = null;
         while (true) {
             if (parent == null) {
@@ -166,7 +168,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
         return ceiling != null ? ceiling.val : null;
     }
 
-    private TreeNode<V> ceiling(TreeNode<V> parent, V v) {
+    protected TreeNode<V> ceiling(TreeNode<V> parent, V v) {
         TreeNode<V> ceiling = null;
         while (true) {
             if (parent == null) {
@@ -224,8 +226,38 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
      */
     @Override
     public List<V> range(V min, V max) {
-        
-        return null;
+        List<V> list = new ArrayList<>();
+        if (greater(min, max)) {
+            return list;
+        }
+        // 先找到 min
+        TreeNode<V> minNode = ceiling(root, min);
+        if (minNode == null || greater(minNode.val, max)) {
+            return list;
+        }
+        /*
+        遍历整棵树 e 要在 min max 之间 
+            可不可以通过ceiling先找到 min, 然后再遍历到 max呢? 
+            不行, 因为这里的树没有parent指针, 直接通过min节点遍历会丢失parent指针的其他节点数据
+        为了降低遍历的范围, 这里将数据分为3段
+            [step=1 (v<min)], [step=2 (min<=v<max)], [step=3 (max>v)]
+            当到达第三段时, 遍历停止
+         */
+        AtomicInteger step = new AtomicInteger(1);
+        traverse(root, Order.MidOrder, e -> {
+            // 遍历整棵树 e 要在 min max 之间 
+            if (less(e, max) && !less(e, min) && step.get() < 3) {
+                list.add(e);
+                step.set(2);
+                return true;
+            }
+            if (step.get() == 2) {
+                step.set(3);
+                return false;
+            }
+            return true;
+        });
+        return list;
     }
 
     @Override
