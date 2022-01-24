@@ -3,7 +3,7 @@ package org.song.algorithm.algorithmbase._02alg._01sort.alg;
 import org.junit.Test;
 import org.song.algorithm.algorithmbase._02alg._01sort.AbstractSort;
 
-public class Sort_06_Merge {
+public class Sort_05_Merge {
 
     @Test
     public void test() {

@@ -5,7 +5,7 @@ import org.song.algorithm.algorithmbase._02alg._01sort.AbstractSort;
 
 import java.util.Random;
 
-public class Sort_07_Quick {
+public class Sort_06_Quick {
 
     @Test
     public void test() {
