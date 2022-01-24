@@ -15,7 +15,7 @@ import org.song.algorithm.algorithmbase._02alg._01sort.AbstractSort;
  * <p>
  * 复杂度是 O(logn), 主要在数组堆化这一步是 O(logn) 的
  */
-public class Sort_Heap {
+public class Sort_05_Heap {
 
 
     @Test
