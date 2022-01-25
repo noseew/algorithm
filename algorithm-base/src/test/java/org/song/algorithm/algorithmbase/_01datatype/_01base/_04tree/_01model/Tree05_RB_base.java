@@ -93,12 +93,15 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree03_AVL_base<V> 
         }
         RBTreeNode<V> rbNode = (RBTreeNode<V>) node;
 
+        // 右红左黑: 左旋
         if (isRed((RBTreeNode<V>) rbNode.right) && !isRed((RBTreeNode<V>) rbNode.left)) {
             rbNode = (RBTreeNode<V>) leftRotation4RR(rbNode);
         }
+        // 左红左左红: 右旋
         if (isRed((RBTreeNode<V>) rbNode.left) && isRed((RBTreeNode<V>) rbNode.left.left)) {
             rbNode = (RBTreeNode<V>) rightRotate4LL(rbNode);
         }
+        // 左红右红: 变色
         if (isRed((RBTreeNode<V>) rbNode.left) && isRed((RBTreeNode<V>) rbNode.right)) {
             flipColors(rbNode);
         }
