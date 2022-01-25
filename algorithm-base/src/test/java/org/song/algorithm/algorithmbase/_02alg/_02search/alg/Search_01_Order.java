@@ -22,20 +22,21 @@ public class Search_01_Order {
 
     public static class OrderSearch extends AbstractSearch {
 
-        private Array_base_01<Comparable> array;
+        private Comparable[] array;
 
         public OrderSearch() {
-            array = new Array_base_01<>(10);
-            for (Comparable c : AbstractSort.build(0, 10, 10)) {
-                array.add(c);
+            array = new Comparable[10];
+            Comparable[] build = AbstractSort.build(0, 10, 10);
+            for (int i = 0; i < build.length; i++) {
+                array[i] = build[i];
             }
         }
 
         @Override
         public Comparable get(Comparable v) {
-            for (int i = 0; i < array.length(); i++) {
-                if (array.get(i).compareTo(v) == 0) {
-                    return array.get(i);
+            for (int i = 0; i < array.length; i++) {
+                if (array[i].compareTo(v) == 0) {
+                    return array[i];
                 }
             }
             return null;
