@@ -12,6 +12,8 @@ import java.util.Comparator;
 树查找
 也就是采用 链表存储, 二分法查找思路, 实现,
 具体根据数的不同效率也会不同, 这里采用AVL数
+
+平均效率 O(logn)
  */
 public class Search_03_Tree {
 

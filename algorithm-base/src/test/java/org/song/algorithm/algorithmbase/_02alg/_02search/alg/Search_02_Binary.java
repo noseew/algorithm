@@ -10,6 +10,8 @@ import org.song.algorithm.algorithmbase.from_ma.QuickSort;
 二分查找
 1. 二分查找要求数据是有序
 2. 且线性定位是O(1)的, 比如数组. 如果数据不是数组的, 则建议使用树形查找
+
+平均效率 O(logn)
  */
 public class Search_02_Binary {
 

@@ -1,12 +1,13 @@
 package org.song.algorithm.algorithmbase._02alg._02search.alg;
 
 import org.junit.Test;
-import org.song.algorithm.algorithmbase._01datatype._01base._01linear_list.list._01model.Array_base_01;
 import org.song.algorithm.algorithmbase._02alg._01sort.AbstractSort;
 import org.song.algorithm.algorithmbase._02alg._02search.AbstractSearch;
 
 /*
 顺序查找是最简单的查找方式, 以暴力穷举的方式依次将表中的关键字与待查找关键字比较
+
+平均效率 O(n)
  */
 public class Search_01_Order {
 
