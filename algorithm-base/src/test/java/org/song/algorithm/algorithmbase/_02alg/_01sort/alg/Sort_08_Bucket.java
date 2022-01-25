@@ -45,12 +45,14 @@ public class Sort_08_Bucket {
 
         @Override
         public void sort(Comparable[] cs) {
+            
+            int bucketSize = 10;
 
             Integer[] doubles = (Integer[]) cs;
 
             // 初始化桶
-            Array_base_01<Comparable>[] buckets = new Array_base_01[10];
-            for (int i = 0; i < buckets.length; i++) {
+            Array_base_01<Comparable>[] buckets = new Array_base_01[bucketSize];
+            for (int i = 0; i < bucketSize; i++) {
                 buckets[i] = new Array_base_01<Comparable>();
             }
 
@@ -62,7 +64,7 @@ public class Sort_08_Bucket {
             }
 
             // 桶数据大小
-            int step = ((max - min) / 10) + 1;
+            int step = ((max - min) / bucketSize) + 1;
             for (Integer d : doubles) {
                 // 定位到第几个桶, 并放入
                 buckets[(d - min) / step].add(d);
