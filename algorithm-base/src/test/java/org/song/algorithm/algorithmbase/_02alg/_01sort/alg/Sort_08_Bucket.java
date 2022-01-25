@@ -1,6 +1,7 @@
 package org.song.algorithm.algorithmbase._02alg._01sort.alg;
 
 import org.junit.Test;
+import org.song.algorithm.algorithmbase._01datatype._01base._01linear_list.list._01model.Array_base_01;
 import org.song.algorithm.algorithmbase._02alg._01sort.AbstractSort;
 
 /*
@@ -44,6 +45,48 @@ public class Sort_08_Bucket {
 
         @Override
         public void sort(Comparable[] cs) {
+
+            Integer[] doubles = (Integer[]) cs;
+
+            // 初始化桶
+            Array_base_01<Comparable>[] buckets = new Array_base_01[10];
+            for (int i = 0; i < buckets.length; i++) {
+                buckets[i] = new Array_base_01<Comparable>();
+            }
+
+            // 数据值的范围
+            Integer max = null, min = null;
+            for (Integer c : doubles) {
+                if (max == null || greater(c, max)) max = c;
+                if (min == null || less(c, min)) min = c;
+            }
+
+            // 桶数据大小
+            int step = ((max - min) / 10) + 1;
+            for (Integer d : doubles) {
+                // 定位到第几个桶, 并放入
+                buckets[(d - min) / step].add(d);
+            }
+
+            // 分桶排序
+            int index = 0;
+            AbstractSort sort = new Sort_03_Insert.InsertSort();
+            for (Array_base_01<Comparable> bucket : buckets) {
+                if (bucket.isEmpty()) {
+                    continue;
+                }
+                Integer[] temp = new Integer[bucket.length()];
+                for (int i = 0; i < bucket.length(); i++) {
+                    temp[i] = (Integer) bucket.get(i);
+                }
+                // 桶内排序
+                sort.sort(temp);
+
+                // 收集到原数组
+                for (Integer d : temp) {
+                    cs[index++] = d;
+                }
+            }
         }
     }
 

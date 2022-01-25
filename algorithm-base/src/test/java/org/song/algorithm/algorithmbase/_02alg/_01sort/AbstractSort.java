@@ -14,6 +14,10 @@ public abstract class AbstractSort {
         return c1.compareTo(c2) < 0;
     }
 
+    public boolean greater(Comparable c1, Comparable c2) {
+        return c1.compareTo(c2) > 0;
+    }
+
     public static boolean lessEq(Comparable c1, Comparable c2) {
         return c1.compareTo(c2) <= 0;
     }
