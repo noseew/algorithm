@@ -39,7 +39,7 @@ public class Sort_09_Radix {
             int maxDigit = getDigit(getMax(datas));
 
             for (int i = 0; i < maxDigit; i++) {
-                // 经过第i个桶
+                // 经过第i个桶, 先按照第1位, 进行分桶和收集, 然后按照第2位, 以此类推, 每一次的分桶和收集, 都是该位数的数字进行排序了
                 Array_base_01<Comparable>[] byMod = distributionByDigitsMod(datas, i);
                 collect(byMod, cs);
             }
