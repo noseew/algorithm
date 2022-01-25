@@ -47,15 +47,10 @@ public class Sort_08_Bucket {
         public void sort(Comparable[] cs) {
             
             int bucketSize = 10;
+            Array_base_01<Comparable>[] buckets = initBucket(bucketSize);
 
-            // 初始化桶
-            Array_base_01<Comparable>[] buckets = new Array_base_01[bucketSize];
-            for (int i = 0; i < bucketSize; i++) {
-                buckets[i] = new Array_base_01<Comparable>();
-            }
-            
             // 数据分配入桶
-            distributionBucket( (Integer[]) cs, buckets);
+            distributionBucket((Integer[]) cs, buckets);
 
             // 分桶排序
             int index = 0;
@@ -78,9 +73,19 @@ public class Sort_08_Bucket {
             }
         }
 
+        private Array_base_01<Comparable>[] initBucket(int bucketSize) {
+            // 初始化桶
+            Array_base_01<Comparable>[] buckets = new Array_base_01[bucketSize];
+            for (int i = 0; i < bucketSize; i++) {
+                buckets[i] = new Array_base_01<Comparable>();
+            }
+            return buckets;
+        }
+
         /**
          * 数据入桶
-         * 采用数据大小分段的方式
+         * 采用数据大小分段的方式, 这里暂时将桶大小写死
+         * 分桶排序总的分桶规则, 一定是将数据分成多个桶之间有序的, 比如 一定 桶1<=桶2
          * 
          * @param datas
          * @param buckets

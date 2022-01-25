@@ -1,6 +1,7 @@
 package org.song.algorithm.algorithmbase._02alg._01sort.alg;
 
 import org.junit.Test;
+import org.song.algorithm.algorithmbase._01datatype._01base._01linear_list.list._01model.Array_base_01;
 import org.song.algorithm.algorithmbase._02alg._01sort.AbstractSort;
 
 /*
@@ -33,6 +34,82 @@ public class Sort_09_Radix {
 
         @Override
         public void sort(Comparable[] cs) {
+            Integer[] datas = (Integer[]) cs;
+
+            int maxDigit = getDigit(getMax(datas));
+
+            for (int i = 0; i < maxDigit; i++) {
+                // 经过第i个桶
+                Array_base_01<Comparable>[] byMod = distributionByDigitsMod(datas, i);
+                collect(byMod, cs);
+            }
+
+        }
+
+        /**
+         * 按位数余数分组
+         * 先按照第1位分桶, 再按照第2位分桶, 每一位数都分成10个桶, 所以直接取余运算
+         *
+         * @param datas
+         * @param digit
+         */
+        private Array_base_01<Comparable>[] distributionByDigitsMod(Integer[] datas, int digit) {
+
+            Array_base_01<Comparable>[] buckets = initBucket(10);
+
+            for (Integer d : datas) {
+                // 定位到第几个桶, 并放入
+                double pow = Math.pow(10d, digit);
+                buckets[(d / (int) pow) % 10].add(d);
+            }
+
+            return buckets;
+        }
+
+        private int getMax(Integer[] datas) {
+            Integer max = null, min = null;
+            for (Integer c : datas) {
+                if (max == null || greater(c, max)) max = c;
+                if (min == null || less(c, min)) min = c;
+            }
+            return max;
+        }
+
+        private int getDigit(int num) {
+            int maxDigit = 0;
+            while (num > 0) {
+                maxDigit++;
+                num = num / 10;
+            }
+            return maxDigit;
+        }
+
+        /**
+         * 将桶内数据收集到原数组
+         *
+         * @param buckets
+         * @param cs
+         */
+        private void collect(Array_base_01<Comparable>[] buckets, Comparable[] cs) {
+            int index = 0;
+            for (Array_base_01<Comparable> bucket : buckets) {
+                if (bucket.isEmpty()) {
+                    continue;
+                }
+                Integer[] temp = new Integer[bucket.length()];
+                for (int i = 0; i < bucket.length(); i++) {
+                    cs[index++] = (Integer) bucket.get(i);
+                }
+            }
+        }
+
+        private Array_base_01<Comparable>[] initBucket(int bucketSize) {
+            // 初始化桶
+            Array_base_01<Comparable>[] buckets = new Array_base_01[bucketSize];
+            for (int i = 0; i < bucketSize; i++) {
+                buckets[i] = new Array_base_01<Comparable>();
+            }
+            return buckets;
         }
     }
 
