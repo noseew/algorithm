@@ -77,6 +77,12 @@ public class Sort_09_Radix {
             return max;
         }
 
+        /**
+         * 获取数的10进制位数
+         * 
+         * @param num
+         * @return
+         */
         private int getDigit(int num) {
             int maxDigit = 0;
             while (num > 0) {
