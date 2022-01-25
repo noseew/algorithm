@@ -48,27 +48,14 @@ public class Sort_08_Bucket {
             
             int bucketSize = 10;
 
-            Integer[] doubles = (Integer[]) cs;
-
             // 初始化桶
             Array_base_01<Comparable>[] buckets = new Array_base_01[bucketSize];
             for (int i = 0; i < bucketSize; i++) {
                 buckets[i] = new Array_base_01<Comparable>();
             }
-
-            // 数据值的范围
-            Integer max = null, min = null;
-            for (Integer c : doubles) {
-                if (max == null || greater(c, max)) max = c;
-                if (min == null || less(c, min)) min = c;
-            }
-
-            // 桶数据大小 这里分桶的规则是按照值的范围写死
-            int step = ((max - min) / bucketSize) + 1;
-            for (Integer d : doubles) {
-                // 定位到第几个桶, 并放入
-                buckets[(d - min) / step].add(d);
-            }
+            
+            // 数据分配入桶
+            distributionBucket( (Integer[]) cs, buckets);
 
             // 分桶排序
             int index = 0;
@@ -88,6 +75,28 @@ public class Sort_08_Bucket {
                 for (Integer d : temp) {
                     cs[index++] = d;
                 }
+            }
+        }
+
+        /**
+         * 数据入桶
+         * 采用数据大小分段的方式
+         * 
+         * @param datas
+         * @param buckets
+         */
+        private void distributionBucket(Integer[] datas, Array_base_01<Comparable>[] buckets) {
+            // 数据值的范围
+            Integer max = null, min = null;
+            for (Integer c : datas) {
+                if (max == null || greater(c, max)) max = c;
+                if (min == null || less(c, min)) min = c;
+            }
+            // 桶数据大小 这里分桶的规则是按照值的范围写死
+            int step = ((max - min) / buckets.length) + 1;
+            for (Integer d : datas) {
+                // 定位到第几个桶, 并放入
+                buckets[(d - min) / step].add(d);
             }
         }
     }
