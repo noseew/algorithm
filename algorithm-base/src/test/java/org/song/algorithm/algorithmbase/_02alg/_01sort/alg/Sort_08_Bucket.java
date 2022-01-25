@@ -63,7 +63,7 @@ public class Sort_08_Bucket {
                 if (min == null || less(c, min)) min = c;
             }
 
-            // 桶数据大小
+            // 桶数据大小 这里分桶的规则是按照值的范围写死
             int step = ((max - min) / bucketSize) + 1;
             for (Integer d : doubles) {
                 // 定位到第几个桶, 并放入
