@@ -85,8 +85,8 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree03_AVL_base<V> 
     新增修正
         1. 不需要修正, 新=红色, 父=黑色
         2. 需要修正, 新=红色, 父=红, 双红需要修正
-            修正总结: 
-                1. 父红-叔红=>直接变色: 父叔变黑, 组变红
+            修正总结: 叔红变 黑, 叔黑转 红
+                1. 父红-叔红=>直接变色: 父叔变黑, 组变红(如果组不是root)
                 2. 父红-叔黑=>旋转+变色
                     [LR:左旋] [LL:右旋] [变色:新组黑 新叔红]
                     [RL:右旋] [RR:左旋] [变色:新组黑 新叔红]
@@ -106,7 +106,7 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree03_AVL_base<V> 
                       父[红] 叔[红]
                       /
                      新(红)
-                修正 ===========>> 变色, 父=>黑 叔=>黑 祖=>红
+                修正 ===========>> 变色, 父=>黑 叔=>黑 祖=>红(如果组不是root)
                           祖[红]
                         /   \
                       父[黑] 叔[黑]
@@ -151,6 +151,10 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree03_AVL_base<V> 
                      新(红)
                 修正 ===========>> 旋转, 右旋, 父为轴祖右旋 => 参见情况1
 
+     */
+    // 删除修正
+    /*
+    
      */
 
     /**
