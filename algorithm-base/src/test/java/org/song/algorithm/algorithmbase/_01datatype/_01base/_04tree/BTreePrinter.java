@@ -1,5 +1,6 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree;
 
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.RBTreeNode;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.TreeNode;
 
 import java.util.Collections;
@@ -24,7 +25,7 @@ public class BTreePrinter {
         traverse(root, 1, nodes, check);
 
 
-        // 定义，叶子节点的宽度
+        // 定义, 叶子节点的宽度
         final int leafNodeWidth = 4;
         for (int level = 1; level <= maxLevel; ++level) {
             // level 层节点的宽度 = 2^(maxLevel - level) * 叶子节点的宽度
@@ -40,9 +41,10 @@ public class BTreePrinter {
             int endIndex = beginIndex * 2 - 1;
             for (int i = beginIndex; i <= endIndex; ++i) {
                 try {
-                    sb.append(getNodeText(nodes[i], nodeWidth));
+                    String nodeText = getNodeText(nodes[i], nodeWidth);
+                    sb.append(nodeText);
                     if (print) {
-                        System.out.print(getNodeText(nodes[i], nodeWidth));
+                        System.out.print(nodeText);
                     }
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
@@ -56,18 +58,20 @@ public class BTreePrinter {
             // 最后一层不需要 edge 了
             if (level == maxLevel) break;
 
-            // 中文比英文更宽，所以多加 3 个空格，以便对齐
+            // 中文比英文更宽, 所以多加 3 个空格, 以便对齐
 
-            sb.append(String.join("", Collections.nCopies(levelInfo.length() + 3, " ")));
+            String content = String.join("", Collections.nCopies(levelInfo.length() + 3, " "));
+            sb.append(content);
             sb.append("===|  ");
             if (print) {
-                System.out.print(String.join("", Collections.nCopies(levelInfo.length() + 3, " ")));
+                System.out.print(content);
                 System.out.print("===|  ");
             }
             for (int i = beginIndex; i <= endIndex; ++i) {
-                sb.append(getEdgeText(nodeWidth, nodes, i));
+                String edgeText = getEdgeText(nodeWidth, nodes, i);
+                sb.append(edgeText);
                 if (print) {
-                    System.out.print(getEdgeText(nodeWidth, nodes, i));
+                    System.out.print(edgeText);
                 }
             }
             sb.append("\r\n");
@@ -81,13 +85,15 @@ public class BTreePrinter {
     private static String getNodeText(TreeNode node, int nodeWidth) {
         int leftLength = nodeWidth / 2;
         String val = (node == null ? "" : String.valueOf(node.val));
-        int rightLeght = nodeWidth - leftLength - val.length();
-
+        int rightLength = nodeWidth - leftLength - val.length();
+        boolean red = isRed(node);
+        
         String left = String.join("", Collections.nCopies(leftLength, " "));
-        String right = String.join("", Collections.nCopies(rightLeght, " "));
+        String right = String.join("", Collections.nCopies(red ? rightLength - 1 : rightLength, " "));
 
         // 得到长度为 nodeWidth 的表示节点的字符串
-        return left + val + right;
+        
+        return left + val + fill(node) + right;
     }
 
     private static String getEdgeText(int nodeWidth, TreeNode[] nodes, int index) {
@@ -161,8 +167,20 @@ public class BTreePrinter {
         }
     }
     
-    static class CycleRecursionCheck<V> {
-        Set<V> set = new HashSet<>();
+    private static String fill(TreeNode node) {
+        return isRed(node) ? "*" : "";
+    }
+    
+    private static boolean isRed(TreeNode node) {
+        if (node instanceof RBTreeNode) {
+            RBTreeNode root = ((RBTreeNode) node);
+            return root != null && root.color;
+        }
+        return false;
+    }
+    
+    static class CycleRecursionCheck<V extends TreeNode> {
+        Set set = new HashSet<>();
         boolean parentPrint = false;
         boolean cycle = false;
 
@@ -173,13 +191,11 @@ public class BTreePrinter {
          * @return false, 说明 V 已存在
          */
         public boolean add(V v) {
-            boolean check = set.add(v);
+            boolean check = set.add(v.val);
             if (!check) {
-//                set.clear();
                 cycle = true;
             }
             return check;
         }
-        
     }
 }

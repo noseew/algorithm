@@ -1,5 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
 
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreePrinter;
+
 import java.util.Comparator;
 
 /*
@@ -26,6 +28,16 @@ import java.util.Comparator;
     没有任何一个结点同时和两条红链接相连
     该树是完美黑色平衡的, 即任意空链接到根结点的路径上的黑链接数量相同
 
+红黑树定义
+    1. 每个节点是红色或黑色的. 
+    2. 根节点是黑色的. 
+    3. 每个叶子节点是黑色的. 
+    4. 如果一个节点为红色, 则其孩子节点必为黑色. 
+    5. 从任一节点到其后代叶子的路径上, 均包含相同数目的黑节点. 
+    
+总结:
+    1. 是红或黑, 根是黑, 叶子为空或黑, 红子必为黑, 黑高相等
+    2. 新节点为红, 然后根据情况旋转和变色
 
  */
 public class Tree05_RB_base<V extends Comparable<V>> extends Tree03_AVL_base<V> {
@@ -56,9 +68,8 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree03_AVL_base<V> 
      */
     private RBTreeNode<V> insert_recursive(RBTreeNode<V> parent, V v) {
         if (parent == null) {
-            // 新建节点, 高度默认1
-            parent = new RBTreeNode<>(null, null, v, RED, 1);
-            parent.height = 1;
+            // 新建节点
+            parent = new RBTreeNode<>(null, null, v, RED);
             size++;
             return parent;
         }
@@ -180,12 +191,6 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree03_AVL_base<V> 
             flipColors(rbNode);
         }
 
-        // 更新数量
-        rbNode.n = size((RBTreeNode<V>) rbNode.left) + size((RBTreeNode<V>) rbNode.right) + 1;
-
-        // 更新高度
-        node.height = Math.max(getHeight(node.left), getHeight(node.right)) + 1;
-
         return rbNode;
     }
 
@@ -200,8 +205,6 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree03_AVL_base<V> 
         // 红黑树自己的处理
         newParent.color = rbp.color;
         rbp.color = RED;
-        newParent.n = rbp.n;
-        rbp.n = size((RBTreeNode<V>) rbp.left) + size((RBTreeNode<V>) rbp.right) + 1;
 
         return newParent;
     }
@@ -217,8 +220,6 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree03_AVL_base<V> 
         // 红黑树自己的处理
         newParent.color = rbp.color;
         rbp.color = RED;
-        newParent.n = rbp.n;
-        rbp.n = size((RBTreeNode<V>) rbp.left) + size((RBTreeNode<V>) rbp.right) + 1;
 
         return newParent;
     }
@@ -230,16 +231,14 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree03_AVL_base<V> 
         return node.color == RED;
     }
 
-    private int size(RBTreeNode<V> node) {
-        if (node == null) {
-            return 0;
-        }
-        return size((RBTreeNode<V>) node.left) + size((RBTreeNode<V>) node.right) + 1;
-    }
-
     private void flipColors(RBTreeNode<V> node) {
         node.color = RED;
         ((RBTreeNode<V>) node.left).color = BLACK;
         ((RBTreeNode<V>) node.right).color = BLACK;
+    }
+
+    @Override
+    public String toString() {
+        return BTreePrinter.print(root, false);
     }
 }

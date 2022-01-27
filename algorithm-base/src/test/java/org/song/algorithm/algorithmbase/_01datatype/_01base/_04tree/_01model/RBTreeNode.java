@@ -10,12 +10,10 @@ import lombok.NoArgsConstructor;
 public class RBTreeNode<V> extends TreeNode<V> {
     
     public boolean color;
-    public int n;
 
-    public RBTreeNode(TreeNode<V> left, TreeNode<V> right, V val, boolean color, int n) {
+    public RBTreeNode(TreeNode<V> left, TreeNode<V> right, V val, boolean color) {
         super(left, right, val);
         this.color = color;
-        this.n = n;
     }
 
 }
