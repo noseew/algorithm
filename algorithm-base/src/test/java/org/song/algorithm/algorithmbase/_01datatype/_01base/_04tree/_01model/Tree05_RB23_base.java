@@ -6,22 +6,7 @@ import java.util.Comparator;
 
 /*
 红黑树
-23树的等价表示
-3. 23树变成2叉树, 方式有很多, 这里采用变成红黑树的方式
-        v1,v2
-        / | \
-       c1 c2 c3
-       将左节点分出, 转变为
-         v1 == v2
-        /  \    \
-       c1  c2   c3
-       最终转变为
-           v2
-          // \
-         v1   c3
-        /  \
-       c1  c2
-    上图中, // 双线链指向的子节点表示为红色节点, 其他节点表示为黑色节点
+这里实现是 等价23树
 
 等价定义
     红链接均为左链接
@@ -40,14 +25,14 @@ import java.util.Comparator;
     2. 新节点为红, 然后根据情况旋转和变色
 
  */
-public class Tree05_RB_base<V extends Comparable<V>> extends Tree03_AVL_base<V> {
+public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V> {
 
     public RBTreeNode<V> root;
 
     public static final boolean RED = true;
     public static final boolean BLACK = false;
 
-    public Tree05_RB_base(Comparator<V> comparator) {
+    public Tree05_RB23_base(Comparator<V> comparator) {
         super(comparator);
     }
 
