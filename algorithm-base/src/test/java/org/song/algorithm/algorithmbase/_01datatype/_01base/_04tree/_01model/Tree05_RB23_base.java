@@ -1,6 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
 
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreePrinter;
+import org.song.algorithm.algorithmbase.utils.TypeUtils;
 
 import java.util.Comparator;
 
@@ -71,6 +72,7 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
             parent.val = v; // 重复元素不处理 直接替换值
             return parent;
         }
+        // 递归从叶子结点向上, 逐个判断
         parent = (RBTreeNode<V>) balance(parent);
         return parent;
     }
@@ -163,7 +165,7 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
         if (node == null) {
             return node;
         }
-        RBTreeNode<V> rbNode = (RBTreeNode<V>) node;
+        RBTreeNode<V> rbNode = TypeUtils.down(node, RBTreeNode.class);
 
         // 右红左黑: 左旋 == 情况 2.2
         if (isRed((RBTreeNode<V>) rbNode.right) && !isRed((RBTreeNode<V>) rbNode.left)) {
@@ -186,7 +188,7 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
      */
     @Override
     protected TreeNode<V> rightRotate4LL(TreeNode<V> p) {
-        RBTreeNode<V> rbp = (RBTreeNode<V>) p;
+        RBTreeNode<V> rbp = TypeUtils.down(p, RBTreeNode.class);
         // 复用 AVL 的右旋
         RBTreeNode<V> newParent = (RBTreeNode<V>) super.rightRotate4LL(rbp);
         // 红黑树自己的处理
@@ -201,7 +203,7 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
      */
     @Override
     protected TreeNode<V> leftRotation4RR(TreeNode<V> p) {
-        RBTreeNode<V> rbp = (RBTreeNode<V>) p;
+        RBTreeNode<V> rbp = TypeUtils.down(p, RBTreeNode.class);
         // 复用 AVL 的左旋
         RBTreeNode<V> newParent = (RBTreeNode<V>) super.leftRotation4RR(rbp);
         // 红黑树自己的处理
