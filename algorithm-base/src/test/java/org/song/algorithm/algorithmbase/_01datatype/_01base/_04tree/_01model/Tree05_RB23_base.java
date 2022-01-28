@@ -79,7 +79,8 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
 
     @Override
     public V remove(V v) {
-        return null;
+        root = (RBTreeNode<V>) remove_recursive(root, v);
+        return v;
     }
 
 

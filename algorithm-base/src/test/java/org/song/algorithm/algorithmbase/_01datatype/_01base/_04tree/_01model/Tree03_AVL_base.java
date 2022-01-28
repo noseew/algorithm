@@ -106,15 +106,16 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
      * @param v
      * @return
      */
-    private TreeNode<V> remove_recursive(TreeNode<V> parent, V v) {
+    protected TreeNode<V> remove_recursive(TreeNode<V> parent, V v) {
 
         if (null == parent) {
             return parent;
         }
         /*
         1. 递归找到指定的节点s
-        2. 找到s的直接前驱结点或者直接后继节点
-            1. 以x为根, 找到其最小的节点
+        2. 找到s的直接前驱结点或者直接后继节点, 替代s即可
+            1. 直接前驱结点: 就是s的左子树的右右..右子节点
+            2. 直接后继节点: 就是s的右子树的左左..右子节点
          */
 
         if (less(v, parent.val)) {
