@@ -108,6 +108,9 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
         RR型(右右) \, M在P右, S在M右, 调整方式 P左旋, M成为新的, P父节点 (M为轴P左旋)
         LR型(左右) <, M在P左, S在M右, 调整方式 M左旋, S成为新的M节点, M成为新的S节点, 此时完全变为LL, 接着旋转P (S为轴M左旋, M(新)为轴P右旋)
         RL型(右左) >, M在P右, S在M左, 调整方式 M右旋, S成为新的M节点, M成为新的S节点, 此时完全成为RR, 接着旋转P (S为轴M右旋, M(新)为轴P左旋)
+        
+    新增节点和删除节点时才需要修正平衡
+        AVL树中, 新增和删除的修正逻辑类似, 无特殊处理
      */
 
     /**

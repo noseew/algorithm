@@ -285,8 +285,8 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
 
     protected void flipColors(TreeNode<V> node) {
         node.color = RED;
-        (node.left).color = BLACK;
-        (node.right).color = BLACK;
+        node.left.color = BLACK;
+        node.right.color = BLACK;
     }
 
     @Override
