@@ -4,6 +4,7 @@ public abstract class _01TreeBase<V> {
 
     public abstract boolean push(V v);
     public abstract V get(V v);
+    public abstract V remove(V v);
     public abstract int size();
 
 }

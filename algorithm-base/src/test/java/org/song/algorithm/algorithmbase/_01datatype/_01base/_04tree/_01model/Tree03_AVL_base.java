@@ -36,6 +36,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
 //        return null;
 //    }
 
+    @Override
     public V remove(V v) {
         root = remove_recursive(root, v);
         return null;
@@ -111,8 +112,9 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
             return parent;
         }
         /*
-        1. 递归找到指定的节点
-        2.
+        1. 递归找到指定的节点s
+        2. 找到s的直接前驱结点或者直接后继节点
+            1. 以x为根, 找到其最小的节点
          */
 
         if (less(v, parent.val)) {

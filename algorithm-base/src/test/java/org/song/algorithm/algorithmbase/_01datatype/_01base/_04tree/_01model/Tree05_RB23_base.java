@@ -77,6 +77,11 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
         return parent;
     }
 
+    @Override
+    public V remove(V v) {
+        return null;
+    }
+
 
     /***************************************** 平衡处理-旋转-变色 *****************************************************/
 
@@ -155,8 +160,8 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
     // 删除修正
     /*
     1. 删除节点的过程, 假设删除的节点是x,
-        如果x仅有一个子节点, 则删除x之后, 让子节点直接接替x节点即可
-        如果x有左右子节点, 则删除x之后, 让任意一个子节点直接接替x节点即可
+        如果x仅有一个子节点(没有孙节点), 则删除x之后, 让子节点直接接替x节点即可
+        如果x有左右子节点(且有孙节点), 则删除x之后, 则需要找到x的直接前驱节点或直接后继节点, 让其替代当前这个位置
     2. 删除示例: 这里不分左右, 因为左右是相同的
         删除前
               父
