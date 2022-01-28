@@ -47,7 +47,7 @@ public class BTreePrinter {
                         System.out.print(nodeText);
                     }
                 } catch (Exception e) {
-                    System.out.println(e.getMessage());
+                    System.err.println(e.getMessage());
                 }
             }
             sb.append("\r\n");
@@ -86,14 +86,12 @@ public class BTreePrinter {
         int leftLength = nodeWidth / 2;
         String val = (node == null ? "" : String.valueOf(node.val));
         int rightLength = nodeWidth - leftLength - val.length();
-        boolean red = isRed(node);
         
         String left = String.join("", Collections.nCopies(leftLength, " "));
-        String right = String.join("", Collections.nCopies(red ? rightLength - 1 : rightLength, " "));
+        String right = String.join("", Collections.nCopies(rightLength, " "));
 
         // 得到长度为 nodeWidth 的表示节点的字符串
-        
-        return left + val + fill(node) + right;
+        return left + fill(node, val) + right;
     }
 
     private static String getEdgeText(int nodeWidth, TreeNode[] nodes, int index) {
@@ -167,8 +165,8 @@ public class BTreePrinter {
         }
     }
     
-    private static String fill(TreeNode node) {
-        return isRed(node) ? "*" : "";
+    private static String fill(TreeNode node, Object v) {
+        return isRed(node) ? "\033[31;4m" + v + "\033[0m" : String.valueOf(v);
     }
     
     private static boolean isRed(TreeNode node) {
