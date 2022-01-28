@@ -38,9 +38,7 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
     @Override
     public boolean push(V v) {
         int size = this.size;
-        root = super.insert_recursive(root, v);
-        // 递归从叶子结点向上, 逐个判断
-        root = balance(root);
+        root = insert_recursive(root, v);
         // 根节点总为黑色
         root.color = BLACK;
         return size > this.size;
@@ -50,6 +48,66 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
     public V remove(V v) {
         root = remove_recursive(root, v);
         return v;
+    }
+
+    @Override
+    protected TreeNode<V> insert_recursive(TreeNode<V> parent, V v) {
+        if (parent == null) {
+            // 新建节点, 高度默认1
+            parent = new TreeNode<>(v, RED);
+            parent.height = 1;
+            size++;
+            return parent;
+        }
+
+        if (less(v, parent.val)) {
+            // 向左插入
+            parent.left = insert_recursive(parent.left, v);
+        } else if (greater(v, parent.val)) {
+            // 向右插入
+            parent.right = insert_recursive(parent.right, v);
+        } else {
+            parent.val = v; // 重复元素不处理 直接替换值
+            return parent;
+        }
+        /*
+        平衡处理, 每个节点都要判断并处理
+        由于插入是递归操作, 所以每插入一个元素, 都会进行一次平衡调整
+        平衡调整由插入的叶子结点的父节点开始, 递归向上逐个判断, 一直判断到根节点
+         */
+        parent = balance(parent);
+        return parent;
+    }
+
+    @Override
+    protected TreeNode<V> remove_recursive(TreeNode<V> parent, V v) {
+
+        if (null == parent) {
+            return parent;
+        }
+        /*
+        1. 递归找到指定的节点s
+        2. 找到s的直接前驱结点或者直接后继节点, 替代s即可
+            1. 直接前驱结点: 就是s的左子树的右右..右子节点
+            2. 直接后继节点: 就是s的右子树的左左..右子节点
+         */
+
+        if (less(v, parent.val)) {
+            // 小于当前根节点
+            parent.left = remove_recursive(parent.left, v);
+        } else if (greater(v, parent.val)) {
+            // 大于当前根节点
+            parent.right = remove_recursive(parent.left, v);
+        } else if (parent.left != null && parent.right != null) {
+            // 找到右边最小的节点
+            parent.val = min(parent.right).val;
+            // 当前节点的右边等于原节点右边删除已经被选为的替代节点
+            parent.right = remove_recursive(parent.right, parent.val);
+        } else {
+            parent = (parent.left != null) ? parent.left : parent.right;
+        }
+        parent = balance(parent);
+        return parent;
     }
 
     /***************************************** 平衡处理-旋转-变色 *****************************************************/

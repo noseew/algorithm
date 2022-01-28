@@ -26,7 +26,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
     @Override
     public boolean push(V v) {
         if (root == null) {
-            root = new TreeNode<>( null, null, v);
+            root = new TreeNode<>(v);
             size++;
             return true;
         }
@@ -213,7 +213,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
     protected TreeNode<V> insert_recursive(TreeNode<V> parent, V v) {
         if (parent == null) {
             // 新建节点, 高度默认1
-            parent = new TreeNode<>(null, null, v);
+            parent = new TreeNode<>(v);
             parent.height = 1;
             size++;
             return parent;
@@ -391,7 +391,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
     }
 
     private void put(TreeNode<V> parent, V v) {
-        TreeNode<V> newNode = new TreeNode<>( null, null, v);
+        TreeNode<V> newNode = new TreeNode<>(v);
         if (comparator != null) {
             if (comparator.compare(v, parent.val) < 0) {
                 parent.left = newNode;
