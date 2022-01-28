@@ -2,6 +2,9 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
 
 /*
 234树
+每个节点最多有3个v, 每个节点最多有4个子节点
+
+
 等价红黑树
 具体不做测试
  */
@@ -28,7 +31,7 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
         v1,v2,v3
        /  |  |  \
       c1  c2 c3  c4
-       将左节点分出, 转变为
+       将左右节点分出, 转变为
          v1 == v2 == v3
         /  \        /  \
        c1  c2      c3  c4
