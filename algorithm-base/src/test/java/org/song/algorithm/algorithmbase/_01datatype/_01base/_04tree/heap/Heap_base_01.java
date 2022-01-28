@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
+package org.song.algorithm.algorithmbase._01datatype._01base._04tree.heap;
 
 import java.lang.reflect.Array;
 import java.util.Comparator;
