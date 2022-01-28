@@ -23,33 +23,21 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
     @Override
     public boolean push(V v) {
         int size = this.size;
-        root = insert_recursive(root, v);
-        return size > this.size;
-    }
-
-    /***************************************** 增删查-递归 *****************************************************/
-
-    @Override
-    protected TreeNode<V> insert_recursive(TreeNode<V> parent, V v) {
-        parent = super.insert_recursive(parent, v);
+        root = super.insert_recursive(root, v);
         /*
         平衡处理, 每个节点都要判断并处理
         由于插入是递归操作, 所以每插入一个元素, 都会进行一次平衡调整
         平衡调整由插入的叶子结点的父节点开始, 递归向上逐个判断, 一直判断到根节点
          */
-        parent = balance(parent);
-        return parent;
+        root = balance(root);
+        return size > this.size;
     }
 
     @Override
-    protected TreeNode<V> search_recursive(TreeNode<V> parent, V v) {
-        return super.search_recursive(parent, v);
-    }
-
-    @Override
-    protected TreeNode<V> remove_recursive(TreeNode<V> parent, V v) {
-        parent = super.remove_recursive(parent, v);
-        return balance(parent);
+    public V remove(V v) {
+        root = super.remove_recursive(root, v);
+        root =  balance(root);
+        return null;
     }
 
     /***************************************** 平衡处理-旋转 *****************************************************/

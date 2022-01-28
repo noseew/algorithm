@@ -37,44 +37,15 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
         super(comparator);
     }
 
-
     @Override
     public boolean push(V v) {
         int size = this.size;
-        root = insert_recursive(root, v);
+        root = (RBTreeNode<V>) super.insert_recursive(root, v);
+        // 递归从叶子结点向上, 逐个判断
+        root = (RBTreeNode<V>) balance(root);
         // 根节点总为黑色
         root.color = BLACK;
         return size > this.size;
-    }
-
-    /**
-     * 采用递归的方式, 插入节点
-     *
-     * @param parent
-     * @param v
-     * @return
-     */
-    private RBTreeNode<V> insert_recursive(RBTreeNode<V> parent, V v) {
-        if (parent == null) {
-            // 新建节点
-            parent = new RBTreeNode<>(null, null, v, RED);
-            size++;
-            return parent;
-        }
-
-        if (less(v, parent.val)) {
-            // 向左插入
-            parent.left = insert_recursive((RBTreeNode<V>) parent.left, v);
-        } else if (greater(v, parent.val)) {
-            // 向右插入
-            parent.right = insert_recursive((RBTreeNode<V>) parent.right, v);
-        } else {
-            parent.val = v; // 重复元素不处理 直接替换值
-            return parent;
-        }
-        // 递归从叶子结点向上, 逐个判断
-        parent = (RBTreeNode<V>) balance(parent);
-        return parent;
     }
 
     @Override
@@ -82,7 +53,6 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
         root = (RBTreeNode<V>) remove_recursive(root, v);
         return v;
     }
-
 
     /***************************************** 平衡处理-旋转-变色 *****************************************************/
 

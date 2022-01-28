@@ -54,31 +54,17 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
 
     @Override
     public V get(V v) {
-        if (root == null || v == null) {
-            return null;
+        TreeNode<V> node = this.search_traverse(root, v);
+        if (node != null) {
+            return node.val;
         }
-
-        TreeNode<V> parent = root;
-        while (true) {
-            TreeNode<V> next;
-            if (less(v, parent.val)) {
-                next = parent.left;
-            } else if (greater(v, parent.val)) {
-                next = parent.right;
-            } else {
-                return parent.val;
-            }
-            if (next == null) {
-                return null;
-            }
-            parent = next;
-        }
+        return null;
     }
 
     @Override
     public V remove(V v) {
         root = remove_recursive(root, v);
-        return v;
+        return null;
     }
 
     @Override
