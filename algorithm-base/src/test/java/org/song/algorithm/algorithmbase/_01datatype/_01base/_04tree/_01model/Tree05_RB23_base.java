@@ -213,14 +213,14 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
         return newParent;
     }
 
-    private boolean isRed(RBTreeNode<V> node) {
+    protected boolean isRed(RBTreeNode<V> node) {
         if (node == null) {
             return false;
         }
         return node.color == RED;
     }
 
-    private void flipColors(RBTreeNode<V> node) {
+    protected void flipColors(RBTreeNode<V> node) {
         node.color = RED;
         ((RBTreeNode<V>) node.left).color = BLACK;
         ((RBTreeNode<V>) node.right).color = BLACK;

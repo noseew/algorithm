@@ -6,22 +6,58 @@ import java.util.Comparator;
 红黑树
 这里实现是 等价234树
 
-红黑树定义
-    1. 每个节点是红色或黑色的. 
-    2. 根节点是黑色的. 
-    3. 每个叶子节点是黑色的. 
-    4. 如果一个节点为红色, 则其孩子节点必为黑色. 
-    5. 从任一节点到其后代叶子的路径上, 均包含相同数目的黑节点. 
-    
-总结:
-    1. 是红或黑, 根是黑, 叶子为空或黑, 红子必为黑, 黑高相等
-    2. 新节点为红, 然后根据情况旋转和变色
+TODO 未完成
 
  */
 public class Tree05_RB234_base<V extends Comparable<V>> extends Tree05_RB23_base<V> {
 
     public Tree05_RB234_base(Comparator<V> comparator) {
         super(comparator);
+    }
+
+
+    @Override
+    public boolean push(V v) {
+        int size = this.size;
+        root = insert_recursive(root, v);
+        // 根节点总为黑色
+        root.color = BLACK;
+        return size > this.size;
+    }
+
+    /**
+     * 采用递归的方式, 插入节点
+     *
+     * @param parent
+     * @param v
+     * @return
+     */
+    private RBTreeNode<V> insert_recursive(RBTreeNode<V> parent, V v) {
+        if (parent == null) {
+            // 新建节点
+            parent = new RBTreeNode<>(null, null, v, RED);
+            size++;
+            return parent;
+        }
+
+        //
+        if (isRed((RBTreeNode<V>) parent.left) && isRed((RBTreeNode<V>) parent.right)) {
+            flipColors(parent);
+        }
+
+        if (less(v, parent.val)) {
+            // 向左插入
+            parent.left = insert_recursive((RBTreeNode<V>) parent.left, v);
+        } else if (greater(v, parent.val)) {
+            // 向右插入
+            parent.right = insert_recursive((RBTreeNode<V>) parent.right, v);
+        } else {
+            parent.val = v; // 重复元素不处理 直接替换值
+            return parent;
+        }
+        // 递归从叶子结点向上, 逐个判断
+        parent = (RBTreeNode<V>) balance(parent);
+        return parent;
     }
 
 }
