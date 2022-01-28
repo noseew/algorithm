@@ -1,7 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree;
 
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.RBTreeNode;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.TreeNode;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.RBTreeNode;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.TreeNode;
 
 import java.util.Collections;
 import java.util.HashSet;

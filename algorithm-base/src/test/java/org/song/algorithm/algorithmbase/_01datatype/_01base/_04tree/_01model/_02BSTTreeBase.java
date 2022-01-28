@@ -1,5 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
 
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.TreeNode;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;

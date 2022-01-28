@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
+package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -2,7 +2,7 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._02alg;
 
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03_AVL_base;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.TreeNode;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.TreeNode;
 
 import java.util.Comparator;
 import java.util.LinkedList;
