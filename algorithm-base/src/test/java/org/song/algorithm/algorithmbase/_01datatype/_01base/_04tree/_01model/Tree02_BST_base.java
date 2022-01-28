@@ -220,9 +220,9 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
     /**
      * 采用递归的方式, 插入节点
      *
-     * @param parent
+     * @param parent 以 parent 为root
      * @param v
-     * @return
+     * @return 返回新的 parent 节点
      */
     protected TreeNode<V> insert_recursive(TreeNode<V> parent, V v) {
         if (parent == null) {
@@ -249,7 +249,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
     /**
      * 采用递归方式, 查找节点
      *
-     * @param parent
+     * @param parent 以 parent 为root
      * @param v
      * @return
      */
@@ -269,8 +269,8 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
     /**
      * 采用递归方式, 删除节点
      *
-     * @param parent
-     * @param v
+     * @param parent 以 parent 为root
+     * @param v 返回新的 parent 节点
      * @return
      */
     protected TreeNode<V> remove_recursive(TreeNode<V> parent, V v) {
@@ -298,6 +298,26 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
             parent.right = remove_recursive(parent.right, parent.val);
         } else {
             parent = (parent.left != null) ? parent.left : parent.right;
+        }
+        return parent;
+    }
+
+    /**
+     * 采用循环遍历方式, 查找节点
+     *
+     * @param parent 以 parent 为root
+     * @param v
+     * @return
+     */
+    protected TreeNode<V> search_traverse(TreeNode<V> parent, V v) {
+        while (parent != null) {
+            if (less(v, parent.val)) {
+                parent = parent.left;
+            } else if (greater(v, parent.val)) {
+                parent = parent.right;
+            } else {
+                return parent;
+            }
         }
         return parent;
     }
