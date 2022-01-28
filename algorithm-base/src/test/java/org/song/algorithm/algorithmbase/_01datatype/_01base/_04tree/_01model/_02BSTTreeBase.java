@@ -6,6 +6,9 @@ import java.util.function.Predicate;
 
 public abstract class _02BSTTreeBase<V> extends _01TreeBase<V> {
 
+    public static final Comparator<Integer> INT_C = Comparator.comparing(Integer::intValue);
+    public static final Comparator<Double> DOUBLE_C = Comparator.comparing(Double::doubleValue);
+
     public Comparator<V> comparator;
 
     public _02BSTTreeBase(Comparator<V> comparator) {
