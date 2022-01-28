@@ -2,6 +2,7 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
 
 /*
 23树
+等价红黑树
 2-3树是比较早期的一个平衡树, 跟2-3-4树差不多, 编程起来稍微麻烦点, 也是被红黑树取代了. 
 2-3查找树的原理很简单, 甚至说代码实现起来难度都不是很大, 但是却很繁琐, 因为它有很多种情况, 而在红黑树中, 用巧妙的方法使用了2个结点解决了3个结点的问题. 
 
@@ -32,9 +33,9 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
     左子树, 每层节点数=3^h, 每层v数量=2*3^h
     右子树, 每层节点数=2^h, 每层v数量=2^h
     左子树每层v数量-右子树每层v数量=
-        h=1, 多 2
-        h=2, 多 4
-        h=3, 多 46
+        h=0, v多 3 - 1 = 2
+        h=1, v多 6 - 2 = 4
+        h=2, v多 18 - 4 = 14
     由于高度相同, 所以查找效率相同, 从而达到平衡的目的
 3. 23树变成2叉树, 方式有很多, 这里采用变成红黑树的方式
         v1,v2
@@ -45,12 +46,14 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
         /  \    \
        c1  c2   c3
        最终转变为
-           v2
-          // \
-         v1   c3
+            v2
+          //  \
+        v1(红) c3
         /  \
        c1  c2
     上图中, // 双线链指向的子节点表示为红色节点, 其他节点表示为黑色节点
+
+下面的代码实现来自于网络, 未测试
  */
 public class Tree04_23_base<V extends Comparable<V>> {
 

@@ -56,6 +56,8 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree03_AVL_base<V> 
     public boolean push(V v) {
         int size = this.size;
         root = insert_recursive(root, v);
+        // 根节点总为黑色
+        root.color = BLACK;
         return size > this.size;
     }
 
