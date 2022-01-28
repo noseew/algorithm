@@ -110,17 +110,21 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
         if (null == parent) {
             return parent;
         }
+        /*
+        1. 递归找到指定的节点
+        2.
+         */
 
-        //小于当前根节点
         if (less(v, parent.val)) {
+            // 小于当前根节点
             parent.left = remove_recursive(parent.left, v);
         } else if (greater(v, parent.val)) {
-            //大于当前根节点
+            // 大于当前根节点
             parent.right = remove_recursive(parent.left, v);
         } else if (parent.left != null && parent.right != null) {
-            //找到右边最小的节点
+            // 找到右边最小的节点
             parent.val = min(parent.right).val;
-            //当前节点的右边等于原节点右边删除已经被选为的替代节点
+            // 当前节点的右边等于原节点右边删除已经被选为的替代节点
             parent.right = remove_recursive(parent.right, parent.val);
         } else {
             parent = (parent.left != null) ? parent.left : parent.right;
