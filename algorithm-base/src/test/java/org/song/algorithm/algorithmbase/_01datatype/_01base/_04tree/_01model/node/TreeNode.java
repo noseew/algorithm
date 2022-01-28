@@ -20,11 +20,33 @@ public class TreeNode<V> {
      有的定义是从1开始
      */
     public int height;
+    /**
+     * 红黑树颜色
+     * true=红色
+     * false=黑色
+     */
+    public boolean color;
+
+    public TreeNode(V val) {
+        this.val = val;
+    }
+
+    public TreeNode(V val, boolean color) {
+        this.val = val;
+        this.color = color;
+    }
 
     public TreeNode(TreeNode<V> left, TreeNode<V> right, V val) {
         this.left = left;
         this.right = right;
         this.val = val;
+    }
+
+    public TreeNode(TreeNode<V> left, TreeNode<V> right, V val, boolean color) {
+        this.left = left;
+        this.right = right;
+        this.val = val;
+        this.color = color;
     }
 
     @Override

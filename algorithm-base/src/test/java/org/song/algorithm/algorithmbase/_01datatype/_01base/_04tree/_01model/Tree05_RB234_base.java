@@ -1,6 +1,6 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
 
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.RBTreeNode;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.TreeNode;
 
 import java.util.Comparator;
 
@@ -34,31 +34,31 @@ public class Tree05_RB234_base<V extends Comparable<V>> extends Tree05_RB23_base
      * @param v
      * @return
      */
-    private RBTreeNode<V> insert_recursive(RBTreeNode<V> parent, V v) {
+    protected TreeNode<V> insert_recursive(TreeNode<V> parent, V v) {
         if (parent == null) {
             // 新建节点
-            parent = new RBTreeNode<>(null, null, v, RED);
+            parent = new TreeNode<>(null, null, v, RED);
             size++;
             return parent;
         }
 
         //
-        if (isRed((RBTreeNode<V>) parent.left) && isRed((RBTreeNode<V>) parent.right)) {
+        if (isRed((TreeNode<V>) parent.left) && isRed((TreeNode<V>) parent.right)) {
             flipColors(parent);
         }
 
         if (less(v, parent.val)) {
             // 向左插入
-            parent.left = insert_recursive((RBTreeNode<V>) parent.left, v);
+            parent.left = insert_recursive((TreeNode<V>) parent.left, v);
         } else if (greater(v, parent.val)) {
             // 向右插入
-            parent.right = insert_recursive((RBTreeNode<V>) parent.right, v);
+            parent.right = insert_recursive((TreeNode<V>) parent.right, v);
         } else {
             parent.val = v; // 重复元素不处理 直接替换值
             return parent;
         }
         // 递归从叶子结点向上, 逐个判断
-        parent = (RBTreeNode<V>) balance(parent);
+        parent = (TreeNode<V>) balance(parent);
         return parent;
     }
 

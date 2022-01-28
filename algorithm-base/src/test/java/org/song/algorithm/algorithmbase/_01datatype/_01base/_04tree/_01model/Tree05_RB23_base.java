@@ -1,9 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
 
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreePrinter;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.RBTreeNode;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.TreeNode;
-import org.song.algorithm.algorithmbase.utils.TypeUtils;
 
 import java.util.Comparator;
 
@@ -30,8 +28,6 @@ import java.util.Comparator;
  */
 public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V> {
 
-    public RBTreeNode<V> root;
-
     public static final boolean RED = true;
     public static final boolean BLACK = false;
 
@@ -42,9 +38,9 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
     @Override
     public boolean push(V v) {
         int size = this.size;
-        root = (RBTreeNode<V>) super.insert_recursive(root, v);
+        root = super.insert_recursive(root, v);
         // 递归从叶子结点向上, 逐个判断
-        root = (RBTreeNode<V>) balance(root);
+        root = balance(root);
         // 根节点总为黑色
         root.color = BLACK;
         return size > this.size;
@@ -52,7 +48,7 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
 
     @Override
     public V remove(V v) {
-        root = (RBTreeNode<V>) remove_recursive(root, v);
+        root = remove_recursive(root, v);
         return v;
     }
 
@@ -178,22 +174,20 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
         if (node == null) {
             return node;
         }
-        RBTreeNode<V> rbNode = TypeUtils.down(node, RBTreeNode.class);
-
         // 右红左黑: 左旋 == 情况 2.2
-        if (isRed((RBTreeNode<V>) rbNode.right) && !isRed((RBTreeNode<V>) rbNode.left)) {
-            rbNode = (RBTreeNode<V>) leftRotation4RR(rbNode);
+        if (isRed(node.right) && !isRed(node.left)) {
+            node = leftRotation4RR(node);
         }
         // 左红左左红: 右旋 == 情况 2.1
-        if (isRed((RBTreeNode<V>) rbNode.left) && isRed((RBTreeNode<V>) rbNode.left.left)) {
-            rbNode = (RBTreeNode<V>) rightRotate4LL(rbNode);
+        if (isRed(node.left) && isRed(node.left.left)) {
+            node = rightRotate4LL(node);
         }
         // 左红右红: 变色 == 情况 1
-        if (isRed((RBTreeNode<V>) rbNode.left) && isRed((RBTreeNode<V>) rbNode.right)) {
-            flipColors(rbNode);
+        if (isRed(node.left) && isRed(node.right)) {
+            flipColors(node);
         }
 
-        return rbNode;
+        return node;
     }
 
     /**
@@ -201,12 +195,11 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
      */
     @Override
     protected TreeNode<V> rightRotate4LL(TreeNode<V> p) {
-        RBTreeNode<V> rbp = TypeUtils.down(p, RBTreeNode.class);
         // 复用 AVL 的右旋
-        RBTreeNode<V> newParent = (RBTreeNode<V>) super.rightRotate4LL(rbp);
+        TreeNode<V> newParent = super.rightRotate4LL(p);
         // 红黑树自己的处理
-        newParent.color = rbp.color;
-        rbp.color = RED;
+        newParent.color = p.color;
+        p.color = RED;
 
         return newParent;
     }
@@ -216,27 +209,26 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
      */
     @Override
     protected TreeNode<V> leftRotation4RR(TreeNode<V> p) {
-        RBTreeNode<V> rbp = TypeUtils.down(p, RBTreeNode.class);
         // 复用 AVL 的左旋
-        RBTreeNode<V> newParent = (RBTreeNode<V>) super.leftRotation4RR(rbp);
+        TreeNode<V> newParent = super.leftRotation4RR(p);
         // 红黑树自己的处理
-        newParent.color = rbp.color;
-        rbp.color = RED;
+        newParent.color = p.color;
+        p.color = RED;
 
         return newParent;
     }
 
-    protected boolean isRed(RBTreeNode<V> node) {
+    protected boolean isRed(TreeNode<V> node) {
         if (node == null) {
             return false;
         }
         return node.color == RED;
     }
 
-    protected void flipColors(RBTreeNode<V> node) {
+    protected void flipColors(TreeNode<V> node) {
         node.color = RED;
-        ((RBTreeNode<V>) node.left).color = BLACK;
-        ((RBTreeNode<V>) node.right).color = BLACK;
+        (node.left).color = BLACK;
+        (node.right).color = BLACK;
     }
 
     @Override
