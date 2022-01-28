@@ -19,4 +19,18 @@ public class AVL_test {
         }
         System.out.println(tree.toString());
     }
+
+    @Test
+    public void test_remove() {
+        Tree03_AVL_base<Integer> tree = new Tree03_AVL_base<>(Comparator.comparing(Integer::doubleValue));
+
+        for (int i = 0; i < 20; i++) {
+            tree.push(i);
+        }
+        System.out.println(tree.toString());
+        for (int i = 0; i < 20; i++) {
+            tree.remove(i);
+            System.out.println(tree.toString());
+        }
+    }
 }

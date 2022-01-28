@@ -11,8 +11,8 @@ public class RB23_test {
 
     @Test
     public void test_start1() {
-        int max = 20;
-        int size = 10;
+        int max = 30;
+        int size = 20;
 
         Tree05_RB23_base<Integer> tree = new Tree05_RB23_base<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
