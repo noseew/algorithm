@@ -137,10 +137,10 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
         M 子节点
         S 孙节点
     3个节点形成的关系
-        LL型(左左) /, M在P左, S在M左, 调整方式 P右旋, M成为新的, P父节点 (P右旋)
-        RR型(右右) \, M在P右, S在M右, 调整方式 P左旋, M成为新的, P父节点 (P左旋)
-        LR型(左右) <, M在P左, S在M右, 调整方式 M左旋, S成为新的M节点, M成为新的S节点, 此时完全变为LL, 接着旋转P (M左旋, P右旋)
-        RL型(右左) >, M在P右, S在M左, 调整方式 M右旋, S成为新的M节点, M成为新的S节点, 此时完全成为RR, 接着旋转P (M右旋, P左旋)
+        LL型(左左) /, M在P左, S在M左, 调整方式 P右旋, M成为新的, P父节点 (M为轴P右旋)
+        RR型(右右) \, M在P右, S在M右, 调整方式 P左旋, M成为新的, P父节点 (M为轴P左旋)
+        LR型(左右) <, M在P左, S在M右, 调整方式 M左旋, S成为新的M节点, M成为新的S节点, 此时完全变为LL, 接着旋转P (S为轴M左旋, M(新)为轴P右旋)
+        RL型(右左) >, M在P右, S在M左, 调整方式 M右旋, S成为新的M节点, M成为新的S节点, 此时完全成为RR, 接着旋转P (S为轴M右旋, M(新)为轴P左旋)
      */
 
     /**
@@ -188,13 +188,15 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
      */
     protected TreeNode<V> leftRightRotate4LR(TreeNode<V> p) {
         /*
-         LR型 <: (M左旋, P右旋)
+        左旋+右旋
+            LR型(左右) <, M在P左, S在M右, 调整方式 M左旋, S成为新的M节点, M成为新的S节点, 此时完全变为LL, 接着旋转P (S为轴M左旋, M(新)为轴P右旋)
+        LR型 <: (M左旋, P右旋)
                 P
                /
                M
                 \
                  S
-             先M左旋转成
+             S为轴M左旋成
                     P
                    /
                   S
@@ -217,13 +219,15 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
      */
     protected TreeNode<V> rightLeftRotate4RL(TreeNode<V> p) {
         /*
-         RL型 >: (M右旋, P左旋)
+        右旋+左旋
+            RL型(右左) >, M在P右, S在M左, 调整方式 M右旋, S成为新的M节点, M成为新的S节点, 此时完全成为RR, 接着旋转P (S为轴M右旋, M(新)为轴P左旋)
+        RL型 >: (M右旋, P左旋)
                 P
                  \
                   M
                   /
                  S
-             先M右旋转成
+             S为轴M右旋成
                 P
                  \
                   S
@@ -246,22 +250,19 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
      */
     protected TreeNode<V> rightRotate4LL(TreeNode<V> p) {
         /*
-         右旋: 需要操作两个节点
-             node: 不平衡的节点
-             newParent: 不平衡节点的左子节点
-         右旋过程:
-            1. 将 node 设置为 newParent 右子节点
-            2. 将 node 的左子节点设置为 newParent 原右子节点
-            3. 更新高度
-         树节点的变更, 至少要操作2个指针才能确定位置安全和线程安全, 因此无法使用CAS操作来保证线程安全
+        右旋:
+            LL型(左左) /, M在P左, S在M左, 调整方式 P右旋, M成为新的, P父节点 (M为轴P右旋)
+        注意:
+            1. 需要将 M右子交给P左子
+            2. 树节点的变更, 至少要操作2个指针才能确定位置安全和线程安全, 因此无法使用CAS操作来保证线程安全
 
-          1. LL 型 /:
+          LL 型 /:
                     P
                    /
                   M
                  /
                 S
-            P右旋转成
+            M为轴P右旋转成
                M
               /  \
              S    P
@@ -286,14 +287,11 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
      */
     protected TreeNode<V> leftRotation4RR(TreeNode<V> p) {
         /*
-         左旋: 需要操作两个节点
-             node: 不平衡的节点
-             newParent: 不平衡节点的右子节点
-         右旋过程:
-            1. 将 node 设置为 newParent 左子节点
-            2. 将 node 的右子节点设置为 newParent 原左子节点
-            3. 更新高度
-         树节点的变更, 至少要操作2个指针才能确定位置安全和线程安全, 因此无法使用CAS操作来保证线程安全
+        左旋:
+            RR型(右右) \, M在P右, S在M右, 调整方式 P左旋, M成为新的, P父节点 (M为轴P左旋)
+        注意:
+            1. 需要将 M左子交给P右子
+            2. 树节点的变更, 至少要操作2个指针才能确定位置安全和线程安全, 因此无法使用CAS操作来保证线程安全
 
             RR 型 \:
                 P
@@ -301,7 +299,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
                   M
                    \
                     S
-            P左旋转成
+            M为轴P左旋转成
                  M
                /   \
               P     S
