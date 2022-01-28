@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 
-public abstract class _02BSTTreeBase<V> extends _01TreeBase<V> {
+public abstract class _02BSTTreeBase<V> {
 
     public static final Comparator<Integer> INT_C = Comparator.comparing(Integer::intValue);
     public static final Comparator<Double> DOUBLE_C = Comparator.comparing(Double::doubleValue);
@@ -16,6 +16,11 @@ public abstract class _02BSTTreeBase<V> extends _01TreeBase<V> {
     public _02BSTTreeBase(Comparator<V> comparator) {
         this.comparator = comparator;
     }
+
+    public abstract boolean push(V v);
+    public abstract V get(V v);
+    public abstract V remove(V v);
+    public abstract int size();
 
     public abstract V max();
     public abstract V min();
