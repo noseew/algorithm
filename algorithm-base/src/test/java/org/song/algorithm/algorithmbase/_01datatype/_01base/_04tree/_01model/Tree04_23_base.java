@@ -1,7 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
 
 /*
-23树
+23树, 3阶B树
 每个节点最多有2个v, 每个节点最多有3个子节点
 
 等价红黑树

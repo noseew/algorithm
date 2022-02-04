@@ -1,7 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
 
 /*
-234树
+234树, 4阶B树
 每个节点最多有3个v, 每个节点最多有4个子节点
 
 

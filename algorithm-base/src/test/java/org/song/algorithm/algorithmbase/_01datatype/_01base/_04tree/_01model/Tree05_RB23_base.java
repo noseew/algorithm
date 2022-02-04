@@ -7,7 +7,10 @@ import java.util.Comparator;
 
 /*
 红黑树
-这里实现是 等价23树
+这里实现是 等价23树, 左倾红黑树
+红黑树 1972年由Rudolf Bayer发明的
+左倾红黑树 2008年 Robert Sedgewick 对其进行了改进, 并命名为 LLRBT(Left-leaning Red Black Tree 左倾红黑树). 
+左倾红黑树相比1978年的红黑树要简单很多, 实现的代码量也少很多. Robert Sedgewick也是Algorithms(中文版叫《算法》)这本书的作者
 
 等价定义
     红链接均为左链接
