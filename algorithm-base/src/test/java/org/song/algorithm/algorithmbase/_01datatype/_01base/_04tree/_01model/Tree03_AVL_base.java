@@ -9,7 +9,10 @@ import java.util.Comparator;
  * 优点: 平衡, 查询效率最差 O(logn)
  * 缺点: 增删会涉及旋转, 效率较低
  * 
+ * 待验证
  * AVL 树新增最多只需要调整O(n)次最多2, 删除最多调整(logn)次
+ * 新增的时候, 高度最多增加1, 在调整一次之后, 新增节点所在的树高度-1并且平衡, 从而达到平衡, 而不影响祖先或者其他子树的高度
+ * 删除的时候, 高度可能降低, 在调整的过程中, 高度可能再次降低, 所以删除可能会有多次调整
  * 
  *
  * @param <V>
@@ -19,7 +22,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
     /**
      * 旋转次数
      */
-    private int rotateTimes;
+    public int rotateTimes;
 
     public Tree03_AVL_base(Comparator<V> comparator) {
         super(comparator);
@@ -99,6 +102,9 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
             parent.right = remove_recursive(parent.right, parent.val);
         } else {
             parent = (parent.left != null) ? parent.left : parent.right;
+        }
+        if (parent != null) {
+            size--;
         }
         parent = balance(parent);
         return parent;
