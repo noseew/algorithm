@@ -8,6 +8,9 @@ import java.util.Comparator;
  * 平衡二叉树
  * 优点: 平衡, 查询效率最差 O(logn)
  * 缺点: 增删会涉及旋转, 效率较低
+ * 
+ * AVL 树新增最多只需要调整O(n)次最多2, 删除最多调整(logn)次
+ * 
  *
  * @param <V>
  */
@@ -22,6 +25,12 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
         super(comparator);
     }
 
+    /**
+     * AVL 树新增最多只需要调整1次
+     * 
+     * @param v
+     * @return
+     */
     @Override
     public boolean push(V v) {
         int size = this.size;
