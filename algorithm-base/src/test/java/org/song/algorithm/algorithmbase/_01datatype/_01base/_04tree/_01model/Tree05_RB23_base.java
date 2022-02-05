@@ -29,6 +29,8 @@ import java.util.Comparator;
     1. 是红或黑, 根是黑, 叶子为空或黑, 红子必为黑, 黑高相等
     2. 新节点为红, 然后根据情况旋转和变色
 
+
+可以通过理解23树来理解左倾红黑树的旋转和变色
  */
 public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V> {
 

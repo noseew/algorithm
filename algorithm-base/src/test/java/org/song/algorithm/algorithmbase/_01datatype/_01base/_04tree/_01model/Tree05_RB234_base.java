@@ -8,7 +8,7 @@ import java.util.Comparator;
 红黑树
 这里实现是 等价234树
 
-TODO 未完成
+可以通过理解234树来理解红黑树的旋转和变色
 
  */
 public class Tree05_RB234_base<V extends Comparable<V>> extends Tree05_RB23_base<V> {
@@ -17,49 +17,34 @@ public class Tree05_RB234_base<V extends Comparable<V>> extends Tree05_RB23_base
         super(comparator);
     }
 
-
-    @Override
-    public boolean push(V v) {
-        int size = this.size;
-        root = insert_recursive(root, v);
-        // 根节点总为黑色
-        root.color = BLACK;
-        return size > this.size;
-    }
-
     /**
-     * 采用递归的方式, 插入节点
-     *
-     * @param parent
-     * @param v
-     * @return
+     * 平衡判断和处理
      */
-    protected TreeNode<V> insert_recursive(TreeNode<V> parent, V v) {
-        if (parent == null) {
-            // 新建节点
-            parent = new TreeNode<>(null, null, v, RED);
-            size++;
-            return parent;
+    @Override
+    protected TreeNode<V> balance(TreeNode<V> node) {
+        if (node == null) {
+            return node;
+        }
+        // 右红左黑: 左旋 == 情况 2.2
+        if (isRed(node.right) && !isRed(node.left)) {
+            node = leftRotation4RR(node);
+        }
+        if (isRed(node.left) && !isRed(node.right)) {
+            node = rightRotate4LL(node);
+        }
+        // 左红左左红: 右旋 == 情况 2.1
+        if (isRed(node.left) && isRed(node.left.left)) {
+            node = rightRotate4LL(node);
+        }
+        if (isRed(node.right) && isRed(node.right.right)) {
+            node = leftRotation4RR(node);
+        }
+        // 左红右红: 变色 == 情况 1
+        if (isRed(node.left) && isRed(node.right)) {
+            flipColors(node);
         }
 
-        //
-        if (isRed(parent.left) && isRed(parent.right)) {
-            flipColors(parent);
-        }
-
-        if (less(v, parent.val)) {
-            // 向左插入
-            parent.left = insert_recursive(parent.left, v);
-        } else if (greater(v, parent.val)) {
-            // 向右插入
-            parent.right = insert_recursive(parent.right, v);
-        } else {
-            parent.val = v; // 重复元素不处理 直接替换值
-            return parent;
-        }
-        // 递归从叶子结点向上, 逐个判断
-        parent = balance(parent);
-        return parent;
+        return node;
     }
 
 }

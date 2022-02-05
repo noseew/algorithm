@@ -22,4 +22,20 @@ public class RB23_test {
         }
         BTreePrinter.print(tree.root, true);
     }
+
+    @Test
+    public void test_start2() {
+
+        Tree05_RB23_base<Integer> tree = new Tree05_RB23_base<>(Comparator.comparing(Integer::doubleValue));
+        tree.push(55);
+        tree.push(38);
+        tree.push(76);
+        tree.push(25);
+        tree.push(50);
+        tree.push(72);
+        tree.push(33);
+        tree.push(17);
+        tree.push(46);
+        BTreePrinter.print(tree.root, true);
+    }
 }
