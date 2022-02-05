@@ -25,5 +25,5 @@ B树特点
 文件索引
 数据库中采用的就是B树或者B树的变种, 比如B+树, 阶数能达到几百甚至几千阶
  */
-public class Tree04_0B_base<V extends Comparable<V>> {
+public class Tree04_B_base<V extends Comparable<V>> {
 }
