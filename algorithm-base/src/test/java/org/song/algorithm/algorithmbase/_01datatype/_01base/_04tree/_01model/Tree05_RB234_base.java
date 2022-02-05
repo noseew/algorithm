@@ -43,22 +43,22 @@ public class Tree05_RB234_base<V extends Comparable<V>> extends Tree05_RB23_base
         }
 
         //
-        if (isRed((TreeNode<V>) parent.left) && isRed((TreeNode<V>) parent.right)) {
+        if (isRed(parent.left) && isRed(parent.right)) {
             flipColors(parent);
         }
 
         if (less(v, parent.val)) {
             // 向左插入
-            parent.left = insert_recursive((TreeNode<V>) parent.left, v);
+            parent.left = insert_recursive(parent.left, v);
         } else if (greater(v, parent.val)) {
             // 向右插入
-            parent.right = insert_recursive((TreeNode<V>) parent.right, v);
+            parent.right = insert_recursive(parent.right, v);
         } else {
             parent.val = v; // 重复元素不处理 直接替换值
             return parent;
         }
         // 递归从叶子结点向上, 逐个判断
-        parent = (TreeNode<V>) balance(parent);
+        parent = balance(parent);
         return parent;
     }
 
