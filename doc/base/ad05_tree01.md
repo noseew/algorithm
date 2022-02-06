@@ -1,4 +1,5 @@
 # tree 数据结构
+
 # 树
 
 ## 二叉树
@@ -57,16 +58,70 @@ B树 (平衡树, 包括2叉树和多叉树)
 
 ```
 
-#### 示例
+#### 添加节点-上溢
 
 ```
 
 ```
 
-![image-20220206183338413](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-add.png)
+节点的 key>=3 需要上溢
 
 ![image-20220206183425510](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-add02.png)
 
+如果上溢后, 父节点 key>=3, 则也会触发父节点上溢
+
 ![image-20220206183456845](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-add03.png)
+
+![image-20220206183714972](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-add04.png)
+
+上溢可能会触发连锁反应, 一直上溢到根节点, 而根节点也可能会触发上溢, 从而增高B树的高度
+
+![image-20220206183745648](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-add05.png)
+
+![image-20220206183816582](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-add06.png)
+
+![image-20220206183922189](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-add07.png)
+
+
+
+#### 删除节点-下溢
+
+```
+
+```
+
+
+
+![image-20220206184134043](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-del01.png)
+
+删除节点80, 叶子节点数=父节点key数, 不满足B树规定, 发生下溢
+
+过程相当于右旋
+
+![image-20220206184208829](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-del-02.png)
+
+![image-20220206184234262](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-del-03.png)
+
+删除节点25, 叶子节点数=父节点key数, 不满足B树规定, 发生下溢
+
+过程相当于左旋
+
+![image-20220206184257700](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-del-04.png)
+
+![image-20220206184323412](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-del-05.png)
+
+下溢并合并
+
+![image-20220206184350370](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-del-06.png)
+
+![image-20220206184418135](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-del-07.png)
+
+下溢并合并
+
+![image-20220206184514404](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-del-08.png)
+
+![image-20220206184537600](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-del-09.png)
+
+![image-20220206184602614](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-del-10.png)
 
 ### 红黑树
