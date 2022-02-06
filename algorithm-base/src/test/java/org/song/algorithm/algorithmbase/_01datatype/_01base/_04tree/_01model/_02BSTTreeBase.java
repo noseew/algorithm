@@ -24,6 +24,8 @@ public abstract class _02BSTTreeBase<V> {
 
     public abstract V max();
     public abstract V min();
+    public abstract V removeMax();
+    public abstract V removeMin();
     public abstract V floor(V v);
     public abstract V ceiling(V v);
     public abstract int rank(V v);

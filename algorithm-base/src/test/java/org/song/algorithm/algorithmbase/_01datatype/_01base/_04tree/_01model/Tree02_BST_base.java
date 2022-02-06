@@ -108,6 +108,24 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
         return max.val;
     }
 
+    @Override
+    public V removeMax() {
+        TreeNode<V> max = removeMax(root);
+        if (max != null) {
+            return max.val;
+        }
+        return null;
+    }
+
+    @Override
+    public V removeMin() {
+        TreeNode<V> min = removeMin(root);
+        if (min != null) {
+            return min.val;
+        }
+        return null;
+    }
+
     /**
      * 地板
      *
@@ -309,7 +327,45 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
     }
 
     /***************************************** 工具 *****************************************************/
+   
+    /**
+     * 由于没有parent指针, 所以不支持删除自己
+     * 
+     * @param parent
+     * @return
+     */
+    protected TreeNode<V> removeMax(TreeNode<V> parent) {
+        if (parent == null) {
+            return null;
+        }
+        TreeNode<V> max = parent;
+        while (max.right != null) {
+            parent = max;
+            max = max.right;
+        }
+        parent.right = max.left;
+        return max;
+    }
 
+    /**
+     * 由于没有parent指针, 所以不支持删除自己
+     *
+     * @param parent
+     * @return
+     */
+    protected TreeNode<V> removeMin(TreeNode<V> parent) {
+        if (parent == null) {
+            return null;
+        }
+        TreeNode<V> max = parent;
+        while (max.left != null) {
+            parent = max;
+            max = max.left;
+        }
+        parent.left = max.right;
+        return max;
+    }
+    
     protected TreeNode<V> floor(TreeNode<V> parent, V v) {
         TreeNode<V> floor = null;
         while (true) {

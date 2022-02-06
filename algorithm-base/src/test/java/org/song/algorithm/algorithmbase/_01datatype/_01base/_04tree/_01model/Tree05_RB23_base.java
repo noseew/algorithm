@@ -289,6 +289,11 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
         return node.color == RED;
     }
 
+    /**
+     * 将h节点设为红色, 其两个子节点设为黑色
+     * 
+     * @param node
+     */
     protected void flipColors(TreeNode<V> node) {
         node.color = RED;
         node.left.color = BLACK;

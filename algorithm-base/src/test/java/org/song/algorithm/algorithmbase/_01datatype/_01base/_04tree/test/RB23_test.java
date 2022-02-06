@@ -37,5 +37,7 @@ public class RB23_test {
         tree.push(17);
         tree.push(46);
         BTreePrinter.print(tree.root, true);
+        tree.remove(17);
+        BTreePrinter.print(tree.root, true);
     }
 }
