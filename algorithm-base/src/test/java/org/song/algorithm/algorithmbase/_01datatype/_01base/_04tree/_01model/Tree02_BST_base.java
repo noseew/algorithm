@@ -368,10 +368,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
     
     protected TreeNode<V> floor(TreeNode<V> parent, V v) {
         TreeNode<V> floor = null;
-        while (true) {
-            if (parent == null) {
-                break;
-            }
+        while (parent != null) {
             if (parent.val == v) {
                 // v == 当前
                 return parent;
@@ -396,10 +393,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
 
     protected TreeNode<V> ceiling(TreeNode<V> parent, V v) {
         TreeNode<V> ceiling = null;
-        while (true) {
-            if (parent == null) {
-                break;
-            }
+        while (parent != null) {
             if (parent.val == v) {
                 // v == 当前
                 return parent;
