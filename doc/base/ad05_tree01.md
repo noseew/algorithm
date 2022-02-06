@@ -110,7 +110,7 @@ B树 (平衡树, 包括2叉树和多叉树)
 
 ![image-20220206184323412](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-del-05.png)
 
-下溢并合并
+下溢并合并?
 
 ![image-20220206184350370](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-del-06.png)
 
