@@ -1,6 +1,10 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
 
 /*
+B树转红黑树图例
+    3阶B树=23树=左倾红黑树
+    4阶B树=234树=红黑树(经典)
+
 23树, 3阶B树
 每个节点最多有2个v, 每个节点最多有3个子节点
 
@@ -103,5 +107,5 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
 
 下面的代码实现来自于网络, 未测试
  */
-public class Tree04_B_case234<V extends Comparable<V>> {
+public class Tree04_B_caseB2RB<V extends Comparable<V>> {
 }
