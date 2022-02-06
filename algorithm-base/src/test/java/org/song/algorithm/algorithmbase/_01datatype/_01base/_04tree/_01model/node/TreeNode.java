@@ -13,6 +13,12 @@ public class TreeNode<V> {
 
     public TreeNode<V> left;
     public TreeNode<V> right;
+    /**
+     * parent 指针, 
+     * 实现的时候有两种方式, 一种有parent指针, 一种没有parent指针
+     * 这里冗余加上
+     */
+    public TreeNode<V> parent;
     public V val;
     /*
      树的高度: 从最低的叶子节点开始, 由0开始, 如果左右子树长度不一样, 则以最长的为准
@@ -36,15 +42,8 @@ public class TreeNode<V> {
         this.color = color;
     }
 
-    public TreeNode(TreeNode<V> left, TreeNode<V> right, V val) {
-        this.left = left;
-        this.right = right;
-        this.val = val;
-    }
-
-    public TreeNode(TreeNode<V> left, TreeNode<V> right, V val, boolean color) {
-        this.left = left;
-        this.right = right;
+    public TreeNode(TreeNode<V> parent, V val, boolean color) {
+        this.parent = parent;
         this.val = val;
         this.color = color;
     }
