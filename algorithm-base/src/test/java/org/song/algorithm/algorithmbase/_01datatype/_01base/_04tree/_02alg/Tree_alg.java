@@ -78,6 +78,15 @@ public class Tree_alg {
 
         BTreePrinter.print(root, true);
     }
+    @Test
+    public void test_03_minHeight() {
+//        TreeNode<Integer> root = initAVLTreeNode(20);
+        TreeNode<Integer> root = initBSTTreeNode(20);
+        int height = minHeightRecursive(root);
+        System.out.println(height);
+
+//        BTreePrinter.print(root, true);
+    }
 
     /**
      * 二叉树还原
@@ -282,6 +291,13 @@ public class Tree_alg {
             return 0;
         }
         return Math.max(getHeightRecursive(root.left), getHeightRecursive(root.right)) + 1;
+    }
+    
+    protected int minHeightRecursive(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        return Math.min(minHeightRecursive(root.left), minHeightRecursive(root.right)) + 1;
     }
 
 }
