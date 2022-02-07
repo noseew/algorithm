@@ -2,17 +2,27 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._02alg;
 
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreePrinter;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02_BST_base;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03_AVL_base;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.TreeNode;
 
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Stack;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Tree_alg {
 
     private TreeNode<Integer> initAVLTreeNode(int count) {
         Tree03_AVL_base<Integer> tree = new Tree03_AVL_base<>(Comparator.comparing(Integer::doubleValue));
+        for (int i = 0; i < count; i++) {
+            tree.push(i);
+        }
+        return tree.root;
+    }
+
+    private TreeNode<Integer> initBSTTreeNode(int count) {
+        Tree02_BST_base<Integer> tree = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
         for (int i = 0; i < count; i++) {
             tree.push(i);
         }
@@ -77,6 +87,40 @@ public class Tree_alg {
         Tree03_AVL_base<Integer> avlTree = initAVLTree(20);
         BTreePrinter.print(avlTree.root, true);
 
+    }
+
+    /**
+     * 判断树是否平衡
+     */
+    @Test
+    public void isBalanced() {
+        TreeNode<Integer> root = initAVLTreeNode(20);
+        AtomicBoolean balanced = new AtomicBoolean(true);
+        getHeight(root, balanced);
+        System.out.println("" + balanced.get());
+        BTreePrinter.print(root, true);
+        
+        System.out.println();
+        
+        TreeNode<Integer> root2 = initBSTTreeNode(5);
+        AtomicBoolean balanced2 = new AtomicBoolean(true);
+        getHeight(root2, balanced2);
+        System.out.println("" + balanced2.get());
+        BTreePrinter.print(root2, true);
+    }
+
+
+    protected int getHeight(TreeNode root, AtomicBoolean balanced) {
+        if (root == null) {
+            return 0;
+        }
+        int leftHeight = getHeight(root.left, balanced);
+        int rightHeight = getHeight(root.right, balanced);
+        int diff = Math.abs(leftHeight - rightHeight);
+        if (diff > 1) {
+            balanced.set(false);
+        }
+        return Math.max(leftHeight, rightHeight) + 1;
     }
 
 
