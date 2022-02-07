@@ -11,7 +11,7 @@ import java.util.Stack;
 
 public class Tree_alg {
 
-    private TreeNode<Integer> initALVBinaryTree(int count) {
+    private TreeNode<Integer> initAVLTreeNode(int count) {
         Tree03_AVL_base<Integer> tree = new Tree03_AVL_base<>(Comparator.comparing(Integer::doubleValue));
         for (int i = 0; i < count; i++) {
             tree.push(i);
@@ -19,12 +19,20 @@ public class Tree_alg {
         return tree.root;
     }
 
+    private Tree03_AVL_base<Integer> initAVLTree(int count) {
+        Tree03_AVL_base<Integer> tree = new Tree03_AVL_base<>(Comparator.comparing(Integer::doubleValue));
+        for (int i = 0; i < count; i++) {
+            tree.push(i);
+        }
+        return tree;
+    }
+
     /**
      * 二叉树的遍历 递归
      */
     @Test
     public void test_01_traverse_01() {
-        TreeNode<Integer> root = initALVBinaryTree(3);
+        TreeNode<Integer> root = initAVLTreeNode(3);
         // 二叉树前序遍历   根-> 左-> 右
         preOrderTraversalRecursive(root);
         // 二叉树中序遍历   左-> 根-> 右
@@ -38,7 +46,7 @@ public class Tree_alg {
      */
     @Test
     public void test_02_traverse_02() {
-        TreeNode<Integer> root = initALVBinaryTree(3);
+        TreeNode<Integer> root = initAVLTreeNode(3);
         // 二叉树前序遍历   根-> 左-> 右
         preOrderTraversalWithStack(root);
         // 二叉树中序遍历   左-> 根-> 右
@@ -54,11 +62,21 @@ public class Tree_alg {
      */
     @Test
     public void test_03_height() {
-        TreeNode<Integer> root = initALVBinaryTree(20);
+        TreeNode<Integer> root = initAVLTreeNode(20);
         int height = getHeightRecursive(root);
         System.out.println(height);
 
         BTreePrinter.print(root, true);
+    }
+
+    /**
+     * 二叉树还原
+     */
+    @Test
+    public void test_04_restore() {
+        Tree03_AVL_base<Integer> avlTree = initAVLTree(20);
+        BTreePrinter.print(avlTree.root, true);
+
     }
 
 
