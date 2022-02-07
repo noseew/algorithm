@@ -41,24 +41,13 @@ public class Leetcode_104_maxDepth {
     }
 
     /**
-     * 未完成
+     * 递归方式
      */
     public int maxDepth(TreeNode root) {
-        int maxDeep = 0;
-        Stack<TreeNode> stack = new Stack<TreeNode>();
-        TreeNode treeNode = root;
-        while (treeNode != null || !stack.isEmpty()) {
-            while (treeNode != null) {
-                stack.push(treeNode);
-                treeNode = treeNode.left;
-            }
-            maxDeep = Math.max(stack.size(), maxDeep);
-            if (!stack.isEmpty()) {
-                treeNode = stack.pop();
-                treeNode = treeNode.right;
-            }
+        if (root == null) {
+            return 0;
         }
-        return maxDeep;
+        return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;
     }
 
 }
