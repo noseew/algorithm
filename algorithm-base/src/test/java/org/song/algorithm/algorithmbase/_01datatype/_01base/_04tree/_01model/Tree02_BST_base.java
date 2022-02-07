@@ -440,6 +440,16 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
         return node.height;
     }
 
+    /**
+     * 获取树的高度
+     */
+    protected int getHeight_recursive(TreeNode<V> node) {
+        if (node == null) {
+            return 0;
+        }
+        return Math.max(getHeight_recursive(node.left), getHeight_recursive(node.right)) + 1;
+    }
+
     private void put(TreeNode<V> parent, V v) {
         TreeNode<V> newNode = new TreeNode<>(v);
         if (comparator != null) {

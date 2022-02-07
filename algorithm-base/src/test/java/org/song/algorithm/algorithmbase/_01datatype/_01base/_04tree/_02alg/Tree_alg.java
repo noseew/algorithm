@@ -1,6 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._02alg;
 
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreePrinter;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03_AVL_base;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.TreeNode;
 
@@ -24,36 +25,12 @@ public class Tree_alg {
     @Test
     public void test_01_traverse_01() {
         TreeNode<Integer> root = initALVBinaryTree(3);
-        recursive_01(root, 2);
-    }
-
-    /**
-     * 0: 前序遍历 根-> 左-> 右
-     * 1: 中序遍历 左-> 根-> 右
-     * 2: 后序遍历 左-> 右-> 根
-     *
-     * @param node
-     * @param order 遍历顺序 0: 前序, 1: 中序, 2: 后序
-     */
-    private void recursive_01(TreeNode<Integer> node, int order) {
-        if (node == null) {
-            return;
-        }
-        if (order == 0) {
-            System.out.println(node.val);
-        }
-
-        recursive_01(node.left, order);
-
-        if (order == 1) {
-            System.out.println(node.val);
-        }
-
-        recursive_01(node.right, order);
-
-        if (order == 2) {
-            System.out.println(node.val);
-        }
+        // 二叉树前序遍历   根-> 左-> 右
+        preOrderTraversalRecursive(root);
+        // 二叉树中序遍历   左-> 根-> 右
+        inOrderTraversalRecursive(root);
+        // 二叉树后序遍历   左-> 右-> 根
+        postOrderTraversalRecursive(root);
     }
 
     /**
@@ -62,33 +39,26 @@ public class Tree_alg {
     @Test
     public void test_02_traverse_02() {
         TreeNode<Integer> root = initALVBinaryTree(3);
-        recursive_02(root, 0);
+        // 二叉树前序遍历   根-> 左-> 右
+        preOrderTraversalWithStack(root);
+        // 二叉树中序遍历   左-> 根-> 右
+        inOrderTraversalWithStack(root);
+        // 二叉树后序遍历   左-> 右-> 根
+        postOrderTraversalWithStack(root);
+        // 层序遍历
+        levelOrder(root);
     }
 
-    private void recursive_02(TreeNode<Integer> node, int order) {
-        if (node == null) {
-            return;
-        }
-        Stack<TreeNode<Integer>> stack = new Stack<>();
-        while (node != null || !stack.isEmpty()) {
-            while (node != null) {
-                if (order == 0) {
-                    System.out.println(node.val);
-                }
+    /**
+     * 获取二叉树的高度
+     */
+    @Test
+    public void test_03_height() {
+        TreeNode<Integer> root = initALVBinaryTree(20);
+        int height = getHeightRecursive(root);
+        System.out.println(height);
 
-                stack.push(node);
-                node = node.left;
-            }
-            if (!stack.isEmpty()) {
-                node = stack.pop();
-
-                if (order == 1) {
-                    System.out.println(node.val);
-                }
-
-                node = node.right;
-            }
-        }
+        BTreePrinter.print(root, true);
     }
 
 
@@ -99,13 +69,13 @@ public class Tree_alg {
      *
      * @param node 二叉树节点
      */
-    public static void preOrderTraversal(TreeNode node) {
+    private static void preOrderTraversalRecursive(TreeNode node) {
         if (node == null) {
             return;
         }
         System.out.print(node.val + " ");
-        preOrderTraversal(node.left);
-        preOrderTraversal(node.right);
+        preOrderTraversalRecursive(node.left);
+        preOrderTraversalRecursive(node.right);
     }
 
     /**
@@ -113,13 +83,13 @@ public class Tree_alg {
      *
      * @param node 二叉树节点
      */
-    public static void inOrderTraversal(TreeNode node) {
+    private static void inOrderTraversalRecursive(TreeNode node) {
         if (node == null) {
             return;
         }
-        inOrderTraversal(node.left);
+        inOrderTraversalRecursive(node.left);
         System.out.print(node.val + " ");
-        inOrderTraversal(node.right);
+        inOrderTraversalRecursive(node.right);
     }
 
     /**
@@ -127,22 +97,22 @@ public class Tree_alg {
      *
      * @param node 二叉树节点
      */
-    public static void postOrderTraversal(TreeNode node) {
+    private static void postOrderTraversalRecursive(TreeNode node) {
         if (node == null) {
             return;
         }
-        postOrderTraversal(node.left);
-        postOrderTraversal(node.right);
+        postOrderTraversalRecursive(node.left);
+        postOrderTraversalRecursive(node.right);
         System.out.print(node.val + " ");
     }
 
     /**************************** 二叉树的遍历-循环方式 *****************************/
     /**
-     * 前序遍历
+     * 前序遍历 根-> 左-> 右
      *
      * @param node
      */
-    public static void preOrderTraversalWithStack(TreeNode node) {
+    private static void preOrderTraversalWithStack(TreeNode node) {
         Stack<TreeNode> stack = new Stack<TreeNode>();
         TreeNode treeNode = node;
         while (treeNode != null || !stack.isEmpty()) {
@@ -161,11 +131,11 @@ public class Tree_alg {
     }
 
     /**
-     * 中序遍历
+     * 中序遍历 左-> 根-> 右
      *
      * @param node
      */
-    public static void inOrderTraversalWithStack(TreeNode node) {
+    private static void inOrderTraversalWithStack(TreeNode node) {
         Stack<TreeNode> stack = new Stack<TreeNode>();
         TreeNode treeNode = node;
         while (treeNode != null || !stack.isEmpty()) {
@@ -183,11 +153,11 @@ public class Tree_alg {
     }
 
     /**
-     * 后续遍历
+     * 后续遍历 左-> 右-> 根
      *
      * @param node
      */
-    public static void postOrderTraversalWithStack(TreeNode node) {
+    private static void postOrderTraversalWithStack(TreeNode node) {
         Stack<TreeNode> stack = new Stack<TreeNode>();
         TreeNode treeNode = node;
         TreeNode lastVisit = null;   //标记每次遍历最后一次访问的节点
@@ -220,11 +190,11 @@ public class Tree_alg {
     }
 
     /**
-     * 层序遍历
+     * 层序遍历 逐层遍历
      *
      * @param root
      */
-    public static void levelOrder(TreeNode root) {
+    private static void levelOrder(TreeNode root) {
         LinkedList<TreeNode> queue = new LinkedList<>();
         queue.add(root);
         while (!queue.isEmpty()) {
@@ -237,6 +207,19 @@ public class Tree_alg {
                 queue.add(root.right);
             }
         }
+    }
+
+    /**
+     * 二叉树的高度 以最大的高度为准
+     * 
+     * @param root
+     * @return
+     */
+    private static int getHeightRecursive(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        return Math.max(getHeightRecursive(root.left), getHeightRecursive(root.right)) + 1;
     }
 
 }
