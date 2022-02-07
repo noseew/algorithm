@@ -1,6 +1,7 @@
 package org.song.algorithm.algorithmbase._02alg._03app.leetcode.simple;
 
 import org.junit.Test;
+import org.song.algorithm.algorithmbase._02alg._03app.leetcode.TreeNode;
 
 import java.util.Stack;
 
@@ -60,25 +61,4 @@ public class Leetcode_104_maxDepth {
         return maxDeep;
     }
 
-    /**
-     * Definition for a binary tree node.
-     */
-    public class TreeNode {
-        int val;
-        TreeNode left;
-        TreeNode right;
-
-        TreeNode() {
-        }
-
-        TreeNode(int val) {
-            this.val = val;
-        }
-
-        TreeNode(int val, TreeNode left, TreeNode right) {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-    }
 }
