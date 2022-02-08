@@ -16,6 +16,8 @@ import lombok.AllArgsConstructor;
  */
 /**
  * B 树的实现, 代码来自网络
+ * https://blog.csdn.net/jimo_lonely/article/details/82716142
+ * 
  * https://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/BTree.java.html
  */
 public class Tree04_B_base2<V extends Comparable<V>> {
