@@ -56,7 +56,7 @@ B树 (平衡树, 包括2叉树和多叉树)
  */
 public class Tree04_B_base<V extends Comparable<V>> {
     public BTree_Node<V> root;
-    public int degree;    // 度
+    public int degree;    // 度, 节点拥有的子树个数
     public int number;    // 树种结点的数量
 
     public Tree04_B_base(int degree) {
