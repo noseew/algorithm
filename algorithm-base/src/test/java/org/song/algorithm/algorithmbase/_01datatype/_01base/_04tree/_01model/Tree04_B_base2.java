@@ -1,4 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
+
+import lombok.AllArgsConstructor;
+
 /*
   BTree 类表示泛型键值对的有序符号表. 它支持 put, get, 包含, size, 和 is-empty 方法.
   符号表实现了 关联数组 抽象:当一个值与符号表中已经存在的键相关联时, 约定是用新值替换旧值.
@@ -11,9 +14,6 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
   附加的文档 https://algs4.cs.princeton.edu/62btree
   算法, 第四版
  */
-
-import lombok.AllArgsConstructor;
-
 /**
  * B 树的实现, 代码来自网络
  * https://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/BTree.java.html
