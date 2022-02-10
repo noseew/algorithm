@@ -72,67 +72,83 @@ B树 (平衡树, 包括2叉树和多叉树)
 #### 添加节点-上溢
 
 ```
-如果节点数量到达临界值, 就会发生上溢, 可能会增高树的高度, 而并不会平衡所有子节点来降低(不增高)高度
+上溢: 
+    1. 节点从中间分裂, (如果是奇数, 那么从中间靠左靠右都可以)
+    2. 将节点中间(中间某一个)key上升并合并到父节点中
+触发条件:
+    1. 新增节点key, 如果节点key数量到达阈值(最大 m-1), 就会发生上溢
+特殊说明:
+    1. 上溢后的父节点key数量也可能会达到阈值, 从而发生连锁上溢现象, 
+    2. 当上溢到根节点, 而根节点key数量也达到了阈值的时候, 那么根节点也会上溢最终可能导致B树高度+1
+    3. 注意: 上溢的过程中, 不会因为兄弟节点key数量不足, 从而调整节点结构来降低(不增高)高度
 ```
 
-节点的 key>=3 需要上溢
+1. 达到阈值上溢, 节点的 key>=3 需要上溢
 
-![image-20220206183425510](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-add02.png)
+    ![image-20220206183425510](..\img\Btree-23-add02.png)
 
-如果上溢后, 父节点 key>=3, 则也会触发父节点上溢
+2. 父节点达到阈值连锁上溢, 如果上溢后, 父节点 key>=3, 则也会触发父节点上溢
 
-![image-20220206183456845](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-add03.png)
+    ![image-20220206183456845](..\img\Btree-23-add03.png)
 
-![image-20220206183714972](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-add04.png)
+    ![image-20220206183714972](..\img\Btree-23-add04.png)
 
-上溢可能会触发连锁反应, 一直上溢到根节点, 而根节点也可能会触发上溢, 从而增高B树的高度
+3. 根节点达到阈值, 发生上溢可能会触发连锁反应, 一直上溢到根节点, 而根节点也可能会触发上溢, 从而增高B树的高度
 
-![image-20220206183745648](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-add05.png)
+    ![image-20220206183745648](..\img\Btree-23-add05.png)
 
-![image-20220206183816582](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-add06.png)
+    ![image-20220206183816582](..\img\Btree-23-add06.png)
 
-![image-20220206183922189](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-add07.png)
+    ![image-20220206183922189](..\img\Btree-23-add07.png)
 
-
+4. 注意: 以3为例, 37上溢到和45,50在一起, 而并没有将(37,45,50)下陈到与其他子节点合并在一起, 从而降低自己的阈值(就不会增高B数的高度了), 
 
 #### 删除节点-下溢
 
 ```
-
+下溢:
+    1. 当前节点key被删除, 从父节点中取出直接前/后key, 替换当前节点的位置
+触发条件:
+    1. 如果节点key数量到达阈值(最小 1), 就会发生下溢
+特殊说明: 下溢特殊情况有很多种
+    1. 删除节点中的key, 导致其子节点数量超过阈值(y = x+1, x=父节点key数量, y=子节点数量)
+        则在子节点中找到其直接前驱节点key, 替代其位置
+        1) 如果该子节点中有多余的key(>1), 则直接拿走一个
+        2) 如果该子节点中没有多余的key(=1), 则向同方向兄弟节点中借一个节点(右旋/左旋)
 ```
 
 
 
-![image-20220206184134043](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-del01.png)
+![image-20220206184134043](..\img\Btree-23-del01.png)
 
 删除节点80, 叶子节点数=父节点key数, 不满足B树规定, 发生下溢
 
 过程相当于右旋
 
-![image-20220206184208829](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-del-02.png)
+![image-20220206184208829](..\img\Btree-23-del-02.png)
 
-![image-20220206184234262](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-del-03.png)
+![image-20220206184234262](..\img\Btree-23-del-03.png)
 
 删除节点25, 叶子节点数=父节点key数, 不满足B树规定, 发生下溢
 
 过程相当于左旋
 
-![image-20220206184257700](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-del-04.png)
+![image-20220206184257700](..\img\Btree-23-del-04.png)
 
-![image-20220206184323412](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-del-05.png)
+![image-20220206184323412](..\img\Btree-23-del-05.png)
 
 下溢并合并?
 
-![image-20220206184350370](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-del-06.png)
+![image-20220206184350370](..\img\Btree-23-del-06.png)
 
-![image-20220206184418135](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-del-07.png)
+![image-20220206184418135](..\img\Btree-23-del-07.png)
 
 下溢并合并
 
-![image-20220206184514404](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-del-08.png)
+![image-20220206184514404](..\img\Btree-23-del-08.png)
 
-![image-20220206184537600](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-del-09.png)
+![image-20220206184537600](..\img\Btree-23-del-09.png)
 
-![image-20220206184602614](D:\workspace\project\idea-git\song\algorithm\doc\img\Btree-23-del-10.png)
+![image-20220206184602614](..\img\Btree-23-del-10.png)
 
 ### 红黑树
