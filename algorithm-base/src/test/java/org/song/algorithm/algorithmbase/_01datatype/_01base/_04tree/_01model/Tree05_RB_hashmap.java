@@ -10,11 +10,11 @@ import java.util.Comparator;
 根据JDK8 HashMap中的红黑树 源码修改
 
  */
-public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_base<V>  {
+public class Tree05_RB_hashmap<V extends Comparable<V>> extends Tree03_AVL_base<V>  {
 
     public TreeNode<V> root;
 
-    public Tree05_RB_fromJDK_Base(Comparator<V> comparator) {
+    public Tree05_RB_hashmap(Comparator<V> comparator) {
         super(comparator);
     }
 
@@ -37,14 +37,16 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
 
     @Override
     public boolean push(V v) {
+        int oSize = size;
         put(v);
         root.red = false;
-        return true;
+        return size > oSize;
     }
 
     private TreeNode<V> put(V v) {
         if (root == null) {
             root = new TreeNode<>(v, true);
+            size++;
         }
         
         for (TreeNode<V> p = root; ; ) {
@@ -57,6 +59,7 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
             if ((p = (com <= 0) ? p.left : p.right) == null) {
                 // 新建 树节点
                 TreeNode<V> x = new TreeNode<>(v, true);
+                size++;
                 x.parent = xp;
                 if (com <= 0) {
                     xp.left = x;
@@ -69,7 +72,22 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
         }
     }
 
-    public void remove(TreeNode<V> p) {
+    /**
+     * TODO 未完成
+     * 
+     * @param v
+     * @return
+     */
+    @Override
+    public V remove(V v) {
+        remove(get(v, root));
+        return null;
+    }
+
+    private void remove(TreeNode<V> p) {
+        if (p == null) {
+            return;
+        }
         TreeNode<V> pLeft = p.left, pRight = p.right, replacement;
         if (pLeft != null && pRight != null) {
             TreeNode<V> s = pRight, sLeft;
