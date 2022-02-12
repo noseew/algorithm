@@ -21,7 +21,7 @@ public class Tree05_RB234_base<V extends Comparable<V>> extends Tree05_RB23_base
      * 平衡判断和处理
      */
     @Override
-    protected TreeNode<V> balance(TreeNode<V> node) {
+    protected TreeNode<V> balanceInsertion(TreeNode<V> node) {
         if (node == null) {
             return node;
         }

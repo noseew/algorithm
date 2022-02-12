@@ -72,7 +72,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
         由于插入是递归操作, 所以每插入一个元素, 都会进行一次平衡调整
         平衡调整由插入的叶子结点的父节点开始, 递归向上逐个判断, 一直判断到根节点
          */
-        parent = balance(parent);
+        parent = balanceInsertion(parent);
         return parent;
     }
 
@@ -106,7 +106,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
         if (parent != null) {
             size--;
         }
-        parent = balance(parent);
+        parent = balanceInsertion(parent);
         return parent;
     }
 
@@ -134,7 +134,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
      * @param node
      * @return
      */
-    protected TreeNode<V> balance(TreeNode<V> node) {
+    protected TreeNode<V> balanceInsertion(TreeNode<V> node) {
         if (node == null) {
             return node;
         }
@@ -146,7 +146,9 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
                 node = rightRotate4LL(node);
             } else {
                 // LR型 < 先左旋转再右旋转
-                node = leftRightRotate4LR(node);
+//                node = leftRightRotate4LR(node);
+                node.left = leftRotation4RR(node.left);
+                node = rightRotate4LL(node);
             }
         }
         // 右高左低
@@ -156,7 +158,9 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
                 node = leftRotation4RR(node);
             } else {
                 // RL型 > 先右旋转再左旋转
-                node = rightLeftRotate4RL(node);
+//                node = rightLeftRotate4RL(node);
+                node.right = rightRotate4LL(node.right);
+                node = leftRotation4RR(node);
             }
         }
 
@@ -171,7 +175,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
      * @param p
      * @return
      */
-    protected TreeNode<V> leftRightRotate4LR(TreeNode<V> p) {
+    private TreeNode<V> leftRightRotate4LR(TreeNode<V> p) {
         /*
         左旋+右旋
             LR型(左右) <, M在P左, S在M右, 调整方式 M左旋, S成为新的M节点, M成为新的S节点, 此时完全变为LL, 接着旋转P (S为轴M左旋, M(新)为轴P右旋)
@@ -202,7 +206,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
      * @param p
      * @return
      */
-    protected TreeNode<V> rightLeftRotate4RL(TreeNode<V> p) {
+    private TreeNode<V> rightLeftRotate4RL(TreeNode<V> p) {
         /*
         右旋+左旋
             RL型(右左) >, M在P右, S在M左, 调整方式 M右旋, S成为新的M节点, M成为新的S节点, 此时完全成为RR, 接着旋转P (S为轴M右旋, M(新)为轴P左旋)

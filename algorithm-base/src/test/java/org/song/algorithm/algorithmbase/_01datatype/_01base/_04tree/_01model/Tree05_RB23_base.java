@@ -81,7 +81,7 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
         由于插入是递归操作, 所以每插入一个元素, 都会进行一次平衡调整
         平衡调整由插入的叶子结点的父节点开始, 递归向上逐个判断, 一直判断到根节点
          */
-        parent = balance(parent);
+        parent = balanceInsertion(parent);
         return parent;
     }
 
@@ -112,7 +112,7 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
         } else {
             parent = (parent.left != null) ? parent.left : parent.right;
         }
-        parent = balance(parent);
+        parent = balanceInsertion(parent);
         return parent;
     }
 
@@ -234,7 +234,7 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
      * 平衡判断和处理
      */
     @Override
-    protected TreeNode<V> balance(TreeNode<V> node) {
+    protected TreeNode<V> balanceInsertion(TreeNode<V> node) {
         if (node == null) {
             return node;
         }

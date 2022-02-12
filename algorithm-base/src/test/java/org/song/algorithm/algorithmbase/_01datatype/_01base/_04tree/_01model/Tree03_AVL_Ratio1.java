@@ -24,7 +24,7 @@ public class Tree03_AVL_Ratio1<V extends Comparable<V>> extends Tree03_AVL_base<
      * @param node
      * @return
      */
-    protected TreeNode<V> balance(TreeNode<V> node) {
+    protected TreeNode<V> balanceInsertion(TreeNode<V> node) {
         if (node == null) {
             return node;
         }
@@ -36,7 +36,9 @@ public class Tree03_AVL_Ratio1<V extends Comparable<V>> extends Tree03_AVL_base<
                 node = rightRotate4LL(node);
             } else {
                 // LR型 < 先左旋转再右旋转
-                node = leftRightRotate4LR(node);
+//                node = leftRightRotate4LR(node);
+                node.left = leftRotation4RR(node.left);
+                node = rightRotate4LL(node);
             }
         }
         // 右高左低
@@ -46,7 +48,9 @@ public class Tree03_AVL_Ratio1<V extends Comparable<V>> extends Tree03_AVL_base<
                 node = leftRotation4RR(node);
             } else {
                 // RL型 > 先右旋转再左旋转
-                node = rightLeftRotate4RL(node);
+//                node = rightLeftRotate4RL(node);
+                node.right = rightRotate4LL(node.right);
+                node = leftRotation4RR(node);
             }
         }
 
