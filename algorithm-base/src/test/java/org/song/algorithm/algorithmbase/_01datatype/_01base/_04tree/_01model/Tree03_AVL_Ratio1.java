@@ -21,42 +21,42 @@ public class Tree03_AVL_Ratio1<V extends Comparable<V>> extends Tree03_AVL_base<
     /**
      * 平衡判断和处理
      *
-     * @param node
+     * @param x
      * @return
      */
-    protected TreeNode<V> balanceInsertion(TreeNode<V> node) {
-        if (node == null) {
-            return node;
+    protected TreeNode<V> balanceInsertion(TreeNode<V> x) {
+        if (x == null) {
+            return x;
         }
 
         // 左高右低
-        if (higher(node.left, node.right)) {
-            if (getHeight(node.left.left) >= getHeight(node.left.right)) {
+        if (higher(x.left, x.right)) {
+            if (getHeight(x.left.left) >= getHeight(x.left.right)) {
                 // LL型 / 右旋转
-                node = rotateRight(node);
+                x = rotateRight(x);
             } else {
                 // LR型 < 先左旋转再右旋转
 //                node = leftRightRotate4LR(node);
-                node.left = rotateLeft(node.left);
-                node = rotateRight(node);
+                x.left = rotateLeft(x.left);
+                x = rotateRight(x);
             }
         }
         // 右高左低
-        else if (higher(node.right, node.left)) {
-            if (getHeight(node.right.right) >= getHeight(node.right.left)) {
+        else if (higher(x.right, x.left)) {
+            if (getHeight(x.right.right) >= getHeight(x.right.left)) {
                 // RR型 \ 左旋转
-                node = rotateLeft(node);
+                x = rotateLeft(x);
             } else {
                 // RL型 > 先右旋转再左旋转
 //                node = rightLeftRotate4RL(node);
-                node.right = rotateRight(node.right);
-                node = rotateLeft(node);
+                x.right = rotateRight(x.right);
+                x = rotateLeft(x);
             }
         }
 
         // 更新高度
-        node.height = Math.max(getHeight(node.left), getHeight(node.right)) + 1;
-        return node;
+        x.height = Math.max(getHeight(x.left), getHeight(x.right)) + 1;
+        return x;
     }
 
     private boolean higher(TreeNode<V> node1, TreeNode<V> node2) {

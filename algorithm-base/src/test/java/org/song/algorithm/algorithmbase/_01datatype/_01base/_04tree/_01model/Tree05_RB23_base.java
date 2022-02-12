@@ -234,24 +234,24 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
      * 平衡判断和处理
      */
     @Override
-    protected TreeNode<V> balanceInsertion(TreeNode<V> node) {
-        if (node == null) {
-            return node;
+    protected TreeNode<V> balanceInsertion(TreeNode<V> x) {
+        if (x == null) {
+            return x;
         }
         // 右红左黑: 左旋 == 情况 2.2
-        if (isRed(node.right) && !isRed(node.left)) {
-            node = rotateLeft(node);
+        if (isRed(x.right) && !isRed(x.left)) {
+            x = rotateLeft(x);
         }
         // 左红左左红: 右旋 == 情况 2.1
-        if (isRed(node.left) && isRed(node.left.left)) {
-            node = rotateRight(node);
+        if (isRed(x.left) && isRed(x.left.left)) {
+            x = rotateRight(x);
         }
         // 左红右红: 变色 == 情况 1
-        if (isRed(node.left) && isRed(node.right)) {
-            flipColors(node);
+        if (isRed(x.left) && isRed(x.right)) {
+            flipColors(x);
         }
 
-        return node;
+        return x;
     }
 
     /**
