@@ -31,21 +31,21 @@ public class TreeNode<V> {
      * true=红色
      * false=黑色
      */
-    public boolean color;
+    public boolean red;
 
     public TreeNode(V val) {
         this.val = val;
     }
 
-    public TreeNode(V val, boolean color) {
+    public TreeNode(V val, boolean red) {
         this.val = val;
-        this.color = color;
+        this.red = red;
     }
 
-    public TreeNode(TreeNode<V> parent, V val, boolean color) {
+    public TreeNode(TreeNode<V> parent, V val, boolean red) {
         this.parent = parent;
         this.val = val;
-        this.color = color;
+        this.red = red;
     }
 
     @Override

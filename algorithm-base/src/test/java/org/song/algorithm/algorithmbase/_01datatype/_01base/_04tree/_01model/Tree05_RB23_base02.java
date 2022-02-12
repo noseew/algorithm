@@ -50,11 +50,11 @@ public class Tree05_RB23_base02<V extends Comparable<V>> extends Tree02_BST_base
 
     public void delete(V k) {
         if (!isRed(root.left) && !isRed(root.right))
-            root.color = RED;
+            root.red = RED;
         root = delete(root, k);
         if (root != null) {
             size--;
-            root.color = BLACK;
+            root.red = BLACK;
         }
     }
 
@@ -64,7 +64,7 @@ public class Tree05_RB23_base02<V extends Comparable<V>> extends Tree02_BST_base
         removeMin(root);
         if (root != null) {
             size--;
-            root.color = BLACK;
+            root.red = BLACK;
         }
         return null;
     }
@@ -75,7 +75,7 @@ public class Tree05_RB23_base02<V extends Comparable<V>> extends Tree02_BST_base
         removeMax(root);
         if (root != null) {
             size--;
-            root.color = BLACK;
+            root.red = BLACK;
         }
         return null;
     }
@@ -83,13 +83,13 @@ public class Tree05_RB23_base02<V extends Comparable<V>> extends Tree02_BST_base
     //---------- PRIVATE METHOD AND CLASS----------//
 
     private boolean isRed(TreeNode<V> x) {
-        return x != null && x.color == RED;
+        return x != null && x.red == RED;
     }
 
     private TreeNode<V> flipColors(TreeNode<V> h) {
-        h.color = RED;
-        h.left.color = BLACK;
-        h.right.color = BLACK;
+        h.red = RED;
+        h.left.red = BLACK;
+        h.right.red = BLACK;
         return h;
     }
 
@@ -105,10 +105,10 @@ public class Tree05_RB23_base02<V extends Comparable<V>> extends Tree02_BST_base
         if (x.left != null)
             x.left.parent = h;
         x.left = h;
-        x.color = h.color;
-        h.color = RED;
+        x.red = h.red;
+        h.red = RED;
         root = (root == x.left) ? x : root;
-        root.color = BLACK;
+        root.red = BLACK;
         return x;
     }
 
@@ -124,10 +124,10 @@ public class Tree05_RB23_base02<V extends Comparable<V>> extends Tree02_BST_base
         if (x.right != null)
             x.right.parent = h;
         x.right = h;
-        x.color = h.color;
-        h.color = RED;
+        x.red = h.red;
+        h.red = RED;
         root = (root == x.right) ? x : root;
-        root.color = BLACK;
+        root.red = BLACK;
         return x;
     }
 
@@ -229,9 +229,9 @@ public class Tree05_RB23_base02<V extends Comparable<V>> extends Tree02_BST_base
     }
 
     private void moveFlipColors(TreeNode<V> h) {
-        h.color = BLACK;
-        if (h.left != null) h.left.color = RED;
-        if (h.right != null) h.right.color = RED;
+        h.red = BLACK;
+        if (h.left != null) h.left.red = RED;
+        if (h.right != null) h.right.red = RED;
     }
 
     private TreeNode<V> moveRedLeft(TreeNode<V> h) {

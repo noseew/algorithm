@@ -46,7 +46,7 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
         int size = this.size;
         root = insert_recursive(root, v);
         // 根节点总为黑色
-        root.color = BLACK;
+        root.red = BLACK;
         return size > this.size;
     }
 
@@ -262,8 +262,8 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
         // 复用 AVL 的右旋
         TreeNode<V> newParent = super.rotateRight(p);
         // 红黑树自己的处理
-        newParent.color = p.color;
-        p.color = RED;
+        newParent.red = p.red;
+        p.red = RED;
 
         return newParent;
     }
@@ -276,8 +276,8 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
         // 复用 AVL 的左旋
         TreeNode<V> newParent = super.rotateLeft(p);
         // 红黑树自己的处理
-        newParent.color = p.color;
-        p.color = RED;
+        newParent.red = p.red;
+        p.red = RED;
 
         return newParent;
     }
@@ -286,7 +286,7 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
         if (node == null) {
             return false;
         }
-        return node.color == RED;
+        return node.red == RED;
     }
 
     /**
@@ -295,9 +295,9 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
      * @param node
      */
     protected void flipColors(TreeNode<V> node) {
-        node.color = RED;
-        node.left.color = BLACK;
-        node.right.color = BLACK;
+        node.red = RED;
+        node.left.red = BLACK;
+        node.right.red = BLACK;
     }
 
     @Override

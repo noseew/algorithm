@@ -169,7 +169,7 @@ public class BTreePrinter {
     }
     
     private static boolean isRed(TreeNode node) {
-        return node != null && node.color;
+        return node != null && node.red;
     }
     
     static class CycleRecursionCheck<V extends TreeNode> {

@@ -18,44 +18,44 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
         super(comparator);
     }
 
-    public TreeNode<V> get(V k, TreeNode<V> parent) {
+    public TreeNode<V> get(V v, TreeNode<V> parent) {
         TreeNode<V> p = parent;
         do {
-            TreeNode<V> pleft = p.left, pright = p.right, q;
-            if (p.val.compareTo(k) > 0)
-                p = pleft;
-            else if (p.val.compareTo(k) < 0)
-                p = pright;
-            else if (p.val.compareTo(k) == 0)
+            TreeNode<V> pLeft = p.left, pRight = p.right, q;
+            if (p.val.compareTo(v) > 0)
+                p = pLeft;
+            else if (p.val.compareTo(v) < 0)
+                p = pRight;
+            else if (p.val.compareTo(v) == 0)
                 return p;
-            else if ((q = get(k, p)) != null)
+            else if ((q = get(v, p)) != null)
                 return q;
             else
-                p = pleft;
+                p = pLeft;
         } while (p != null);
         return null;
     }
-    public boolean push(V k) {
-        put(k);
-        root.color = false;
+    public boolean push(V v) {
+        put(v);
+        root.red = false;
         return true;
     }
 
-    public TreeNode<V> put(V k) {
+    public TreeNode<V> put(V v) {
         if (root == null) {
-            root = new TreeNode<>(k, true);
+            root = new TreeNode<>(v, true);
         }
         
         for (TreeNode<V> p = root; ; ) {
-            if (p.val.compareTo(k) == 0) {
+            if (p.val.compareTo(v) == 0) {
                 return p;
             }
-            int dir = k.compareTo(p.val);
+            int dir = v.compareTo(p.val);
 
             TreeNode<V> xp = p;
             if ((p = (dir <= 0) ? p.left : p.right) == null) {
                 // 新建 树节点
-                TreeNode<V> x = new TreeNode<>(k, true);
+                TreeNode<V> x = new TreeNode<>(v, true);
                 x.parent = xp;
                 if (dir <= 0)
                     xp.left = x;
@@ -68,17 +68,17 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
     }
 
     public void remove(TreeNode<V> p) {
-        TreeNode<V> pleft = p.left, pright = p.right, replacement;
-        if (pleft != null && pright != null) {
-            TreeNode<V> s = pright, sl;
-            while ((sl = s.left) != null) // find successor
-                s = sl;
-            boolean c = s.color;
-            s.color = p.color;
-            p.color = c; // swap colors
+        TreeNode<V> pLeft = p.left, pRight = p.right, replacement;
+        if (pLeft != null && pRight != null) {
+            TreeNode<V> s = pRight, sLeft;
+            while ((sLeft = s.left) != null) // find successor
+                s = sLeft;
+            boolean c = s.red;
+            s.red = p.red;
+            p.red = c; // swap colors
             TreeNode<V> sr = s.right;
             TreeNode<V> pp = p.parent;
-            if (s == pright) { // p was s's direct parent
+            if (s == pRight) { // p was s's direct parent
                 p.parent = s;
                 s.right = p;
             } else {
@@ -89,14 +89,14 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
                     else
                         sp.right = p;
                 }
-                if ((s.right = pright) != null)
-                    pright.parent = s;
+                if ((s.right = pRight) != null)
+                    pRight.parent = s;
             }
             p.left = null;
             if ((p.right = sr) != null)
                 sr.parent = p;
-            if ((s.left = pleft) != null)
-                pleft.parent = s;
+            if ((s.left = pLeft) != null)
+                pLeft.parent = s;
             if ((s.parent = pp) == null)
                 root = s;
             else if (p == pp.left)
@@ -107,10 +107,10 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
                 replacement = sr;
             else
                 replacement = p;
-        } else if (pleft != null)
-            replacement = pleft;
-        else if (pright != null)
-            replacement = pright;
+        } else if (pLeft != null)
+            replacement = pLeft;
+        else if (pRight != null)
+            replacement = pRight;
         else
             replacement = p;
         if (replacement != p) {
@@ -124,7 +124,7 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
             p.left = p.right = p.parent = null;
         }
 
-        if (!p.color) balanceDeletion(root, replacement);
+        if (!p.red) balanceDeletion(root, replacement);
 
         if (replacement == p) {  // detach
             TreeNode<V> pp = p.parent;
@@ -148,15 +148,15 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
     private TreeNode<V> balanceInsertion(TreeNode<V> root, TreeNode<V> x) {
         for (TreeNode<V> xp, xpp, xppl, xppr; ; ) {
             if ((xp = x.parent) == null) {
-                x.color = false;
+                x.red = false;
                 return x;
-            } else if (!xp.color || (xpp = xp.parent) == null)
+            } else if (!xp.red || (xpp = xp.parent) == null)
                 return root;
             if (xp == (xppl = xpp.left)) {
-                if ((xppr = xpp.right) != null && xppr.color) {
-                    xppr.color = false;
-                    xp.color = false;
-                    xpp.color = true;
+                if ((xppr = xpp.right) != null && xppr.red) {
+                    xppr.red = false;
+                    xp.red = false;
+                    xpp.red = true;
                     x = xpp;
                 } else {
                     if (x == xp.right) {
@@ -164,18 +164,18 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
                         xpp = (xp = x.parent) == null ? null : xp.parent;
                     }
                     if (xp != null) {
-                        xp.color = false;
+                        xp.red = false;
                         if (xpp != null) {
-                            xpp.color = true;
+                            xpp.red = true;
                             root = rotateRight(root, xpp);
                         }
                     }
                 }
             } else {
-                if (xppl != null && xppl.color) {
-                    xppl.color = false;
-                    xp.color = false;
-                    xpp.color = true;
+                if (xppl != null && xppl.red) {
+                    xppl.red = false;
+                    xp.red = false;
+                    xpp.red = true;
                     x = xpp;
                 } else {
                     if (x == xp.left) {
@@ -183,9 +183,9 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
                         xpp = (xp = x.parent) == null ? null : xp.parent;
                     }
                     if (xp != null) {
-                        xp.color = false;
+                        xp.red = false;
                         if (xpp != null) {
-                            xpp.color = true;
+                            xpp.red = true;
                             root = rotateLeft(root, xpp);
                         }
                     }
@@ -206,15 +206,15 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
             if (x == null || x == root)
                 return root;
             else if ((xp = x.parent) == null) {
-                x.color = false;
+                x.red = false;
                 return x;
-            } else if (x.color) {
-                x.color = false;
+            } else if (x.red) {
+                x.red = false;
                 return root;
             } else if ((xpl = xp.left) == x) {
-                if ((xpr = xp.right) != null && xpr.color) {
-                    xpr.color = false;
-                    xp.color = true;
+                if ((xpr = xp.right) != null && xpr.red) {
+                    xpr.red = false;
+                    xp.red = true;
                     root = rotateLeft(root, xp);
                     xpr = (xp = x.parent) == null ? null : xp.right;
                 }
@@ -222,35 +222,35 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
                     x = xp;
                 else {
                     TreeNode<V> sl = xpr.left, sr = xpr.right;
-                    if ((sr == null || !sr.color) &&
-                            (sl == null || !sl.color)) {
-                        xpr.color = true;
+                    if ((sr == null || !sr.red) &&
+                            (sl == null || !sl.red)) {
+                        xpr.red = true;
                         x = xp;
                     } else {
-                        if (sr == null || !sr.color) {
+                        if (sr == null || !sr.red) {
                             if (sl != null)
-                                sl.color = false;
-                            xpr.color = true;
+                                sl.red = false;
+                            xpr.red = true;
                             root = rotateRight(root, xpr);
                             xpr = (xp = x.parent) == null ?
                                     null : xp.right;
                         }
                         if (xpr != null) {
-                            xpr.color = (xp == null) ? false : xp.color;
+                            xpr.red = (xp == null) ? false : xp.red;
                             if ((sr = xpr.right) != null)
-                                sr.color = false;
+                                sr.red = false;
                         }
                         if (xp != null) {
-                            xp.color = false;
+                            xp.red = false;
                             root = rotateLeft(root, xp);
                         }
                         x = root;
                     }
                 }
             } else { // symmetric
-                if (xpl != null && xpl.color) {
-                    xpl.color = false;
-                    xp.color = true;
+                if (xpl != null && xpl.red) {
+                    xpl.red = false;
+                    xp.red = true;
                     root = rotateRight(root, xp);
                     xpl = (xp = x.parent) == null ? null : xp.left;
                 }
@@ -258,26 +258,26 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
                     x = xp;
                 else {
                     TreeNode<V> sl = xpl.left, sr = xpl.right;
-                    if ((sl == null || !sl.color) &&
-                            (sr == null || !sr.color)) {
-                        xpl.color = true;
+                    if ((sl == null || !sl.red) &&
+                            (sr == null || !sr.red)) {
+                        xpl.red = true;
                         x = xp;
                     } else {
-                        if (sl == null || !sl.color) {
+                        if (sl == null || !sl.red) {
                             if (sr != null)
-                                sr.color = false;
-                            xpl.color = true;
+                                sr.red = false;
+                            xpl.red = true;
                             root = rotateLeft(root, xpl);
                             xpl = (xp = x.parent) == null ?
                                     null : xp.left;
                         }
                         if (xpl != null) {
-                            xpl.color = (xp == null) ? false : xp.color;
+                            xpl.red = (xp == null) ? false : xp.red;
                             if ((sl = xpl.left) != null)
-                                sl.color = false;
+                                sl.red = false;
                         }
                         if (xp != null) {
-                            xp.color = false;
+                            xp.red = false;
                             root = rotateRight(root, xp);
                         }
                         x = root;
@@ -300,7 +300,7 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
             if ((rl = p.right = r.left) != null)
                 rl.parent = p;
             if ((pp = r.parent = p.parent) == null)
-                (root = r).color = false;
+                (root = r).red = false;
             else if (pp.left == p)
                 pp.left = r;
             else
@@ -324,7 +324,7 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
             if ((lr = p.left = l.right) != null)
                 lr.parent = p;
             if ((pp = l.parent = p.parent) == null)
-                (root = l).color = false;
+                (root = l).red = false;
             else if (pp.right == p)
                 pp.right = l;
             else
