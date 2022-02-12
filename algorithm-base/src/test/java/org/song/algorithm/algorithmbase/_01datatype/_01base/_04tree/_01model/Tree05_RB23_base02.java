@@ -4,6 +4,11 @@ import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.nod
 
 import java.util.Comparator;
 
+/**
+ * 代码来自网络
+ * 
+ * @param <V>
+ */
 public class Tree05_RB23_base02<V extends Comparable<V>> extends Tree02_BST_base<V> {
     private static final boolean RED = true;
     private static final boolean BLACK = false;
