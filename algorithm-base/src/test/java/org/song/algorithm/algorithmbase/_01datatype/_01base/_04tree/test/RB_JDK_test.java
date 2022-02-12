@@ -16,7 +16,7 @@ public class RB_JDK_test {
         int max = 50;
         int size = 30;
 
-        Tree05_RB_fromJDK_Base<Integer> tree = new Tree05_RB_fromJDK_Base<>();
+        Tree05_RB_fromJDK_Base<Integer> tree = new Tree05_RB_fromJDK_Base<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
         for (int i = 0; i < size; i++) {
             int v = random.nextInt(max);

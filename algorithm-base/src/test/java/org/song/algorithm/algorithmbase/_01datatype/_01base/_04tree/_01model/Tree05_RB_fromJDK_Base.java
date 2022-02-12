@@ -2,20 +2,26 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
 
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.TreeNode;
 
+import java.util.Comparator;
+
 /*
 红黑树
 
 根据JDK源码修改
 
  */
-public class Tree05_RB_fromJDK_Base<K extends Comparable<K>> {
+public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_base<V>  {
 
-    public TreeNode<K> root;
+    public TreeNode<V> root;
 
-    public TreeNode<K> get(K k, TreeNode<K> parent) {
-        TreeNode<K> p = parent;
+    public Tree05_RB_fromJDK_Base(Comparator<V> comparator) {
+        super(comparator);
+    }
+
+    public TreeNode<V> get(V k, TreeNode<V> parent) {
+        TreeNode<V> p = parent;
         do {
-            TreeNode<K> pleft = p.left, pright = p.right, q;
+            TreeNode<V> pleft = p.left, pright = p.right, q;
             if (p.val.compareTo(k) > 0)
                 p = pleft;
             else if (p.val.compareTo(k) < 0)
@@ -29,22 +35,27 @@ public class Tree05_RB_fromJDK_Base<K extends Comparable<K>> {
         } while (p != null);
         return null;
     }
+    public boolean push(V k) {
+        put(k);
+        root.color = false;
+        return true;
+    }
 
-    public TreeNode<K> push(K k) {
+    public TreeNode<V> put(V k) {
         if (root == null) {
             root = new TreeNode<>(k, true);
         }
         
-        for (TreeNode<K> p = root; ; ) {
+        for (TreeNode<V> p = root; ; ) {
             if (p.val.compareTo(k) == 0) {
                 return p;
             }
             int dir = k.compareTo(p.val);
 
-            TreeNode<K> xp = p;
+            TreeNode<V> xp = p;
             if ((p = (dir <= 0) ? p.left : p.right) == null) {
                 // 新建 树节点
-                TreeNode<K> x = new TreeNode<>(k, true);
+                TreeNode<V> x = new TreeNode<>(k, true);
                 x.parent = xp;
                 if (dir <= 0)
                     xp.left = x;
@@ -56,22 +67,22 @@ public class Tree05_RB_fromJDK_Base<K extends Comparable<K>> {
         }
     }
 
-    public void remove(TreeNode<K> p) {
-        TreeNode<K> pleft = p.left, pright = p.right, replacement;
+    public void remove(TreeNode<V> p) {
+        TreeNode<V> pleft = p.left, pright = p.right, replacement;
         if (pleft != null && pright != null) {
-            TreeNode<K> s = pright, sl;
+            TreeNode<V> s = pright, sl;
             while ((sl = s.left) != null) // find successor
                 s = sl;
             boolean c = s.color;
             s.color = p.color;
             p.color = c; // swap colors
-            TreeNode<K> sr = s.right;
-            TreeNode<K> pp = p.parent;
+            TreeNode<V> sr = s.right;
+            TreeNode<V> pp = p.parent;
             if (s == pright) { // p was s's direct parent
                 p.parent = s;
                 s.right = p;
             } else {
-                TreeNode<K> sp = s.parent;
+                TreeNode<V> sp = s.parent;
                 if ((p.parent = sp) != null) {
                     if (s == sp.left)
                         sp.left = p;
@@ -103,7 +114,7 @@ public class Tree05_RB_fromJDK_Base<K extends Comparable<K>> {
         else
             replacement = p;
         if (replacement != p) {
-            TreeNode<K> pp = replacement.parent = p.parent;
+            TreeNode<V> pp = replacement.parent = p.parent;
             if (pp == null)
                 root = replacement;
             else if (p == pp.left)
@@ -116,7 +127,7 @@ public class Tree05_RB_fromJDK_Base<K extends Comparable<K>> {
         if (!p.color) balanceDeletion(root, replacement);
 
         if (replacement == p) {  // detach
-            TreeNode<K> pp = p.parent;
+            TreeNode<V> pp = p.parent;
             p.parent = null;
             if (pp != null) {
                 if (p == pp.left)
@@ -134,8 +145,8 @@ public class Tree05_RB_fromJDK_Base<K extends Comparable<K>> {
      * @param x
      * @return
      */
-    private TreeNode<K> balanceInsertion(TreeNode<K> root, TreeNode<K> x) {
-        for (TreeNode<K> xp, xpp, xppl, xppr; ; ) {
+    private TreeNode<V> balanceInsertion(TreeNode<V> root, TreeNode<V> x) {
+        for (TreeNode<V> xp, xpp, xppl, xppr; ; ) {
             if ((xp = x.parent) == null) {
                 x.color = false;
                 return x;
@@ -190,8 +201,8 @@ public class Tree05_RB_fromJDK_Base<K extends Comparable<K>> {
      * @param x
      * @return
      */
-    private TreeNode<K> balanceDeletion(TreeNode<K> root, TreeNode<K> x) {
-        for (TreeNode<K> xp, xpl, xpr; ; ) {
+    private TreeNode<V> balanceDeletion(TreeNode<V> root, TreeNode<V> x) {
+        for (TreeNode<V> xp, xpl, xpr; ; ) {
             if (x == null || x == root)
                 return root;
             else if ((xp = x.parent) == null) {
@@ -210,7 +221,7 @@ public class Tree05_RB_fromJDK_Base<K extends Comparable<K>> {
                 if (xpr == null)
                     x = xp;
                 else {
-                    TreeNode<K> sl = xpr.left, sr = xpr.right;
+                    TreeNode<V> sl = xpr.left, sr = xpr.right;
                     if ((sr == null || !sr.color) &&
                             (sl == null || !sl.color)) {
                         xpr.color = true;
@@ -246,7 +257,7 @@ public class Tree05_RB_fromJDK_Base<K extends Comparable<K>> {
                 if (xpl == null)
                     x = xp;
                 else {
-                    TreeNode<K> sl = xpl.left, sr = xpl.right;
+                    TreeNode<V> sl = xpl.left, sr = xpl.right;
                     if ((sl == null || !sl.color) &&
                             (sr == null || !sr.color)) {
                         xpl.color = true;
@@ -283,8 +294,8 @@ public class Tree05_RB_fromJDK_Base<K extends Comparable<K>> {
      * @param p
      * @return
      */
-    private TreeNode<K> rotateLeft(TreeNode<K> root, TreeNode<K> p) {
-        TreeNode<K> r, pp, rl;
+    private TreeNode<V> rotateLeft(TreeNode<V> root, TreeNode<V> p) {
+        TreeNode<V> r, pp, rl;
         if (p != null && (r = p.right) != null) {
             if ((rl = p.right = r.left) != null)
                 rl.parent = p;
@@ -307,8 +318,8 @@ public class Tree05_RB_fromJDK_Base<K extends Comparable<K>> {
      * @param p
      * @return
      */
-    private TreeNode<K> rotateRight(TreeNode<K> root, TreeNode<K> p) {
-        TreeNode<K> l, pp, lr;
+    private TreeNode<V> rotateRight(TreeNode<V> root, TreeNode<V> p) {
+        TreeNode<V> l, pp, lr;
         if (p != null && (l = p.left) != null) {
             if ((lr = p.left = l.right) != null)
                 lr.parent = p;

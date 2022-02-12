@@ -240,11 +240,11 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
         }
         // 右红左黑: 左旋 == 情况 2.2
         if (isRed(node.right) && !isRed(node.left)) {
-            node = leftRotation4RR(node);
+            node = rotateLeft(node);
         }
         // 左红左左红: 右旋 == 情况 2.1
         if (isRed(node.left) && isRed(node.left.left)) {
-            node = rightRotate4LL(node);
+            node = rotateRight(node);
         }
         // 左红右红: 变色 == 情况 1
         if (isRed(node.left) && isRed(node.right)) {
@@ -258,9 +258,9 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
      * 处理 / LL
      */
     @Override
-    protected TreeNode<V> rightRotate4LL(TreeNode<V> p) {
+    protected TreeNode<V> rotateRight(TreeNode<V> p) {
         // 复用 AVL 的右旋
-        TreeNode<V> newParent = super.rightRotate4LL(p);
+        TreeNode<V> newParent = super.rotateRight(p);
         // 红黑树自己的处理
         newParent.color = p.color;
         p.color = RED;
@@ -272,9 +272,9 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
      * 处理 \ RR
      */
     @Override
-    protected TreeNode<V> leftRotation4RR(TreeNode<V> p) {
+    protected TreeNode<V> rotateLeft(TreeNode<V> p) {
         // 复用 AVL 的左旋
-        TreeNode<V> newParent = super.leftRotation4RR(p);
+        TreeNode<V> newParent = super.rotateLeft(p);
         // 红黑树自己的处理
         newParent.color = p.color;
         p.color = RED;

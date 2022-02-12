@@ -27,17 +27,17 @@ public class Tree05_RB234_base<V extends Comparable<V>> extends Tree05_RB23_base
         }
         // 右红左黑: 左旋 == 情况 2.2
         if (isRed(node.right) && !isRed(node.left)) {
-            node = leftRotation4RR(node);
+            node = rotateLeft(node);
         }
         if (isRed(node.left) && !isRed(node.right)) {
-            node = rightRotate4LL(node);
+            node = rotateRight(node);
         }
         // 左红左左红: 右旋 == 情况 2.1
         if (isRed(node.left) && isRed(node.left.left)) {
-            node = rightRotate4LL(node);
+            node = rotateRight(node);
         }
         if (isRed(node.right) && isRed(node.right.right)) {
-            node = leftRotation4RR(node);
+            node = rotateLeft(node);
         }
         // 左红右红: 变色 == 情况 1
         if (isRed(node.left) && isRed(node.right)) {
