@@ -34,13 +34,15 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
         } while (parent != null);
         return null;
     }
+
+    @Override
     public boolean push(V v) {
         put(v);
         root.red = false;
         return true;
     }
 
-    public TreeNode<V> put(V v) {
+    private TreeNode<V> put(V v) {
         if (root == null) {
             root = new TreeNode<>(v, true);
         }
@@ -61,7 +63,7 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
                 } else {
                     xp.right = x;
                 }
-                balanceInsertion(root, x);
+                balanceInsertion(x);
                 return null;
             }
         }
@@ -132,7 +134,7 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
             p.left = p.right = p.parent = null;
         }
 
-        if (!p.red) balanceDeletion(root, replacement);
+        if (!p.red) balanceDeletion(replacement);
 
         if (replacement == p) {  // detach
             TreeNode<V> pp = p.parent;
@@ -148,12 +150,12 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
 
     /**
      * 插入平衡
-     * 
-     * @param root
+     *
      * @param x
      * @return
      */
-    private TreeNode<V> balanceInsertion(TreeNode<V> root, TreeNode<V> x) {
+    @Override
+    protected TreeNode<V> balanceInsertion(TreeNode<V> x) {
         for (TreeNode<V> xp, xpp, xppl, xppr; ; ) {
             if ((xp = x.parent) == null) {
                 x.red = false;
@@ -168,14 +170,14 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
                     x = xpp;
                 } else {
                     if (x == xp.right) {
-                        root = rotateLeft(root, x = xp);
+                        root = rotateLeft(x = xp);
                         xpp = (xp = x.parent) == null ? null : xp.parent;
                     }
                     if (xp != null) {
                         xp.red = false;
                         if (xpp != null) {
                             xpp.red = true;
-                            root = rotateRight(root, xpp);
+                            root = rotateRight(xpp);
                         }
                     }
                 }
@@ -187,14 +189,14 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
                     x = xpp;
                 } else {
                     if (x == xp.left) {
-                        root = rotateRight(root, x = xp);
+                        root = rotateRight(x = xp);
                         xpp = (xp = x.parent) == null ? null : xp.parent;
                     }
                     if (xp != null) {
                         xp.red = false;
                         if (xpp != null) {
                             xpp.red = true;
-                            root = rotateLeft(root, xpp);
+                            root = rotateLeft(xpp);
                         }
                     }
                 }
@@ -203,13 +205,12 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
     }
 
     /**
-     * 插入删除
-     * 
-     * @param root
+     * 删除平衡
+     *
      * @param x
      * @return
      */
-    private TreeNode<V> balanceDeletion(TreeNode<V> root, TreeNode<V> x) {
+    protected TreeNode<V> balanceDeletion(TreeNode<V> x) {
         for (TreeNode<V> xp, xpl, xpr; ; ) {
             if (x == null || x == root)
                 return root;
@@ -223,7 +224,7 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
                 if ((xpr = xp.right) != null && xpr.red) {
                     xpr.red = false;
                     xp.red = true;
-                    root = rotateLeft(root, xp);
+                    root = rotateLeft(xp);
                     xpr = (xp = x.parent) == null ? null : xp.right;
                 }
                 if (xpr == null)
@@ -239,7 +240,7 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
                             if (sl != null)
                                 sl.red = false;
                             xpr.red = true;
-                            root = rotateRight(root, xpr);
+                            root = rotateRight(xpr);
                             xpr = (xp = x.parent) == null ?
                                     null : xp.right;
                         }
@@ -250,7 +251,7 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
                         }
                         if (xp != null) {
                             xp.red = false;
-                            root = rotateLeft(root, xp);
+                            root = rotateLeft(xp);
                         }
                         x = root;
                     }
@@ -259,7 +260,7 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
                 if (xpl != null && xpl.red) {
                     xpl.red = false;
                     xp.red = true;
-                    root = rotateRight(root, xp);
+                    root = rotateRight(xp);
                     xpl = (xp = x.parent) == null ? null : xp.left;
                 }
                 if (xpl == null)
@@ -275,7 +276,7 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
                             if (sr != null)
                                 sr.red = false;
                             xpl.red = true;
-                            root = rotateLeft(root, xpl);
+                            root = rotateLeft(xpl);
                             xpl = (xp = x.parent) == null ?
                                     null : xp.left;
                         }
@@ -286,7 +287,7 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
                         }
                         if (xp != null) {
                             xp.red = false;
-                            root = rotateRight(root, xp);
+                            root = rotateRight(xp);
                         }
                         x = root;
                     }
@@ -295,14 +296,8 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
         }
     }
 
-    /**
-     * 左旋
-     * 
-     * @param root
-     * @param p
-     * @return
-     */
-    private TreeNode<V> rotateLeft(TreeNode<V> root, TreeNode<V> p) {
+    @Override
+    protected TreeNode<V> rotateLeft(TreeNode<V> p) {
         TreeNode<V> r, pp, rl;
         if (p != null && (r = p.right) != null) {
             if ((rl = p.right = r.left) != null)
@@ -319,14 +314,8 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
         return root;
     }
 
-    /**
-     * 右旋
-     * 
-     * @param root
-     * @param p
-     * @return
-     */
-    private TreeNode<V> rotateRight(TreeNode<V> root, TreeNode<V> p) {
+    @Override
+    protected TreeNode<V> rotateRight(TreeNode<V> p) {
         TreeNode<V> l, pp, lr;
         if (p != null && (l = p.left) != null) {
             if ((lr = p.left = l.right) != null)
