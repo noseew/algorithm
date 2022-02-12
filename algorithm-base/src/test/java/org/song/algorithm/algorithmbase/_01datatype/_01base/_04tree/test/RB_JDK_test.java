@@ -13,7 +13,7 @@ public class RB_JDK_test {
 
     @Test
     public void test_start1() {
-        int max = 50;
+        int max = 100;
         int size = 30;
 
         Tree05_RB_fromJDK_Base<Integer> tree = new Tree05_RB_fromJDK_Base<>(Comparator.comparing(Integer::doubleValue));

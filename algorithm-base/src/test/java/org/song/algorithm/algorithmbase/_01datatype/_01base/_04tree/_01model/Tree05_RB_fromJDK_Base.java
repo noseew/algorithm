@@ -7,7 +7,7 @@ import java.util.Comparator;
 /*
 红黑树
 
-根据JDK源码修改
+根据JDK8 HashMap中的红黑树 源码修改
 
  */
 public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_base<V>  {
@@ -19,20 +19,19 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
     }
 
     public TreeNode<V> get(V v, TreeNode<V> parent) {
-        TreeNode<V> p = parent;
         do {
-            TreeNode<V> pLeft = p.left, pRight = p.right, q;
-            if (p.val.compareTo(v) > 0)
-                p = pLeft;
-            else if (p.val.compareTo(v) < 0)
-                p = pRight;
-            else if (p.val.compareTo(v) == 0)
-                return p;
-            else if ((q = get(v, p)) != null)
+            TreeNode<V> pLeft = parent.left, pRight = parent.right, q;
+            if (parent.val.compareTo(v) > 0)
+                parent = pLeft;
+            else if (parent.val.compareTo(v) < 0)
+                parent = pRight;
+            else if (parent.val.compareTo(v) == 0)
+                return parent;
+            else if ((q = get(v, parent)) != null)
                 return q;
             else
-                p = pLeft;
-        } while (p != null);
+                parent = pLeft;
+        } while (parent != null);
         return null;
     }
     public boolean push(V v) {
@@ -50,17 +49,18 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
             if (p.val.compareTo(v) == 0) {
                 return p;
             }
-            int dir = v.compareTo(p.val);
+            int com = v.compareTo(p.val);
 
             TreeNode<V> xp = p;
-            if ((p = (dir <= 0) ? p.left : p.right) == null) {
+            if ((p = (com <= 0) ? p.left : p.right) == null) {
                 // 新建 树节点
                 TreeNode<V> x = new TreeNode<>(v, true);
                 x.parent = xp;
-                if (dir <= 0)
+                if (com <= 0) {
                     xp.left = x;
-                else
+                } else {
                     xp.right = x;
+                }
                 balanceInsertion(root, x);
                 return null;
             }
@@ -71,56 +71,64 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
         TreeNode<V> pLeft = p.left, pRight = p.right, replacement;
         if (pLeft != null && pRight != null) {
             TreeNode<V> s = pRight, sLeft;
-            while ((sLeft = s.left) != null) // find successor
+            while ((sLeft = s.left) != null) { // find successor
                 s = sLeft;
-            boolean c = s.red;
+            }
+            boolean red = s.red;
             s.red = p.red;
-            p.red = c; // swap colors
-            TreeNode<V> sr = s.right;
-            TreeNode<V> pp = p.parent;
+            p.red = red; // swap colors
+            TreeNode<V> sRight = s.right;
+            TreeNode<V> pParent = p.parent;
             if (s == pRight) { // p was s's direct parent
                 p.parent = s;
                 s.right = p;
             } else {
-                TreeNode<V> sp = s.parent;
-                if ((p.parent = sp) != null) {
-                    if (s == sp.left)
-                        sp.left = p;
-                    else
-                        sp.right = p;
+                TreeNode<V> sParent = s.parent;
+                if ((p.parent = sParent) != null) {
+                    if (s == sParent.left) {
+                        sParent.left = p;
+                    } else {
+                        sParent.right = p;
+                    }
                 }
                 if ((s.right = pRight) != null)
                     pRight.parent = s;
             }
             p.left = null;
-            if ((p.right = sr) != null)
-                sr.parent = p;
-            if ((s.left = pLeft) != null)
+            if ((p.right = sRight) != null) {
+                sRight.parent = p;
+            }
+            if ((s.left = pLeft) != null) {
                 pLeft.parent = s;
-            if ((s.parent = pp) == null)
+            }
+            if ((s.parent = pParent) == null) {
                 root = s;
-            else if (p == pp.left)
-                pp.left = s;
-            else
-                pp.right = s;
-            if (sr != null)
-                replacement = sr;
-            else
+            } else if (p == pParent.left) {
+                pParent.left = s;
+            } else {
+                pParent.right = s;
+            }
+            if (sRight != null) {
+                replacement = sRight;
+            } else {
                 replacement = p;
-        } else if (pLeft != null)
+            }
+        } else if (pLeft != null) {
             replacement = pLeft;
-        else if (pRight != null)
+        } else if (pRight != null) {
             replacement = pRight;
-        else
+        } else {
             replacement = p;
+        }
         if (replacement != p) {
             TreeNode<V> pp = replacement.parent = p.parent;
-            if (pp == null)
+            if (pp == null) {
                 root = replacement;
-            else if (p == pp.left)
+            } else if (p == pp.left) {
                 pp.left = replacement;
-            else
+            } else {
                 pp.right = replacement;
+            }
             p.left = p.right = p.parent = null;
         }
 
@@ -130,9 +138,9 @@ public class Tree05_RB_fromJDK_Base<V extends Comparable<V>> extends Tree03_AVL_
             TreeNode<V> pp = p.parent;
             p.parent = null;
             if (pp != null) {
-                if (p == pp.left)
+                if (p == pp.left) {
                     pp.left = null;
-                else if (p == pp.right)
+                } else if (p == pp.right)
                     pp.right = null;
             }
         }
