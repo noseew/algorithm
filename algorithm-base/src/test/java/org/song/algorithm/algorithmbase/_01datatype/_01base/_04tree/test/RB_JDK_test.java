@@ -13,14 +13,14 @@ public class RB_JDK_test {
 
     @Test
     public void test_start1() {
-        int max = 30;
-        int size = 20;
+        int max = 50;
+        int size = 30;
 
         Tree05_RB_fromJDK_Base<Integer> tree = new Tree05_RB_fromJDK_Base<>();
         Random random = new Random();
         for (int i = 0; i < size; i++) {
             int v = random.nextInt(max);
-            tree.put(v);
+            tree.push(v);
         }
         BTreePrinter.print(tree.root, true);
     }

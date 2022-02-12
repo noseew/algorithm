@@ -30,7 +30,7 @@ public class Tree05_RB_fromJDK_Base<K extends Comparable<K>> {
         return null;
     }
 
-    public TreeNode<K> put(K k) {
+    public TreeNode<K> push(K k) {
         if (root == null) {
             root = new TreeNode<>(k, true);
         }
@@ -126,10 +126,15 @@ public class Tree05_RB_fromJDK_Base<K extends Comparable<K>> {
             }
         }
     }
-    
-    // 工具
-    TreeNode<K> balanceInsertion(TreeNode<K> root, TreeNode<K> x) {
-//        x.color = true;
+
+    /**
+     * 插入平衡
+     * 
+     * @param root
+     * @param x
+     * @return
+     */
+    private TreeNode<K> balanceInsertion(TreeNode<K> root, TreeNode<K> x) {
         for (TreeNode<K> xp, xpp, xppl, xppr; ; ) {
             if ((xp = x.parent) == null) {
                 x.color = false;
@@ -177,42 +182,15 @@ public class Tree05_RB_fromJDK_Base<K extends Comparable<K>> {
             }
         }
     }
-    // 工具
-    TreeNode<K> rotateLeft(TreeNode<K> root, TreeNode<K> p) {
-        TreeNode<K> r, pp, rl;
-        if (p != null && (r = p.right) != null) {
-            if ((rl = p.right = r.left) != null)
-                rl.parent = p;
-            if ((pp = r.parent = p.parent) == null)
-                (root = r).color = false;
-            else if (pp.left == p)
-                pp.left = r;
-            else
-                pp.right = r;
-            r.left = p;
-            p.parent = r;
-        }
-        return root;
-    }
-    // 工具
-    TreeNode<K> rotateRight(TreeNode<K> root, TreeNode<K> p) {
-        TreeNode<K> l, pp, lr;
-        if (p != null && (l = p.left) != null) {
-            if ((lr = p.left = l.right) != null)
-                lr.parent = p;
-            if ((pp = l.parent = p.parent) == null)
-                (root = l).color = false;
-            else if (pp.right == p)
-                pp.right = l;
-            else
-                pp.left = l;
-            l.right = p;
-            p.parent = l;
-        }
-        return root;
-    }
-    // 工具
-    TreeNode<K> balanceDeletion(TreeNode<K> root, TreeNode<K> x) {
+
+    /**
+     * 插入删除
+     * 
+     * @param root
+     * @param x
+     * @return
+     */
+    private TreeNode<K> balanceDeletion(TreeNode<K> root, TreeNode<K> x) {
         for (TreeNode<K> xp, xpl, xpr; ; ) {
             if (x == null || x == root)
                 return root;
@@ -296,6 +274,54 @@ public class Tree05_RB_fromJDK_Base<K extends Comparable<K>> {
                 }
             }
         }
+    }
+
+    /**
+     * 左旋
+     * 
+     * @param root
+     * @param p
+     * @return
+     */
+    private TreeNode<K> rotateLeft(TreeNode<K> root, TreeNode<K> p) {
+        TreeNode<K> r, pp, rl;
+        if (p != null && (r = p.right) != null) {
+            if ((rl = p.right = r.left) != null)
+                rl.parent = p;
+            if ((pp = r.parent = p.parent) == null)
+                (root = r).color = false;
+            else if (pp.left == p)
+                pp.left = r;
+            else
+                pp.right = r;
+            r.left = p;
+            p.parent = r;
+        }
+        return root;
+    }
+
+    /**
+     * 右旋
+     * 
+     * @param root
+     * @param p
+     * @return
+     */
+    private TreeNode<K> rotateRight(TreeNode<K> root, TreeNode<K> p) {
+        TreeNode<K> l, pp, lr;
+        if (p != null && (l = p.left) != null) {
+            if ((lr = p.left = l.right) != null)
+                lr.parent = p;
+            if ((pp = l.parent = p.parent) == null)
+                (root = l).color = false;
+            else if (pp.right == p)
+                pp.right = l;
+            else
+                pp.left = l;
+            l.right = p;
+            p.parent = l;
+        }
+        return root;
     }
 
 }
