@@ -62,11 +62,9 @@ public class RB_JDK_test {
         Random random = new Random();
         for (int i = 0; i < size; i++) {
             int v = random.nextInt(max);
-            Tree05_RB_hotspot.RBNode rbNode = new Tree05_RB_hotspot.RBNode(v);
-            tree.insertNode(rbNode);
+            tree.put(v);
         }
-        System.out.println();
-//        BTreePrinter.print(tree.root, true);
+        BTreePrinter.print(tree.root, true);
 //        int lastSize = tree.size;
 //        for (int i = 0; i < size; i++) {
 //            tree.remove(i);

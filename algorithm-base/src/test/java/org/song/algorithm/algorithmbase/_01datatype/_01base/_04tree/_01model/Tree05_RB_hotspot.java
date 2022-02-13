@@ -2,6 +2,7 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.TreeNode;
 
 import java.util.Comparator;
 
@@ -12,91 +13,71 @@ import java.util.Comparator;
 
  */
 public class Tree05_RB_hotspot<V extends Comparable<V>> {
-    public RBNode root;
+    public TreeNode<V> root;
     private Comparator comparator;
-    protected static final boolean DEBUGGING = true;
-    protected static final boolean REALLY_VERBOSE = false;
+    public static final boolean RED = true;
+    public static final boolean BLACK = false;
 
     public Tree05_RB_hotspot(Comparator comparator) {
         this.comparator = comparator;
     }
 
-    public void insertNode(RBNode x) {
+    public void put(V v) {
+        insertNode(new TreeNode<>(v, true));
+    }
+
+    public void insertNode(TreeNode<V> x) {
         treeInsert(x);
 
-        x.setRed(RBColor.RED);
-        boolean shouldPropagate = x.update();
+        x.setRed(RED);
+        boolean shouldPropagate = false;
 
-        if (DEBUGGING && REALLY_VERBOSE) {
-            System.err.println("RBTree.insertNode");
-        }
-
-        RBNode propagateStart = x;
+        TreeNode<V> propagateStart = x;
 
         // Loop invariant: x has been updated.
-        while ((x != root) && (x.getParent().red == RBColor.RED)) {
+        while ((x != root) && (x.getParent().red == RED)) {
             if (x.getParent() == x.getParent().getParent().getLeft()) {
-                RBNode y = x.getParent().getParent().getRight();
-                if ((y != null) && (y.red == RBColor.RED)) {
+                TreeNode<V> y = x.getParent().getParent().getRight();
+                if ((y != null) && (y.red == RED)) {
                     // Case 1
-                    if (DEBUGGING && REALLY_VERBOSE) {
-                        System.err.println("  Case 1/1");
-                    }
-                    x.getParent().setRed(RBColor.BLACK);
-                    y.setRed(RBColor.BLACK);
-                    x.getParent().getParent().setRed(RBColor.RED);
-                    x.getParent().update();
+                    x.getParent().setRed(BLACK);
+                    y.setRed(BLACK);
+                    x.getParent().getParent().setRed(RED);
                     x = x.getParent().getParent();
-                    shouldPropagate = x.update();
+                    shouldPropagate = false;
                     propagateStart = x;
                 } else {
                     if (x == x.getParent().getRight()) {
                         // Case 2
-                        if (DEBUGGING && REALLY_VERBOSE) {
-                            System.err.println("  Case 1/2");
-                        }
                         x = x.getParent();
                         leftRotate(x);
                     }
                     // Case 3
-                    if (DEBUGGING && REALLY_VERBOSE) {
-                        System.err.println("  Case 1/3");
-                    }
-                    x.getParent().setRed(RBColor.BLACK);
-                    x.getParent().getParent().setRed(RBColor.RED);
+                    x.getParent().setRed(BLACK);
+                    x.getParent().getParent().setRed(RED);
                     shouldPropagate = rightRotate(x.getParent().getParent());
                     propagateStart = x.getParent();
                 }
             } else {
                 // Same as then clause with "right" and "left" exchanged
-                RBNode y = x.getParent().getParent().getLeft();
-                if ((y != null) && (y.red == RBColor.RED)) {
+                TreeNode<V> y = x.getParent().getParent().getLeft();
+                if ((y != null) && (y.red == RED)) {
                     // Case 1
-                    if (DEBUGGING && REALLY_VERBOSE) {
-                        System.err.println("  Case 2/1");
-                    }
-                    x.getParent().setRed(RBColor.BLACK);
-                    y.setRed(RBColor.BLACK);
-                    x.getParent().getParent().setRed(RBColor.RED);
-                    x.getParent().update();
+                    x.getParent().setRed(BLACK);
+                    y.setRed(BLACK);
+                    x.getParent().getParent().setRed(RED);
                     x = x.getParent().getParent();
-                    shouldPropagate = x.update();
+                    shouldPropagate = false;
                     propagateStart = x;
                 } else {
                     if (x == x.getParent().getLeft()) {
                         // Case 2
-                        if (DEBUGGING && REALLY_VERBOSE) {
-                            System.err.println("  Case 2/2");
-                        }
                         x = x.getParent();
                         rightRotate(x);
                     }
                     // Case 3
-                    if (DEBUGGING && REALLY_VERBOSE) {
-                        System.err.println("  Case 2/3");
-                    }
-                    x.getParent().setRed(RBColor.BLACK);
-                    x.getParent().getParent().setRed(RBColor.RED);
+                    x.getParent().setRed(BLACK);
+                    x.getParent().getParent().setRed(RED);
                     shouldPropagate = leftRotate(x.getParent().getParent());
                     propagateStart = x.getParent();
                 }
@@ -104,30 +85,27 @@ public class Tree05_RB_hotspot<V extends Comparable<V>> {
         }
 
         while (shouldPropagate && (propagateStart != root)) {
-            if (DEBUGGING && REALLY_VERBOSE) {
-                System.err.println("  Propagating");
-            }
             propagateStart = propagateStart.getParent();
-            shouldPropagate = propagateStart.update();
+            shouldPropagate = false;
         }
 
-        root.setRed(RBColor.BLACK);
+        root.setRed(BLACK);
     }
 
-    public void deleteNode(RBNode z) {
+    public void deleteNode(TreeNode<V> z) {
         // This routine splices out a node. Note that we may not actually
-        // delete the RBNode z from the tree, but may instead remove
+        // delete the TreeNode<V> z from the tree, but may instead remove
         // another node from the tree, copying its contents into z.
 
         // y is the node to be unlinked from the tree
-        RBNode y;
+        TreeNode<V> y;
         if ((z.getLeft() == null) || (z.getRight() == null)) {
             y = z;
         } else {
             y = treeSuccessor(z);
         }
         // y is guaranteed to be non-null at this point
-        RBNode x;
+        TreeNode<V> x;
         if (y.getLeft() != null) {
             x = y.getLeft();
         } else {
@@ -135,7 +113,7 @@ public class Tree05_RB_hotspot<V extends Comparable<V>> {
         }
         // x is the potential child of y to replace it in the tree.
         // x may be null at this point
-        RBNode xParent;
+        TreeNode<V> xParent;
         if (x != null) {
             x.setParent(y.getParent());
             xParent = x.getParent();
@@ -152,30 +130,24 @@ public class Tree05_RB_hotspot<V extends Comparable<V>> {
             }
         }
         if (y != z) {
-            z.data = y.data;
+            z.val = y.val;
         }
-        if (y.red == RBColor.BLACK) {
+        if (y.red == BLACK) {
             deleteFixup(x, xParent);
         }
-    }
-
-    // Functionality overridable by subclass
-
-    protected Object getNodeValue(RBNode node) {
-        return node.getData();
     }
 
     // Internals only below this point
 
     // Vanilla binary search tree operations
 
-    private void treeInsert(RBNode z) {
-        RBNode y = null;
-        RBNode x = root;
+    private void treeInsert(TreeNode<V> z) {
+        TreeNode<V> y = null;
+        TreeNode<V> x = root;
 
         while (x != null) {
             y = x;
-            if (comparator.compare(getNodeValue(z), getNodeValue(x)) < 0) {
+            if (comparator.compare(z.val, x.val) < 0) {
                 x = x.getLeft();
             } else {
                 x = x.getRight();
@@ -185,7 +157,7 @@ public class Tree05_RB_hotspot<V extends Comparable<V>> {
         if (y == null) {
             root = z;
         } else {
-            if (comparator.compare(getNodeValue(z), getNodeValue(y)) < 0) {
+            if (comparator.compare(z.val, y.val) < 0) {
                 y.setLeft(z);
             } else {
                 y.setRight(z);
@@ -193,11 +165,11 @@ public class Tree05_RB_hotspot<V extends Comparable<V>> {
         }
     }
 
-    private RBNode treeSuccessor(RBNode x) {
+    private TreeNode<V> treeSuccessor(TreeNode<V> x) {
         if (x.getRight() != null) {
             return treeMinimum(x.getRight());
         }
-        RBNode y = x.getParent();
+        TreeNode<V> y = x.getParent();
         while ((y != null) && (x == y.getRight())) {
             x = y;
             y = y.getParent();
@@ -205,7 +177,7 @@ public class Tree05_RB_hotspot<V extends Comparable<V>> {
         return y;
     }
 
-    private RBNode treeMinimum(RBNode x) {
+    private TreeNode<V> treeMinimum(TreeNode<V> x) {
         while (x.getLeft() != null) {
             x = x.getLeft();
         }
@@ -214,9 +186,9 @@ public class Tree05_RB_hotspot<V extends Comparable<V>> {
 
     // Insertion and deletion helpers
 
-    private boolean leftRotate(RBNode x) {
+    private boolean leftRotate(TreeNode<V> x) {
         // Set y.
-        RBNode y = x.getRight();
+        TreeNode<V> y = x.getRight();
         // Turn y's left subtree into x's right subtree.
         x.setRight(y.getLeft());
         if (y.getLeft() != null) {
@@ -237,14 +209,12 @@ public class Tree05_RB_hotspot<V extends Comparable<V>> {
         y.setLeft(x);
         x.setParent(y);
         // Update nodes in appropriate order (lowest to highest)
-        boolean res = x.update();
-        res = y.update() || res;
-        return res;
+        return false;
     }
 
-    private boolean rightRotate(RBNode y) {
+    private boolean rightRotate(TreeNode<V> y) {
         // Set x.
-        RBNode x = y.getLeft();
+        TreeNode<V> x = y.getLeft();
         // Turn x's right subtree into y's left subtree.
         y.setLeft(x.getRight());
         if (x.getRight() != null) {
@@ -265,49 +235,42 @@ public class Tree05_RB_hotspot<V extends Comparable<V>> {
         x.setRight(y);
         y.setParent(x);
         // Update nodes in appropriate order (lowest to highest)
-        boolean res = y.update();
-        res = x.update() || res;
-        return res;
+        return false;
     }
 
-    private void deleteFixup(RBNode x, RBNode xParent) {
-        while ((x != root) && ((x == null) || (x.red == RBColor.BLACK))) {
+    private void deleteFixup(TreeNode<V> x, TreeNode<V> xParent) {
+        while ((x != root) && ((x == null) || (x.red == BLACK))) {
             if (x == xParent.getLeft()) {
                 // NOTE: the text points out that w can not be null. The
                 // reason is not obvious from simply examining the code; it
                 // comes about because of properties of the red-black tree.
-                RBNode w = xParent.getRight();
-                if (DEBUGGING) {
-                    if (w == null) {
-                        throw new RuntimeException("x's sibling should not be null");
-                    }
-                }
-                if (w.red == RBColor.RED) {
+                TreeNode<V> w = xParent.getRight();
+                if (w.red == RED) {
                     // Case 1
-                    w.setRed(RBColor.BLACK);
-                    xParent.setRed(RBColor.RED);
+                    w.setRed(BLACK);
+                    xParent.setRed(RED);
                     leftRotate(xParent);
                     w = xParent.getRight();
                 }
-                if (((w.getLeft() == null) || (w.getLeft().red == RBColor.BLACK)) &&
-                        ((w.getRight() == null) || (w.getRight().red == RBColor.BLACK))) {
+                if (((w.getLeft() == null) || (w.getLeft().red == BLACK)) &&
+                        ((w.getRight() == null) || (w.getRight().red == BLACK))) {
                     // Case 2
-                    w.setRed(RBColor.RED);
+                    w.setRed(RED);
                     x = xParent;
                     xParent = x.getParent();
                 } else {
-                    if ((w.getRight() == null) || (w.getRight().red == RBColor.BLACK)) {
+                    if ((w.getRight() == null) || (w.getRight().red == BLACK)) {
                         // Case 3
-                        w.getLeft().setRed(RBColor.BLACK);
-                        w.setRed(RBColor.RED);
+                        w.getLeft().setRed(BLACK);
+                        w.setRed(RED);
                         rightRotate(w);
                         w = xParent.getRight();
                     }
                     // Case 4
                     w.setRed(xParent.red);
-                    xParent.setRed(RBColor.BLACK);
+                    xParent.setRed(BLACK);
                     if (w.getRight() != null) {
-                        w.getRight().setRed(RBColor.BLACK);
+                        w.getRight().setRed(BLACK);
                     }
                     leftRotate(xParent);
                     x = root;
@@ -320,38 +283,33 @@ public class Tree05_RB_hotspot<V extends Comparable<V>> {
                 // NOTE: the text points out that w can not be null. The
                 // reason is not obvious from simply examining the code; it
                 // comes about because of properties of the red-black tree.
-                RBNode w = xParent.getLeft();
-                if (DEBUGGING) {
-                    if (w == null) {
-                        throw new RuntimeException("x's sibling should not be null");
-                    }
-                }
-                if (w.red == RBColor.RED) {
+                TreeNode<V> w = xParent.getLeft();
+                if (w.red == RED) {
                     // Case 1
-                    w.setRed(RBColor.BLACK);
-                    xParent.setRed(RBColor.RED);
+                    w.setRed(BLACK);
+                    xParent.setRed(RED);
                     rightRotate(xParent);
                     w = xParent.getLeft();
                 }
-                if (((w.getRight() == null) || (w.getRight().red == RBColor.BLACK)) &&
-                        ((w.getLeft() == null) || (w.getLeft().red == RBColor.BLACK))) {
+                if (((w.getRight() == null) || (w.getRight().red == BLACK)) &&
+                        ((w.getLeft() == null) || (w.getLeft().red == BLACK))) {
                     // Case 2
-                    w.setRed(RBColor.RED);
+                    w.setRed(RED);
                     x = xParent;
                     xParent = x.getParent();
                 } else {
-                    if ((w.getLeft() == null) || (w.getLeft().red == RBColor.BLACK)) {
+                    if ((w.getLeft() == null) || (w.getLeft().red == BLACK)) {
                         // Case 3
-                        w.getRight().setRed(RBColor.BLACK);
-                        w.setRed(RBColor.RED);
+                        w.getRight().setRed(BLACK);
+                        w.setRed(RED);
                         leftRotate(w);
                         w = xParent.getLeft();
                     }
                     // Case 4
                     w.setRed(xParent.red);
-                    xParent.setRed(RBColor.BLACK);
+                    xParent.setRed(BLACK);
                     if (w.getLeft() != null) {
-                        w.getLeft().setRed(RBColor.BLACK);
+                        w.getLeft().setRed(BLACK);
                     }
                     rightRotate(xParent);
                     x = root;
@@ -360,36 +318,7 @@ public class Tree05_RB_hotspot<V extends Comparable<V>> {
             }
         }
         if (x != null) {
-            x.setRed(RBColor.BLACK);
-        }
-    }
-
-    @Data
-    @AllArgsConstructor
-    public static class RBColor {
-        public static final boolean RED = true;
-        public static final boolean BLACK = false;
-    }
-
-    @Data
-    public static class RBNode {
-        Object data;
-        RBNode left;
-        RBNode right;
-        RBNode parent;
-        boolean red;
-
-        public RBNode(Object data) {
-            this.data = data;
-            red = RBColor.RED;
-        }
-
-        public Object getData() {
-            return data;
-        }
-
-        public boolean update() {
-            return false;
+            x.setRed(BLACK);
         }
     }
 }
