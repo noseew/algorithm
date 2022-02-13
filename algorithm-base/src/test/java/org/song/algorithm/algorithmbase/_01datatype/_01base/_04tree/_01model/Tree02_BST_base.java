@@ -55,10 +55,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
     @Override
     public V get(V v) {
         TreeNode<V> node = this.search_traverse(root, v);
-        if (node != null) {
-            return node.val;
-        }
-        return null;
+        return (node == null ? null : node.val);
     }
 
     @Override
@@ -85,15 +82,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
      */
     @Override
     public V max() {
-        if (root == null) {
-            return null;
-        }
-
-        TreeNode<V> max = root;
-        while (max.right != null) {
-            max = max.right;
-        }
-        return max.val;
+        return keyOrNull(getMaxNode(root));
     }
 
     /**
@@ -103,15 +92,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
      */
     @Override
     public V min() {
-        if (root == null) {
-            return null;
-        }
-
-        TreeNode<V> max = root;
-        while (max.left != null) {
-            max = max.left;
-        }
-        return max.val;
+        return keyOrNull(getMinNode(root));
     }
 
     @Override
@@ -140,7 +121,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
      */
     @Override
     public V floor(V v) {
-        TreeNode<V> floor = floor(root, v);
+        TreeNode<V> floor = getFloorNode(root, v);
         return floor != null ? floor.val : null;
     }
 
@@ -152,7 +133,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
      */
     @Override
     public V ceiling(V v) {
-        TreeNode<V> ceiling = ceiling(root, v);
+        TreeNode<V> ceiling = getCeilingNode(root, v);
         return ceiling != null ? ceiling.val : null;
     }
 
@@ -191,7 +172,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
             return list;
         }
         // 先找到 min
-        TreeNode<V> minNode = ceiling(root, min);
+        TreeNode<V> minNode = getCeilingNode(root, min);
         if (minNode == null || greater(minNode.val, max)) {
             return list;
         }
@@ -303,7 +284,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
             parent.right = remove_recursive(parent.left, v);
         } else if (parent.left != null && parent.right != null) {
             // 找到右边最小的节点
-            parent.val = min(parent.right).val;
+            parent.val = getMinNode(parent.right).val;
             // 当前节点的右边等于原节点右边删除已经被选为的替代节点
             parent.right = remove_recursive(parent.right, parent.val);
         } else {
@@ -410,7 +391,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
         return max;
     }
     
-    protected TreeNode<V> floor(TreeNode<V> parent, V v) {
+    protected TreeNode<V> getFloorNode(TreeNode<V> parent, V v) {
         TreeNode<V> floor = null;
         while (parent != null) {
             if (parent.val == v) {
@@ -435,7 +416,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
         return floor;
     }
 
-    protected TreeNode<V> ceiling(TreeNode<V> parent, V v) {
+    protected TreeNode<V> getCeilingNode(TreeNode<V> parent, V v) {
         TreeNode<V> ceiling = null;
         while (parent != null) {
             if (parent.val == v) {
@@ -460,10 +441,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
         return ceiling;
     }
 
-    /**
-     * 查找最小结点
-     */
-    protected TreeNode<V> min(TreeNode<V> tree) {
+    protected TreeNode<V> getMinNode(TreeNode<V> tree) {
         if (tree == null) {
             return null;
         }
@@ -472,6 +450,18 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
             tree = tree.left;
         }
         return tree;
+    }
+
+    protected TreeNode<V> getMaxNode(TreeNode<V> tree) {
+        if (tree == null) {
+            return null;
+        }
+
+        TreeNode<V> max = tree;
+        while (max.right != null) {
+            max = max.right;
+        }
+        return max;
     }
 
     /**

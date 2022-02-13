@@ -149,7 +149,7 @@ public class Tree05_RB23_base02<V extends Comparable<V>> extends Tree02_BST_base
         return x;
     }
 
-    protected TreeNode<V> floor(TreeNode<V> x, V k) {
+    protected TreeNode<V> getFloorNode(TreeNode<V> x, V k) {
         while (x != null) {
             int cmp = x.val.compareTo(k);
             if (cmp == 0) return x;
@@ -157,7 +157,7 @@ public class Tree05_RB23_base02<V extends Comparable<V>> extends Tree02_BST_base
             else {
                 if (x.right == null)
                     return x;
-                TreeNode<V> t = min(x.right);
+                TreeNode<V> t = getMinNode(x.right);
                 int c = t.val.compareTo(k);
                 if (c > 0) return x;
                 else if (c == 0) return t;
@@ -167,7 +167,7 @@ public class Tree05_RB23_base02<V extends Comparable<V>> extends Tree02_BST_base
         return null;
     }
 
-    protected TreeNode<V> ceiling(TreeNode<V> x, V k) {
+    protected TreeNode<V> getCeilingNode(TreeNode<V> x, V k) {
         while (x != null) {
             int cmp = x.val.compareTo(k);
             if (cmp == 0) return x;
@@ -218,8 +218,8 @@ public class Tree05_RB23_base02<V extends Comparable<V>> extends Tree02_BST_base
             if (!isRed(h.right) && !isRed(leftOf(h.right)))
                 h = moveRedRight(h);
             if (k.compareTo(h.val) == 0) {
-                h.val = search_recursive(h.right, min(h.right).val).val;
-                h.val = min(h.right).val;
+                h.val = search_recursive(h.right, getMinNode(h.right).val).val;
+                h.val = getMinNode(h.right).val;
                 h.right = removeMin(h.right);
             } else {
                 h.right = delete(h.right, k);

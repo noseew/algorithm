@@ -106,7 +106,7 @@ public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V
             parent.right = remove_recursive(parent.left, v);
         } else if (parent.left != null && parent.right != null) {
             // 找到右边最小的节点
-            parent.val = min(parent.right).val;
+            parent.val = getMinNode(parent.right).val;
             // 当前节点的右边等于原节点右边删除已经被选为的替代节点
             parent.right = remove_recursive(parent.right, parent.val);
         } else {

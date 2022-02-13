@@ -21,17 +21,6 @@ public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<
         super(comparator);
     }
 
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public V get(V v) {
-        TreeNode<V> p = search_traverse(root, v);
-        return (p == null ? null : p.val);
-    }
-
     public V put(V v) {
         TreeNode<V> t = root;
         // 如果只有一个元素, 初始化根节点后直接返回
@@ -96,10 +85,10 @@ public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<
         return oldValue;
     }
 
+    @Override
     public void clear() {
+        super.clear();
         modCount++;
-        size = 0;
-        root = null;
     }
 
     // NavigableMap API methods
