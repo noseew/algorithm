@@ -25,11 +25,7 @@ public class Tree05_RB_jdkhotspot<V extends Comparable<V>> extends Tree02_BST_ba
 
     public void insertNode(TreeNode<V> x) {
         treeInsert(x);
-
         x.red = RED;
-        boolean shouldPropagate = false;
-
-        TreeNode<V> propagateStart = x;
 
         // Loop invariant: x has been updated.
         while ((x != root) && (x.parent.red == RED)) {
@@ -41,8 +37,6 @@ public class Tree05_RB_jdkhotspot<V extends Comparable<V>> extends Tree02_BST_ba
                     y.red = BLACK;
                     x.parent.parent.red = RED;
                     x = x.parent.parent;
-                    shouldPropagate = false;
-                    propagateStart = x;
                 } else {
                     if (x == x.parent.right) {
                         // Case 2
@@ -53,8 +47,6 @@ public class Tree05_RB_jdkhotspot<V extends Comparable<V>> extends Tree02_BST_ba
                     x.parent.red = BLACK;
                     x.parent.parent.red = RED;
                     rightRotate(x.parent.parent);
-//                    shouldPropagate = rightRotate(x.parent.parent);
-//                    propagateStart = x.parent;
                 }
             } else {
                 // Same as then clause with "right" and "left" exchanged
@@ -65,8 +57,6 @@ public class Tree05_RB_jdkhotspot<V extends Comparable<V>> extends Tree02_BST_ba
                     y.red = BLACK;
                     x.parent.parent.red = RED;
                     x = x.parent.parent;
-                    shouldPropagate = false;
-                    propagateStart = x;
                 } else {
                     if (x == x.parent.left) {
                         // Case 2
@@ -77,16 +67,9 @@ public class Tree05_RB_jdkhotspot<V extends Comparable<V>> extends Tree02_BST_ba
                     x.parent.red = BLACK;
                     x.parent.parent.red = RED;
                     leftRotate(x.parent.parent);
-//                    shouldPropagate = leftRotate(x.parent.parent);
-//                    propagateStart = x.parent;
                 }
             }
         }
-
-//        while (shouldPropagate && (propagateStart != root)) {
-//            propagateStart = propagateStart.parent;
-//            shouldPropagate = false;
-//        }
 
         root.red = BLACK;
     }
