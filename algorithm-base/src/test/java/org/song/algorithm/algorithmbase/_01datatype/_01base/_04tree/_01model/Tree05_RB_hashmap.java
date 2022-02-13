@@ -46,7 +46,7 @@ public class Tree05_RB_hashmap<V extends Comparable<V>> extends Tree03_AVL_base<
         if (parent == null) {
             root = new TreeNode<>(v, true);
             size++;
-            return parent;
+            return root;
         }
         
         for (TreeNode<V> p = parent; ; ) {

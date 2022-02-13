@@ -28,7 +28,7 @@ public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<
 
     @Override
     public V get(V v) {
-        TreeNode<V> p = getNode(v);
+        TreeNode<V> p = search_traverse(root, v);
         return (p == null ? null : p.val);
     }
 
@@ -87,7 +87,7 @@ public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<
 
     @Override
     public V remove(V v) {
-        TreeNode<V> p = getNode(v);
+        TreeNode<V> p = search_traverse(root, v);
         if (p == null)
             return null;
 
@@ -104,18 +104,22 @@ public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<
 
     // NavigableMap API methods
 
-    public TreeNode<V> pollFirstEntry() {
+    @Override
+    public V removeMin() {
         TreeNode<V> p = getFirstEntry();
-        if (p != null)
+        if (p != null) {
             deleteEntry(p);
-        return p;
+        }
+        return keyOrNull(p);
     }
 
-    public TreeNode<V> pollLastEntry() {
+    @Override
+    public V removeMax() {
         TreeNode<V> p = getLastEntry();
-        if (p != null)
+        if (p != null) {
             deleteEntry(p);
-        return p;
+        }
+        return keyOrNull(p);
     }
 
     @Override
@@ -126,28 +130,6 @@ public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<
     @Override
     public V ceiling(V v) {
         return keyOrNull(getCeilingNode(v));
-    }
-
-    final TreeNode<V> getNode(V v) {
-        if (v == null) {
-            // 没有比较器, key为null, 不允许
-            throw new NullPointerException();
-        }
-        @SuppressWarnings("unchecked")
-        Comparable<? super V> k = (Comparable<? super V>) v;
-        // 从根节点开始遍历
-        TreeNode<V> p = root;
-        while (p != null) {
-            int cmp = k.compareTo(p.val);
-            if (cmp < 0) {
-                p = p.left;
-            } else if (cmp > 0) {
-                p = p.right;
-            } else {
-                return p;
-            }
-        }
-        return null;
     }
 
     final TreeNode<V> getCeilingNode(V v) {
@@ -215,10 +197,6 @@ public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<
                 throw new ConcurrentModificationException();
             }
         }
-    }
-
-    static <V> V keyOrNull(TreeNode<V> e) {
-        return (e == null) ? null : e.val;
     }
 
     // Red-black mechanics

@@ -510,4 +510,8 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
             }
         }
     }
+
+    protected static <V> V keyOrNull(TreeNode<V> e) {
+        return (e == null) ? null : e.val;
+    }
 }
