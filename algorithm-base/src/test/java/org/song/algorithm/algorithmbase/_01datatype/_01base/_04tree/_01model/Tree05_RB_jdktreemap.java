@@ -326,7 +326,7 @@ public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree03_AVL_ba
     }
 
     @Override
-    protected TreeNode<V> rotateLeft(TreeNode<V> p) {
+    protected TreeNode<V> leftRotate(TreeNode<V> p) {
         if (p != null) {
             // 获取P的右子节点, 其实这里就相当于新增节点N(情况四而言)
             TreeNode<V> r = p.right;
@@ -359,7 +359,7 @@ public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree03_AVL_ba
     }
 
     @Override
-    protected TreeNode<V> rotateRight(TreeNode<V> p) {
+    protected TreeNode<V> rightRotate(TreeNode<V> p) {
         if (p != null) {
             // 将L设置为P的左子树
             TreeNode<V> l = p.left;
@@ -419,7 +419,7 @@ public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree03_AVL_ba
                         // 将X的父节点作为X
                         x = parentOf(x);
                         // 右旋转
-                        rotateLeft(x);
+                        leftRotate(x);
                     }
                     //(情况五)
                     // 将X的父节点(P)设置为黑色
@@ -427,7 +427,7 @@ public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree03_AVL_ba
                     // 将X的父节点的父节点(G)设置红色
                     setColor(parentOf(parentOf(x)), RED);
                     // 以X的父节点的父节点(G)为中心右旋转
-                    rotateRight(parentOf(parentOf(x)));
+                    rightRotate(parentOf(parentOf(x)));
                 }
             }
             // 如果X的父节点(P)是其父节点的父节点(G)的右节点
@@ -451,7 +451,7 @@ public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree03_AVL_ba
                         // 将X的父节点作为X
                         x = parentOf(x);
                         // 右旋转
-                        rotateRight(x);
+                        rightRotate(x);
                     }
                     // (情况五)
                     // 将X的父节点(P)设置为黑色
@@ -459,7 +459,7 @@ public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree03_AVL_ba
                     // 将X的父节点的父节点(G)设置红色
                     setColor(parentOf(parentOf(x)), RED);
                     // 以X的父节点的父节点(G)为中心右旋转
-                    rotateLeft(parentOf(parentOf(x)));
+                    leftRotate(parentOf(parentOf(x)));
                 }
             }
         }
@@ -478,7 +478,7 @@ public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree03_AVL_ba
                 if (colorOf(sib) == RED) {
                     setColor(sib, BLACK);
                     setColor(parentOf(x), RED);
-                    rotateLeft(parentOf(x));
+                    leftRotate(parentOf(x));
                     sib = rightOf(parentOf(x));
                 }
 
@@ -490,13 +490,13 @@ public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree03_AVL_ba
                     if (colorOf(rightOf(sib)) == BLACK) {
                         setColor(leftOf(sib), BLACK);
                         setColor(sib, RED);
-                        rotateRight(sib);
+                        rightRotate(sib);
                         sib = rightOf(parentOf(x));
                     }
                     setColor(sib, colorOf(parentOf(x)));
                     setColor(parentOf(x), BLACK);
                     setColor(rightOf(sib), BLACK);
-                    rotateLeft(parentOf(x));
+                    leftRotate(parentOf(x));
                     x = root;
                 }
             } else { // symmetric
@@ -505,7 +505,7 @@ public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree03_AVL_ba
                 if (colorOf(sib) == RED) {
                     setColor(sib, BLACK);
                     setColor(parentOf(x), RED);
-                    rotateRight(parentOf(x));
+                    rightRotate(parentOf(x));
                     sib = leftOf(parentOf(x));
                 }
 
@@ -517,13 +517,13 @@ public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree03_AVL_ba
                     if (colorOf(leftOf(sib)) == BLACK) {
                         setColor(rightOf(sib), BLACK);
                         setColor(sib, RED);
-                        rotateLeft(sib);
+                        leftRotate(sib);
                         sib = leftOf(parentOf(x));
                     }
                     setColor(sib, colorOf(parentOf(x)));
                     setColor(parentOf(x), BLACK);
                     setColor(leftOf(sib), BLACK);
-                    rotateRight(parentOf(x));
+                    rightRotate(parentOf(x));
                     x = root;
                 }
             }

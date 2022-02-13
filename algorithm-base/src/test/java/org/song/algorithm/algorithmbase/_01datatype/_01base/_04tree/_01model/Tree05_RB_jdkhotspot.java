@@ -52,8 +52,9 @@ public class Tree05_RB_jdkhotspot<V extends Comparable<V>> extends Tree03_AVL_ba
                     // Case 3
                     x.parent.red = BLACK;
                     x.parent.parent.red = RED;
-                    shouldPropagate = rightRotate(x.parent.parent);
-                    propagateStart = x.parent;
+                    rightRotate(x.parent.parent);
+//                    shouldPropagate = rightRotate(x.parent.parent);
+//                    propagateStart = x.parent;
                 }
             } else {
                 // Same as then clause with "right" and "left" exchanged
@@ -75,16 +76,17 @@ public class Tree05_RB_jdkhotspot<V extends Comparable<V>> extends Tree03_AVL_ba
                     // Case 3
                     x.parent.red = BLACK;
                     x.parent.parent.red = RED;
-                    shouldPropagate = leftRotate(x.parent.parent);
-                    propagateStart = x.parent;
+                    leftRotate(x.parent.parent);
+//                    shouldPropagate = leftRotate(x.parent.parent);
+//                    propagateStart = x.parent;
                 }
             }
         }
 
-        while (shouldPropagate && (propagateStart != root)) {
-            propagateStart = propagateStart.parent;
-            shouldPropagate = false;
-        }
+//        while (shouldPropagate && (propagateStart != root)) {
+//            propagateStart = propagateStart.parent;
+//            shouldPropagate = false;
+//        }
 
         root.red = BLACK;
     }
@@ -183,7 +185,7 @@ public class Tree05_RB_jdkhotspot<V extends Comparable<V>> extends Tree03_AVL_ba
 
     // Insertion and deletion helpers
 
-    private boolean leftRotate(TreeNode<V> x) {
+    protected TreeNode<V> leftRotate(TreeNode<V> x) {
         // Set y.
         TreeNode<V> y = x.right;
         // Turn y's left subtree into x's right subtree.
@@ -206,10 +208,10 @@ public class Tree05_RB_jdkhotspot<V extends Comparable<V>> extends Tree03_AVL_ba
         y.left = x;
         x.parent = y;
         // Update nodes in appropriate order (lowest to highest)
-        return false;
+        return y;
     }
 
-    private boolean rightRotate(TreeNode<V> y) {
+    protected TreeNode<V> rightRotate(TreeNode<V> y) {
         // Set x.
         TreeNode<V> x = y.left;
         // Turn x's right subtree into y's left subtree.
@@ -232,7 +234,7 @@ public class Tree05_RB_jdkhotspot<V extends Comparable<V>> extends Tree03_AVL_ba
         x.right = y;
         y.parent = x;
         // Update nodes in appropriate order (lowest to highest)
-        return false;
+        return x;
     }
 
     private void deleteFixup(TreeNode<V> x, TreeNode<V> xParent) {

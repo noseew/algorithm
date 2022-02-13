@@ -143,7 +143,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
         if (getHeight(x.left) - getHeight(x.right) > 1) {
             if (getHeight(x.left.left) >= getHeight(x.left.right)) {
                 // LL型 / 右旋转
-                x = rotateRight(x);
+                x = rightRotate(x);
             } else {
                 // LR型 < 先左旋转再右旋转
                 /*
@@ -166,15 +166,15 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
               /  \
              M    P
          */
-                x.left = rotateLeft(x.left);
-                x = rotateRight(x);
+                x.left = leftRotate(x.left);
+                x = rightRotate(x);
             }
         }
         // 右高左低
         else if (getHeight(x.right) - getHeight(x.left) > 1) {
             if (getHeight(x.right.right) >= getHeight(x.right.left)) {
                 // RR型 \ 左旋转
-                x = rotateLeft(x);
+                x = leftRotate(x);
             } else {
                 // RL型 > 先右旋转再左旋转
                 /*
@@ -197,8 +197,8 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
               /  \
              P    M
          */
-                x.right = rotateRight(x.right);
-                x = rotateLeft(x);
+                x.right = rightRotate(x.right);
+                x = leftRotate(x);
             }
         }
 
@@ -217,7 +217,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
      * @param p 不平衡的节点, isBalanced(node) = false
      * @return 新的 parent 节点
      */
-    protected TreeNode<V> rotateRight(TreeNode<V> p) {
+    protected TreeNode<V> rightRotate(TreeNode<V> p) {
         /*
         右旋:
             LL型(左左) /, M在P左, S在M左, 调整方式 P右旋, M成为新的, P父节点 (M为轴P右旋)
@@ -254,7 +254,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
      * @param p 不平衡的节点, isBalanced(node) = false
      * @return 新的 parent 节点
      */
-    protected TreeNode<V> rotateLeft(TreeNode<V> p) {
+    protected TreeNode<V> leftRotate(TreeNode<V> p) {
         /*
         左旋:
             RR型(右右) \, M在P右, S在M右, 调整方式 P左旋, M成为新的, P父节点 (M为轴P左旋)

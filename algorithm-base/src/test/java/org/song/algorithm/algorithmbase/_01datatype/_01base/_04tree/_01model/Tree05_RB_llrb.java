@@ -240,11 +240,11 @@ public class Tree05_RB_llrb<V extends Comparable<V>> extends Tree03_AVL_base<V> 
         }
         // 右红左黑: 左旋 == 情况 2.2
         if (isRed(x.right) && !isRed(x.left)) {
-            x = rotateLeft(x);
+            x = leftRotate(x);
         }
         // 左红左左红: 右旋 == 情况 2.1
         if (isRed(x.left) && isRed(x.left.left)) {
-            x = rotateRight(x);
+            x = rightRotate(x);
         }
         // 左红右红: 变色 == 情况 1
         if (isRed(x.left) && isRed(x.right)) {
@@ -258,9 +258,9 @@ public class Tree05_RB_llrb<V extends Comparable<V>> extends Tree03_AVL_base<V> 
      * 处理 / LL
      */
     @Override
-    protected TreeNode<V> rotateRight(TreeNode<V> p) {
+    protected TreeNode<V> rightRotate(TreeNode<V> p) {
         // 复用 AVL 的右旋
-        TreeNode<V> newParent = super.rotateRight(p);
+        TreeNode<V> newParent = super.rightRotate(p);
         // 红黑树自己的处理
         newParent.red = p.red;
         p.red = RED;
@@ -272,9 +272,9 @@ public class Tree05_RB_llrb<V extends Comparable<V>> extends Tree03_AVL_base<V> 
      * 处理 \ RR
      */
     @Override
-    protected TreeNode<V> rotateLeft(TreeNode<V> p) {
+    protected TreeNode<V> leftRotate(TreeNode<V> p) {
         // 复用 AVL 的左旋
-        TreeNode<V> newParent = super.rotateLeft(p);
+        TreeNode<V> newParent = super.leftRotate(p);
         // 红黑树自己的处理
         newParent.red = p.red;
         p.red = RED;

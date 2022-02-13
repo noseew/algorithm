@@ -34,22 +34,22 @@ public class Tree03_AVL_Ratio1<V extends Comparable<V>> extends Tree03_AVL_base<
         if (higher(x.left, x.right)) {
             if (getHeight(x.left.left) >= getHeight(x.left.right)) {
                 // LL型 / 右旋转
-                x = rotateRight(x);
+                x = rightRotate(x);
             } else {
                 // LR型 < 先左旋转再右旋转
-                x.left = rotateLeft(x.left);
-                x = rotateRight(x);
+                x.left = leftRotate(x.left);
+                x = rightRotate(x);
             }
         }
         // 右高左低
         else if (higher(x.right, x.left)) {
             if (getHeight(x.right.right) >= getHeight(x.right.left)) {
                 // RR型 \ 左旋转
-                x = rotateLeft(x);
+                x = leftRotate(x);
             } else {
                 // RL型 > 先右旋转再左旋转
-                x.right = rotateRight(x.right);
-                x = rotateLeft(x);
+                x.right = rightRotate(x.right);
+                x = leftRotate(x);
             }
         }
 
