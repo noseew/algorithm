@@ -16,23 +16,6 @@ public class Tree05_RB_jdkhashmap<V extends Comparable<V>> extends Tree03_AVL_ba
         super(comparator);
     }
 
-    public TreeNode<V> get(V v, TreeNode<V> parent) {
-        do {
-            TreeNode<V> pLeft = parent.left, pRight = parent.right, q;
-            if (parent.val.compareTo(v) > 0)
-                parent = pLeft;
-            else if (parent.val.compareTo(v) < 0)
-                parent = pRight;
-            else if (parent.val.compareTo(v) == 0)
-                return parent;
-            else if ((q = get(v, parent)) != null)
-                return q;
-            else
-                parent = pLeft;
-        } while (parent != null);
-        return null;
-    }
-
     @Override
     public boolean push(V v) {
         int oSize = size;
@@ -164,6 +147,23 @@ public class Tree05_RB_jdkhashmap<V extends Comparable<V>> extends Tree03_AVL_ba
                     pp.right = null;
             }
         }
+    }
+
+    private TreeNode<V> get(V v, TreeNode<V> parent) {
+        do {
+            TreeNode<V> pLeft = parent.left, pRight = parent.right, q;
+            if (parent.val.compareTo(v) > 0)
+                parent = pLeft;
+            else if (parent.val.compareTo(v) < 0)
+                parent = pRight;
+            else if (parent.val.compareTo(v) == 0)
+                return parent;
+            else if ((q = get(v, parent)) != null)
+                return q;
+            else
+                parent = pLeft;
+        } while (parent != null);
+        return null;
     }
 
     /**
