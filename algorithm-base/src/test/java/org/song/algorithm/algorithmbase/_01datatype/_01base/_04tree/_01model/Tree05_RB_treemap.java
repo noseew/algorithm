@@ -28,137 +28,8 @@ public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<
 
     @Override
     public V get(V v) {
-        TreeNode<V> p = getEntry(v);
+        TreeNode<V> p = getNode(v);
         return (p == null ? null : p.val);
-    }
-
-    final TreeNode<V> getEntry(Object v) {
-        if (v == null) {
-            // 没有比较器, key为null, 不允许
-            throw new NullPointerException();
-        }
-        @SuppressWarnings("unchecked")
-        Comparable<? super V> k = (Comparable<? super V>) v;
-        // 从根节点开始遍历
-        TreeNode<V> p = root;
-        while (p != null) {
-            int cmp = k.compareTo(p.val);
-            if (cmp < 0) {
-                p = p.left;
-            } else if (cmp > 0) {
-                p = p.right;
-            } else {
-                return p;
-            }
-        }
-        return null;
-    }
-
-    final TreeNode<V> getCeilingEntry(V v) {
-        TreeNode<V> p = root;
-        while (p != null) {
-            int cmp = comparator.compare(v, p.val);
-            if (cmp < 0) {
-                if (p.left != null)
-                    p = p.left;
-                else
-                    return p;
-            } else if (cmp > 0) {
-                if (p.right != null) {
-                    p = p.right;
-                } else {
-                    TreeNode<V> parent = p.parent;
-                    TreeNode<V> ch = p;
-                    while (parent != null && ch == parent.right) {
-                        ch = parent;
-                        parent = parent.parent;
-                    }
-                    return parent;
-                }
-            } else
-                return p;
-        }
-        return null;
-    }
-
-    final TreeNode<V> getFloorEntry(V v) {
-        TreeNode<V> p = root;
-        while (p != null) {
-            int cmp = comparator.compare(v, p.val);
-            if (cmp > 0) {
-                if (p.right != null)
-                    p = p.right;
-                else
-                    return p;
-            } else if (cmp < 0) {
-                if (p.left != null) {
-                    p = p.left;
-                } else {
-                    TreeNode<V> parent = p.parent;
-                    TreeNode<V> ch = p;
-                    while (parent != null && ch == parent.left) {
-                        ch = parent;
-                        parent = parent.parent;
-                    }
-                    return parent;
-                }
-            } else
-                return p;
-
-        }
-        return null;
-    }
-
-    final TreeNode<V> getHigherEntry(V v) {
-        TreeNode<V> p = root;
-        while (p != null) {
-            int cmp = comparator.compare(v, p.val);
-            if (cmp < 0) {
-                if (p.left != null)
-                    p = p.left;
-                else
-                    return p;
-            } else {
-                if (p.right != null) {
-                    p = p.right;
-                } else {
-                    TreeNode<V> parent = p.parent;
-                    TreeNode<V> ch = p;
-                    while (parent != null && ch == parent.right) {
-                        ch = parent;
-                        parent = parent.parent;
-                    }
-                    return parent;
-                }
-            }
-        }
-        return null;
-    }
-
-    final TreeNode<V> getLowerEntry(V v) {
-        TreeNode<V> p = root;
-        while (p != null) {
-            int cmp = comparator.compare(v, p.val);
-            if (cmp > 0) {
-                if (p.right != null)
-                    p = p.right;
-                else
-                    return p;
-            } else {
-                if (p.left != null) {
-                    p = p.left;
-                } else {
-                    TreeNode<V> parent = p.parent;
-                    TreeNode<V> ch = p;
-                    while (parent != null && ch == parent.left) {
-                        ch = parent;
-                        parent = parent.parent;
-                    }
-                    return parent;
-                }
-            }
-        }
-        return null;
     }
 
     public V put(V v) {
@@ -214,8 +85,9 @@ public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<
         return null;
     }
 
+    @Override
     public V remove(V v) {
-        TreeNode<V> p = getEntry(v);
+        TreeNode<V> p = getNode(v);
         if (p == null)
             return null;
 
@@ -246,20 +118,151 @@ public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<
         return p;
     }
 
-    public V lowerKey(V v) {
-        return keyOrNull(getLowerEntry(v));
+    @Override
+    public V floor(V v) {
+        return keyOrNull(getFloorNode(v));
     }
 
-    public V floorKey(V v) {
-        return keyOrNull(getFloorEntry(v));
+    @Override
+    public V ceiling(V v) {
+        return keyOrNull(getCeilingNode(v));
     }
 
-    public V ceilingKey(V v) {
-        return keyOrNull(getCeilingEntry(v));
+    public V lower(V v) {
+        return keyOrNull(getLowerNode(v));
     }
 
-    public V higherKey(V v) {
-        return keyOrNull(getHigherEntry(v));
+    public V higher(V v) {
+        return keyOrNull(getHigherNode(v));
+    }
+
+    final TreeNode<V> getNode(V v) {
+        if (v == null) {
+            // 没有比较器, key为null, 不允许
+            throw new NullPointerException();
+        }
+        @SuppressWarnings("unchecked")
+        Comparable<? super V> k = (Comparable<? super V>) v;
+        // 从根节点开始遍历
+        TreeNode<V> p = root;
+        while (p != null) {
+            int cmp = k.compareTo(p.val);
+            if (cmp < 0) {
+                p = p.left;
+            } else if (cmp > 0) {
+                p = p.right;
+            } else {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    final TreeNode<V> getCeilingNode(V v) {
+        TreeNode<V> p = root;
+        while (p != null) {
+            int cmp = comparator.compare(v, p.val);
+            if (cmp < 0) {
+                if (p.left != null)
+                    p = p.left;
+                else
+                    return p;
+            } else if (cmp > 0) {
+                if (p.right != null) {
+                    p = p.right;
+                } else {
+                    TreeNode<V> parent = p.parent;
+                    TreeNode<V> ch = p;
+                    while (parent != null && ch == parent.right) {
+                        ch = parent;
+                        parent = parent.parent;
+                    }
+                    return parent;
+                }
+            } else
+                return p;
+        }
+        return null;
+    }
+
+    final TreeNode<V> getFloorNode(V v) {
+        TreeNode<V> p = root;
+        while (p != null) {
+            int cmp = comparator.compare(v, p.val);
+            if (cmp > 0) {
+                if (p.right != null)
+                    p = p.right;
+                else
+                    return p;
+            } else if (cmp < 0) {
+                if (p.left != null) {
+                    p = p.left;
+                } else {
+                    TreeNode<V> parent = p.parent;
+                    TreeNode<V> ch = p;
+                    while (parent != null && ch == parent.left) {
+                        ch = parent;
+                        parent = parent.parent;
+                    }
+                    return parent;
+                }
+            } else
+                return p;
+
+        }
+        return null;
+    }
+
+    final TreeNode<V> getHigherNode(V v) {
+        TreeNode<V> p = root;
+        while (p != null) {
+            int cmp = comparator.compare(v, p.val);
+            if (cmp < 0) {
+                if (p.left != null)
+                    p = p.left;
+                else
+                    return p;
+            } else {
+                if (p.right != null) {
+                    p = p.right;
+                } else {
+                    TreeNode<V> parent = p.parent;
+                    TreeNode<V> ch = p;
+                    while (parent != null && ch == parent.right) {
+                        ch = parent;
+                        parent = parent.parent;
+                    }
+                    return parent;
+                }
+            }
+        }
+        return null;
+    }
+
+    final TreeNode<V> getLowerNode(V v) {
+        TreeNode<V> p = root;
+        while (p != null) {
+            int cmp = comparator.compare(v, p.val);
+            if (cmp > 0) {
+                if (p.right != null)
+                    p = p.right;
+                else
+                    return p;
+            } else {
+                if (p.left != null) {
+                    p = p.left;
+                } else {
+                    TreeNode<V> parent = p.parent;
+                    TreeNode<V> ch = p;
+                    while (parent != null && ch == parent.left) {
+                        ch = parent;
+                        parent = parent.parent;
+                    }
+                    return parent;
+                }
+            }
+        }
+        return null;
     }
 
     public void forEach(Consumer<? super V> action) {
