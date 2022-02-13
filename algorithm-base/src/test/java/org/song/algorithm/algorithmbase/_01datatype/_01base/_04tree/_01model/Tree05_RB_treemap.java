@@ -17,7 +17,7 @@ public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<
 
     public transient TreeNode<V> root;
 
-    private transient int size = 0;
+    public transient int size = 0;
 
     private transient int modCount = 0;
 
@@ -170,7 +170,7 @@ public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<
         // 如果只有一个元素, 初始化根节点后直接返回
         if (t == null) {
             // 初始化根节点
-            root = new TreeNode(v, true);
+            root = new TreeNode(v, root != null);
             size = 1;
             modCount++;
             return null;
@@ -214,7 +214,7 @@ public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<
         size++;
         modCount++;
 
-        root.red = true;
+        root.red = false;
         return null;
     }
 
