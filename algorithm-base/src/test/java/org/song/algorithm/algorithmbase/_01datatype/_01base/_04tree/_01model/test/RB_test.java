@@ -7,7 +7,7 @@ import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tre
 import java.util.Comparator;
 import java.util.Random;
 
-public class RB234_test {
+public class RB_test {
 
     @Test
     public void test_start1() {
