@@ -1,4 +1,6 @@
-package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
+package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model_lab;
+
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03_AVL_base;
 
 import java.util.Comparator;
 

@@ -1,5 +1,6 @@
-package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
+package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model_lab;
 
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03_AVL_base;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.TreeNode;
 
 import java.util.Comparator;
@@ -36,7 +37,6 @@ public class Tree03_AVL_Ratio1<V extends Comparable<V>> extends Tree03_AVL_base<
                 x = rotateRight(x);
             } else {
                 // LR型 < 先左旋转再右旋转
-//                node = leftRightRotate4LR(node);
                 x.left = rotateLeft(x.left);
                 x = rotateRight(x);
             }
@@ -48,7 +48,6 @@ public class Tree03_AVL_Ratio1<V extends Comparable<V>> extends Tree03_AVL_base<
                 x = rotateLeft(x);
             } else {
                 // RL型 > 先右旋转再左旋转
-//                node = rightLeftRotate4RL(node);
                 x.right = rotateRight(x.right);
                 x = rotateLeft(x);
             }
@@ -59,7 +58,7 @@ public class Tree03_AVL_Ratio1<V extends Comparable<V>> extends Tree03_AVL_base<
         return x;
     }
 
-    private boolean higher(TreeNode<V> node1, TreeNode<V> node2) {
+    protected boolean higher(TreeNode<V> node1, TreeNode<V> node2) {
         int node1Height = getHeight(node1);
         int node2Height = getHeight(node2);
         node2Height = node2Height == 0 ? 1 : node2Height;

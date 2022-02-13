@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
+package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model_lab;
 
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.TreeNode;
 
@@ -19,7 +19,7 @@ public class Tree03_AVL_Ratio2<V extends Comparable<V>> extends Tree03_AVL_Ratio
         super(comparator);
     }
 
-    private boolean higher(TreeNode<V> node1, TreeNode<V> node2) {
+    protected boolean higher(TreeNode<V> node1, TreeNode<V> node2) {
         int node1Height = getHeight(node1);
         int node2Height = getHeight(node2);
         return node1Height - node2Height > balanceRatio;

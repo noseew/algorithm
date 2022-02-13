@@ -1,40 +1,15 @@
-package org.song.algorithm.algorithmbase._01datatype._01base._04tree.test;
+package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model_lab.test;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03_AVL_Ratio2;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03_AVL_RatioTimes;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03_AVL_base;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03_AVL_Ratio1;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model_lab.Tree03_AVL_Ratio1;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model_lab.Tree03_AVL_Ratio2;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model_lab.Tree03_AVL_RatioTimes;
 
 import java.util.Comparator;
 import java.util.Random;
 
 public class AVL_test {
-
-    @Test
-    public void test_01_start() {
-        Tree03_AVL_base<Integer> tree = new Tree03_AVL_base<>(Comparator.comparing(Integer::doubleValue));
-
-        Random random = new Random();
-        for (int i = 0; i < 30; i++) {
-            tree.push(random.nextInt(100));
-        }
-        System.out.println(tree.toString());
-    }
-
-    @Test
-    public void test_remove() {
-        Tree03_AVL_base<Integer> tree = new Tree03_AVL_base<>(Comparator.comparing(Integer::doubleValue));
-
-        for (int i = 0; i < 20; i++) {
-            tree.push(i);
-        }
-        System.out.println(tree.toString());
-        for (int i = 0; i < 20; i++) {
-            tree.remove(i);
-            System.out.println(tree.toString());
-        }
-    }
 
     /**
      * 验证 不同平衡因子对调整次数的影响
