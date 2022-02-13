@@ -128,12 +128,6 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
         AVL树中, 新增和删除的修正逻辑类似, 无特殊处理
      */
 
-    /**
-     * 平衡判断和处理
-     *
-     * @param x
-     * @return
-     */
     protected TreeNode<V> balanceInsertion(TreeNode<V> x) {
         if (x == null) {
             return x;

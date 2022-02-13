@@ -230,9 +230,6 @@ public class Tree05_RB_llrb<V extends Comparable<V>> extends Tree03_AVL_base<V> 
 
      */
 
-    /**
-     * 平衡判断和处理
-     */
     @Override
     protected TreeNode<V> balanceInsertion(TreeNode<V> x) {
         if (x == null) {
@@ -254,9 +251,6 @@ public class Tree05_RB_llrb<V extends Comparable<V>> extends Tree03_AVL_base<V> 
         return x;
     }
 
-    /**
-     * 处理 / LL
-     */
     @Override
     protected TreeNode<V> rightRotate(TreeNode<V> p) {
         // 复用 AVL 的右旋
@@ -268,9 +262,6 @@ public class Tree05_RB_llrb<V extends Comparable<V>> extends Tree03_AVL_base<V> 
         return newParent;
     }
 
-    /**
-     * 处理 \ RR
-     */
     @Override
     protected TreeNode<V> leftRotate(TreeNode<V> p) {
         // 复用 AVL 的左旋
