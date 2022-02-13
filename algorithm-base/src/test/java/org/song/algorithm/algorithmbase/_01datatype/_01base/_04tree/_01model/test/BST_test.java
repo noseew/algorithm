@@ -3,7 +3,7 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.te
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreePrinter;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02_BST_base;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model._02BSTTreeBase;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.AbsBSTTree;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -50,12 +50,12 @@ public class BST_test {
         }
         BTreePrinter.print(tree.root, true);
 
-        tree.traverse(tree.root, _02BSTTreeBase.Order.MidOrder, e -> {
+        tree.traverse(tree.root, AbsBSTTree.Order.MidOrder, e -> {
             System.out.println(e);
             return true;
         });
         System.out.println("条件打印");
-        tree.traverse(tree.root, _02BSTTreeBase.Order.MidOrder, e -> {
+        tree.traverse(tree.root, AbsBSTTree.Order.MidOrder, e -> {
             if (e < 10) {
                 System.out.println(e);
                 return true;

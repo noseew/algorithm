@@ -1,10 +1,10 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.test;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree04_B_base3;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree04_B_base;
 
 public class B3_test {
-    private Tree04_B_base3<String> tree = new Tree04_B_base3<String>(3);    // degree为3
+    private Tree04_B_base<String> tree = new Tree04_B_base<String>(3);    // degree为3
 
     @Test
     public void test_start1() {

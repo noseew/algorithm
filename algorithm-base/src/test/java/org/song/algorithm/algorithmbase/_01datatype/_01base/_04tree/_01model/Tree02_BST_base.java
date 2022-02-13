@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 其中每个结点都含有一个Comparable的键(以及相关联的值)且每个结点的键都大于其左子树中的任意结点的键而小于右子树的任意结点的键
 没有平衡功能
  */
-public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> {
+public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
 
     public int size;
 
