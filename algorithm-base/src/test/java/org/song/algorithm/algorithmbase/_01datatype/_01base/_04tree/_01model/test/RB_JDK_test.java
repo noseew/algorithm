@@ -73,4 +73,31 @@ public class RB_JDK_test {
 //            }
 //        }
     }
+
+    @Test
+    public void test_vs() {
+        int max = 100;
+        int size = 20;
+
+        Tree05_RB_jdktreemap<Integer> treemap = new Tree05_RB_jdktreemap<>(Comparator.comparing(Integer::doubleValue));
+        Tree05_RB_jdkhashmap<Integer> hashmap = new Tree05_RB_jdkhashmap<>(Comparator.comparing(Integer::doubleValue));
+        Tree05_RB_jdkhotspot<Integer> hotspot = new Tree05_RB_jdkhotspot<>(Comparator.comparing(Integer::doubleValue));
+        Random random = new Random();
+        for (int i = 0; i < size; i++) {
+            int v = random.nextInt(max);
+            treemap.put(v);
+            hashmap.push(v);
+            hotspot.put(v);
+        }
+        BTreePrinter.print(treemap.root, true);
+        BTreePrinter.print(hashmap.root, true);
+        BTreePrinter.print(hotspot.root, true);
+//        int lastSize = tree.size;
+//        for (int i = 0; i < size; i++) {
+//            tree.remove(i);
+//            if (tree.size < lastSize) {
+//                BTreePrinter.print(tree.root, true);
+//            }
+//        }
+    }
 }
