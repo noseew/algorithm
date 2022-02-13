@@ -36,18 +36,20 @@ public class Tree05_RB_hashmap<V extends Comparable<V>> extends Tree03_AVL_base<
     @Override
     public boolean push(V v) {
         int oSize = size;
-        put(v);
+        insert_traverse(root, v);
         root.red = false;
         return size > oSize;
     }
 
-    private TreeNode<V> put(V v) {
-        if (root == null) {
+    @Override
+    protected TreeNode<V> insert_traverse(TreeNode<V> parent, V v) {
+        if (parent == null) {
             root = new TreeNode<>(v, true);
             size++;
+            return parent;
         }
         
-        for (TreeNode<V> p = root; ; ) {
+        for (TreeNode<V> p = parent; ; ) {
             if (p.val.compareTo(v) == 0) {
                 return p;
             }

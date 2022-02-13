@@ -305,6 +305,44 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
         }
         return parent;
     }
+    
+    /**
+     * 采用循环的方式, 插入节点
+     *
+     * @param parent 以 parent 为root
+     * @param v
+     * @return 返回新的 parent 节点
+     */
+    protected TreeNode<V> insert_traverse(TreeNode<V> parent, V v) {
+        if (parent == null) {
+            // 新建节点, 高度默认1
+            parent = new TreeNode<>(v);
+            parent.height = 1;
+            size++;
+            return parent;
+        }
+
+        for (TreeNode<V> p = parent; ; ) {
+            if (p.val.compareTo(v) == 0) {
+                return p;
+            }
+            int com = v.compareTo(p.val);
+
+            TreeNode<V> xp = p;
+            if ((p = (com <= 0) ? p.left : p.right) == null) {
+                // 新建 树节点
+                TreeNode<V> x = new TreeNode<>(v, true);
+                size++;
+                x.parent = xp;
+                if (com <= 0) {
+                    xp.left = x;
+                } else {
+                    xp.right = x;
+                }
+                return parent;
+            }
+        }
+    }
 
     /**
      * 采用循环遍历方式, 查找节点

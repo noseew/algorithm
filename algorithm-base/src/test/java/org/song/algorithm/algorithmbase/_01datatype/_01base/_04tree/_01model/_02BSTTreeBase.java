@@ -39,6 +39,10 @@ public abstract class _02BSTTreeBase<V> {
         return comparator.compare(v1, v2) > 0;
     }
 
+    public boolean eq(V v1, V v2) {
+        return comparator.compare(v1, v2) == 0;
+    }
+
     /**
      * 二叉树遍历
      * 
