@@ -128,14 +128,6 @@ public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<
         return keyOrNull(getCeilingNode(v));
     }
 
-    public V lower(V v) {
-        return keyOrNull(getLowerNode(v));
-    }
-
-    public V higher(V v) {
-        return keyOrNull(getHigherNode(v));
-    }
-
     final TreeNode<V> getNode(V v) {
         if (v == null) {
             // 没有比较器, key为null, 不允许
@@ -213,58 +205,6 @@ public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<
         return null;
     }
 
-    final TreeNode<V> getHigherNode(V v) {
-        TreeNode<V> p = root;
-        while (p != null) {
-            int cmp = comparator.compare(v, p.val);
-            if (cmp < 0) {
-                if (p.left != null)
-                    p = p.left;
-                else
-                    return p;
-            } else {
-                if (p.right != null) {
-                    p = p.right;
-                } else {
-                    TreeNode<V> parent = p.parent;
-                    TreeNode<V> ch = p;
-                    while (parent != null && ch == parent.right) {
-                        ch = parent;
-                        parent = parent.parent;
-                    }
-                    return parent;
-                }
-            }
-        }
-        return null;
-    }
-
-    final TreeNode<V> getLowerNode(V v) {
-        TreeNode<V> p = root;
-        while (p != null) {
-            int cmp = comparator.compare(v, p.val);
-            if (cmp > 0) {
-                if (p.right != null)
-                    p = p.right;
-                else
-                    return p;
-            } else {
-                if (p.left != null) {
-                    p = p.left;
-                } else {
-                    TreeNode<V> parent = p.parent;
-                    TreeNode<V> ch = p;
-                    while (parent != null && ch == parent.left) {
-                        ch = parent;
-                        parent = parent.parent;
-                    }
-                    return parent;
-                }
-            }
-        }
-        return null;
-    }
-
     public void forEach(Consumer<? super V> action) {
         Objects.requireNonNull(action);
         int expectedModCount = modCount;
@@ -276,8 +216,6 @@ public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<
             }
         }
     }
-
-    // Little utilities
 
     static <V> V keyOrNull(TreeNode<V> e) {
         return (e == null) ? null : e.val;
@@ -302,6 +240,53 @@ public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<
             while (p.right != null)
                 p = p.right;
         return p;
+    }
+
+    private void deleteEntry(TreeNode<V> p) {
+        modCount++;
+        size--;
+
+        // If strictly internal, copy successor's element to p and then make p
+        // point to successor.
+        if (p.left != null && p.right != null) {
+            TreeNode<V> s = successor(p);
+            p.val = s.val;
+            p = s;
+        } // p has 2 children
+
+        // Start fixup at replacement node, if it exists.
+        TreeNode<V> replacement = (p.left != null ? p.left : p.right);
+
+        if (replacement != null) {
+            // Link replacement to parent
+            replacement.parent = p.parent;
+            if (p.parent == null)
+                root = replacement;
+            else if (p == p.parent.left)
+                p.parent.left = replacement;
+            else
+                p.parent.right = replacement;
+
+            // Null out links so they are OK to use by fixAfterDeletion.
+            p.left = p.right = p.parent = null;
+
+            // Fix replacement
+            if (p.red == BLACK)
+                balanceDeletion(replacement);
+        } else if (p.parent == null) { // return if we are the only node.
+            root = null;
+        } else { //  No children. Use self as phantom replacement and unlink.
+            if (p.red == BLACK)
+                balanceDeletion(p);
+
+            if (p.parent != null) {
+                if (p == p.parent.left)
+                    p.parent.left = null;
+                else if (p == p.parent.right)
+                    p.parent.right = null;
+                p.parent = null;
+            }
+        }
     }
 
     static <V> TreeNode<V> successor(TreeNode<V> t) {
@@ -579,53 +564,6 @@ public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<
 
         setColor(x, BLACK);
         return null;
-    }
-
-    private void deleteEntry(TreeNode<V> p) {
-        modCount++;
-        size--;
-
-        // If strictly internal, copy successor's element to p and then make p
-        // point to successor.
-        if (p.left != null && p.right != null) {
-            TreeNode<V> s = successor(p);
-            p.val = s.val;
-            p = s;
-        } // p has 2 children
-
-        // Start fixup at replacement node, if it exists.
-        TreeNode<V> replacement = (p.left != null ? p.left : p.right);
-
-        if (replacement != null) {
-            // Link replacement to parent
-            replacement.parent = p.parent;
-            if (p.parent == null)
-                root = replacement;
-            else if (p == p.parent.left)
-                p.parent.left = replacement;
-            else
-                p.parent.right = replacement;
-
-            // Null out links so they are OK to use by fixAfterDeletion.
-            p.left = p.right = p.parent = null;
-
-            // Fix replacement
-            if (p.red == BLACK)
-                balanceDeletion(replacement);
-        } else if (p.parent == null) { // return if we are the only node.
-            root = null;
-        } else { //  No children. Use self as phantom replacement and unlink.
-            if (p.red == BLACK)
-                balanceDeletion(p);
-
-            if (p.parent != null) {
-                if (p == p.parent.left)
-                    p.parent.left = null;
-                else if (p == p.parent.right)
-                    p.parent.right = null;
-                p.parent = null;
-            }
-        }
     }
 
 }
