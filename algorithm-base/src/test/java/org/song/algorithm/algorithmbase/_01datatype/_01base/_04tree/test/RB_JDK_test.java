@@ -3,6 +3,7 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree.test;
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreePrinter;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB_hashmap;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB_hotspot;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB_treemap;
 
 import java.util.Comparator;
@@ -43,6 +44,29 @@ public class RB_JDK_test {
             tree.put(v);
         }
         BTreePrinter.print(tree.root, true);
+//        int lastSize = tree.size;
+//        for (int i = 0; i < size; i++) {
+//            tree.remove(i);
+//            if (tree.size < lastSize) {
+//                BTreePrinter.print(tree.root, true);
+//            }
+//        }
+    }
+
+    @Test
+    public void test_start3() {
+        int max = 100;
+        int size = 30;
+
+        Tree05_RB_hotspot<Integer> tree = new Tree05_RB_hotspot<>(Comparator.comparing(Integer::doubleValue));
+        Random random = new Random();
+        for (int i = 0; i < size; i++) {
+            int v = random.nextInt(max);
+            Tree05_RB_hotspot.RBNode rbNode = new Tree05_RB_hotspot.RBNode(v);
+            tree.insertNode(rbNode);
+        }
+        System.out.println();
+//        BTreePrinter.print(tree.root, true);
 //        int lastSize = tree.size;
 //        for (int i = 0; i < size; i++) {
 //            tree.remove(i);
