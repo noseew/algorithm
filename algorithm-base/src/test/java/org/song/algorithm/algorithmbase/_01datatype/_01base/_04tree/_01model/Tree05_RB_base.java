@@ -11,40 +11,10 @@ import java.util.Comparator;
 可以通过理解234树来理解红黑树的旋转和变色
 
  */
-public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_llrb<V> {
+public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
 
     public Tree05_RB_base(Comparator<V> comparator) {
         super(comparator);
-    }
-
-    /**
-     * 平衡判断和处理
-     */
-    @Override
-    protected TreeNode<V> balanceInsertion(TreeNode<V> x) {
-        if (x == null) {
-            return x;
-        }
-        // 右红左黑: 左旋 == 情况 2.2
-        if (isRed(x.right) && !isRed(x.left)) {
-            x = leftRotate(x);
-        }
-        if (isRed(x.left) && !isRed(x.right)) {
-            x = rightRotate(x);
-        }
-        // 左红左左红: 右旋 == 情况 2.1
-        if (isRed(x.left) && isRed(x.left.left)) {
-            x = rightRotate(x);
-        }
-        if (isRed(x.right) && isRed(x.right.right)) {
-            x = leftRotate(x);
-        }
-        // 左红右红: 变色 == 情况 1
-        if (isRed(x.left) && isRed(x.right)) {
-            flipColors(x);
-        }
-
-        return x;
     }
 
 }

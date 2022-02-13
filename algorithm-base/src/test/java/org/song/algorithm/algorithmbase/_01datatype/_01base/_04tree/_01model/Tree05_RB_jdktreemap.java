@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 根据JDK8 TreeMap中的红黑树 源码修改
 
  */
-public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree02_BST_base<V> {
+public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree05_RB_abs<V> {
 
     private transient int modCount = 0;
 
