@@ -11,9 +11,9 @@ import java.util.Comparator;
 可以通过理解234树来理解红黑树的旋转和变色
 
  */
-public class Tree05_RB234_base<V extends Comparable<V>> extends Tree05_RB23_base<V> {
+public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_llrb<V> {
 
-    public Tree05_RB234_base(Comparator<V> comparator) {
+    public Tree05_RB_base(Comparator<V> comparator) {
         super(comparator);
     }
 

@@ -13,11 +13,11 @@ import java.util.function.Consumer;
 根据JDK8 TreeMap中的红黑树 源码修改
 
  */
-public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<V> {
+public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree03_AVL_base<V> {
 
     private transient int modCount = 0;
 
-    public Tree05_RB_treemap(Comparator<V> comparator) {
+    public Tree05_RB_jdktreemap(Comparator<V> comparator) {
         super(comparator);
     }
 

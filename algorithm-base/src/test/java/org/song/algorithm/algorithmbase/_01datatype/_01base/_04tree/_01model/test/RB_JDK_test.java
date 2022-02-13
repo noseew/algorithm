@@ -2,9 +2,9 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.te
 
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreePrinter;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB_hashmap;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB_hotspot;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB_treemap;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB_jdkhashmap;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB_jdkhotspot;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB_jdktreemap;
 
 import java.util.Comparator;
 import java.util.Random;
@@ -16,7 +16,7 @@ public class RB_JDK_test {
         int max = 100;
         int size = 30;
 
-        Tree05_RB_hashmap<Integer> tree = new Tree05_RB_hashmap<>(Comparator.comparing(Integer::doubleValue));
+        Tree05_RB_jdkhashmap<Integer> tree = new Tree05_RB_jdkhashmap<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
         for (int i = 0; i < size; i++) {
             int v = random.nextInt(max);
@@ -37,7 +37,7 @@ public class RB_JDK_test {
         int max = 100;
         int size = 30;
 
-        Tree05_RB_treemap<Integer> tree = new Tree05_RB_treemap<>(Comparator.comparing(Integer::doubleValue));
+        Tree05_RB_jdktreemap<Integer> tree = new Tree05_RB_jdktreemap<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
         for (int i = 0; i < size; i++) {
             int v = random.nextInt(max);
@@ -58,7 +58,7 @@ public class RB_JDK_test {
         int max = 100;
         int size = 30;
 
-        Tree05_RB_hotspot<Integer> tree = new Tree05_RB_hotspot<>(Comparator.comparing(Integer::doubleValue));
+        Tree05_RB_jdkhotspot<Integer> tree = new Tree05_RB_jdkhotspot<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
         for (int i = 0; i < size; i++) {
             int v = random.nextInt(max);

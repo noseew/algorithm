@@ -2,8 +2,8 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.te
 
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreePrinter;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB23_base;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB23_base02;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB_llrb;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB_llrb02;
 
 import java.util.Comparator;
 import java.util.Random;
@@ -15,7 +15,7 @@ public class RB23_test {
         int max = 30;
         int size = 20;
 
-        Tree05_RB23_base<Integer> tree = new Tree05_RB23_base<>(Comparator.comparing(Integer::doubleValue));
+        Tree05_RB_llrb<Integer> tree = new Tree05_RB_llrb<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
         for (int i = 0; i < size; i++) {
             int v = random.nextInt(max);
@@ -29,8 +29,8 @@ public class RB23_test {
         int max = 30;
         int size = 20;
 
-        Tree05_RB23_base<Integer> tree1 = new Tree05_RB23_base<>(Comparator.comparing(Integer::doubleValue));
-        Tree05_RB23_base02<Integer> tree2 = new Tree05_RB23_base02<>(Comparator.comparing(Integer::doubleValue));
+        Tree05_RB_llrb<Integer> tree1 = new Tree05_RB_llrb<>(Comparator.comparing(Integer::doubleValue));
+        Tree05_RB_llrb02<Integer> tree2 = new Tree05_RB_llrb02<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
         for (int i = 0; i < size; i++) {
             int v = random.nextInt(max);
@@ -44,7 +44,7 @@ public class RB23_test {
     @Test
     public void test_start2() {
 
-        Tree05_RB23_base<Integer> tree = new Tree05_RB23_base<>(Comparator.comparing(Integer::doubleValue));
+        Tree05_RB_llrb<Integer> tree = new Tree05_RB_llrb<>(Comparator.comparing(Integer::doubleValue));
         tree.push(55);
         tree.push(38);
         tree.push(76);

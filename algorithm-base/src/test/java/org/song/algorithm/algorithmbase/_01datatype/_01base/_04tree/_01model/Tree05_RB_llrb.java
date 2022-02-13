@@ -32,12 +32,12 @@ import java.util.Comparator;
 
 可以通过理解23树来理解左倾红黑树的旋转和变色
  */
-public class Tree05_RB23_base<V extends Comparable<V>> extends Tree03_AVL_base<V> {
+public class Tree05_RB_llrb<V extends Comparable<V>> extends Tree03_AVL_base<V> {
 
     public static final boolean RED = true;
     public static final boolean BLACK = false;
 
-    public Tree05_RB23_base(Comparator<V> comparator) {
+    public Tree05_RB_llrb(Comparator<V> comparator) {
         super(comparator);
     }
 

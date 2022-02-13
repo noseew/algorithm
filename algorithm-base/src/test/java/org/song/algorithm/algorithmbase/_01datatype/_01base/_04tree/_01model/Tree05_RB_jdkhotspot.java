@@ -10,12 +10,12 @@ import java.util.Comparator;
 根据JDK9 hotspot工具中的红黑树 源码修改
 
  */
-public class Tree05_RB_hotspot<V extends Comparable<V>> extends Tree03_AVL_base<V> {
+public class Tree05_RB_jdkhotspot<V extends Comparable<V>> extends Tree03_AVL_base<V> {
     
     public static final boolean RED = true;
     public static final boolean BLACK = false;
 
-    public Tree05_RB_hotspot(Comparator<V> comparator) {
+    public Tree05_RB_jdkhotspot(Comparator<V> comparator) {
         super(comparator);
     }
 
