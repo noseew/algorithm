@@ -169,6 +169,9 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
         return x;
     }
 
+    protected TreeNode<V> balanceDeletion(TreeNode<V> x) {
+        return x;}
+
     /**
      * 处理 < LR
      *

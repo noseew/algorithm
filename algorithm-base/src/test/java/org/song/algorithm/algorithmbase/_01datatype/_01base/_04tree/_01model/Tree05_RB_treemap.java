@@ -25,10 +25,12 @@ public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<
         super(comparator);
     }
 
+    @Override
     public int size() {
         return size;
     }
 
+    @Override
     public V get(V v) {
         TreeNode<V> p = getEntry(v);
         return (p == null ? null : p.val);
@@ -208,7 +210,7 @@ public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<
          * 上面已经完成了排序二叉树的的构建, 将新增节点插入该树中的合适位置
          * 下面fixAfterInsertion()方法就是对这棵树进行调整/平衡, 具体过程参考上面的五种情况
          */
-        fixAfterInsertion(e);
+        balanceInsertion(e);
         size++;
         modCount++;
 
@@ -372,6 +374,7 @@ public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<
         return (p == null) ? null : p.right;
     }
 
+    @Override
     protected TreeNode<V> rotateLeft(TreeNode<V> p) {
         if (p != null) {
             // 获取P的右子节点, 其实这里就相当于新增节点N(情况四而言)
@@ -404,6 +407,7 @@ public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<
         return null;
     }
 
+    @Override
     protected TreeNode<V> rotateRight(TreeNode<V> p) {
         if (p != null) {
             // 将L设置为P的左子树
@@ -436,7 +440,8 @@ public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<
         return null;
     }
 
-    private void fixAfterInsertion(TreeNode<V> x) {
+    @Override
+    protected TreeNode<V> balanceInsertion(TreeNode<V> x) {
         //新增节点的颜色为红色
         x.red = RED;
 
@@ -509,56 +514,12 @@ public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<
         }
         // 将根节点G强制设置为黑色
         root.red = BLACK;
+
+        return null;
     }
 
-    private void deleteEntry(TreeNode<V> p) {
-        modCount++;
-        size--;
-
-        // If strictly internal, copy successor's element to p and then make p
-        // point to successor.
-        if (p.left != null && p.right != null) {
-            TreeNode<V> s = successor(p);
-            p.val = s.val;
-            p = s;
-        } // p has 2 children
-
-        // Start fixup at replacement node, if it exists.
-        TreeNode<V> replacement = (p.left != null ? p.left : p.right);
-
-        if (replacement != null) {
-            // Link replacement to parent
-            replacement.parent = p.parent;
-            if (p.parent == null)
-                root = replacement;
-            else if (p == p.parent.left)
-                p.parent.left = replacement;
-            else
-                p.parent.right = replacement;
-
-            // Null out links so they are OK to use by fixAfterDeletion.
-            p.left = p.right = p.parent = null;
-
-            // Fix replacement
-            if (p.red == BLACK)
-                fixAfterDeletion(replacement);
-        } else if (p.parent == null) { // return if we are the only node.
-            root = null;
-        } else { //  No children. Use self as phantom replacement and unlink.
-            if (p.red == BLACK)
-                fixAfterDeletion(p);
-
-            if (p.parent != null) {
-                if (p == p.parent.left)
-                    p.parent.left = null;
-                else if (p == p.parent.right)
-                    p.parent.right = null;
-                p.parent = null;
-            }
-        }
-    }
-
-    private void fixAfterDeletion(TreeNode<V> x) {
+    @Override
+    protected TreeNode<V> balanceDeletion(TreeNode<V> x) {
         while (x != root && colorOf(x) == BLACK) {
             if (x == leftOf(parentOf(x))) {
                 TreeNode<V> sib = rightOf(parentOf(x));
@@ -618,6 +579,54 @@ public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<
         }
 
         setColor(x, BLACK);
+        return null;
+    }
+
+    private void deleteEntry(TreeNode<V> p) {
+        modCount++;
+        size--;
+
+        // If strictly internal, copy successor's element to p and then make p
+        // point to successor.
+        if (p.left != null && p.right != null) {
+            TreeNode<V> s = successor(p);
+            p.val = s.val;
+            p = s;
+        } // p has 2 children
+
+        // Start fixup at replacement node, if it exists.
+        TreeNode<V> replacement = (p.left != null ? p.left : p.right);
+
+        if (replacement != null) {
+            // Link replacement to parent
+            replacement.parent = p.parent;
+            if (p.parent == null)
+                root = replacement;
+            else if (p == p.parent.left)
+                p.parent.left = replacement;
+            else
+                p.parent.right = replacement;
+
+            // Null out links so they are OK to use by fixAfterDeletion.
+            p.left = p.right = p.parent = null;
+
+            // Fix replacement
+            if (p.red == BLACK)
+                balanceDeletion(replacement);
+        } else if (p.parent == null) { // return if we are the only node.
+            root = null;
+        } else { //  No children. Use self as phantom replacement and unlink.
+            if (p.red == BLACK)
+                balanceDeletion(p);
+
+            if (p.parent != null) {
+                if (p == p.parent.left)
+                    p.parent.left = null;
+                else if (p == p.parent.right)
+                    p.parent.right = null;
+                p.parent = null;
+            }
+        }
     }
 
 }
