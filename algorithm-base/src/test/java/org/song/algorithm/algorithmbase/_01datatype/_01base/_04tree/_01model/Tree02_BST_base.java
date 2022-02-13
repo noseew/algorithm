@@ -68,6 +68,12 @@ public class Tree02_BST_base<V extends Comparable<V>> extends _02BSTTreeBase<V> 
     }
 
     @Override
+    public void clear() {
+        root = null;
+        size = 0;
+    }
+
+    @Override
     public int size() {
         return size;
     }

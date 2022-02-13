@@ -20,6 +20,7 @@ public abstract class _02BSTTreeBase<V> {
     public abstract boolean push(V v);
     public abstract V get(V v);
     public abstract V remove(V v);
+    public abstract void clear();
     public abstract int size();
 
     public abstract V max();
