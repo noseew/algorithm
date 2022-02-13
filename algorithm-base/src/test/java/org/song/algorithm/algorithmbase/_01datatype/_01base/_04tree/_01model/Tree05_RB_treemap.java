@@ -13,41 +13,36 @@ import java.util.function.Consumer;
 根据JDK8 TreeMap中的红黑树 源码修改
 
  */
-public class Tree05_RB_treemap<K extends Comparable<K>> {
+public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<V> {
 
-    private final Comparator<? super K> comparator;
-
-    public transient TreeNode<K> root;
+    public transient TreeNode<V> root;
 
     private transient int size = 0;
 
     private transient int modCount = 0;
 
-    public Tree05_RB_treemap(Comparator<? super K> comparator) {
-        this.comparator = comparator;
+    public Tree05_RB_treemap(Comparator<V> comparator) {
+        super(comparator);
     }
-
-
-    // Query Operations
 
     public int size() {
         return size;
     }
 
-    public K get(Object key) {
-        TreeNode<K> p = getEntry(key);
+    public V get(V v) {
+        TreeNode<V> p = getEntry(v);
         return (p == null ? null : p.val);
     }
 
-    final TreeNode<K> getEntry(Object key) {
-        if (key == null) {
+    final TreeNode<V> getEntry(Object v) {
+        if (v == null) {
             // 没有比较器, key为null, 不允许
             throw new NullPointerException();
         }
         @SuppressWarnings("unchecked")
-        Comparable<? super K> k = (Comparable<? super K>) key;
+        Comparable<? super V> k = (Comparable<? super V>) v;
         // 从根节点开始遍历
-        TreeNode<K> p = root;
+        TreeNode<V> p = root;
         while (p != null) {
             int cmp = k.compareTo(p.val);
             if (cmp < 0) {
@@ -61,10 +56,10 @@ public class Tree05_RB_treemap<K extends Comparable<K>> {
         return null;
     }
 
-    final TreeNode<K> getCeilingEntry(K key) {
-        TreeNode<K> p = root;
+    final TreeNode<V> getCeilingEntry(V v) {
+        TreeNode<V> p = root;
         while (p != null) {
-            int cmp = comparator.compare(key, p.val);
+            int cmp = comparator.compare(v, p.val);
             if (cmp < 0) {
                 if (p.left != null)
                     p = p.left;
@@ -74,8 +69,8 @@ public class Tree05_RB_treemap<K extends Comparable<K>> {
                 if (p.right != null) {
                     p = p.right;
                 } else {
-                    TreeNode<K> parent = p.parent;
-                    TreeNode<K> ch = p;
+                    TreeNode<V> parent = p.parent;
+                    TreeNode<V> ch = p;
                     while (parent != null && ch == parent.right) {
                         ch = parent;
                         parent = parent.parent;
@@ -88,10 +83,10 @@ public class Tree05_RB_treemap<K extends Comparable<K>> {
         return null;
     }
 
-    final TreeNode<K> getFloorEntry(K key) {
-        TreeNode<K> p = root;
+    final TreeNode<V> getFloorEntry(V v) {
+        TreeNode<V> p = root;
         while (p != null) {
-            int cmp = comparator.compare(key, p.val);
+            int cmp = comparator.compare(v, p.val);
             if (cmp > 0) {
                 if (p.right != null)
                     p = p.right;
@@ -101,8 +96,8 @@ public class Tree05_RB_treemap<K extends Comparable<K>> {
                 if (p.left != null) {
                     p = p.left;
                 } else {
-                    TreeNode<K> parent = p.parent;
-                    TreeNode<K> ch = p;
+                    TreeNode<V> parent = p.parent;
+                    TreeNode<V> ch = p;
                     while (parent != null && ch == parent.left) {
                         ch = parent;
                         parent = parent.parent;
@@ -116,10 +111,10 @@ public class Tree05_RB_treemap<K extends Comparable<K>> {
         return null;
     }
 
-    final TreeNode<K> getHigherEntry(K key) {
-        TreeNode<K> p = root;
+    final TreeNode<V> getHigherEntry(V v) {
+        TreeNode<V> p = root;
         while (p != null) {
-            int cmp = comparator.compare(key, p.val);
+            int cmp = comparator.compare(v, p.val);
             if (cmp < 0) {
                 if (p.left != null)
                     p = p.left;
@@ -129,8 +124,8 @@ public class Tree05_RB_treemap<K extends Comparable<K>> {
                 if (p.right != null) {
                     p = p.right;
                 } else {
-                    TreeNode<K> parent = p.parent;
-                    TreeNode<K> ch = p;
+                    TreeNode<V> parent = p.parent;
+                    TreeNode<V> ch = p;
                     while (parent != null && ch == parent.right) {
                         ch = parent;
                         parent = parent.parent;
@@ -142,10 +137,10 @@ public class Tree05_RB_treemap<K extends Comparable<K>> {
         return null;
     }
 
-    final TreeNode<K> getLowerEntry(K key) {
-        TreeNode<K> p = root;
+    final TreeNode<V> getLowerEntry(V v) {
+        TreeNode<V> p = root;
         while (p != null) {
-            int cmp = comparator.compare(key, p.val);
+            int cmp = comparator.compare(v, p.val);
             if (cmp > 0) {
                 if (p.right != null)
                     p = p.right;
@@ -155,8 +150,8 @@ public class Tree05_RB_treemap<K extends Comparable<K>> {
                 if (p.left != null) {
                     p = p.left;
                 } else {
-                    TreeNode<K> parent = p.parent;
-                    TreeNode<K> ch = p;
+                    TreeNode<V> parent = p.parent;
+                    TreeNode<V> ch = p;
                     while (parent != null && ch == parent.left) {
                         ch = parent;
                         parent = parent.parent;
@@ -168,25 +163,25 @@ public class Tree05_RB_treemap<K extends Comparable<K>> {
         return null;
     }
 
-    public K put(K key) {
-        TreeNode<K> t = root;
+    public V put(V v) {
+        TreeNode<V> t = root;
         // 如果只有一个元素, 初始化根节点后直接返回
         if (t == null) {
             // 初始化根节点
-            root = new TreeNode(key, true);
+            root = new TreeNode(v, true);
             size = 1;
             modCount++;
             return null;
         }
         int cmp;
         // 临时节点
-        TreeNode<K> parent;
+        TreeNode<V> parent;
 
         // 1. 替换并返回
         do {
             // 遍历树, 临时节点逐渐遍历
             parent = t;
-            cmp = comparator.compare(key, t.val);
+            cmp = comparator.compare(v, t.val);
             if (cmp < 0) {
                 // 放在节点的左子节点上
                 t = t.left;
@@ -195,14 +190,14 @@ public class Tree05_RB_treemap<K extends Comparable<K>> {
                 t = t.right;
             } else {
                 // 覆盖设置节点本身
-                t.setVal(key);
-                return key;
+                t.setVal(v);
+                return v;
             }
             // 二分查找的方式, 遍历到叶子节点
         } while (t != null);
 
         // 2. 新建 并返回
-        TreeNode<K> e = new TreeNode(parent, key, true);
+        TreeNode<V> e = new TreeNode(parent, v, true);
         if (cmp < 0) {
             parent.left = e;
         } else {
@@ -216,15 +211,17 @@ public class Tree05_RB_treemap<K extends Comparable<K>> {
         fixAfterInsertion(e);
         size++;
         modCount++;
+
+        root.red = true;
         return null;
     }
 
-    public K remove(Object key) {
-        TreeNode<K> p = getEntry(key);
+    public V remove(V v) {
+        TreeNode<V> p = getEntry(v);
         if (p == null)
             return null;
 
-        K oldValue = p.val;
+        V oldValue = p.val;
         deleteEntry(p);
         return oldValue;
     }
@@ -237,40 +234,40 @@ public class Tree05_RB_treemap<K extends Comparable<K>> {
 
     // NavigableMap API methods
 
-    public TreeNode<K> pollFirstEntry() {
-        TreeNode<K> p = getFirstEntry();
+    public TreeNode<V> pollFirstEntry() {
+        TreeNode<V> p = getFirstEntry();
         if (p != null)
             deleteEntry(p);
         return p;
     }
 
-    public TreeNode<K> pollLastEntry() {
-        TreeNode<K> p = getLastEntry();
+    public TreeNode<V> pollLastEntry() {
+        TreeNode<V> p = getLastEntry();
         if (p != null)
             deleteEntry(p);
         return p;
     }
 
-    public K lowerKey(K key) {
-        return keyOrNull(getLowerEntry(key));
+    public V lowerKey(V v) {
+        return keyOrNull(getLowerEntry(v));
     }
 
-    public K floorKey(K key) {
-        return keyOrNull(getFloorEntry(key));
+    public V floorKey(V v) {
+        return keyOrNull(getFloorEntry(v));
     }
 
-    public K ceilingKey(K key) {
-        return keyOrNull(getCeilingEntry(key));
+    public V ceilingKey(V v) {
+        return keyOrNull(getCeilingEntry(v));
     }
 
-    public K higherKey(K key) {
-        return keyOrNull(getHigherEntry(key));
+    public V higherKey(V v) {
+        return keyOrNull(getHigherEntry(v));
     }
 
-    public void forEach(Consumer<? super K> action) {
+    public void forEach(Consumer<? super V> action) {
         Objects.requireNonNull(action);
         int expectedModCount = modCount;
-        for (TreeNode<K> e = getFirstEntry(); e != null; e = successor(e)) {
+        for (TreeNode<V> e = getFirstEntry(); e != null; e = successor(e)) {
             action.accept(e.val);
 
             if (expectedModCount != modCount) {
@@ -281,7 +278,7 @@ public class Tree05_RB_treemap<K extends Comparable<K>> {
 
     // Little utilities
 
-    static <K> K keyOrNull(TreeNode<K> e) {
+    static <V> V keyOrNull(TreeNode<V> e) {
         return (e == null) ? null : e.val;
     }
 
@@ -290,33 +287,33 @@ public class Tree05_RB_treemap<K extends Comparable<K>> {
     private static final boolean RED = false;
     private static final boolean BLACK = true;
 
-    final TreeNode<K> getFirstEntry() {
-        TreeNode<K> p = root;
+    final TreeNode<V> getFirstEntry() {
+        TreeNode<V> p = root;
         if (p != null)
             while (p.left != null)
                 p = p.left;
         return p;
     }
 
-    final TreeNode<K> getLastEntry() {
-        TreeNode<K> p = root;
+    final TreeNode<V> getLastEntry() {
+        TreeNode<V> p = root;
         if (p != null)
             while (p.right != null)
                 p = p.right;
         return p;
     }
 
-    static <K> TreeNode<K> successor(TreeNode<K> t) {
+    static <V> TreeNode<V> successor(TreeNode<V> t) {
         if (t == null)
             return null;
         else if (t.right != null) {
-            TreeNode<K> p = t.right;
+            TreeNode<V> p = t.right;
             while (p.left != null)
                 p = p.left;
             return p;
         } else {
-            TreeNode<K> p = t.parent;
-            TreeNode<K> ch = t;
+            TreeNode<V> p = t.parent;
+            TreeNode<V> ch = t;
             while (p != null && ch == p.right) {
                 ch = p;
                 p = p.parent;
@@ -325,17 +322,17 @@ public class Tree05_RB_treemap<K extends Comparable<K>> {
         }
     }
 
-    static <K> TreeNode<K> predecessor(TreeNode<K> t) {
+    static <V> TreeNode<V> predecessor(TreeNode<V> t) {
         if (t == null)
             return null;
         else if (t.left != null) {
-            TreeNode<K> p = t.left;
+            TreeNode<V> p = t.left;
             while (p.right != null)
                 p = p.right;
             return p;
         } else {
-            TreeNode<K> p = t.parent;
-            TreeNode<K> ch = t;
+            TreeNode<V> p = t.parent;
+            TreeNode<V> ch = t;
             while (p != null && ch == p.left) {
                 ch = p;
                 p = p.parent;
@@ -354,31 +351,31 @@ public class Tree05_RB_treemap<K extends Comparable<K>> {
      * algorithms.
      */
 
-    private static <K> boolean colorOf(TreeNode<K> p) {
+    private static <V> boolean colorOf(TreeNode<V> p) {
         return (p == null ? BLACK : p.red);
     }
 
-    private static <K> TreeNode<K> parentOf(TreeNode<K> p) {
+    private static <V> TreeNode<V> parentOf(TreeNode<V> p) {
         return (p == null ? null : p.parent);
     }
 
-    private static <K> void setColor(TreeNode<K> p, boolean c) {
+    private static <V> void setColor(TreeNode<V> p, boolean c) {
         if (p != null)
             p.red = c;
     }
 
-    private static <K> TreeNode<K> leftOf(TreeNode<K> p) {
+    private static <V> TreeNode<V> leftOf(TreeNode<V> p) {
         return (p == null) ? null : p.left;
     }
 
-    private static <K> TreeNode<K> rightOf(TreeNode<K> p) {
+    private static <V> TreeNode<V> rightOf(TreeNode<V> p) {
         return (p == null) ? null : p.right;
     }
 
-    private void rotateLeft(TreeNode<K> p) {
+    protected TreeNode<V> rotateLeft(TreeNode<V> p) {
         if (p != null) {
             // 获取P的右子节点, 其实这里就相当于新增节点N(情况四而言)
-            TreeNode<K> r = p.right;
+            TreeNode<V> r = p.right;
             // 将R的左子树设置为P的右子树
             p.right = r.left;
             // 若R的左子树不为空, 则将P设置为R左子树的父亲
@@ -404,12 +401,13 @@ public class Tree05_RB_treemap<K extends Comparable<K>> {
             // 将R设置为P的父节点
             p.parent = r;
         }
+        return null;
     }
 
-    private void rotateRight(TreeNode<K> p) {
+    protected TreeNode<V> rotateRight(TreeNode<V> p) {
         if (p != null) {
             // 将L设置为P的左子树
-            TreeNode<K> l = p.left;
+            TreeNode<V> l = p.left;
             // 将L的右子树设置为P的左子树
             p.left = l.right;
             // 若L的右子树不为空, 则将P设置L的右子树的父节点
@@ -435,9 +433,10 @@ public class Tree05_RB_treemap<K extends Comparable<K>> {
             // 将L设置为P的父节点
             p.parent = l;
         }
+        return null;
     }
 
-    private void fixAfterInsertion(TreeNode<K> x) {
+    private void fixAfterInsertion(TreeNode<V> x) {
         //新增节点的颜色为红色
         x.red = RED;
 
@@ -446,7 +445,7 @@ public class Tree05_RB_treemap<K extends Comparable<K>> {
             // 如果X的父节点(P)是其父节点的父节点(G)的左节点
             if (parentOf(x) == leftOf(parentOf(parentOf(x)))) {
                 // 获取X的叔节点(U)
-                TreeNode<K> y = rightOf(parentOf(parentOf(x)));
+                TreeNode<V> y = rightOf(parentOf(parentOf(x)));
                 // 如果X的叔节点(U) 为红色(情况三)
                 if (colorOf(y) == RED) {
                     // 将X的父节点(P)设置为黑色
@@ -478,7 +477,7 @@ public class Tree05_RB_treemap<K extends Comparable<K>> {
             // 如果X的父节点(P)是其父节点的父节点(G)的右节点
             else {
                 // 获取X的叔节点(U)
-                TreeNode<K> y = leftOf(parentOf(parentOf(x)));
+                TreeNode<V> y = leftOf(parentOf(parentOf(x)));
                 // 如果X的叔节点(U) 为红色(情况三)
                 if (colorOf(y) == RED) {
                     // 将X的父节点(P)设置为黑色
@@ -512,20 +511,20 @@ public class Tree05_RB_treemap<K extends Comparable<K>> {
         root.red = BLACK;
     }
 
-    private void deleteEntry(TreeNode<K> p) {
+    private void deleteEntry(TreeNode<V> p) {
         modCount++;
         size--;
 
         // If strictly internal, copy successor's element to p and then make p
         // point to successor.
         if (p.left != null && p.right != null) {
-            TreeNode<K> s = successor(p);
+            TreeNode<V> s = successor(p);
             p.val = s.val;
             p = s;
         } // p has 2 children
 
         // Start fixup at replacement node, if it exists.
-        TreeNode<K> replacement = (p.left != null ? p.left : p.right);
+        TreeNode<V> replacement = (p.left != null ? p.left : p.right);
 
         if (replacement != null) {
             // Link replacement to parent
@@ -559,10 +558,10 @@ public class Tree05_RB_treemap<K extends Comparable<K>> {
         }
     }
 
-    private void fixAfterDeletion(TreeNode<K> x) {
+    private void fixAfterDeletion(TreeNode<V> x) {
         while (x != root && colorOf(x) == BLACK) {
             if (x == leftOf(parentOf(x))) {
-                TreeNode<K> sib = rightOf(parentOf(x));
+                TreeNode<V> sib = rightOf(parentOf(x));
 
                 if (colorOf(sib) == RED) {
                     setColor(sib, BLACK);
@@ -589,7 +588,7 @@ public class Tree05_RB_treemap<K extends Comparable<K>> {
                     x = root;
                 }
             } else { // symmetric
-                TreeNode<K> sib = leftOf(parentOf(x));
+                TreeNode<V> sib = leftOf(parentOf(x));
 
                 if (colorOf(sib) == RED) {
                     setColor(sib, BLACK);
