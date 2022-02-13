@@ -2,11 +2,14 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree;
 
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.TreeNode;
 
+import java.io.PrintStream;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 public class BTreePrinter {
+    
+    // 来自网络
     
     public static String print(TreeNode root, boolean print) {
         CycleRecursionCheck<TreeNode> check = new CycleRecursionCheck<>();
@@ -135,17 +138,9 @@ public class BTreePrinter {
         return left + "┴" + right;
     }
 
-    public static int getDepth(TreeNode root, CycleRecursionCheck<TreeNode> check) {
+    private static int getDepth(TreeNode root, CycleRecursionCheck<TreeNode> check) {
         if (root == null || !check.add(root)) return 0;
         return Math.max(getDepth(root.left, check), getDepth(root.right, check)) + 1;
-    }
-
-    public static void traverse(TreeNode root, int index, TreeNode[] nodes) {
-        if (root == null) return;
-        // System.out.println("index:" + index);
-        nodes[index] = root;
-        traverse(root.left, index * 2, nodes);
-        traverse(root.right, index * 2 + 1, nodes);
     }
 
     private static void traverse(TreeNode root, int index, TreeNode[] nodes, CycleRecursionCheck<TreeNode> check) {
@@ -191,4 +186,33 @@ public class BTreePrinter {
             return check;
         }
     }
+    
+    // 来自JDK9 sun.jvm.hotspot.utilities.RBTree
+
+    public static void printJDK9(TreeNode root) {
+        printOn(System.out, root);
+    }
+
+    private static void printOn(PrintStream tty, TreeNode root) {
+        printFromNode(root, tty, 0);
+    }
+    
+    private static void printFromNode(TreeNode node, PrintStream tty, int indentDepth) {
+        for (int i = 0; i < indentDepth; i++) {
+            tty.print(" ");
+        }
+
+        tty.print("-");
+        if (node == null) {
+            tty.println();
+            return;
+        }
+
+//        tty.println(" " + node.val + ((node.red) ? " (red)" : " (black)"));
+        tty.println(" " + fill(node, node.val));
+        printFromNode(node.getLeft(), tty, indentDepth + 2);
+        printFromNode(node.getRight(), tty, indentDepth + 2);
+    }
+
+
 }

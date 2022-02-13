@@ -65,6 +65,7 @@ public class RB_JDK_test {
             tree.put(v);
         }
         BTreePrinter.print(tree.root, true);
+        BTreePrinter.printJDK9(tree.root);
 //        int lastSize = tree.size;
 //        for (int i = 0; i < size; i++) {
 //            tree.remove(i);
