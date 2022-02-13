@@ -10,7 +10,7 @@ import java.util.Comparator;
 根据JDK8 HashMap中的红黑树 源码修改
 
  */
-public class Tree05_RB_jdkhashmap<V extends Comparable<V>> extends Tree03_AVL_base<V>  {
+public class Tree05_RB_jdkhashmap<V extends Comparable<V>> extends Tree02_BST_base<V>  {
 
     public Tree05_RB_jdkhashmap(Comparator<V> comparator) {
         super(comparator);
