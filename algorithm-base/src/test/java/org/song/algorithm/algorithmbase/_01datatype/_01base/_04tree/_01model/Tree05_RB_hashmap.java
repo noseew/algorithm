@@ -12,8 +12,6 @@ import java.util.Comparator;
  */
 public class Tree05_RB_hashmap<V extends Comparable<V>> extends Tree03_AVL_base<V>  {
 
-    public TreeNode<V> root;
-
     public Tree05_RB_hashmap(Comparator<V> comparator) {
         super(comparator);
     }

@@ -15,10 +15,6 @@ import java.util.function.Consumer;
  */
 public class Tree05_RB_treemap<V extends Comparable<V>> extends Tree03_AVL_base<V> {
 
-    public transient TreeNode<V> root;
-
-    public transient int size = 0;
-
     private transient int modCount = 0;
 
     public Tree05_RB_treemap(Comparator<V> comparator) {
