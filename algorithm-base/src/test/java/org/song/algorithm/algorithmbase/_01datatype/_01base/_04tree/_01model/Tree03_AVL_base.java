@@ -146,40 +146,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
                 x = rotateRight(x);
             } else {
                 // LR型 < 先左旋转再右旋转
-//                x = leftRightRotate4LR(x);
-                x.left = rotateLeft(x.left);
-                x = rotateRight(x);
-            }
-        }
-        // 右高左低
-        else if (getHeight(x.right) - getHeight(x.left) > 1) {
-            if (getHeight(x.right.right) >= getHeight(x.right.left)) {
-                // RR型 \ 左旋转
-                x = rotateLeft(x);
-            } else {
-                // RL型 > 先右旋转再左旋转
-//                x = rightLeftRotate4RL(x);
-                x.right = rotateRight(x.right);
-                x = rotateLeft(x);
-            }
-        }
-
-        // 更新高度
-        x.height = Math.max(getHeight(x.left), getHeight(x.right)) + 1;
-        return x;
-    }
-
-    protected TreeNode<V> balanceDeletion(TreeNode<V> x) {
-        return x;}
-
-    /**
-     * 处理 < LR
-     *
-     * @param p
-     * @return
-     */
-    private TreeNode<V> leftRightRotate4LR(TreeNode<V> p) {
-        /*
+                /*
         左旋+右旋
             LR型(左右) <, M在P左, S在M右, 调整方式 M左旋, S成为新的M节点, M成为新的S节点, 此时完全变为LL, 接着旋转P (S为轴M左旋, M(新)为轴P右旋)
         LR型 <: (M左旋, P右旋)
@@ -199,18 +166,18 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
               /  \
              M    P
          */
-        p.left = rotateLeft(p.left);
-        return rotateRight(p);
-    }
-
-    /**
-     * 处理 > RL
-     *
-     * @param p
-     * @return
-     */
-    private TreeNode<V> rightLeftRotate4RL(TreeNode<V> p) {
-        /*
+                x.left = rotateLeft(x.left);
+                x = rotateRight(x);
+            }
+        }
+        // 右高左低
+        else if (getHeight(x.right) - getHeight(x.left) > 1) {
+            if (getHeight(x.right.right) >= getHeight(x.right.left)) {
+                // RR型 \ 左旋转
+                x = rotateLeft(x);
+            } else {
+                // RL型 > 先右旋转再左旋转
+                /*
         右旋+左旋
             RL型(右左) >, M在P右, S在M左, 调整方式 M右旋, S成为新的M节点, M成为新的S节点, 此时完全成为RR, 接着旋转P (S为轴M右旋, M(新)为轴P左旋)
         RL型 >: (M右旋, P左旋)
@@ -230,8 +197,18 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
               /  \
              P    M
          */
-        p.right = rotateRight(p.right);
-        return rotateLeft(p);
+                x.right = rotateRight(x.right);
+                x = rotateLeft(x);
+            }
+        }
+
+        // 更新高度
+        x.height = Math.max(getHeight(x.left), getHeight(x.right)) + 1;
+        return x;
+    }
+
+    protected TreeNode<V> balanceDeletion(TreeNode<V> x) {
+        return x;
     }
 
     /**
