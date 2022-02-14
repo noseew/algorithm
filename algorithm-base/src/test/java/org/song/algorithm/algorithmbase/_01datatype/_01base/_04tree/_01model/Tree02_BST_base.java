@@ -289,26 +289,18 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
             return parent;
         }
 
-        for (TreeNode<V> p = parent; ; ) {
-            if (p.val.compareTo(v) == 0) {
-                return p;
-            }
-            int com = v.compareTo(p.val);
-
-            TreeNode<V> xp = p;
-            if ((p = (com <= 0) ? p.left : p.right) == null) {
-                // 新建 树节点
-                TreeNode<V> x = new TreeNode<>(v, true);
-                size++;
-                x.parent = xp;
-                if (com <= 0) {
-                    xp.left = x;
-                } else {
-                    xp.right = x;
-                }
-                return parent;
+        TreeNode<V> xp = getParentNode(parent, v);
+        if (xp != null) {
+            TreeNode<V> x = new TreeNode<>(v);
+            size++;
+            x.parent = xp;
+            if (less(v, xp.val)) {
+                xp.left = x;
+            } else {
+                xp.right = x;
             }
         }
+        return root;
     }
 
     /**
@@ -442,6 +434,15 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
             max = max.right;
         }
         return max;
+    }
+
+    protected TreeNode<V> getParentNode(TreeNode<V> tree, V v) {
+        TreeNode<V> p = tree, pp = null;
+        while (p != null) {
+            pp = p;
+            p = less(v, p.val) ? p.left : p.right;
+        }
+        return pp;
     }
 
     /**
