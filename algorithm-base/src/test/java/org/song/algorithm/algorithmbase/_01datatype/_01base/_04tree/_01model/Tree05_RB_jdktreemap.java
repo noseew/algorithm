@@ -70,7 +70,7 @@ public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree05_RB_abs
         size++;
         modCount++;
 
-        root.red = false;
+        root.red = BLACK;
         return null;
     }
 

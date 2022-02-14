@@ -11,9 +11,6 @@ import java.util.Comparator;
 
  */
 public class Tree05_RB_jdkhotspot<V extends Comparable<V>> extends Tree05_RB_abs<V> {
-    
-    public static final boolean RED = true;
-    public static final boolean BLACK = false;
 
     public Tree05_RB_jdkhotspot(Comparator<V> comparator) {
         super(comparator);

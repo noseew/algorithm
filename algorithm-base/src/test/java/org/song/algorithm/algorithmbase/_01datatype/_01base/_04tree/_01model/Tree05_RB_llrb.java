@@ -34,9 +34,6 @@ import java.util.Comparator;
  */
 public class Tree05_RB_llrb<V extends Comparable<V>> extends Tree05_RB_abs<V> {
 
-    public static final boolean RED = true;
-    public static final boolean BLACK = false;
-
     public Tree05_RB_llrb(Comparator<V> comparator) {
         super(comparator);
     }

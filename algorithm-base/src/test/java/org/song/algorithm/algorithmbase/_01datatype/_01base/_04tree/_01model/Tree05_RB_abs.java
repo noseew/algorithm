@@ -12,6 +12,9 @@ import java.util.Comparator;
 
  */
 public abstract class Tree05_RB_abs<V extends Comparable<V>> extends Tree02_BST_base<V> {
+
+    public static final boolean RED = true;
+    public static final boolean BLACK = false;
     
     public Tree05_RB_abs(Comparator<V> comparator) {
         super(comparator);

@@ -20,7 +20,7 @@ public class Tree05_RB_jdkhashmap<V extends Comparable<V>> extends Tree05_RB_abs
     public boolean add(V v) {
         int oSize = size;
         insert_traverse(root, v);
-        root.red = false;
+        root.red = BLACK;
         return size > oSize;
     }
 
@@ -176,15 +176,15 @@ public class Tree05_RB_jdkhashmap<V extends Comparable<V>> extends Tree05_RB_abs
     protected TreeNode<V> balanceInsertion(TreeNode<V> x) {
         for (TreeNode<V> xp, xpp, xppl, xppr; ; ) {
             if ((xp = x.parent) == null) {
-                x.red = false;
+                x.red = BLACK;
                 return x;
             } else if (!xp.red || (xpp = xp.parent) == null)
                 return root;
             if (xp == (xppl = xpp.left)) {
                 if ((xppr = xpp.right) != null && xppr.red) {
-                    xppr.red = false;
-                    xp.red = false;
-                    xpp.red = true;
+                    xppr.red = BLACK;
+                    xp.red = BLACK;
+                    xpp.red = RED;
                     x = xpp;
                 } else {
                     if (x == xp.right) {
@@ -192,18 +192,18 @@ public class Tree05_RB_jdkhashmap<V extends Comparable<V>> extends Tree05_RB_abs
                         xpp = (xp = x.parent) == null ? null : xp.parent;
                     }
                     if (xp != null) {
-                        xp.red = false;
+                        xp.red = BLACK;
                         if (xpp != null) {
-                            xpp.red = true;
+                            xpp.red = RED;
                             root = rightRotate(xpp);
                         }
                     }
                 }
             } else {
                 if (xppl != null && xppl.red) {
-                    xppl.red = false;
-                    xp.red = false;
-                    xpp.red = true;
+                    xppl.red = BLACK;
+                    xp.red = BLACK;
+                    xpp.red = RED;
                     x = xpp;
                 } else {
                     if (x == xp.left) {
@@ -211,9 +211,9 @@ public class Tree05_RB_jdkhashmap<V extends Comparable<V>> extends Tree05_RB_abs
                         xpp = (xp = x.parent) == null ? null : xp.parent;
                     }
                     if (xp != null) {
-                        xp.red = false;
+                        xp.red = BLACK;
                         if (xpp != null) {
-                            xpp.red = true;
+                            xpp.red = RED;
                             root = leftRotate(xpp);
                         }
                     }
@@ -234,15 +234,15 @@ public class Tree05_RB_jdkhashmap<V extends Comparable<V>> extends Tree05_RB_abs
             if (x == null || x == root)
                 return root;
             else if ((xp = x.parent) == null) {
-                x.red = false;
+                x.red = BLACK;
                 return x;
             } else if (x.red) {
-                x.red = false;
+                x.red = BLACK;
                 return root;
             } else if ((xpl = xp.left) == x) {
                 if ((xpr = xp.right) != null && xpr.red) {
-                    xpr.red = false;
-                    xp.red = true;
+                    xpr.red = BLACK;
+                    xp.red = RED;
                     root = leftRotate(xp);
                     xpr = (xp = x.parent) == null ? null : xp.right;
                 }
@@ -252,24 +252,23 @@ public class Tree05_RB_jdkhashmap<V extends Comparable<V>> extends Tree05_RB_abs
                     TreeNode<V> sl = xpr.left, sr = xpr.right;
                     if ((sr == null || !sr.red) &&
                             (sl == null || !sl.red)) {
-                        xpr.red = true;
+                        xpr.red = RED;
                         x = xp;
                     } else {
                         if (sr == null || !sr.red) {
                             if (sl != null)
-                                sl.red = false;
-                            xpr.red = true;
+                                sl.red = BLACK;
+                            xpr.red = RED;
                             root = rightRotate(xpr);
-                            xpr = (xp = x.parent) == null ?
-                                    null : xp.right;
+                            xpr = (xp = x.parent) == null ? null : xp.right;
                         }
                         if (xpr != null) {
                             xpr.red = (xp == null) ? false : xp.red;
                             if ((sr = xpr.right) != null)
-                                sr.red = false;
+                                sr.red = BLACK;
                         }
                         if (xp != null) {
-                            xp.red = false;
+                            xp.red = BLACK;
                             root = leftRotate(xp);
                         }
                         x = root;
@@ -277,8 +276,8 @@ public class Tree05_RB_jdkhashmap<V extends Comparable<V>> extends Tree05_RB_abs
                 }
             } else { // symmetric
                 if (xpl != null && xpl.red) {
-                    xpl.red = false;
-                    xp.red = true;
+                    xpl.red = BLACK;
+                    xp.red = RED;
                     root = rightRotate(xp);
                     xpl = (xp = x.parent) == null ? null : xp.left;
                 }
@@ -288,13 +287,13 @@ public class Tree05_RB_jdkhashmap<V extends Comparable<V>> extends Tree05_RB_abs
                     TreeNode<V> sl = xpl.left, sr = xpl.right;
                     if ((sl == null || !sl.red) &&
                             (sr == null || !sr.red)) {
-                        xpl.red = true;
+                        xpl.red = RED;
                         x = xp;
                     } else {
                         if (sl == null || !sl.red) {
                             if (sr != null)
-                                sr.red = false;
-                            xpl.red = true;
+                                sr.red = BLACK;
+                            xpl.red = RED;
                             root = leftRotate(xpl);
                             xpl = (xp = x.parent) == null ?
                                     null : xp.left;
@@ -302,10 +301,10 @@ public class Tree05_RB_jdkhashmap<V extends Comparable<V>> extends Tree05_RB_abs
                         if (xpl != null) {
                             xpl.red = (xp == null) ? false : xp.red;
                             if ((sl = xpl.left) != null)
-                                sl.red = false;
+                                sl.red = BLACK;
                         }
                         if (xp != null) {
-                            xp.red = false;
+                            xp.red = BLACK;
                             root = rightRotate(xp);
                         }
                         x = root;
@@ -322,7 +321,7 @@ public class Tree05_RB_jdkhashmap<V extends Comparable<V>> extends Tree05_RB_abs
             if ((rl = p.right = r.left) != null)
                 rl.parent = p;
             if ((pp = r.parent = p.parent) == null)
-                (root = r).red = false;
+                (root = r).red = BLACK;
             else if (pp.left == p)
                 pp.left = r;
             else
@@ -340,7 +339,7 @@ public class Tree05_RB_jdkhashmap<V extends Comparable<V>> extends Tree05_RB_abs
             if ((lr = p.left = l.right) != null)
                 lr.parent = p;
             if ((pp = l.parent = p.parent) == null)
-                (root = l).red = false;
+                (root = l).red = BLACK;
             else if (pp.right == p)
                 pp.right = l;
             else
