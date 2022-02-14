@@ -414,24 +414,19 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
     }
 
     protected TreeNode<V> getMinNode(TreeNode<V> tree) {
-        if (tree == null) {
-            return null;
+        TreeNode<V> p = tree, min = null;
+        while (p != null) {
+            min = p;
+            p = p.left;
         }
-
-        while (tree.left != null) {
-            tree = tree.left;
-        }
-        return tree;
+        return min;
     }
 
     protected TreeNode<V> getMaxNode(TreeNode<V> tree) {
-        if (tree == null) {
-            return null;
-        }
-
-        TreeNode<V> max = tree;
-        while (max.right != null) {
-            max = max.right;
+        TreeNode<V> p = tree, max = null;
+        while (p != null) {
+            max = p;
+            p = p.right;
         }
         return max;
     }

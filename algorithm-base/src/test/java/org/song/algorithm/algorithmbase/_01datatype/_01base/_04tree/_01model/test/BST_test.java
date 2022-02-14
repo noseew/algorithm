@@ -130,6 +130,54 @@ public class BST_test {
     }
 
     @Test
+    public void test_start3_max_AutoTest() {
+        int max = 1000;
+        int size = 100;
+
+        int minV = 1000;
+
+        Tree02_BST_base<Integer> tree = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
+        Random random = new Random();
+        for (int i = 0; i < size; i++) {
+            int v = random.nextInt(max);
+            tree.add(v);
+            minV = Math.min(v, minV);
+        }
+//        BTreePrinter.print(tree.root, true);
+
+        if (tree.min() != minV) {
+            System.out.println("error minV=" + minV);
+            System.out.println("error min=" + tree.min());
+        } else {
+            System.out.println("OK");
+        }
+    }
+
+    @Test
+    public void test_start3_min_AutoTest() {
+        int max = 1000;
+        int size = 100;
+
+        int maxV = -1;
+
+        Tree02_BST_base<Integer> tree = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
+        Random random = new Random();
+        for (int i = 0; i < size; i++) {
+            int v = random.nextInt(max);
+            tree.add(v);
+            maxV = Math.max(v, maxV);
+        }
+//        BTreePrinter.print(tree.root, true);
+
+        if (tree.max() != maxV) {
+            System.out.println("error maxV=" + maxV);
+            System.out.println("error max=" + tree.max());
+        } else {
+            System.out.println("OK");
+        }
+    }
+
+    @Test
     public void test_start3_rank_AutoTest() {
         int max = 20;
         int size = 10;
