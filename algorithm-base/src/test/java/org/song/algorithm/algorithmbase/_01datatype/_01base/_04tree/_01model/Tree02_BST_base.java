@@ -25,30 +25,10 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
 
     @Override
     public boolean add(V v) {
+        TreeNode<V> node = insert_traverse(root, v);
         if (root == null) {
-            root = new TreeNode<>(v);
-            size++;
-            return true;
+            root = node;
         }
-
-        TreeNode<V> parent = root;
-        while (true) {
-            TreeNode<V> next;
-            if (less(v, parent.val)) {
-                next = parent.left;
-            } else if (greater(v, parent.val)) {
-                next = parent.right;
-            } else {
-                return false;
-            }
-            if (next == null) {
-                break;
-            }
-            parent = next;
-        }
-
-        put(parent, v);
-        size++;
         return true;
     }
 
@@ -482,23 +462,6 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
             return 0;
         }
         return Math.max(getHeight_recursive(node.left), getHeight_recursive(node.right)) + 1;
-    }
-
-    private void put(TreeNode<V> parent, V v) {
-        TreeNode<V> newNode = new TreeNode<>(v);
-        if (comparator != null) {
-            if (comparator.compare(v, parent.val) < 0) {
-                parent.left = newNode;
-            } else {
-                parent.right = newNode;
-            }
-        } else {
-            if (((Comparable) v).compareTo(((Comparable) parent.val)) < 0) {
-                parent.left = newNode;
-            } else {
-                parent.right = newNode;
-            }
-        }
     }
 
     protected static <V> V keyOrNull(TreeNode<V> e) {
