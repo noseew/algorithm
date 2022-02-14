@@ -3,7 +3,6 @@ package org.song.algorithm.algorithmbase._02alg._02search.alg;
 import org.junit.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03_AVL_base;
 import org.song.algorithm.algorithmbase._02alg._01sort.AbstractSort;
-import org.song.algorithm.algorithmbase._02alg._01sort.alg.Sort_06_Quick;
 import org.song.algorithm.algorithmbase._02alg._02search.AbstractSearch;
 
 import java.util.Comparator;
@@ -35,7 +34,7 @@ public class Search_03_Tree {
             tree = new Tree03_AVL_base<>(Comparator.comparing(Integer::doubleValue));
             Comparable[] build = AbstractSort.build(0, 10, 10);
             for (int i = 0; i < build.length; i++) {
-                tree.push((Integer) build[i]);
+                tree.add((Integer) build[i]);
             }
         }
 

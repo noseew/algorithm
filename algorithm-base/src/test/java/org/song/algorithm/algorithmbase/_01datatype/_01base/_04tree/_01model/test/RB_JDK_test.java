@@ -20,7 +20,7 @@ public class RB_JDK_test {
         Random random = new Random();
         for (int i = 0; i < size; i++) {
             int v = random.nextInt(max);
-            tree.push(v);
+            tree.add(v);
         }
         BTreePrinter.print(tree.root, true);
         int lastSize = tree.size;
@@ -87,7 +87,7 @@ public class RB_JDK_test {
         for (int i = 0; i < size; i++) {
             int v = random.nextInt(max);
             treemap.put(v);
-            hashmap.push(v);
+            hashmap.add(v);
             hotspot.put(v);
         }
         BTreePrinter.print(treemap.root, true);

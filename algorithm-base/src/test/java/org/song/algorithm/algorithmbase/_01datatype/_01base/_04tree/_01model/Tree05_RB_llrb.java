@@ -42,7 +42,7 @@ public class Tree05_RB_llrb<V extends Comparable<V>> extends Tree05_RB_abs<V> {
     }
 
     @Override
-    public boolean push(V v) {
+    public boolean add(V v) {
         int size = this.size;
         root = insert_recursive(root, v);
         // 根节点总为黑色

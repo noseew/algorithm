@@ -17,7 +17,7 @@ public class Tree05_RB_jdkhashmap<V extends Comparable<V>> extends Tree05_RB_abs
     }
 
     @Override
-    public boolean push(V v) {
+    public boolean add(V v) {
         int oSize = size;
         insert_traverse(root, v);
         root.red = false;

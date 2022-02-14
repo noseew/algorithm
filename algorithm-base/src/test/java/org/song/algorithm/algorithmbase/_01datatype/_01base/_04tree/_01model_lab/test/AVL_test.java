@@ -23,9 +23,9 @@ public class AVL_test {
         Random random = new Random();
         for (int i = 0; i < 30; i++) {
             int val = random.nextInt(100);
-            tree1.push(val);
-            tree2.push(val);
-            tree3.push(val);
+            tree1.add(val);
+            tree2.add(val);
+            tree3.add(val);
         }
         System.out.println(tree1.toString());
         System.out.println();
@@ -44,7 +44,7 @@ public class AVL_test {
         Random random = new Random();
         for (int i = 0; i < 30; i++) {
             int val = random.nextInt(100);
-            if (tree1.push(val)) {
+            if (tree1.add(val)) {
                 // 测试每次操作的旋转次数
                 System.out.println(tree1.toString());
                 tree1.resetRotateTimes();

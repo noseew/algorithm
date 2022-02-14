@@ -16,7 +16,7 @@ public class BST_test {
 
         Random random = new Random();
         for (int i = 0; i < 20; i++) {
-            tree.push(random.nextInt(50));
+            tree.add(random.nextInt(50));
         }
         BTreePrinter.print(tree.root, true);
     }
@@ -27,7 +27,7 @@ public class BST_test {
 
         Random random = new Random();
         for (int i = 0; i < 10; i++) {
-            tree.push(random.nextInt(20));
+            tree.add(random.nextInt(20));
         }
         BTreePrinter.print(tree.root, true);
         
@@ -46,7 +46,7 @@ public class BST_test {
         Random random = new Random();
         for (int i = 0; i < size; i++) {
             int v = random.nextInt(max);
-            tree.push(v);
+            tree.add(v);
         }
         BTreePrinter.print(tree.root, true);
 
@@ -80,7 +80,7 @@ public class BST_test {
         Random random = new Random();
         for (int i = 0; i < size; i++) {
             int v = random.nextInt(max);
-            tree.push(v);
+            tree.add(v);
             list.add(v);
         }
         BTreePrinter.print(tree.root, true);
@@ -110,7 +110,7 @@ public class BST_test {
         Random random = new Random();
         for (int i = 0; i < size; i++) {
             int v = random.nextInt(max);
-            tree.push(v);
+            tree.add(v);
             list.add(v);
         }
         BTreePrinter.print(tree.root, true);
@@ -140,7 +140,7 @@ public class BST_test {
         Random random = new Random();
         for (int i = 0; i < size; i++) {
             int v = random.nextInt(max);
-            if (tree.push(v)) {
+            if (tree.add(v)) {
                 list.add(v);
             }
         }
@@ -168,7 +168,7 @@ public class BST_test {
         Random random = new Random();
         for (int i = 0; i < size; i++) {
             int v = random.nextInt(max);
-            if (tree.push(v)) {
+            if (tree.add(v)) {
                 list.add(v);
             }
         }

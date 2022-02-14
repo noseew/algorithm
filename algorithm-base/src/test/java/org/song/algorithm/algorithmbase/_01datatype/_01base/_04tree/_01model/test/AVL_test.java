@@ -14,7 +14,7 @@ public class AVL_test {
 
         Random random = new Random();
         for (int i = 0; i < 30; i++) {
-            tree.push(random.nextInt(100));
+            tree.add(random.nextInt(100));
         }
         System.out.println(tree.toString());
     }
@@ -24,7 +24,7 @@ public class AVL_test {
         Tree03_AVL_base<Integer> tree = new Tree03_AVL_base<>(Comparator.comparing(Integer::doubleValue));
 
         for (int i = 0; i < 20; i++) {
-            tree.push(i);
+            tree.add(i);
         }
         System.out.println(tree.toString());
         for (int i = 0; i < 20; i++) {

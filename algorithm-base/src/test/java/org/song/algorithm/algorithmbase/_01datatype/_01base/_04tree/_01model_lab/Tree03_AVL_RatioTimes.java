@@ -17,7 +17,7 @@ public class Tree03_AVL_RatioTimes<V extends Comparable<V>> extends Tree03_AVL_b
      * @return
      */
     @Override
-    public boolean push(V v) {
+    public boolean add(V v) {
         int size = this.size;
         root = insert_recursive(root, v);
         return size < this.size;

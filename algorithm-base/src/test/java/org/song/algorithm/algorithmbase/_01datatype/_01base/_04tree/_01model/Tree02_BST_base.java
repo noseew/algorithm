@@ -24,7 +24,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
     }
 
     @Override
-    public boolean push(V v) {
+    public boolean add(V v) {
         if (root == null) {
             root = new TreeNode<>(v);
             size++;

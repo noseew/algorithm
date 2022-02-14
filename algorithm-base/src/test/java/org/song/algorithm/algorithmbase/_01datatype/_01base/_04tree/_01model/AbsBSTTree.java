@@ -17,7 +17,7 @@ public abstract class AbsBSTTree<V> {
         this.comparator = comparator;
     }
 
-    public abstract boolean push(V v);
+    public abstract boolean add(V v);
     public abstract V get(V v);
     public abstract V remove(V v);
     public abstract void clear();

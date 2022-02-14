@@ -16,7 +16,7 @@ public class Tree_alg {
     private TreeNode<Integer> initAVLTreeNode(int count) {
         Tree03_AVL_base<Integer> tree = new Tree03_AVL_base<>(Comparator.comparing(Integer::doubleValue));
         for (int i = 0; i < count; i++) {
-            tree.push(i);
+            tree.add(i);
         }
         return tree.root;
     }
@@ -24,7 +24,7 @@ public class Tree_alg {
     private TreeNode<Integer> initBSTTreeNode(int count) {
         Tree02_BST_base<Integer> tree = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
         for (int i = 0; i < count; i++) {
-            tree.push(i);
+            tree.add(i);
         }
         return tree.root;
     }
@@ -32,7 +32,7 @@ public class Tree_alg {
     private Tree03_AVL_base<Integer> initAVLTree(int count) {
         Tree03_AVL_base<Integer> tree = new Tree03_AVL_base<>(Comparator.comparing(Integer::doubleValue));
         for (int i = 0; i < count; i++) {
-            tree.push(i);
+            tree.add(i);
         }
         return tree;
     }

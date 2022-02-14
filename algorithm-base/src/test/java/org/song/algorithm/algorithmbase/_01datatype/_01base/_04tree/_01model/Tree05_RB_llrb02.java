@@ -17,7 +17,7 @@ public class Tree05_RB_llrb02<V extends Comparable<V>> extends Tree05_RB_abs<V> 
         super(comparator);
     }
 
-    public boolean push(V v) {
+    public boolean add(V v) {
         if (root == null) {
             root = new TreeNode(null, v, BLACK);
             size++;

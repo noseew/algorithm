@@ -19,7 +19,7 @@ public class RBllrb_test {
         Random random = new Random();
         for (int i = 0; i < size; i++) {
             int v = random.nextInt(max);
-            tree.push(v);
+            tree.add(v);
         }
         BTreePrinter.print(tree.root, true);
     }
@@ -34,8 +34,8 @@ public class RBllrb_test {
         Random random = new Random();
         for (int i = 0; i < size; i++) {
             int v = random.nextInt(max);
-            tree1.push(v);
-            tree2.push(v);
+            tree1.add(v);
+            tree2.add(v);
         }
         BTreePrinter.print(tree1.root, true);
         BTreePrinter.print(tree2.root, true);
@@ -45,15 +45,15 @@ public class RBllrb_test {
     public void test_start2() {
 
         Tree05_RB_llrb<Integer> tree = new Tree05_RB_llrb<>(Comparator.comparing(Integer::doubleValue));
-        tree.push(55);
-        tree.push(38);
-        tree.push(76);
-        tree.push(25);
-        tree.push(50);
-        tree.push(72);
-        tree.push(33);
-        tree.push(17);
-        tree.push(46);
+        tree.add(55);
+        tree.add(38);
+        tree.add(76);
+        tree.add(25);
+        tree.add(50);
+        tree.add(72);
+        tree.add(33);
+        tree.add(17);
+        tree.add(46);
         BTreePrinter.print(tree.root, true);
         tree.remove(17);
         BTreePrinter.print(tree.root, true);
