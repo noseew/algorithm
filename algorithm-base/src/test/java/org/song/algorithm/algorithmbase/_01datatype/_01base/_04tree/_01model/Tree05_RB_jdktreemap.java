@@ -4,6 +4,7 @@ import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.nod
 
 import java.util.Comparator;
 import java.util.ConcurrentModificationException;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -328,67 +329,45 @@ public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree05_RB_abs
     @Override
     protected TreeNode<V> leftRotate(TreeNode<V> p) {
         if (p != null) {
-            // 获取P的右子节点, 其实这里就相当于新增节点N(情况四而言)
             TreeNode<V> r = p.right;
-            // 将R的左子树设置为P的右子树
             p.right = r.left;
-            // 若R的左子树不为空, 则将P设置为R左子树的父亲
             if (r.left != null) {
                 r.left.parent = p;
             }
-            // 将P的父亲设置R的父亲
             r.parent = p.parent;
-            // 如果P的父亲为空, 则将R设置为跟节点
             if (p.parent == null) {
                 root = r;
-            }
-            // 如果P为其父节点(G)的左子树, 则将R设置为P父节点(G)左子树
-            else if (p.parent.left == p) {
+            } else if (p.parent.left == p) {
                 p.parent.left = r;
-            }
-            // 否则R设置为P的父节点(G)的右子树
-            else {
+            } else {
                 p.parent.right = r;
             }
-            // 将P设置为R的左子树
             r.left = p;
-            // 将R设置为P的父节点
             p.parent = r;
         }
-        return null;
+        return root;
     }
 
     @Override
     protected TreeNode<V> rightRotate(TreeNode<V> p) {
         if (p != null) {
-            // 将L设置为P的左子树
             TreeNode<V> l = p.left;
-            // 将L的右子树设置为P的左子树
             p.left = l.right;
-            // 若L的右子树不为空, 则将P设置L的右子树的父节点
             if (l.right != null) {
                 l.right.parent = p;
             }
-            // 将P的父节点设置为L的父节点
             l.parent = p.parent;
-            // 如果P的父节点为空, 则将L设置根节点
             if (p.parent == null) {
                 root = l;
-            }
-            // 若P为其父节点的右子树, 则将L设置为P的父节点的右子树
-            else if (p.parent.right == p) {
+            } else if (p.parent.right == p) {
                 p.parent.right = l;
-            }
-            // 否则将L设置为P的父节点的左子树
-            else {
+            } else {
                 p.parent.left = l;
             }
-            // 将P设置为L的右子树
             l.right = p;
-            // 将L设置为P的父节点
             p.parent = l;
         }
-        return null;
+        return root;
     }
 
     @Override
