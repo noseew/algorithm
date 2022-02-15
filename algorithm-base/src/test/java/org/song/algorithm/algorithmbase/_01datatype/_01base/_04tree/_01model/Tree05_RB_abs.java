@@ -103,6 +103,14 @@ public abstract class Tree05_RB_abs<V extends Comparable<V>> extends Tree02_BST_
             p.parent = pLeft;
             return pLeft;
         }
+        // 处理 p.parent的子节点指向, 可选操作, 也可以将新的parent节点返回, 由调用方处理
+            if (p.parent == null) {
+                root = l;
+            } else if (p.parent.right == p) {
+                p.parent.right = l;
+            } else {
+                p.parent.left = l;
+            }
          */
 
         return p;
@@ -168,6 +176,14 @@ public abstract class Tree05_RB_abs<V extends Comparable<V>> extends Tree02_BST_
             p.parent = pRight;
             return pRight;
         }
+        // 处理 p.parent的子节点指向, 可选操作, 也可以将新的parent节点返回, 由调用方处理
+            if (p.parent == null) {
+                root = r;
+            } else if (p.parent.left == p) {
+                p.parent.left = r;
+            } else {
+                p.parent.right = r;
+            }
          */
         return p;
     }
