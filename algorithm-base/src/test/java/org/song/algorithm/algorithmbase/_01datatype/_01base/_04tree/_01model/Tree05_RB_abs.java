@@ -29,6 +29,35 @@ public abstract class Tree05_RB_abs<V extends Comparable<V>> extends Tree02_BST_
      * @return
      */
     protected TreeNode<V> balanceInsertion(TreeNode<V> x) {
+        /*
+        条件: 新 != 根 && 新.父 == 红 (双红)
+    
+        伪代码
+        新.父 == 新.父.父.左      (父节点是左子节点)
+            新.父.父.右 == 红     (右叔为红)
+                新.父 = 黑
+                新.父.父 = 红
+                新.父.父.右 = 黑
+                新 = 新.父.父    (为下一次循环判断跳转)
+            否则                (右叔为黑)
+                新.父.右 == 新   (当前新是右子节点)
+                    左旋 新      (新 = 新.父) 这里没有处理 新.子节点指针, 可以交给旋转里处理
+                新.父 = 黑
+                新.父.父 = 红
+                右旋 新.父.父
+        否则                   (父节点是右子节点)
+            新.父.父.左 == 红    (左叔为红)
+                新.父 = 黑
+                新.父.父 = 红
+                新.父.父.左 = 黑
+                新 = 新.父.父   (为下一次循环判断跳转)
+            否则               (左叔为黑)
+                新.父.左 = 新   (当前新是左子节点)
+                    右旋 新     (新 = 新.父) 这里没有处理 新.子节点指针, 可以交给旋转里处理
+                新.父 = 黑
+                新.父.父 = 红
+                左旋 新.父.父
+         */
         return x;
     }
 
@@ -103,7 +132,7 @@ public abstract class Tree05_RB_abs<V extends Comparable<V>> extends Tree02_BST_
             p.parent = pLeft;
             return pLeft;
         }
-        // 处理 p.parent的子节点指向, 可选操作, 也可以将新的parent节点返回, 由调用方处理
+        // 处理 p.parent.left/right 节点指向, 可选操作, 也可以将新的parent节点返回, 由调用方处理
             if (p.parent == null) {
                 root = l;
             } else if (p.parent.right == p) {
@@ -176,7 +205,7 @@ public abstract class Tree05_RB_abs<V extends Comparable<V>> extends Tree02_BST_
             p.parent = pRight;
             return pRight;
         }
-        // 处理 p.parent的子节点指向, 可选操作, 也可以将新的parent节点返回, 由调用方处理
+        // 处理 p.parent.left/right 子节点指向, 可选操作, 也可以将新的parent节点返回, 由调用方处理
             if (p.parent == null) {
                 root = r;
             } else if (p.parent.left == p) {
