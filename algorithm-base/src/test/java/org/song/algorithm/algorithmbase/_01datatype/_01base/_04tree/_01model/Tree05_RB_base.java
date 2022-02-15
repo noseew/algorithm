@@ -8,7 +8,7 @@ import java.util.Comparator;
 红黑树
 这里实现是 等价234树
 
-可以通过理解234树来理解红黑树的旋转和变色
+模板实现, 尤其是旋转和平衡
 
  */
 public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
@@ -19,35 +19,35 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
 
     protected TreeNode<V> balanceInsertion(TreeNode<V> x) {
 
-        while (x != null && x != root && x.parent.red == RED) {
+        while (x != null && x != root && isRed(x.parent)) {
             if (x.parent == x.parent.parent.left) {
-                if (x.parent.parent.right.red == RED) {
-                    x.parent.red = BLACK;
-                    x.parent.parent.red = RED;
-                    x.parent.parent.right.red = BLACK;
+                if (isRed(x.parent.parent.right)) {
+                    setBlack(x.parent);
+                    setRed(x.parent.parent);
+                    setBlack(x.parent.parent.right);
                     x = x.parent.parent;
                 } else {
                     if (x == x.parent.right) {
                         x = x.parent;
                         leftRotate(x);
                     }
-                    x.parent.red = BLACK;
-                    x.parent.parent.red = RED;
+                    setBlack(x.parent);
+                    setRed(x.parent.parent);
                     rightRotate(x.parent.parent);
                 }
             } else {
-                if (x.parent.parent.left.red == RED) {
-                    x.parent.red = BLACK;
-                    x.parent.parent.red = RED;
-                    x.parent.parent.left.red = BLACK;
+                if (isRed(x.parent.parent.left)) {
+                    setBlack(x.parent);
+                    setRed(x.parent.parent);
+                    setBlack(x.parent.parent.left);
                     x = x.parent.parent;
                 } else {
                     if (x == x.parent.parent.left) {
                         x = x.parent;
                         rightRotate(x);
                     }
-                    x.parent.red = BLACK;
-                    x.parent.parent.red = RED;
+                    setBlack(x.parent);
+                    setRed(x.parent.parent);
                     leftRotate(x.parent.parent);
                 }
             }
@@ -56,47 +56,47 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
     }
 
     protected TreeNode<V> balanceDeletion(TreeNode<V> x) {
-        while (x != root && x.red == BLACK) {
+        while (x != root && isBlack(x)) {
             if (x == x.parent.left) {
-                if (x.parent.right.red == RED) {
-                    x.parent.right.red = BLACK;
-                    x.parent.red = RED;
+                if (isRed(x.parent.right)) {
+                    setBlack(x.parent.right);
+                    setRed(x.parent);
                     leftRotate(x.parent);
                 }
-                if (x.parent.right.left.red == BLACK && x.parent.right.right.red == BLACK) {
-                    x.parent.right.red = RED;
+                if (isBlack(x.parent.right.left) && isBlack(x.parent.right.right)) {
+                    setRed(x.parent.right);
                     x = x.parent;
                 } else {
-                    if (x.parent.right.right.red == BLACK) {
-                        x.parent.right.left.red = BLACK;
-                        x.parent.right.red = RED;
+                    if (isBlack(x.parent.right.right)) {
+                        setBlack(x.parent.right.left);
+                        setRed(x.parent.right);
                         rightRotate(x.parent);
                         x = x.parent;
                     }
                     x.parent.right.red = x.parent.red;
-                    x.parent.red = BLACK;
-                    x.parent.right.right.red = BLACK;
+                    setBlack(x.parent);
+                    setBlack(x.parent.right.right);
                     leftRotate(x.parent);
                     x = root;
                 }
             } else {
-                if (x.parent.left.red == RED) {
-                    x.parent.left.red = BLACK;
-                    x.parent.red = RED;
+                if (isRed(x.parent.left)) {
+                    setBlack(x.parent.left);
+                    setRed(x.parent);
                     rightRotate(x.parent);
                 }
-                if (x.parent.left.right.red == BLACK && x.parent.left.left.red == BLACK) {
-                    x.parent.left.red = RED;
+                if (isBlack(x.parent.left.right) && isBlack(x.parent.left.left)) {
+                    setRed(x.parent.left);
                     x = x.parent;
                 } else {
-                    if (x.parent.left.left.red == BLACK) {
-                        x.parent.left.right.red = BLACK;
-                        x.parent.left.red = RED;
+                    if (isBlack(x.parent.left.left)) {
+                        setBlack(x.parent.left.right);
+                        setRed(x.parent.left);
                         leftRotate(x.parent.left);
                     }
                     x.parent.left.red = x.parent.red;
-                    x.parent.red = BLACK;
-                    x.parent.left.left.red = BLACK;
+                    setBlack(x.parent);
+                    setBlack(x.parent.left.left);
                     rightRotate(x.parent);
                     x = root;
                 }
