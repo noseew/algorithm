@@ -17,6 +17,51 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
         super(comparator);
     }
 
+    @Override
+    public boolean add(V v) {
+        TreeNode<V> vTreeNode = this.insert_traverse(root, v);
+        if (vTreeNode != null) {
+            root = vTreeNode;
+            TreeNode<V> node = this.search_traverse(root, v);
+            balanceInsertion(node);
+            setBlack(root);
+            return true;
+        }
+        setBlack(root);
+        return false;
+    }
+    
+    @Override
+    protected TreeNode<V> insert_traverse(TreeNode<V> parent, V v) {
+        if (parent == null) {
+            root = new TreeNode<>(v, true);
+            size++;
+            return root;
+        }
+
+        for (TreeNode<V> p = parent; ; ) {
+            if (p.val.compareTo(v) == 0) {
+                return p;
+            }
+            int com = v.compareTo(p.val);
+
+            TreeNode<V> xp = p;
+            if ((p = (com <= 0) ? p.left : p.right) == null) {
+                // 新建 树节点
+                TreeNode<V> x = new TreeNode<>(v, true);
+                size++;
+                x.parent = xp;
+                if (com <= 0) {
+                    xp.left = x;
+                } else {
+                    xp.right = x;
+                }
+                balanceInsertion(x);
+                return null;
+            }
+        }
+    }
+
     protected TreeNode<V> balanceInsertion(TreeNode<V> x) {
 
         while (x != null && x != root && isRed(parent(x))) {
@@ -106,6 +151,9 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
     }
 
     protected TreeNode<V> rightRotate(TreeNode<V> p) {
+        if (p == null) {
+            return p;
+        }
         TreeNode<V> pLeft = p.left;
         p.left = pLeft.right;
         if (pLeft.right != null) {
@@ -127,6 +175,9 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
     }
 
     protected TreeNode<V> leftRotate(TreeNode<V> p) {
+        if (p == null) {
+            return p;
+        }
         TreeNode<V> pRight = p.right;
         p.right = pRight.left;
         if (pRight.left != null) {

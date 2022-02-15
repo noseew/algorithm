@@ -274,13 +274,6 @@ public class Tree05_RB_llrb<V extends Comparable<V>> extends Tree05_RB_abs<V> {
         return newParent;
     }
 
-    protected boolean isRed(TreeNode<V> node) {
-        if (node == null) {
-            return false;
-        }
-        return node.red == RED;
-    }
-
     /**
      * 将h节点设为红色, 其两个子节点设为黑色
      * 

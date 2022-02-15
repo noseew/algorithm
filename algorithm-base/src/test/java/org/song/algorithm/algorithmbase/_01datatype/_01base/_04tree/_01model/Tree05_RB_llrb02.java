@@ -80,10 +80,6 @@ public class Tree05_RB_llrb02<V extends Comparable<V>> extends Tree05_RB_abs<V> 
 
     //---------- PRIVATE METHOD AND CLASS----------//
 
-    private boolean isRed(TreeNode<V> x) {
-        return x != null && x.red == RED;
-    }
-
     private TreeNode<V> flipColors(TreeNode<V> h) {
         h.red = RED;
         h.left.red = BLACK;
