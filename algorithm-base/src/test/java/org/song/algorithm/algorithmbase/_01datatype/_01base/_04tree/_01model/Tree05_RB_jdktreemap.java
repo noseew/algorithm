@@ -372,77 +372,43 @@ public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree05_RB_abs
 
     @Override
     protected TreeNode<V> balanceInsertion(TreeNode<V> x) {
-        //新增节点的颜色为红色
         x.red = RED;
 
-        // 循环 直到 x不是根节点, 且x的父节点不为红色
         while (x != null && x != root && x.parent.red == RED) {
-            // 如果X的父节点(P)是其父节点的父节点(G)的左节点
             if (parentOf(x) == leftOf(parentOf(parentOf(x)))) {
-                // 获取X的叔节点(U)
                 TreeNode<V> y = rightOf(parentOf(parentOf(x)));
-                // 如果X的叔节点(U) 为红色(情况三)
                 if (colorOf(y) == RED) {
-                    // 将X的父节点(P)设置为黑色
                     setColor(parentOf(x), BLACK);
-                    // 将X的叔节点(U)设置为黑色
                     setColor(y, BLACK);
-                    // 将X的父节点的父节点(G)设置红色
                     setColor(parentOf(parentOf(x)), RED);
                     x = parentOf(parentOf(x));
-                }
-                // 如果X的叔节点(U为黑色)；这里会存在两种情况(情况四/情况五)
-                else {
-                    // 如果X节点为其父节点(P)的右子树, 则进行左旋转(情况四)
+                } else {
                     if (x == rightOf(parentOf(x))) {
-                        // 将X的父节点作为X
                         x = parentOf(x);
-                        // 右旋转
                         leftRotate(x);
                     }
-                    //(情况五)
-                    // 将X的父节点(P)设置为黑色
                     setColor(parentOf(x), BLACK);
-                    // 将X的父节点的父节点(G)设置红色
                     setColor(parentOf(parentOf(x)), RED);
-                    // 以X的父节点的父节点(G)为中心右旋转
                     rightRotate(parentOf(parentOf(x)));
                 }
-            }
-            // 如果X的父节点(P)是其父节点的父节点(G)的右节点
-            else {
-                // 获取X的叔节点(U)
+            } else {
                 TreeNode<V> y = leftOf(parentOf(parentOf(x)));
-                // 如果X的叔节点(U) 为红色(情况三)
                 if (colorOf(y) == RED) {
-                    // 将X的父节点(P)设置为黑色
                     setColor(parentOf(x), BLACK);
-                    // 将X的叔节点(U)设置为黑色
                     setColor(y, BLACK);
-                    // 将X的父节点的父节点(G)设置红色
                     setColor(parentOf(parentOf(x)), RED);
                     x = parentOf(parentOf(x));
-                }
-                // 如果X的叔节点(U为黑色)；这里会存在两种情况(情况四/情况五)
-                else {
-                    // 如果X节点为其父节点(P)的右子树, 则进行左旋转(情况四)
+                } else {
                     if (x == leftOf(parentOf(x))) {
-                        // 将X的父节点作为X
                         x = parentOf(x);
-                        // 右旋转
                         rightRotate(x);
                     }
-                    // (情况五)
-                    // 将X的父节点(P)设置为黑色
                     setColor(parentOf(x), BLACK);
-                    // 将X的父节点的父节点(G)设置红色
                     setColor(parentOf(parentOf(x)), RED);
-                    // 以X的父节点的父节点(G)为中心右旋转
                     leftRotate(parentOf(parentOf(x)));
                 }
             }
         }
-        // 将根节点G强制设置为黑色
         root.red = BLACK;
 
         return null;
