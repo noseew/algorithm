@@ -262,19 +262,31 @@ public abstract class Tree05_RB_abs<V extends Comparable<V>> extends Tree02_BST_
 
     /***************************************** 工具 *****************************************************/
 
-    protected static boolean isRed(TreeNode p) {
+    final protected boolean isRed(TreeNode<V> p) {
         return p != null && p.red;
     }
 
-    protected static void setRed(TreeNode p) {
+    final protected void setRed(TreeNode<V> p) {
         if (p != null) p.red = RED;
     }
 
-    protected static boolean isBlack(TreeNode p) {
+    final protected boolean isBlack(TreeNode<V> p) {
         return p == null || !p.red;
     }
 
-    protected static void setBlack(TreeNode p) {
+    final protected void setBlack(TreeNode<V> p) {
         if (p != null) p.red = BLACK;
+    }
+
+    final protected TreeNode<V> parent(TreeNode<V> p) {
+        return (p == null ? null : p.parent);
+    }
+
+    final protected TreeNode<V> left(TreeNode<V> p) {
+        return (p == null) ? null : p.left;
+    }
+
+    final protected TreeNode<V> right(TreeNode<V> p) {
+        return (p == null) ? null : p.right;
     }
 }

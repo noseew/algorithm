@@ -19,36 +19,36 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
 
     protected TreeNode<V> balanceInsertion(TreeNode<V> x) {
 
-        while (x != null && x != root && isRed(x.parent)) {
-            if (x.parent == x.parent.parent.left) {
-                if (isRed(x.parent.parent.right)) {
-                    setBlack(x.parent);
-                    setRed(x.parent.parent);
-                    setBlack(x.parent.parent.right);
-                    x = x.parent.parent;
+        while (x != null && x != root && isRed(parent(x))) {
+            if (parent(x) == left(parent(parent(x)))) {
+                if (isRed(right(parent(parent(x))))) {
+                    setBlack(parent(x));
+                    setRed(parent(parent(x)));
+                    setBlack(right(parent(parent(x))));
+                    x = parent(parent(x));
                 } else {
-                    if (x == x.parent.right) {
-                        x = x.parent;
+                    if (x == right(parent(x))) {
+                        x = parent(x);
                         leftRotate(x);
                     }
-                    setBlack(x.parent);
-                    setRed(x.parent.parent);
-                    rightRotate(x.parent.parent);
+                    setBlack(parent(x));
+                    setRed(parent(parent(x)));
+                    rightRotate(parent(parent(x)));
                 }
             } else {
-                if (isRed(x.parent.parent.left)) {
-                    setBlack(x.parent);
-                    setRed(x.parent.parent);
-                    setBlack(x.parent.parent.left);
-                    x = x.parent.parent;
+                if (isRed(left(parent(parent(x))))) {
+                    setBlack(parent(x));
+                    setRed(parent(parent(x)));
+                    setBlack(left(parent(parent(x))));
+                    x = parent(parent(x));
                 } else {
-                    if (x == x.parent.parent.left) {
-                        x = x.parent;
+                    if (x == left(parent(parent(x)))) {
+                        x = parent(x);
                         rightRotate(x);
                     }
-                    setBlack(x.parent);
-                    setRed(x.parent.parent);
-                    leftRotate(x.parent.parent);
+                    setBlack(parent(x));
+                    setRed(parent(parent(x)));
+                    leftRotate(parent(parent(x)));
                 }
             }
         }
@@ -57,47 +57,47 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
 
     protected TreeNode<V> balanceDeletion(TreeNode<V> x) {
         while (x != root && isBlack(x)) {
-            if (x == x.parent.left) {
-                if (isRed(x.parent.right)) {
-                    setBlack(x.parent.right);
-                    setRed(x.parent);
-                    leftRotate(x.parent);
+            if (x == left(parent(x))) {
+                if (isRed(right(parent(x)))) {
+                    setBlack(right(parent(x)));
+                    setRed(parent(x));
+                    leftRotate(parent(x));
                 }
-                if (isBlack(x.parent.right.left) && isBlack(x.parent.right.right)) {
-                    setRed(x.parent.right);
-                    x = x.parent;
+                if (isBlack(left(right(parent(x)))) && isBlack(right(right(parent(x))))) {
+                    setRed(right(parent(x)));
+                    x = parent(x);
                 } else {
-                    if (isBlack(x.parent.right.right)) {
-                        setBlack(x.parent.right.left);
-                        setRed(x.parent.right);
-                        rightRotate(x.parent);
-                        x = x.parent;
+                    if (isBlack(right(right(parent(x))))) {
+                        setBlack(left(right(parent(x))));
+                        setRed(right(parent(x)));
+                        rightRotate(parent(x));
+                        x = parent(x);
                     }
-                    x.parent.right.red = x.parent.red;
-                    setBlack(x.parent);
-                    setBlack(x.parent.right.right);
-                    leftRotate(x.parent);
+                    right(parent(x)).red = parent(x).red;
+                    setBlack(parent(x));
+                    setBlack(right(right(parent(x))));
+                    leftRotate(parent(x));
                     x = root;
                 }
             } else {
-                if (isRed(x.parent.left)) {
-                    setBlack(x.parent.left);
-                    setRed(x.parent);
-                    rightRotate(x.parent);
+                if (isRed(left(parent(x)))) {
+                    setBlack(left(parent(x)));
+                    setRed(parent(x));
+                    rightRotate(parent(x));
                 }
-                if (isBlack(x.parent.left.right) && isBlack(x.parent.left.left)) {
-                    setRed(x.parent.left);
-                    x = x.parent;
+                if (isBlack(right(left(parent(x)))) && isBlack(left(left(parent(x))))) {
+                    setRed(left(parent(x)));
+                    x = parent(x);
                 } else {
-                    if (isBlack(x.parent.left.left)) {
-                        setBlack(x.parent.left.right);
-                        setRed(x.parent.left);
-                        leftRotate(x.parent.left);
+                    if (isBlack(left(left(parent(x))))) {
+                        setBlack(right(left(parent(x))));
+                        setRed(left(parent(x)));
+                        leftRotate(left(parent(x)));
                     }
-                    x.parent.left.red = x.parent.red;
-                    setBlack(x.parent);
-                    setBlack(x.parent.left.left);
-                    rightRotate(x.parent);
+                    left(parent(x)).red = parent(x).red;
+                    setBlack(parent(x));
+                    setBlack(left(left(parent(x))));
+                    rightRotate(parent(x));
                     x = root;
                 }
             }
