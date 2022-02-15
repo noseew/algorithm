@@ -259,4 +259,22 @@ public abstract class Tree05_RB_abs<V extends Comparable<V>> extends Tree02_BST_
          */
         return p;
     }
+
+    /***************************************** 工具 *****************************************************/
+
+    protected static boolean isRed(TreeNode p) {
+        return p != null && p.red;
+    }
+
+    protected static void setRed(TreeNode p) {
+        if (p != null) p.red = RED;
+    }
+
+    protected static boolean isBlack(TreeNode p) {
+        return p == null || !p.red;
+    }
+
+    protected static void setBlack(TreeNode p) {
+        if (p != null) p.red = BLACK;
+    }
 }
