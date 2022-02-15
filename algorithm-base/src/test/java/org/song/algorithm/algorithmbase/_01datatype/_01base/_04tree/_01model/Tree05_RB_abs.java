@@ -69,13 +69,40 @@ public abstract class Tree05_RB_abs<V extends Comparable<V>> extends Tree02_BST_
          */
         
         /*
-        没有 parent 指针
+        说明: 
+            1. 没有 parent 指针
+            2. 返回新的父节点, 由调用方处理和他们的关系重新和他关联
         
-        TreeNode<V> newParent = p.left;
-        p.left = newParent.right;
-        newParent.right = p;
-        return newParent;
+        TreeNode<V> pLeft = p.left;
+        p.left = pLeft.right;
+        pLeft.right = p;
+        return pLeft;
         
+         */
+        
+        /*
+        说明: 
+            1. 有 parent 指针
+                至少需要处理3个节点的 parent 指针
+                1)p.parent, 2)pLeft.parent, 3)pLeft.right.parent
+            2. 返回新的父节点, 由调用方处理和他们的关系重新和他关联
+            3. 没有处理 p.parent.left/right, 由调用方处理和他们的关系重新和他关联
+            4. 没有处理变色
+        
+        if (p != null) {
+            TreeNode<V> pLeft = p.left;
+            p.left = pLeft.right;
+            if (pLeft.right != null) {
+                // 3. pLeft.right.parent
+                pLeft.right.parent = p;
+            }
+            // 2. pLeft.parent
+            pLeft.parent = p.parent;
+            pLeft.right = p;
+            // 1. p.parent
+            p.parent = pLeft;
+            return pLeft;
+        }
          */
 
         return p;
@@ -108,13 +135,39 @@ public abstract class Tree05_RB_abs<V extends Comparable<V>> extends Tree02_BST_
          */
         
         /*
-        没有 parent 指针
+        说明: 
+            1. 没有 parent 指针
+            2. 返回新的父节点, 由调用方处理和他们的关系重新和他关联
         
-        TreeNode<V> newParent = p.right;
-        p.right = newParent.left;
-        newParent.left = p;
-        return newParent;
+        TreeNode<V> pRight = p.right;
+        p.right = pRight.left;
+        pRight.left = p;
+        return pRight;
         
+         */
+        /*
+        说明: 
+            1. 有 parent 指针
+                至少需要处理3个节点的 parent 指针
+                1)p.parent, 2)pRight.parent, 3)pRight.left.parent
+            2. 返回新的父节点, 由调用方处理和他们的关系重新和他关联
+            3. 没有处理 p.parent.left/right, 由调用方处理和他们的关系重新和他关联
+            4. 没有处理变色
+        
+        if (p != null) {
+            TreeNode<V> pRight = p.right;
+            p.right = pRight.left;
+            if (pRight.left != null) {
+                // 3)pRight.left.parent
+                pRight.left.parent = p;
+            }
+            // 2)pRight.parent
+            pRight.parent = p.parent;
+            pRight.left = p;
+            // 1)p.parent
+            p.parent = pRight;
+            return pRight;
+        }
          */
         return p;
     }

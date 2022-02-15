@@ -251,7 +251,9 @@ public class Tree05_RB_llrb<V extends Comparable<V>> extends Tree05_RB_abs<V> {
     @Override
     protected TreeNode<V> rightRotate(TreeNode<V> p) {
         // 复用 AVL 的右旋
-        TreeNode<V> newParent = super.rightRotate(p);
+        TreeNode<V> newParent = p.left;
+        p.left = newParent.right;
+        newParent.right = p;
         // 红黑树自己的处理
         newParent.red = p.red;
         p.red = RED;
@@ -262,7 +264,9 @@ public class Tree05_RB_llrb<V extends Comparable<V>> extends Tree05_RB_abs<V> {
     @Override
     protected TreeNode<V> leftRotate(TreeNode<V> p) {
         // 复用 AVL 的左旋
-        TreeNode<V> newParent = super.leftRotate(p);
+        TreeNode<V> newParent = p.right;
+        p.right = newParent.left;
+        newParent.left = p;
         // 红黑树自己的处理
         newParent.red = p.red;
         p.red = RED;
