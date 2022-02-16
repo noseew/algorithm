@@ -32,6 +32,10 @@ public abstract class AbsBSTTree<V> {
     public abstract int rank(V v);
     public abstract List<V> range(V min, V max);
 
+    public TreeNode<V> newNode(V v) {
+        return new TreeNode<>(v);
+    }
+
     public boolean less(V v1, V v2) {
         return comparator.compare(v1, v2) < 0;
     }

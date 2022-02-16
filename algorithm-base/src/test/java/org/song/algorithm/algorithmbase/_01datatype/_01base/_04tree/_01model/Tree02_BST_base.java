@@ -182,6 +182,14 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
     }
 
     @Override
+    public TreeNode<V> newNode(V v) {
+        TreeNode<V> node = new TreeNode<>(v);
+        node.height = 1;
+        size++;
+        return node;
+    }
+
+    @Override
     public String toString() {
         return BTreePrinter.print(root, false);
     }
@@ -197,11 +205,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
      */
     protected TreeNode<V> insert_recursive(TreeNode<V> parent, V v) {
         if (parent == null) {
-            // 新建节点, 高度默认1
-            parent = new TreeNode<>(v);
-            parent.height = 1;
-            size++;
-            return parent;
+            return newNode(v);
         }
 
         if (less(v, parent.val)) {
@@ -282,17 +286,12 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
      */
     protected TreeNode<V> insert_traverse(TreeNode<V> parent, V v) {
         if (parent == null) {
-            // 新建节点, 高度默认1
-            parent = new TreeNode<>(v);
-            parent.height = 1;
-            size++;
-            return parent;
+            return newNode(v);
         }
 
         TreeNode<V> xp = getParentNode(parent, v);
         if (xp != null) {
-            TreeNode<V> x = new TreeNode<>(v);
-            size++;
+            TreeNode<V> x = newNode(v);
             x.parent = xp;
             if (less(v, xp.val)) {
                 xp.left = x;

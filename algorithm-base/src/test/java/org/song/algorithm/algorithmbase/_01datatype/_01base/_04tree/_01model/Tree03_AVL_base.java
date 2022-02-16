@@ -48,13 +48,17 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
     }
 
     @Override
+    public TreeNode<V> newNode(V v) {
+        TreeNode<V> node = new TreeNode<>(v);
+        node.height = 1;
+        size++;
+        return node;
+    }
+
+    @Override
     protected TreeNode<V> insert_recursive(TreeNode<V> parent, V v) {
         if (parent == null) {
-            // 新建节点, 高度默认1
-            parent = new TreeNode<>(v);
-            parent.height = 1;
-            size++;
-            return parent;
+            return newNode(v);
         }
 
         if (less(v, parent.val)) {

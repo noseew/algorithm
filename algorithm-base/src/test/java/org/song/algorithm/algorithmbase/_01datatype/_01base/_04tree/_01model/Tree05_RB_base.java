@@ -30,36 +30,13 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
         setBlack(root);
         return false;
     }
-    
+
     @Override
-    protected TreeNode<V> insert_traverse(TreeNode<V> parent, V v) {
-        if (parent == null) {
-            root = new TreeNode<>(v, true);
-            size++;
-            return root;
-        }
-
-        for (TreeNode<V> p = parent; ; ) {
-            if (p.val.compareTo(v) == 0) {
-                return p;
-            }
-            int com = v.compareTo(p.val);
-
-            TreeNode<V> xp = p;
-            if ((p = (com <= 0) ? p.left : p.right) == null) {
-                // 新建 树节点
-                TreeNode<V> x = new TreeNode<>(v, true);
-                size++;
-                x.parent = xp;
-                if (com <= 0) {
-                    xp.left = x;
-                } else {
-                    xp.right = x;
-                }
-                balanceInsertion(x);
-                return null;
-            }
-        }
+    public TreeNode<V> newNode(V v) {
+        TreeNode<V> node = new TreeNode<>(v, RED);
+        node.height = 1;
+        size++;
+        return node;
     }
 
     protected TreeNode<V> balanceInsertion(TreeNode<V> x) {
