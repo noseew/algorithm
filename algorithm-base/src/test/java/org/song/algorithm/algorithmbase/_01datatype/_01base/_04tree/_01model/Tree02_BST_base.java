@@ -282,7 +282,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
      *
      * @param parent 以 parent 为root
      * @param v
-     * @return 返回新的 parent 节点
+     * @return 返回该节点
      */
     protected TreeNode<V> insert_traverse(TreeNode<V> parent, V v) {
         if (parent == null) {
@@ -290,16 +290,15 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
         }
 
         TreeNode<V> xp = getParentNode(parent, v);
-        if (xp != null) {
-            TreeNode<V> x = newNode(v);
-            x.parent = xp;
-            if (less(v, xp.val)) {
-                xp.left = x;
-            } else {
-                xp.right = x;
-            }
+
+        TreeNode<V> x = newNode(v);
+        x.parent = xp;
+        if (less(v, xp.val)) {
+            xp.left = x;
+        } else {
+            xp.right = x;
         }
-        return root;
+        return x;
     }
 
     /**
@@ -311,13 +310,8 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
      */
     protected TreeNode<V> search_traverse(TreeNode<V> parent, V v) {
         while (parent != null) {
-            if (less(v, parent.val)) {
-                parent = parent.left;
-            } else if (greater(v, parent.val)) {
-                parent = parent.right;
-            } else {
-                return parent;
-            }
+            if (eq(v, parent.val))  return parent;
+            parent = less(v, parent.val) ? parent.left : parent.right;
         }
         return parent;
     }

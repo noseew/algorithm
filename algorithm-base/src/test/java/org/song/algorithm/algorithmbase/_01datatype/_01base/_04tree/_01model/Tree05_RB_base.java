@@ -19,16 +19,13 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
 
     @Override
     public boolean add(V v) {
-        TreeNode<V> vTreeNode = this.insert_traverse(root, v);
-        if (vTreeNode != null) {
-            root = vTreeNode;
-            TreeNode<V> node = this.search_traverse(root, v);
-            balanceInsertion(node);
-            setBlack(root);
-            return true;
+        TreeNode<V> node = this.insert_traverse(root, v);
+        if (root == null) {
+            root = node;
         }
-        setBlack(root);
-        return false;
+        balanceInsertion(node);
+        setBlack(root); // 根总为黑
+        return true;
     }
 
     @Override
@@ -39,8 +36,8 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
         return node;
     }
 
+    @Override
     protected TreeNode<V> balanceInsertion(TreeNode<V> x) {
-
         while (x != null && x != root && isRed(parent(x))) {
             if (parent(x) == left(parent(parent(x)))) {
                 if (isRed(right(parent(parent(x))))) {
@@ -77,6 +74,7 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
         return x;
     }
 
+    @Override
     protected TreeNode<V> balanceDeletion(TreeNode<V> x) {
         while (x != root && isBlack(x)) {
             if (x == left(parent(x))) {
@@ -127,6 +125,7 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
         return x;
     }
 
+    @Override
     protected TreeNode<V> rightRotate(TreeNode<V> p) {
         if (p == null) {
             return p;
@@ -151,6 +150,7 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
         return p;
     }
 
+    @Override
     protected TreeNode<V> leftRotate(TreeNode<V> p) {
         if (p == null) {
             return p;
