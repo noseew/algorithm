@@ -19,13 +19,14 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
 
     @Override
     public boolean add(V v) {
+        int oldSize = this.size;
         TreeNode<V> node = this.insert_traverse(root, v);
         if (root == null) {
             root = node;
         }
         balanceInsertion(node);
         setBlack(root); // 根总为黑
-        return true;
+        return oldSize < size;
     }
 
     @Override

@@ -347,13 +347,13 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
         if (parent == null) {
             return null;
         }
-        TreeNode<V> max = parent;
-        while (max.left != null) {
-            parent = max;
-            max = max.left;
+        TreeNode<V> min = parent;
+        while (min.left != null) {
+            parent = min;
+            min = min.left;
         }
-        parent.left = max.right;
-        return max;
+        parent.left = min.right;
+        return min;
     }
     
     protected TreeNode<V> getFloorNode(TreeNode<V> parent, V v) {

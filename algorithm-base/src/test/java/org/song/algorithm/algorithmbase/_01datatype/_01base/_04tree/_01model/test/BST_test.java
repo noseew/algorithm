@@ -22,19 +22,27 @@ public class BST_test {
     }
 
     @Test
-    public void test_start2_floor() {
+    public void test_remove() {
         Tree02_BST_base<Integer> tree = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
-
-        Random random = new Random();
-        for (int i = 0; i < 10; i++) {
-            tree.add(random.nextInt(20));
-        }
+        tree.add(55);
+        tree.add(38);
+        tree.add(76);
+        tree.add(25);
+        tree.add(50);
+        tree.add(72);
+        tree.add(33);
+        tree.add(17);
+        tree.add(46);
         BTreePrinter.print(tree.root, true);
-        
-        System.out.println("floor(5) = " + tree.floor(5));
-        System.out.println("floor(8) = " + tree.floor(8));
-        System.out.println("floor(15) = " + tree.floor(15));
-        System.out.println("floor(20) = " + tree.floor(20));
+        tree.remove(55);
+        tree.remove(38);
+        tree.remove(76);
+        tree.remove(25);
+        tree.remove(50);
+        tree.remove(72);
+        tree.remove(33);
+        tree.remove(17);
+        tree.remove(46);
     }
 
     @Test
