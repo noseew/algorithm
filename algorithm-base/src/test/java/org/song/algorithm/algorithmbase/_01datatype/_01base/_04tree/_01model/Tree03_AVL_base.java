@@ -61,6 +61,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
             return newNode(v);
         }
 
+        // 复用 BST
         if (less(v, parent.val)) {
             // 向左插入
             parent.left = insert_recursive(parent.left, v);
@@ -86,30 +87,18 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
         if (null == parent) {
             return parent;
         }
-        /*
-        1. 递归找到指定的节点s
-        2. 找到s的直接前驱结点或者直接后继节点, 替代s即可
-            1. 直接前驱结点: 就是s的左子树的右右..右子节点
-            2. 直接后继节点: 就是s的右子树的左左..右子节点
-         */
-
+        // 复用 BST 的删除
         if (less(v, parent.val)) {
-            // 小于当前根节点
             parent.left = remove_recursive(parent.left, v);
         } else if (greater(v, parent.val)) {
-            // 大于当前根节点
-            parent.right = remove_recursive(parent.left, v);
-        } else if (parent.left != null && parent.right != null) {
-            // 找到右边最小的节点
+            parent.right = remove_recursive(parent.right, v);
+        } else if (parent.right != null && parent.left != null) {
             parent.val = getMinNode(parent.right).val;
-            // 当前节点的右边等于原节点右边删除已经被选为的替代节点
             parent.right = remove_recursive(parent.right, parent.val);
         } else {
             parent = (parent.left != null) ? parent.left : parent.right;
         }
-        if (parent != null) {
-            size--;
-        }
+        // 需要调整
         parent = balanceInsertion(parent);
         return parent;
     }
@@ -132,6 +121,12 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
         AVL树中, 新增和删除的修正逻辑类似, 无特殊处理
      */
 
+    /**
+     * 新增修正
+     *
+     * @param x
+     * @return 返回新的 parent 节点
+     */
     protected TreeNode<V> balanceInsertion(TreeNode<V> x) {
         if (x == null) {
             return x;
@@ -205,6 +200,12 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
         return x;
     }
 
+    /**
+     * 删除修正
+     *
+     * @param x
+     * @return 返回新的 parent 节点
+     */
     protected TreeNode<V> balanceDeletion(TreeNode<V> x) {
         return x;
     }
