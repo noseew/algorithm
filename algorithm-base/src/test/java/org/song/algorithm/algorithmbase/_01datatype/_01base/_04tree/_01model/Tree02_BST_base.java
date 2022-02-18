@@ -77,7 +77,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
 
     @Override
     public V removeMax() {
-        TreeNode<V> max = removeMax(root);
+        TreeNode<V> max = removeAndReturnMax(root);
         if (max != null) {
             return max.val;
         }
@@ -86,7 +86,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
 
     @Override
     public V removeMin() {
-        TreeNode<V> min = removeMin(root);
+        TreeNode<V> min = removeAndReturnMin(root);
         if (min != null) {
             return min.val;
         }
@@ -140,7 +140,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
     /**
      * 范围
      * 左开右闭
-     * 
+     *
      * @param min >= min
      * @param max < max
      * @return
@@ -245,7 +245,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
      * 采用递归方式, 删除节点
      *
      * @param parent 以 parent 为root
-     * @param v 返回新的 parent 节点
+     * @param v      返回新的 parent 节点
      * @return
      */
     protected TreeNode<V> remove_recursive(TreeNode<V> parent, V v) {
@@ -281,7 +281,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
         }
         return parent;
     }
-    
+
     /**
      * 采用循环的方式, 插入节点
      *
@@ -315,21 +315,21 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
      */
     protected TreeNode<V> search_traverse(TreeNode<V> parent, V v) {
         while (parent != null) {
-            if (eq(v, parent.val))  return parent;
+            if (eq(v, parent.val)) return parent;
             parent = less(v, parent.val) ? parent.left : parent.right;
         }
         return parent;
     }
-    
+
     /***************************************** 工具 *****************************************************/
-   
+
     /**
      * 由于没有parent指针, 所以不支持删除自己
-     * 
+     *
      * @param parent
-     * @return
+     * @return 返回被删除的节点
      */
-    protected TreeNode<V> removeMax(TreeNode<V> parent) {
+    protected TreeNode<V> removeAndReturnMax(TreeNode<V> parent) {
         if (parent == null) {
             return null;
         }
@@ -346,9 +346,9 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
      * 由于没有parent指针, 所以不支持删除自己
      *
      * @param parent
-     * @return
+     * @return 返回被删除的节点
      */
-    protected TreeNode<V> removeMin(TreeNode<V> parent) {
+    protected TreeNode<V> removeAndReturnMin(TreeNode<V> parent) {
         if (parent == null) {
             return null;
         }
@@ -360,7 +360,45 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
         parent.left = min.right;
         return min;
     }
-    
+
+    /**
+     * 由于没有parent指针, 所以不支持删除自己
+     *
+     * @param parent
+     * @return 返回的父节点
+     */
+    protected TreeNode<V> removeMaxReturnNewParent(TreeNode<V> parent) {
+        if (parent == null) {
+            return null;
+        }
+        TreeNode<V> max = parent, maxParent = null;
+        while (max.right != null) {
+            maxParent = max;
+            max = max.right;
+        }
+        if (maxParent != null) maxParent.right = max.left;
+        return maxParent;
+    }
+
+    /**
+     * 由于没有parent指针, 所以不支持删除自己
+     *
+     * @param parent
+     * @return 返回的父节点
+     */
+    protected TreeNode<V> removeMinReturnNewParent(TreeNode<V> parent) {
+        if (parent == null) {
+            return null;
+        }
+        TreeNode<V> min = parent, minParent = null;
+        while (min.left != null) {
+            minParent = min;
+            min = min.left;
+        }
+        if (minParent != null) parent.left = min.right;
+        return minParent;
+    }
+
     protected TreeNode<V> getFloorNode(TreeNode<V> parent, V v) {
         TreeNode<V> floor = null;
         while (parent != null) {

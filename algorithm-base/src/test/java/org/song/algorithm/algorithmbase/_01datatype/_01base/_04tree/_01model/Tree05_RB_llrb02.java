@@ -59,7 +59,7 @@ public class Tree05_RB_llrb02<V extends Comparable<V>> extends Tree05_RB_abs<V> 
     public V removeMin() {
         if (size == 0)
             return null;
-        removeMin(root);
+        removeAndReturnMin(root);
         if (root != null) {
             size--;
             root.red = BLACK;
@@ -70,7 +70,7 @@ public class Tree05_RB_llrb02<V extends Comparable<V>> extends Tree05_RB_abs<V> 
     public V removeMax() {
         if (size == 0)
             return null;
-        removeMax(root);
+        removeAndReturnMax(root);
         if (root != null) {
             size--;
             root.red = BLACK;
@@ -179,23 +179,23 @@ public class Tree05_RB_llrb02<V extends Comparable<V>> extends Tree05_RB_abs<V> 
         return null;
     }
 
-    protected TreeNode<V> removeMin(TreeNode<V> h) {
+    protected TreeNode<V> removeAndReturnMin(TreeNode<V> h) {
         if (h.left == null)
             return null;
         if (!isRed(h.left) && !isRed(leftOf(h.left)))
             h = moveRedLeft(h);
-        h.left = removeMin(h.left);
+        h.left = removeAndReturnMin(h.left);
         return balance(h);
     }
 
-    protected TreeNode<V> removeMax(TreeNode<V> h) {
+    protected TreeNode<V> removeAndReturnMax(TreeNode<V> h) {
         if (isRed(h.left))
             h = rotateRight(h);
         if (h.right == null)
             return null;
         if (!isRed(h.right) && !isRed(leftOf(h.right)))
             h = moveRedRight(h);
-        h.right = removeMax(h.right);
+        h.right = removeAndReturnMax(h.right);
         return balance(h);
     }
 
@@ -214,7 +214,7 @@ public class Tree05_RB_llrb02<V extends Comparable<V>> extends Tree05_RB_abs<V> 
             if (k.compareTo(h.val) == 0) {
                 h.val = search_recursive(h.right, getMinNode(h.right).val).val;
                 h.val = getMinNode(h.right).val;
-                h.right = removeMin(h.right);
+                h.right = removeAndReturnMin(h.right);
             } else {
                 h.right = delete(h.right, k);
             }
