@@ -24,49 +24,34 @@ public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree05_RB_abs
 
     public V put(V v) {
         TreeNode<V> t = root;
-        // 如果只有一个元素, 初始化根节点后直接返回
-        if (t == null) {
-            // 初始化根节点
-            root = new TreeNode(v, root != null);
+        if (root == null) {
+            root = new TreeNode(v, false);
             size = 1;
             modCount++;
-            return null;
+            return v;
         }
         int cmp;
-        // 临时节点
         TreeNode<V> parent;
 
-        // 1. 替换并返回
         do {
-            // 遍历树, 临时节点逐渐遍历
             parent = t;
             cmp = comparator.compare(v, t.val);
             if (cmp < 0) {
-                // 放在节点的左子节点上
                 t = t.left;
             } else if (cmp > 0) {
-                // 放在节点的右子节点上
                 t = t.right;
             } else {
-                // 覆盖设置节点本身
                 t.setVal(v);
                 return v;
             }
-            // 二分查找的方式, 遍历到叶子节点
         } while (t != null);
 
-        // 2. 新建 并返回
-        TreeNode<V> e = new TreeNode(parent, v, true);
+        TreeNode<V> e = new TreeNode<>(parent, v, true);
         if (cmp < 0) {
             parent.left = e;
         } else {
             parent.right = e;
         }
-        /**
-         * 调整红黑树
-         * 上面已经完成了排序二叉树的的构建, 将新增节点插入该树中的合适位置
-         * 下面fixAfterInsertion()方法就是对这棵树进行调整/平衡, 具体过程参考上面的五种情况
-         */
         balanceInsertion(e);
         size++;
         modCount++;
@@ -372,8 +357,6 @@ public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree05_RB_abs
 
     @Override
     protected TreeNode<V> balanceInsertion(TreeNode<V> x) {
-        x.red = RED;
-
         while (x != null && x != root && x.parent.red == RED) {
             if (parentOf(x) == leftOf(parentOf(parentOf(x)))) {
                 TreeNode<V> y = rightOf(parentOf(parentOf(x)));
@@ -409,8 +392,6 @@ public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree05_RB_abs
                 }
             }
         }
-        root.red = BLACK;
-
         return null;
     }
 
