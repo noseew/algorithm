@@ -33,16 +33,35 @@ public class BST_test {
         tree.add(33);
         tree.add(17);
         tree.add(46);
+        
         BTreePrinter.print(tree.root, true);
         tree.remove(55);
+        System.out.println(55);
+        BTreePrinter.print(tree.root, true);
         tree.remove(38);
+        System.out.println(38);
+        BTreePrinter.print(tree.root, true);
         tree.remove(76);
+        System.out.println(76);
+        BTreePrinter.print(tree.root, true);
         tree.remove(25);
+        System.out.println(25);
+        BTreePrinter.print(tree.root, true);
         tree.remove(50);
+        System.out.println(50);
+        BTreePrinter.print(tree.root, true);
         tree.remove(72);
+        System.out.println(72);
+        BTreePrinter.print(tree.root, true);
         tree.remove(33);
+        System.out.println(33);
+        BTreePrinter.print(tree.root, true);
         tree.remove(17);
+        System.out.println(17);
+        BTreePrinter.print(tree.root, true);
         tree.remove(46);
+        System.out.println(46);
+        BTreePrinter.print(tree.root, true);
     }
 
     @Test

@@ -254,10 +254,13 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
             return parent;
         }
         /*
-        1. 递归找到指定的节点s
-        2. 找到s的直接前驱结点或者直接后继节点, 替代s即可
+        1. 递归找到指定待删除的节点s
+        2. 如果s是叶子结点, 那么直接删除即可
+            但是如果s是非叶子结点, 则找到s的直接前驱结点或者直接后继节点s2, 替代s即可
             1. 直接前驱结点: 就是s的左子树的右右..右子节点
             2. 直接后继节点: 就是s的右子树的左左..右子节点
+        3. 但是s2也需要被删除, 所以将s2的值赋值给s之后, 还需要将s2删除, 此时s2肯定是叶子结点, 此时删除叶子节点即可
+        4. 删除叶子结点s2, 递归当前删除方法定位到待删除的叶子结点, 将叶子结点的父节点的叶子节点置空即可
          */
 
         if (less(v, parent.val)) {
@@ -265,13 +268,15 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
             parent.left = remove_recursive(parent.left, v);
         } else if (greater(v, parent.val)) {
             // 大于当前根节点
-            parent.right = remove_recursive(parent.left, v);
-        } else if (parent.left != null && parent.right != null) {
+            parent.right = remove_recursive(parent.right, v);
+        } else if (parent.right != null && parent.left != null) {
+            // 删除左子节点的最大节点(直接去前驱节点) 或 右子节点的最小节点(直接后驱节点) 都可以
             // 找到右边最小的节点
             parent.val = getMinNode(parent.right).val;
             // 当前节点的右边等于原节点右边删除已经被选为的替代节点
             parent.right = remove_recursive(parent.right, parent.val);
         } else {
+            // 删除待删除的叶子节点
             parent = (parent.left != null) ? parent.left : parent.right;
         }
         return parent;
