@@ -62,7 +62,7 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
                     setBlack(left(parent(parent(x))));
                     x = parent(parent(x));
                 } else {
-                    if (x == left(parent(parent(x)))) {
+                    if (x == left(parent(x))) {
                         x = parent(x);
                         rightRotate(x);
                     }

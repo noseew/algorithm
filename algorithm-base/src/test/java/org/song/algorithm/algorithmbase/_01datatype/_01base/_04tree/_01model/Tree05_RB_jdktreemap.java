@@ -13,6 +13,8 @@ import java.util.function.Consumer;
 
 根据JDK8 TreeMap中的红黑树 源码修改
 
+坑爹 源码红黑树中, RED = false, BLACK = true;
+
  */
 public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree05_RB_abs<V> {
 
@@ -25,7 +27,7 @@ public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree05_RB_abs
     public V put(V v) {
         TreeNode<V> t = root;
         if (root == null) {
-            root = new TreeNode(v, false);
+            root = new TreeNode(v, RED);
             size = 1;
             modCount++;
             return v;
@@ -46,7 +48,7 @@ public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree05_RB_abs
             }
         } while (t != null);
 
-        TreeNode<V> e = new TreeNode<>(parent, v, true);
+        TreeNode<V> e = new TreeNode<>(parent, v, RED);
         if (cmp < 0) {
             parent.left = e;
         } else {
