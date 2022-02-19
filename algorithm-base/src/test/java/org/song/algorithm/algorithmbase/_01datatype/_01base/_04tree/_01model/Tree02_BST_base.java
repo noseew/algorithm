@@ -474,6 +474,13 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
         return minParent != null ? parent : min.right;
     }
 
+    /**
+     * 获取指定树中, 天花板node
+     * 
+     * @param parent
+     * @param v
+     * @return
+     */
     protected TreeNode<V> getFloorNode(TreeNode<V> parent, V v) {
         TreeNode<V> floor = null;
         while (parent != null) {
@@ -499,6 +506,13 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
         return floor;
     }
 
+    /**
+     * 获取指定树中, 地板node
+     * 
+     * @param parent
+     * @param v
+     * @return
+     */
     protected TreeNode<V> getCeilingNode(TreeNode<V> parent, V v) {
         TreeNode<V> ceiling = null;
         while (parent != null) {
@@ -524,6 +538,12 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
         return ceiling;
     }
 
+    /**
+     * 返回指定树中最小的节点
+     * 
+     * @param tree
+     * @return
+     */
     protected TreeNode<V> getMinNode(TreeNode<V> tree) {
         TreeNode<V> p = tree, min = null;
         while (p != null) {
@@ -533,6 +553,12 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
         return min;
     }
 
+    /**
+     * 返回指定树中最大的节点
+     *
+     * @param tree
+     * @return
+     */
     protected TreeNode<V> getMaxNode(TreeNode<V> tree) {
         TreeNode<V> p = tree, max = null;
         while (p != null) {
@@ -542,6 +568,13 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
         return max;
     }
 
+    /**
+     * 返回指定树中, 指定值v的父节点, 如果v不在树中, 那么返回v可以插入位置的父节点
+     * 
+     * @param tree
+     * @param v
+     * @return
+     */
     protected TreeNode<V> getParentNode(TreeNode<V> tree, V v) {
         TreeNode<V> p = tree, pp = null;
         while (p != null) {
@@ -557,21 +590,21 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
     /**
      * 获取树的高度
      */
-    protected int getHeight(TreeNode<V> node) {
-        if (node == null) {
-            return 0;
-        }
-        return node.height;
-    }
-
-    /**
-     * 获取树的高度
-     */
     protected int getHeight_recursive(TreeNode<V> node) {
         if (node == null) {
             return 0;
         }
         return Math.max(getHeight_recursive(node.left), getHeight_recursive(node.right)) + 1;
+    }
+
+    /**
+     * 获取树的高度
+     */
+    protected int getHeight(TreeNode<V> node) {
+        if (node == null) {
+            return 0;
+        }
+        return node.height;
     }
 
     protected static <V> V keyOrNull(TreeNode<V> e) {
