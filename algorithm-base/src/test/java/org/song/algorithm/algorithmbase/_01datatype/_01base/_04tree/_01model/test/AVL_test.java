@@ -5,8 +5,7 @@ import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreeUtils;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02_BST_base;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03_AVL_base;
 
-import java.util.Comparator;
-import java.util.Random;
+import java.util.*;
 
 public class AVL_test {
 
@@ -87,6 +86,7 @@ public class AVL_test {
 
     @Test
     public void test_diff_BST_add() {
+        // avl 和 bst 是否是同一棵树
         Tree03_AVL_base<Integer> avl = new Tree03_AVL_base<>(Comparator.comparing(Integer::doubleValue));
         Tree02_BST_base<Integer> bst = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
@@ -100,6 +100,37 @@ public class AVL_test {
             System.out.println(BTreeUtils.print(avl.root, false));
             System.out.println(BTreeUtils.print(bst.root, false));
             assert false;
+        }
+    }
+
+    /**
+     * 删除是否正常
+     */
+    @Test
+    public void test_start2_remove_AutoTest() {
+
+        Set<Integer> set = new HashSet<>(valueSize);
+
+        Tree03_AVL_base<Integer> tree = new Tree03_AVL_base<>(Comparator.comparing(Integer::doubleValue));
+        Random random = new Random();
+        for (int i = 0; i < valueSize; i++) {
+            int v = random.nextInt(maxValue);
+            if (tree.add(v)) {
+                set.add(v);
+            }
+        }
+        Iterator<Integer> iterator = set.iterator();
+        while (iterator.hasNext()) {
+            Integer next = iterator.next();
+            tree.remove(next);
+            iterator.remove();
+
+            if (!BTreeUtils.eq(set, tree)) {
+                System.out.println("error=" + next);
+                System.out.println(BTreeUtils.print(tree.root, false));
+                System.out.println(Arrays.toString(set.toArray()));
+                assert false;
+            }
         }
     }
 }

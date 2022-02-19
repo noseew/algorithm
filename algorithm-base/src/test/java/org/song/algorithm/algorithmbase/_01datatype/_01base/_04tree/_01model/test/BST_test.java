@@ -129,6 +129,9 @@ public class BST_test {
      * 自动测试 test
      */
 
+    /**
+     * 删除是否正常
+     */
     @Test
     public void test_start2_remove_AutoTest() {
 
