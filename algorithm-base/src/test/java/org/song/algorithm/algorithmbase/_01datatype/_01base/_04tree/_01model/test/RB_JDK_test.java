@@ -7,10 +7,12 @@ import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tre
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB_jdkhotspot;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB_jdktreemap;
 
-import java.util.Comparator;
-import java.util.Random;
+import java.util.*;
 
 public class RB_JDK_test {
+
+    private final int maxValue = 50;
+    private final int valueSize = 15;
 
     @Test
     public void test_start1() {
@@ -24,13 +26,6 @@ public class RB_JDK_test {
             tree.add(v);
         }
         BTreeUtils.print(tree.root, true);
-        int lastSize = tree.size;
-        for (int i = 0; i < size; i++) {
-            tree.remove(i);
-            if (tree.size < lastSize) {
-                BTreeUtils.print(tree.root, true);
-            }
-        }
     }
 
     @Test
@@ -45,13 +40,6 @@ public class RB_JDK_test {
             tree.put(v);
         }
         BTreeUtils.print(tree.root, true);
-//        int lastSize = tree.size;
-//        for (int i = 0; i < size; i++) {
-//            tree.remove(i);
-//            if (tree.size < lastSize) {
-//                BTreePrinter.print(tree.root, true);
-//            }
-//        }
     }
 
     @Test
@@ -67,17 +55,10 @@ public class RB_JDK_test {
         }
         BTreeUtils.print(tree.root, true);
         BTreeUtils.printJDK9(tree.root);
-//        int lastSize = tree.size;
-//        for (int i = 0; i < size; i++) {
-//            tree.remove(i);
-//            if (tree.size < lastSize) {
-//                BTreePrinter.print(tree.root, true);
-//            }
-//        }
     }
 
     @Test
-    public void test_vs() {
+    public void test_vs_add() {
         int max = 100;
         int size = 20;
 
@@ -94,14 +75,63 @@ public class RB_JDK_test {
         BTreeUtils.print(treemap.root, true);
         BTreeUtils.print(hashmap.root, true);
         BTreeUtils.print(hotspot.root, true);
-//        int lastSize = tree.size;
-//        for (int i = 0; i < size; i++) {
-//            tree.remove(i);
-//            if (tree.size < lastSize) {
-//                BTreePrinter.print(tree.root, true);
-//            }
-//        }
     }
+
+    @Test
+    public void test_vs_remove() {
+
+        Set<Integer> set = new HashSet<>(valueSize);
+
+        Tree05_RB_jdktreemap<Integer> treemap = new Tree05_RB_jdktreemap<>(Comparator.comparing(Integer::doubleValue));
+        Tree05_RB_jdkhashmap<Integer> hashmap = new Tree05_RB_jdkhashmap<>(Comparator.comparing(Integer::doubleValue));
+        Tree05_RB_jdkhotspot<Integer> hotspot = new Tree05_RB_jdkhotspot<>(Comparator.comparing(Integer::doubleValue));
+        Random random = new Random();
+        for (int i = 0; i < valueSize; i++) {
+            int v = random.nextInt(maxValue);
+            treemap.put(v);
+            if (hashmap.add(v)) {
+                set.add(v);
+            }
+            hotspot.put(v);
+        }
+        BTreeUtils.print(treemap.root, true);
+        BTreeUtils.print(hashmap.root, true);
+        BTreeUtils.print(hotspot.root, true);
+        
+        Iterator<Integer> iterator = set.iterator();
+        while (iterator.hasNext()) {
+            Integer next = iterator.next();
+            iterator.remove();
+            
+            treemap.remove(next);
+            if (!BTreeUtils.eq(set, treemap)) {
+                System.out.println("hotspot error=" + next);
+                System.out.println(BTreeUtils.print(treemap.root, false));
+                System.out.println(Arrays.toString(set.toArray()));
+                assert false;
+            }
+
+            hashmap.remove(next);
+            if (!BTreeUtils.eq(set, hashmap)) {
+                System.out.println("hashmap error=" + next);
+                System.out.println(BTreeUtils.print(hashmap.root, false));
+                System.out.println(Arrays.toString(set.toArray()));
+                assert false;
+            }
+
+            hotspot.remove(next);
+            if (!BTreeUtils.eq(set, hotspot)) {
+                System.out.println("hotspot error=" + next);
+                System.out.println(BTreeUtils.print(hotspot.root, false));
+                System.out.println(Arrays.toString(set.toArray()));
+                assert false;
+            }
+        }
+    }
+
+    /**
+     * 自定义
+     */
 
     @Test
     public void test_vs2() {
