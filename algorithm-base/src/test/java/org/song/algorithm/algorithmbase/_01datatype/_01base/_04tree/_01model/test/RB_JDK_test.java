@@ -15,42 +15,36 @@ public class RB_JDK_test {
     private final int valueSize = 15;
 
     @Test
-    public void test_start1() {
-        int max = 100;
-        int size = 30;
+    public void test_hashmap() {
 
         Tree05_RB_jdkhashmap<Integer> tree = new Tree05_RB_jdkhashmap<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
-        for (int i = 0; i < size; i++) {
-            int v = random.nextInt(max);
+        for (int i = 0; i < valueSize; i++) {
+            int v = random.nextInt(maxValue);
             tree.add(v);
         }
         BTreeUtils.print(tree.root, true);
     }
 
     @Test
-    public void test_start2() {
-        int max = 100;
-        int size = 30;
+    public void test_treemap() {
 
         Tree05_RB_jdktreemap<Integer> tree = new Tree05_RB_jdktreemap<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
-        for (int i = 0; i < size; i++) {
-            int v = random.nextInt(max);
+        for (int i = 0; i < valueSize; i++) {
+            int v = random.nextInt(maxValue);
             tree.put(v);
         }
         BTreeUtils.print(tree.root, true);
     }
 
     @Test
-    public void test_start3() {
-        int max = 100;
-        int size = 30;
+    public void test_hotspot() {
 
         Tree05_RB_jdkhotspot<Integer> tree = new Tree05_RB_jdkhotspot<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
-        for (int i = 0; i < size; i++) {
-            int v = random.nextInt(max);
+        for (int i = 0; i < valueSize; i++) {
+            int v = random.nextInt(maxValue);
             tree.put(v);
         }
         BTreeUtils.print(tree.root, true);
@@ -59,15 +53,13 @@ public class RB_JDK_test {
 
     @Test
     public void test_vs_add() {
-        int max = 100;
-        int size = 20;
 
         Tree05_RB_jdktreemap<Integer> treemap = new Tree05_RB_jdktreemap<>(Comparator.comparing(Integer::doubleValue));
         Tree05_RB_jdkhashmap<Integer> hashmap = new Tree05_RB_jdkhashmap<>(Comparator.comparing(Integer::doubleValue));
         Tree05_RB_jdkhotspot<Integer> hotspot = new Tree05_RB_jdkhotspot<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
-        for (int i = 0; i < size; i++) {
-            int v = random.nextInt(max);
+        for (int i = 0; i < valueSize; i++) {
+            int v = random.nextInt(maxValue);
             treemap.put(v);
             hashmap.add(v);
             hotspot.put(v);
@@ -133,23 +125,5 @@ public class RB_JDK_test {
 //            }
         }
     }
-
-    /**
-     * 自定义
-     */
-
-    @Test
-    public void test_vs2() {
-
-        Tree05_RB_jdktreemap<Integer> treemap = new Tree05_RB_jdktreemap<>(Comparator.comparing(Integer::doubleValue));
-        Tree05_RB_base<Integer> rb = new Tree05_RB_base<>(Comparator.comparing(Integer::doubleValue));
-        Random random = new Random();
-        for (int i = 0; i < valueSize; i++) {
-            int v = random.nextInt(maxValue);
-            treemap.put(v);
-            rb.add(v);
-        }
-        System.out.println("(treemap, rb)");
-        assert BTreeUtils.eq(treemap, rb);
-    }
+    
 }

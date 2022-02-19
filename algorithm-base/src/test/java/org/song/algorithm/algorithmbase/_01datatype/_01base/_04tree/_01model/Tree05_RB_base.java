@@ -29,12 +29,6 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
         return oldSize < size;
     }
 
-    /**
-     * TODO 未完成
-     * 
-     * @param v
-     * @return
-     */
     @Override
     public V remove(V v) {
         root = remove_traverse(root, v);
@@ -65,6 +59,9 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
         } while (x != null);
 
         if (x == null) return parent; // 无需删除, 原样返回
+        
+        // 红黑树平衡, 在节点删除之前进行平衡操作
+        if (!x.red) balanceDeletion(x);
 
         // 待删除x是叶子结点
         if (x.right == null && x.left == null) {
@@ -95,8 +92,6 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
         }
         size--;
         
-        // 红黑树平衡
-        balanceDeletion(x);
         return root;
     }
 
