@@ -2,12 +2,16 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.te
 
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreeUtils;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02_BST_base;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03_AVL_base;
 
 import java.util.Comparator;
 import java.util.Random;
 
 public class AVL_test {
+
+    private final int maxValue = 50;
+    private final int valueSize = 20;
 
     @Test
     public void test_01_start() {
@@ -33,6 +37,7 @@ public class AVL_test {
             System.out.println(tree.toString());
         }
     }
+    
     @Test
     public void test_remove2() {
         Tree03_AVL_base<Integer> tree = new Tree03_AVL_base<>(Comparator.comparing(Integer::doubleValue));
@@ -76,4 +81,25 @@ public class AVL_test {
         BTreeUtils.print(tree.root, true);
     }
 
+    /**
+     * 自动测试
+     */
+
+    @Test
+    public void test_diff_BST_add() {
+        Tree03_AVL_base<Integer> avl = new Tree03_AVL_base<>(Comparator.comparing(Integer::doubleValue));
+        Tree02_BST_base<Integer> bst = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
+        Random random = new Random();
+        for (int i = 0; i < valueSize; i++) {
+            int v = random.nextInt(maxValue);
+            avl.add(v);
+            bst.add(v);
+        }
+
+        if (!BTreeUtils.eq(avl, bst)) {
+            System.out.println(BTreeUtils.print(avl.root, false));
+            System.out.println(BTreeUtils.print(bst.root, false));
+            assert false;
+        }
+    }
 }

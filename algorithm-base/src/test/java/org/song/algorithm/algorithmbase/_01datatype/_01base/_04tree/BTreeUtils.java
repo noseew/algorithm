@@ -28,7 +28,7 @@ public class BTreeUtils {
         List<Object> list2 = new ArrayList<>(tree2.size);
 
         Tree02_BST_base.traverse(tree1.root, AbsBSTTree.Order.MidOrder, (Predicate<Comparable>) list1::add);
-        Tree02_BST_base.traverse(tree2.root, AbsBSTTree.Order.MidOrder, (Predicate<Comparable>) tree2::add);
+        Tree02_BST_base.traverse(tree2.root, AbsBSTTree.Order.MidOrder, (Predicate<Comparable>) list2::add);
 
         if (list1.size() != list2.size()) {
             System.err.println("size diff: list1.size=" + list1.size());
