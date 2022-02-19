@@ -75,6 +75,11 @@ public class RB_JDK_test {
         BTreeUtils.print(treemap.root, true);
         BTreeUtils.print(hashmap.root, true);
         BTreeUtils.print(hotspot.root, true);
+
+        System.out.println("(treemap, hashmap)");
+        assert BTreeUtils.eq(treemap, hashmap);
+        System.out.println("(hashmap, hotspot)");
+        assert BTreeUtils.eq(hashmap, hotspot);
     }
 
     @Test
@@ -94,32 +99,32 @@ public class RB_JDK_test {
             }
             hotspot.put(v);
         }
-        BTreeUtils.print(treemap.root, true);
-        BTreeUtils.print(hashmap.root, true);
-        BTreeUtils.print(hotspot.root, true);
+//        BTreeUtils.print(treemap.root, true);
+//        BTreeUtils.print(hashmap.root, true);
+//        BTreeUtils.print(hotspot.root, true);
         
         Iterator<Integer> iterator = set.iterator();
         while (iterator.hasNext()) {
             Integer next = iterator.next();
             iterator.remove();
             
-            treemap.remove(next);
-            if (!BTreeUtils.eq(set, treemap)) {
-                System.out.println("hotspot error=" + next);
-                System.out.println(BTreeUtils.print(treemap.root, false));
-                System.out.println(Arrays.toString(set.toArray()));
-                assert false;
-            }
+//            treemap.remove(next);
+//            if (!BTreeUtils.eq(set, treemap)) {
+//                System.out.println("hotspot error=" + next);
+//                System.out.println(BTreeUtils.print(treemap.root, false));
+//                System.out.println(Arrays.toString(set.toArray()));
+//                assert false;
+//            }
 
-            hashmap.remove(next);
-            if (!BTreeUtils.eq(set, hashmap)) {
-                System.out.println("hashmap error=" + next);
-                System.out.println(BTreeUtils.print(hashmap.root, false));
-                System.out.println(Arrays.toString(set.toArray()));
-                assert false;
-            }
+//            hashmap.remove(next);
+//            if (!BTreeUtils.eq(set, hashmap)) {
+//                System.out.println("hashmap error=" + next);
+//                System.out.println(BTreeUtils.print(hashmap.root, false));
+//                System.out.println(Arrays.toString(set.toArray()));
+//                assert false;
+//            }
 
-            hotspot.remove(next);
+            hotspot.del(next);
             if (!BTreeUtils.eq(set, hotspot)) {
                 System.out.println("hotspot error=" + next);
                 System.out.println(BTreeUtils.print(hotspot.root, false));

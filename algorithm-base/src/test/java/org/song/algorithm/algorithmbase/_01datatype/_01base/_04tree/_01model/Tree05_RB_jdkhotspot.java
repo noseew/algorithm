@@ -17,10 +17,21 @@ public class Tree05_RB_jdkhotspot<V extends Comparable<V>> extends Tree05_RB_abs
     }
 
     public void put(V v) {
-        insertNode(new TreeNode<>(v, true));
+        insertNode(v);
     }
 
-    public void insertNode(TreeNode<V> x) {
+    public void del(V v) {
+        TreeNode<V> delNode = search_recursive(root, v);
+        if (delNode == null) {
+            return;
+        }
+        size--;
+        deleteNode(delNode);
+    }
+
+    public void insertNode(V v) {
+        TreeNode<V> x = new TreeNode<>(v, RED);
+        
         treeInsert(x);
         x.red = RED;
 
@@ -135,12 +146,14 @@ public class Tree05_RB_jdkhotspot<V extends Comparable<V>> extends Tree05_RB_abs
         z.parent = y;
         if (y == null) {
             root = z;
+            size++;
         } else {
             if (comparator.compare(z.val, y.val) < 0) {
                 y.left = z;
             } else {
                 y.right = z;
             }
+            size++;
         }
     }
 

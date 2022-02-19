@@ -28,7 +28,7 @@ public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree05_RB_abs
         TreeNode<V> t = root;
         if (root == null) {
             root = new TreeNode(v, RED);
-            size = 1;
+            size++;
             modCount++;
             return v;
         }

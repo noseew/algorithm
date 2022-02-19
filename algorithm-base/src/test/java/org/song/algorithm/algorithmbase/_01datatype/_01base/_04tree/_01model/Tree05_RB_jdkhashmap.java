@@ -71,6 +71,7 @@ public class Tree05_RB_jdkhashmap<V extends Comparable<V>> extends Tree05_RB_abs
         if (p == null) {
             return;
         }
+        size--;
         TreeNode<V> pLeft = p.left, pRight = p.right, replacement;
         if (pLeft != null && pRight != null) {
             TreeNode<V> s = pRight, sLeft;
@@ -133,7 +134,7 @@ public class Tree05_RB_jdkhashmap<V extends Comparable<V>> extends Tree05_RB_abs
                 pp.right = replacement;
             }
             p.left = p.right = p.parent = null;
-        }
+        } 
 
         if (!p.red) balanceDeletion(replacement);
 
@@ -145,6 +146,9 @@ public class Tree05_RB_jdkhashmap<V extends Comparable<V>> extends Tree05_RB_abs
                     pp.left = null;
                 } else if (p == pp.right)
                     pp.right = null;
+            }
+            if (replacement == root) {
+                root = null;
             }
         }
     }
