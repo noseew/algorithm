@@ -25,12 +25,12 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
 
     @Override
     public boolean add(V v) {
-//        TreeNode<V> node = insert_recursive(root, v);
+        int oldSize = this.size;
         TreeNode<V> node = insert_traverse(root, v);
         if (root == null) {
             root = node;
         }
-        return true;
+        return oldSize < size;
     }
 
     @Override
@@ -295,9 +295,16 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
             return newNode(v);
         }
 
+        // 获取v的父节点, 如果v存在就是v的父节点, 如果v不存在就是v应该插入的父节点
         TreeNode<V> xp = getParentNode(parent, v);
         if (xp == null) {
             // v == parent
+            return parent;
+        }
+
+        if ((xp.left != null && eq(xp.left.val, v))
+                || (xp.right != null && eq(xp.right.val, v))) {
+            // 等值不处理
             return parent;
         }
 

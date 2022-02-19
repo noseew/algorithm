@@ -5,19 +5,16 @@ import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreePrinter
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.AbsBSTTree;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02_BST_base;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BST_test {
 
-    private final int maxValue = 100;
-    private final int valueSize = 30;
+    private final int maxValue = 50;
+    private final int valueSize = 20;
 
     @Test
-    public void test_add() {
+    public void test_start_add() {
         Tree02_BST_base<Integer> tree = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
 
         Random random = new Random();
@@ -33,7 +30,33 @@ public class BST_test {
     }
 
     @Test
-    public void test_remove() {
+    public void test_start_add2() {
+        Tree02_BST_base<Integer> tree = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
+
+        List<Integer> sort = new ArrayList<>(valueSize);
+
+        Random random = new Random();
+        for (int i = 0; i < valueSize; i++) {
+            int v = random.nextInt(maxValue);
+            if (tree.add(v)) {
+                sort.add(v);
+                System.out.println(v);
+                System.out.println(BTreePrinter.print(tree.root, false));
+                sort.sort(Comparator.comparing(Integer::doubleValue));
+                System.out.println(Arrays.toString(sort.toArray()));
+                System.out.println();
+            }
+        }
+        // 循环引用检测
+        boolean check = BTreePrinter.cycleCheck(tree.root);
+        System.out.println(check);
+        if (check) {
+            System.out.println(BTreePrinter.print(tree.root, false));
+        }
+    }
+
+    @Test
+    public void test_start_remove() {
         Tree02_BST_base<Integer> tree = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
         tree.add(55);
         tree.add(38);
@@ -74,9 +97,9 @@ public class BST_test {
         System.out.println(46);
         BTreePrinter.print(tree.root, true);
     }
-
+    
     @Test
-    public void test_traverse() {
+    public void test_start_traverse() {
 
         Tree02_BST_base<Integer> tree = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
@@ -104,6 +127,7 @@ public class BST_test {
     /**
      * 自动测试 test
      */
+    
     @Test
     public void test_start2_floor_AutoTest() {
 
@@ -163,7 +187,7 @@ public class BST_test {
     }
 
     @Test
-    public void test_start3_max_AutoTest() {
+    public void test_start3_min_AutoTest() {
 
         int expectV = maxValue;
 
@@ -185,7 +209,38 @@ public class BST_test {
     }
 
     @Test
-    public void test_start3_min_AutoTest() {
+    public void test_start2_removeMin_AutoTest() {
+
+        List<Integer> sort = new ArrayList<>(valueSize);
+
+        Tree02_BST_base<Integer> tree = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
+        Random random = new Random();
+        for (int i = 0; i < valueSize; i++) {
+            int v = random.nextInt(maxValue);
+            if (tree.add(v)) {
+                sort.add(v);
+            }
+        }
+        sort.sort(Comparator.comparing(Integer::doubleValue));
+//        System.out.println(BTreePrinter.print(tree.root, false));
+
+        System.out.println("min=" + sort.get(0));
+        System.out.println("删除=" + tree.removeMin());
+
+        if (tree.min() !=  sort.get(1)) {
+            System.out.println("sort min=" + sort.get(1));
+            System.out.println("tree min=" + tree.min());
+            System.out.println(Arrays.toString(sort.toArray()));
+            System.out.println(BTreePrinter.print(tree.root, false));
+            assert false;
+        } else {
+            System.out.println("OK " + tree.min());
+        }
+
+    }
+
+    @Test
+    public void test_start3_max_AutoTest() {
 
         int expectV = -1;
 
