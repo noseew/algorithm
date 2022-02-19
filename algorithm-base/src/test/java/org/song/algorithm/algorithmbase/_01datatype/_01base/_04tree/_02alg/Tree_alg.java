@@ -1,7 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._02alg;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreePrinter;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreeUtils;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02_BST_base;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03_AVL_base;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.TreeNode;
@@ -76,7 +76,7 @@ public class Tree_alg {
         int height = getHeightRecursive(root);
         System.out.println(height);
 
-        BTreePrinter.print(root, true);
+        BTreeUtils.print(root, true);
     }
     @Test
     public void test_03_minHeight() {
@@ -94,7 +94,7 @@ public class Tree_alg {
     @Test
     public void test_04_restore() {
         Tree03_AVL_base<Integer> avlTree = initAVLTree(20);
-        BTreePrinter.print(avlTree.root, true);
+        BTreeUtils.print(avlTree.root, true);
 
     }
 
@@ -107,7 +107,7 @@ public class Tree_alg {
         AtomicBoolean balanced = new AtomicBoolean(true);
         getHeight(root, balanced);
         System.out.println("" + balanced.get());
-        BTreePrinter.print(root, true);
+        BTreeUtils.print(root, true);
         
         System.out.println();
         
@@ -115,7 +115,7 @@ public class Tree_alg {
         AtomicBoolean balanced2 = new AtomicBoolean(true);
         getHeight(root2, balanced2);
         System.out.println("" + balanced2.get());
-        BTreePrinter.print(root2, true);
+        BTreeUtils.print(root2, true);
     }
 
 

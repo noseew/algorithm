@@ -1,11 +1,12 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.test;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreePrinter;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreeUtils;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.AbsBSTTree;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02_BST_base;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class BST_test {
@@ -22,10 +23,10 @@ public class BST_test {
             tree.add(random.nextInt(maxValue));
         }
         // 循环引用检测
-        boolean check = BTreePrinter.cycleCheck(tree.root);
+        boolean check = BTreeUtils.cycleCheck(tree.root);
         System.out.println(check);
         if (check) {
-            System.out.println(BTreePrinter.print(tree.root, false));
+            System.out.println(BTreeUtils.print(tree.root, false));
         }
     }
 
@@ -41,17 +42,17 @@ public class BST_test {
             if (tree.add(v)) {
                 sort.add(v);
                 System.out.println(v);
-                System.out.println(BTreePrinter.print(tree.root, false));
+                System.out.println(BTreeUtils.print(tree.root, false));
                 sort.sort(Comparator.comparing(Integer::doubleValue));
                 System.out.println(Arrays.toString(sort.toArray()));
                 System.out.println();
             }
         }
         // 循环引用检测
-        boolean check = BTreePrinter.cycleCheck(tree.root);
+        boolean check = BTreeUtils.cycleCheck(tree.root);
         System.out.println(check);
         if (check) {
-            System.out.println(BTreePrinter.print(tree.root, false));
+            System.out.println(BTreeUtils.print(tree.root, false));
         }
     }
 
@@ -68,34 +69,34 @@ public class BST_test {
         tree.add(17);
         tree.add(46);
         
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
         tree.remove(55);
         System.out.println(55);
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
         tree.remove(38);
         System.out.println(38);
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
         tree.remove(76);
         System.out.println(76);
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
         tree.remove(25);
         System.out.println(25);
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
         tree.remove(50);
         System.out.println(50);
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
         tree.remove(72);
         System.out.println(72);
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
         tree.remove(33);
         System.out.println(33);
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
         tree.remove(17);
         System.out.println(17);
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
         tree.remove(46);
         System.out.println(46);
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
     }
     
     @Test
@@ -107,7 +108,7 @@ public class BST_test {
             int v = random.nextInt(maxValue);
             tree.add(v);
         }
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
 
         tree.traverse(tree.root, AbsBSTTree.Order.MidOrder, e -> {
             System.out.println(e);
@@ -127,7 +128,35 @@ public class BST_test {
     /**
      * 自动测试 test
      */
-    
+
+    @Test
+    public void test_start2_remove_AutoTest() {
+
+        Set<Integer> set = new HashSet<>(valueSize);
+
+        Tree02_BST_base<Integer> tree = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
+        Random random = new Random();
+        for (int i = 0; i < valueSize; i++) {
+            int v = random.nextInt(maxValue);
+            if (tree.add(v)) {
+                set.add(v);
+            }
+        }
+        Iterator<Integer> iterator = set.iterator();
+        while (iterator.hasNext()) {
+            Integer next = iterator.next();
+            tree.remove(next);
+            iterator.remove();
+
+            if (!BTreeUtils.eq(set, tree)) {
+                System.out.println("error=" + next);
+                System.out.println(BTreeUtils.print(tree.root, false));
+                System.out.println(Arrays.toString(set.toArray()));
+                assert false;
+            }
+        }
+    }
+
     @Test
     public void test_start2_floor_AutoTest() {
 
@@ -152,7 +181,7 @@ public class BST_test {
                 continue;
             }
             System.out.println("error " + i);
-            BTreePrinter.print(tree.root, true);
+            BTreeUtils.print(tree.root, true);
             assert false;
         }
     }
@@ -181,7 +210,7 @@ public class BST_test {
                 continue;
             }
             System.out.println("error " + i);
-            BTreePrinter.print(tree.root, true);
+            BTreeUtils.print(tree.root, true);
             assert false;
         }
     }
@@ -231,7 +260,7 @@ public class BST_test {
             System.out.println("sort min=" + sort.get(1));
             System.out.println("tree min=" + tree.min());
             System.out.println(Arrays.toString(sort.toArray()));
-            System.out.println(BTreePrinter.print(tree.root, false));
+            System.out.println(BTreeUtils.print(tree.root, false));
             assert false;
         } else {
             System.out.println("OK " + tree.min());
@@ -284,7 +313,7 @@ public class BST_test {
             System.out.println("sort max=" + sort.get(1));
             System.out.println("tree max=" + tree.max());
             System.out.println(Arrays.toString(sort.toArray()));
-            System.out.println(BTreePrinter.print(tree.root, false));
+            System.out.println(BTreeUtils.print(tree.root, false));
             assert false;
         } else {
             System.out.println("OK " + tree.min());
@@ -305,7 +334,7 @@ public class BST_test {
                 list.add(v);
             }
         }
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
 
         for (int val : list) {
             int rank = tree.rank(val);
@@ -331,7 +360,7 @@ public class BST_test {
                 list.add(v);
             }
         }
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
 
         for (int i = 1; i <= valueSize; i++) {
             int min = random.nextInt(i);

@@ -1,6 +1,6 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
 
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreePrinter;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreeUtils;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.TreeNode;
 
 import java.util.Comparator;
@@ -287,6 +287,6 @@ public class Tree05_RB_llrb<V extends Comparable<V>> extends Tree05_RB_abs<V> {
 
     @Override
     public String toString() {
-        return BTreePrinter.print(root, false);
+        return BTreeUtils.print(root, false);
     }
 }

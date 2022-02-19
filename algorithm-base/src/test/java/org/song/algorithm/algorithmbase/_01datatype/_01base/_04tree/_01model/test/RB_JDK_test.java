@@ -1,7 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.test;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreePrinter;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreeUtils;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB_base;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB_jdkhashmap;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB_jdkhotspot;
@@ -23,12 +23,12 @@ public class RB_JDK_test {
             int v = random.nextInt(max);
             tree.add(v);
         }
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
         int lastSize = tree.size;
         for (int i = 0; i < size; i++) {
             tree.remove(i);
             if (tree.size < lastSize) {
-                BTreePrinter.print(tree.root, true);
+                BTreeUtils.print(tree.root, true);
             }
         }
     }
@@ -44,7 +44,7 @@ public class RB_JDK_test {
             int v = random.nextInt(max);
             tree.put(v);
         }
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
 //        int lastSize = tree.size;
 //        for (int i = 0; i < size; i++) {
 //            tree.remove(i);
@@ -65,8 +65,8 @@ public class RB_JDK_test {
             int v = random.nextInt(max);
             tree.put(v);
         }
-        BTreePrinter.print(tree.root, true);
-        BTreePrinter.printJDK9(tree.root);
+        BTreeUtils.print(tree.root, true);
+        BTreeUtils.printJDK9(tree.root);
 //        int lastSize = tree.size;
 //        for (int i = 0; i < size; i++) {
 //            tree.remove(i);
@@ -91,9 +91,9 @@ public class RB_JDK_test {
             hashmap.add(v);
             hotspot.put(v);
         }
-        BTreePrinter.print(treemap.root, true);
-        BTreePrinter.print(hashmap.root, true);
-        BTreePrinter.print(hotspot.root, true);
+        BTreeUtils.print(treemap.root, true);
+        BTreeUtils.print(hashmap.root, true);
+        BTreeUtils.print(hotspot.root, true);
 //        int lastSize = tree.size;
 //        for (int i = 0; i < size; i++) {
 //            tree.remove(i);
@@ -116,8 +116,8 @@ public class RB_JDK_test {
             treemap.put(v);
             rb.add(v);
         }
-        BTreePrinter.print(treemap.root, true);
-        BTreePrinter.print(rb.root, true);
+        BTreeUtils.print(treemap.root, true);
+        BTreeUtils.print(rb.root, true);
 //        int lastSize = tree.size;
 //        for (int i = 0; i < size; i++) {
 //            tree.remove(i);

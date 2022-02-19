@@ -1,7 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.test;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreePrinter;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreeUtils;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB_base;
 
 import java.util.Comparator;
@@ -20,7 +20,7 @@ public class RB_test {
             int v = random.nextInt(max);
             tree.add(v);
         }
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
     }
     @Test
     public void test_start2() {
@@ -35,6 +35,6 @@ public class RB_test {
         tree.add(33);
         tree.add(17);
         tree.add(46);
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
     }
 }

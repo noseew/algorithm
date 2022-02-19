@@ -1,6 +1,6 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
 
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreePrinter;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreeUtils;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.TreeNode;
 
 import java.util.ArrayList;
@@ -192,7 +192,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
 
     @Override
     public String toString() {
-        return BTreePrinter.printJDK9(root);
+        return BTreeUtils.printJDK9(root);
     }
 
     /***************************************** 通用方法 可重写 *****************************************************/
@@ -279,6 +279,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
         } else {
             // 删除待删除的叶子节点
             parent = (parent.left != null) ? parent.left : parent.right;
+            size--;
         }
         return parent;
     }

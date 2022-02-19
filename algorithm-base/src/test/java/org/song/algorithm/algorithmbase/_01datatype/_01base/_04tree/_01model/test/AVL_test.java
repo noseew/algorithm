@@ -1,8 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.test;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreePrinter;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02_BST_base;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreeUtils;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03_AVL_base;
 
 import java.util.Comparator;
@@ -47,34 +46,34 @@ public class AVL_test {
         tree.add(17);
         tree.add(46);
 
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
         tree.remove(55);
         System.out.println(55);
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
         tree.remove(38);
         System.out.println(38);
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
         tree.remove(76);
         System.out.println(76);
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
         tree.remove(25);
         System.out.println(25);
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
         tree.remove(50);
         System.out.println(50);
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
         tree.remove(72);
         System.out.println(72);
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
         tree.remove(33);
         System.out.println(33);
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
         tree.remove(17);
         System.out.println(17);
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
         tree.remove(46);
         System.out.println(46);
-        BTreePrinter.print(tree.root, true);
+        BTreeUtils.print(tree.root, true);
     }
 
 }

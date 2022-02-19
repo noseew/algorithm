@@ -1,16 +1,43 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree;
 
+import lombok.experimental.UtilityClass;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.AbsBSTTree;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02_BST_base;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.TreeNode;
 
-import java.io.PrintStream;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Predicate;
 
-public class BTreePrinter {
-    
+@UtilityClass
+public class BTreeUtils {
+
+    public static boolean eq(Collection c, Tree02_BST_base tree) {
+        if (c.size() != tree.size) {
+            System.err.println("size diff: c.size=" + c.size());
+            System.err.println("size diff: tree.size=" + tree.size());
+            return false;
+        }
+        Collection set = new HashSet(tree.size);
+        Tree02_BST_base.traverse(tree.root, AbsBSTTree.Order.MidOrder, (Predicate<Comparable>) set::add);
+        return set.equals(c);
+    }
+
+    public static boolean eq(Tree02_BST_base tree1, Tree02_BST_base tree2) {
+        List<Object> list1 = new ArrayList<>(tree1.size);
+        List<Object> list2 = new ArrayList<>(tree2.size);
+
+        Tree02_BST_base.traverse(tree1.root, AbsBSTTree.Order.MidOrder, (Predicate<Comparable>) list1::add);
+        Tree02_BST_base.traverse(tree2.root, AbsBSTTree.Order.MidOrder, (Predicate<Comparable>) tree2::add);
+
+        if (list1.size() != list2.size()) {
+            System.err.println("size diff: list1.size=" + list1.size());
+            System.err.println("size diff: list2.size=" + list2.size());
+            return false;
+        }
+        return list1.equals(list2);
+    }
+
     public static <V extends Comparable<V>> boolean cycleCheck(TreeNode<V> root) {
         Set<V> set = new HashSet<>();
         AtomicBoolean terminal = new AtomicBoolean(false);
@@ -34,12 +61,12 @@ public class BTreePrinter {
         }
         return false;
     }
-    
+
     // 来自网络
-    
+
     public static String print(TreeNode root, boolean print) {
         CycleRecursionCheck<TreeNode> check = new CycleRecursionCheck<>();
-                
+
         StringBuilder sb = new StringBuilder();
         final int maxLevel = getDepth(root, check);
         sb.append("maxLevel: " + maxLevel).append("\r\n");
@@ -115,7 +142,7 @@ public class BTreePrinter {
         int leftLength = nodeWidth / 2;
         String val = (node == null ? "" : String.valueOf(node.val));
         int rightLength = nodeWidth - leftLength - val.length();
-        
+
         String left = String.join("", Collections.nCopies(leftLength, " "));
         String right = String.join("", Collections.nCopies(rightLength, " "));
 
@@ -185,23 +212,23 @@ public class BTreePrinter {
             check.parentPrint = true;
         }
     }
-    
+
     private static String fill(TreeNode node, Object v) {
         return isRed(node) ? "\033[31;4m" + v + "\033[0m" : String.valueOf(v);
     }
-    
+
     private static boolean isRed(TreeNode node) {
         return node != null && node.red;
     }
-    
-    static class CycleRecursionCheck<V extends TreeNode> {
+
+    private static class CycleRecursionCheck<V extends TreeNode> {
         Set set = new HashSet<>();
         boolean parentPrint = false;
         boolean cycle = false;
 
         /**
          * return false, 说明 V 已存在
-         * 
+         *
          * @param v
          * @return false, 说明 V 已存在
          */
@@ -213,13 +240,13 @@ public class BTreePrinter {
             return check;
         }
     }
-    
+
     // 来自JDK9 sun.jvm.hotspot.utilities.RBTree
 
     public static String printJDK9(TreeNode root) {
         return printFromNode(root, new StringBuilder(), 0);
     }
-    
+
     private static String printFromNode(TreeNode node, StringBuilder tty, int indentDepth) {
         for (int i = 0; i < indentDepth; i++) {
             tty.append(" ");
