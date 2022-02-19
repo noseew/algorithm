@@ -129,7 +129,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
         AtomicInteger rank = new AtomicInteger(1);
         // 采用中序遍历, 并计数
         traverse(root, Order.MidOrder, e -> {
-            if (greater(v, e)) {
+            if (greater(v, e.val)) {
                 rank.incrementAndGet();
                 return true;
             }
@@ -168,8 +168,8 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
         AtomicInteger step = new AtomicInteger(1);
         traverse(root, Order.MidOrder, e -> {
             // 遍历整棵树 e 要在 min max 之间 
-            if (less(e, max) && !less(e, min) && step.get() < 3) {
-                list.add(e);
+            if (less(e.val, max) && !less(e.val, min) && step.get() < 3) {
+                list.add(e.val);
                 step.set(2);
                 return true;
             }
@@ -594,7 +594,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
     /**
      * 获取树的高度
      */
-    protected int getHeight_recursive(TreeNode<V> node) {
+    public static int getHeight_recursive(TreeNode node) {
         if (node == null) {
             return 0;
         }
@@ -604,7 +604,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
     /**
      * 获取树的高度
      */
-    protected int getHeight(TreeNode<V> node) {
+    public static int getHeight(TreeNode node) {
         if (node == null) {
             return 0;
         }

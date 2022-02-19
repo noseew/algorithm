@@ -115,7 +115,7 @@ public class BST_test {
         });
         System.out.println("条件打印");
         tree.traverse(tree.root, AbsBSTTree.Order.MidOrder, e -> {
-            if (e < 10) {
+            if (e.val < 10) {
                 System.out.println(e);
                 return true;
             }

@@ -19,7 +19,7 @@ public class BTreeUtils {
             return false;
         }
         Collection set = new HashSet(tree.size);
-        Tree02_BST_base.traverse(tree.root, AbsBSTTree.Order.MidOrder, (Predicate<Comparable>) set::add);
+        Tree02_BST_base.traverse(tree.root, AbsBSTTree.Order.MidOrder, e -> set.add(e.val));
         return set.equals(c);
     }
 
@@ -27,8 +27,8 @@ public class BTreeUtils {
         List<Object> list1 = new ArrayList<>(tree1.size);
         List<Object> list2 = new ArrayList<>(tree2.size);
 
-        Tree02_BST_base.traverse(tree1.root, AbsBSTTree.Order.MidOrder, (Predicate<Comparable>) list1::add);
-        Tree02_BST_base.traverse(tree2.root, AbsBSTTree.Order.MidOrder, (Predicate<Comparable>) list2::add);
+        Tree02_BST_base.traverse(tree1.root, AbsBSTTree.Order.MidOrder, e -> list1.add(e.val));
+        Tree02_BST_base.traverse(tree2.root, AbsBSTTree.Order.MidOrder, e -> list2.add(e.val));
 
         if (list1.size() != list2.size()) {
             System.err.println("size diff: list1.size=" + list1.size());
@@ -47,8 +47,8 @@ public class BTreeUtils {
                 return false;
             }
             v[0] = v[1];
-            v[1] = e;
-            if (set.add(e)) {
+            v[1] = e.val;
+            if (set.add(e.val)) {
                 return true;
             }
             terminal.set(true);

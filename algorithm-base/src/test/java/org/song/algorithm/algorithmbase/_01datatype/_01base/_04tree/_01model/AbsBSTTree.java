@@ -55,13 +55,13 @@ public abstract class AbsBSTTree<V extends Comparable<V>> {
      * @param order 顺序 0-前序, 1-中序, 2-后序
      * @param goon 执行操作, true-继续遍历, false-终止遍历
      */
-    public static <V extends Comparable<V>> void traverse(TreeNode<V> node, Order order, Predicate<V> goon) {
+    public static <V extends Comparable<V>> void traverse(TreeNode<V> node, Order order, Predicate<TreeNode<V>> goon) {
         if (node == null) return;
-        if (order == Order.PreOrder && !goon.test(node.val)) return;
+        if (order == Order.PreOrder && !goon.test(node)) return;
         traverse(node.left, order, goon);
-        if (order == Order.MidOrder && !goon.test(node.val)) return;
+        if (order == Order.MidOrder && !goon.test(node)) return;
         traverse(node.right, order, goon);
-        if (order == Order.PostOrder && !goon.test(node.val)) return;
+        if (order == Order.PostOrder && !goon.test(node)) return;
     }
     
     public enum Order {

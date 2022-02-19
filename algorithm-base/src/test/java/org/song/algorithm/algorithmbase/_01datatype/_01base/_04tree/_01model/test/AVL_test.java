@@ -2,10 +2,12 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.te
 
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreeUtils;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.AbsBSTTree;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02_BST_base;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03_AVL_base;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AVL_test {
 
@@ -101,6 +103,37 @@ public class AVL_test {
             System.out.println(BTreeUtils.print(bst.root, false));
             assert false;
         }
+    }
+
+    @Test
+    public void test_isBalance() {
+        Tree03_AVL_base<Integer> avl = new Tree03_AVL_base<>(Comparator.comparing(Integer::doubleValue));
+        Random random = new Random();
+        for (int i = 0; i < valueSize; i++) {
+            int v = random.nextInt(maxValue);
+            avl.add(v);
+        }
+
+        AtomicBoolean balance = new AtomicBoolean(true);
+
+        Tree02_BST_base.traverse(avl.root, AbsBSTTree.Order.MidOrder, 
+                e -> {
+                    boolean goon = Math.abs(Math.abs(Tree02_BST_base.getHeight_recursive(e.left))
+                            - Math.abs(Tree02_BST_base.getHeight_recursive(e.right))) <= 1;
+                    if (!goon) {
+                        // 不平衡
+                        balance.set(false);
+                        return false;
+                    }
+                    if (!balance.get()) {
+                        return false;
+                    }
+                    balance.set(true);
+                    return true;
+                });
+
+        assert balance.get();
+        
     }
 
     /**
