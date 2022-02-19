@@ -29,9 +29,16 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
         return oldSize < size;
     }
 
+    /**
+     * TODO 未完成
+     * 
+     * @param v
+     * @return
+     */
     @Override
     public V remove(V v) {
-        root = remove_recursive(root, v);
+        root = remove_traverse(root, v);
+        setBlack(root); // 根总为黑
         return null;
     }
 
@@ -41,6 +48,56 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
         node.height = 1;
         size++;
         return node;
+    }
+
+    @Override
+    protected TreeNode<V> remove_traverse(TreeNode<V> parent, V v) {
+        if (parent == null) {
+            return null;
+        }
+        // 复用 BST
+        // 待删除的节点x, x的父节点xp
+        TreeNode<V> x = parent, xp = null;
+        do {
+            if (eq(v, x.val)) break;
+            xp = x;
+            x = less(v, x.val) ? x.left : x.right;
+        } while (x != null);
+
+        if (x == null) return parent; // 无需删除, 原样返回
+
+        // 待删除x是叶子结点
+        if (x.right == null && x.left == null) {
+            if (xp == null) {
+                size--;
+                return null;
+            }
+            if (xp.left == x) {
+                xp.left = null;
+            } else {
+                xp.right = null;
+            }
+            size--;
+            return root;
+        }
+
+        // 待删除x是非叶子结点, 要找到其前驱或后继节点代替它
+        if (x.right != null) {
+            TreeNode<V> minNode = getMinNode(x.right);
+            x.val = minNode.val;
+            x.right = removeMinReturnNewParent(x.right);
+            x.red = minNode.red;
+        } else if (x.left != null) {
+            TreeNode<V> maxNode = getMaxNode(x.left);
+            x.val = maxNode.val;
+            x.left = removeMaxReturnNewParent(x.left);
+            x.red = maxNode.red;
+        }
+        size--;
+        
+        // 红黑树平衡
+        balanceDeletion(x);
+        return root;
     }
 
     @Override

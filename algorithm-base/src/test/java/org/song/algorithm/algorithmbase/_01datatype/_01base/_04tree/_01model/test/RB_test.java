@@ -36,5 +36,32 @@ public class RB_test {
         tree.add(17);
         tree.add(46);
         BTreeUtils.print(tree.root, true);
+        tree.remove(55);
+        System.out.println(55);
+        BTreeUtils.print(tree.root, true);
+        tree.remove(38);
+        System.out.println(38);
+        BTreeUtils.print(tree.root, true);
+        tree.remove(76);
+        System.out.println(76);
+        BTreeUtils.print(tree.root, true);
+        tree.remove(25);
+        System.out.println(25);
+        BTreeUtils.print(tree.root, true);
+        tree.remove(50);
+        System.out.println(50);
+        BTreeUtils.print(tree.root, true);
+        tree.remove(72);
+        System.out.println(72);
+        BTreeUtils.print(tree.root, true);
+        tree.remove(33);
+        System.out.println(33);
+        BTreeUtils.print(tree.root, true);
+        tree.remove(17);
+        System.out.println(17);
+        BTreeUtils.print(tree.root, true);
+        tree.remove(46);
+        System.out.println(46);
+        BTreeUtils.print(tree.root, true);
     }
 }
