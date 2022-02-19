@@ -37,13 +37,15 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
     @Override
     public boolean add(V v) {
         int size = this.size;
-        root = insert_recursive(root, v);
+//        root = insert_recursive(root, v);
+        root = insert_traverse(root, v);
         return size > this.size;
     }
 
     @Override
     public V remove(V v) {
-        root = remove_recursive(root, v);
+//        root = remove_recursive(root, v);
+        root = remove_traverse(root, v);
         return null;
     }
 
@@ -103,6 +105,53 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
         return parent;
     }
 
+    @Override
+    protected TreeNode<V> remove_traverse(TreeNode<V> parent, V v) {
+        if (parent == null) {
+            return null;
+        }
+        // 复用BST删除
+        
+        // 待删除的节点x, x的父节点xp
+        TreeNode<V> x = parent, xp = null;
+        do {
+            if (eq(v, x.val)) break;
+            xp = x;
+            x = less(v, x.val) ? x.left : x.right;
+        } while (x != null);
+
+        if (x == null) return parent; // 无需删除, 原样返回
+
+        // 待删除x是叶子结点
+        if (x.right == null && x.left == null) {
+            if (xp == null) {
+                size--;
+                return null;
+            }
+            if (xp.left == x) {
+                xp.left = null;
+            } else {
+                xp.right = null;
+            }
+            size--;
+            return root;
+        }
+
+        // 待删除x是非叶子结点, 要找到其前驱或后继节点代替它
+        if (x.right != null) {
+            TreeNode<V> minNode = getMinNode(x.right);
+            x.val = minNode.val;
+            x.right = removeMinReturnNewParent(x.right);
+        } else if (x.left != null) {
+            TreeNode<V> maxNode = getMaxNode(x.left);
+            x.val = maxNode.val;
+            x.left = removeMaxReturnNewParent(x.left);
+            x.red = maxNode.red;
+        }
+        size--;
+        return root;
+    }
+
     /***************************************** 平衡处理-旋转 *****************************************************/
 
     /*
@@ -122,12 +171,12 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
      */
 
     /**
-     * 新增修正
-     *
+     * AVL 平衡方式统一
+     * 
      * @param x
-     * @return 返回新的 parent 节点
+     * @return
      */
-    protected TreeNode<V> balanceInsertion(TreeNode<V> x) {
+    protected TreeNode<V> balance(TreeNode<V> x) {
         if (x == null) {
             return x;
         }
@@ -198,6 +247,17 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
         // 更新高度
         x.height = Math.max(getHeight(x.left), getHeight(x.right)) + 1;
         return x;
+        
+    }
+
+    /**
+     * 新增修正
+     *
+     * @param x
+     * @return 返回新的 parent 节点
+     */
+    protected TreeNode<V> balanceInsertion(TreeNode<V> x) {
+        return balance(x);
     }
 
     /**
@@ -207,7 +267,7 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
      * @return 返回新的 parent 节点
      */
     protected TreeNode<V> balanceDeletion(TreeNode<V> x) {
-        return x;
+        return balance(x);
     }
 
     /**
