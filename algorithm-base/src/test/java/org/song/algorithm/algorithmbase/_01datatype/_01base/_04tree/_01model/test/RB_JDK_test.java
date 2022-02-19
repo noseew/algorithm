@@ -140,25 +140,16 @@ public class RB_JDK_test {
 
     @Test
     public void test_vs2() {
-        int max = 100;
-        int size = 10;
 
         Tree05_RB_jdktreemap<Integer> treemap = new Tree05_RB_jdktreemap<>(Comparator.comparing(Integer::doubleValue));
         Tree05_RB_base<Integer> rb = new Tree05_RB_base<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
-        for (int i = 0; i < size; i++) {
-            int v = random.nextInt(max);
+        for (int i = 0; i < valueSize; i++) {
+            int v = random.nextInt(maxValue);
             treemap.put(v);
             rb.add(v);
         }
-        BTreeUtils.print(treemap.root, true);
-        BTreeUtils.print(rb.root, true);
-//        int lastSize = tree.size;
-//        for (int i = 0; i < size; i++) {
-//            tree.remove(i);
-//            if (tree.size < lastSize) {
-//                BTreePrinter.print(tree.root, true);
-//            }
-//        }
+        System.out.println("(treemap, rb)");
+        assert BTreeUtils.eq(treemap, rb);
     }
 }
