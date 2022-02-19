@@ -262,6 +262,37 @@ public class BST_test {
     }
 
     @Test
+    public void test_start2_removeMax_AutoTest() {
+
+        List<Integer> sort = new ArrayList<>(valueSize);
+
+        Tree02_BST_base<Integer> tree = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
+        Random random = new Random();
+        for (int i = 0; i < valueSize; i++) {
+            int v = random.nextInt(maxValue);
+            if (tree.add(v)) {
+                sort.add(v);
+            }
+        }
+        sort.sort(Comparator.comparing(Integer::doubleValue).reversed());
+//        System.out.println(BTreePrinter.print(tree.root, false));
+
+        System.out.println("max=" + sort.get(0));
+        System.out.println("删除=" + tree.removeMax());
+
+        if (tree.max() !=  sort.get(1)) {
+            System.out.println("sort max=" + sort.get(1));
+            System.out.println("tree max=" + tree.max());
+            System.out.println(Arrays.toString(sort.toArray()));
+            System.out.println(BTreePrinter.print(tree.root, false));
+            assert false;
+        } else {
+            System.out.println("OK " + tree.min());
+        }
+
+    }
+    
+    @Test
     public void test_start3_rank_AutoTest() {
 
         List<Integer> list = new ArrayList<>(valueSize);
