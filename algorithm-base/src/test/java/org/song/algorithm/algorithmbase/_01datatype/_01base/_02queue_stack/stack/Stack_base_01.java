@@ -29,6 +29,9 @@ public class Stack_base_01<T> {
         return size == 0;
     }
 
+    public int getSize() {
+        return size;
+    }
 
     class Node<T> {
         Node<T> next;

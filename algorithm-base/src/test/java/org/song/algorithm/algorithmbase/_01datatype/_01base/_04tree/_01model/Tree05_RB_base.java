@@ -30,6 +30,12 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
     }
 
     @Override
+    public V remove(V v) {
+        root = remove_recursive(root, v);
+        return null;
+    }
+
+    @Override
     public TreeNode<V> newNode(V v) {
         TreeNode<V> node = new TreeNode<>(v, RED);
         node.height = 1;

@@ -2,23 +2,34 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.te
 
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreePrinter;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02_BST_base;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.AbsBSTTree;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02_BST_base;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class BST_test {
 
+    private final int maxValue = 100;
+    private final int valueSize = 30;
+
     @Test
-    public void test_start1() {
+    public void test_add() {
         Tree02_BST_base<Integer> tree = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
 
         Random random = new Random();
-        for (int i = 0; i < 20; i++) {
-            tree.add(random.nextInt(50));
+        for (int i = 0; i < valueSize; i++) {
+            tree.add(random.nextInt(maxValue));
         }
-        BTreePrinter.print(tree.root, true);
+        // 循环引用检测
+        boolean check = BTreePrinter.cycleCheck(tree.root);
+        System.out.println(check);
+        if (check) {
+            System.out.println(BTreePrinter.print(tree.root, false));
+        }
     }
 
     @Test
@@ -66,13 +77,11 @@ public class BST_test {
 
     @Test
     public void test_traverse() {
-        int max = 20;
-        int size = 10;
 
         Tree02_BST_base<Integer> tree = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
-        for (int i = 0; i < size; i++) {
-            int v = random.nextInt(max);
+        for (int i = 0; i < valueSize; i++) {
+            int v = random.nextInt(maxValue);
             tree.add(v);
         }
         BTreePrinter.print(tree.root, true);
@@ -98,83 +107,78 @@ public class BST_test {
     @Test
     public void test_start2_floor_AutoTest() {
 
-        int max = 1000;
-        int size = 100;
-        
-        List<Integer> list = new ArrayList<>(size);
-        
+        List<Integer> list = new ArrayList<>(valueSize);
+
         Tree02_BST_base<Integer> tree = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
-        for (int i = 0; i < size; i++) {
-            int v = random.nextInt(max);
+        for (int i = 0; i < valueSize; i++) {
+            int v = random.nextInt(maxValue);
             tree.add(v);
             list.add(v);
         }
-        BTreePrinter.print(tree.root, true);
 
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < valueSize; i++) {
             int val = i;
             Integer floor = tree.floor(val);
-            if (floor == null && list.stream().filter(e-> e <= val).max(Comparator.comparing(Integer::doubleValue)).orElse(null) == null) {
+            if (floor == null && list.stream().filter(e -> e <= val).max(Comparator.comparing(Integer::doubleValue)).orElse(null) == null) {
                 continue;
             }
             // <= v 的 最大的那个
-            if (floor == list.stream().filter(e-> e <= val).max(Comparator.comparing(Integer::doubleValue)).orElse(null)) {
+            if (floor == list.stream().filter(e -> e <= val).max(Comparator.comparing(Integer::doubleValue)).orElse(null)) {
                 continue;
             }
             System.out.println("error " + i);
+            BTreePrinter.print(tree.root, true);
+            assert false;
         }
     }
 
     @Test
     public void test_start3_ceiling_AutoTest() {
-        int max = 1000;
-        int size = 100;
 
-        List<Integer> list = new ArrayList<>(size);
+        List<Integer> list = new ArrayList<>(valueSize);
 
         Tree02_BST_base<Integer> tree = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
-        for (int i = 0; i < size; i++) {
-            int v = random.nextInt(max);
+        for (int i = 0; i < valueSize; i++) {
+            int v = random.nextInt(maxValue);
             tree.add(v);
             list.add(v);
         }
-        BTreePrinter.print(tree.root, true);
 
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < valueSize; i++) {
             int val = i;
             Integer ceiling = tree.ceiling(val);
-            if (ceiling == null && list.stream().filter(e-> e >= val).min(Comparator.comparing(Integer::doubleValue)).orElse(null) == null) {
+            if (ceiling == null && list.stream().filter(e -> e >= val).min(Comparator.comparing(Integer::doubleValue)).orElse(null) == null) {
                 continue;
             }
             // >= v 的 最小的那个
-            if (ceiling == list.stream().filter(e-> e >= val).min(Comparator.comparing(Integer::doubleValue)).orElse(null)) {
+            if (ceiling == list.stream().filter(e -> e >= val).min(Comparator.comparing(Integer::doubleValue)).orElse(null)) {
                 continue;
             }
             System.out.println("error " + i);
+            BTreePrinter.print(tree.root, true);
+            assert false;
         }
     }
 
     @Test
     public void test_start3_max_AutoTest() {
-        int max = 1000;
-        int size = 100;
 
-        int minV = 1000;
+        int expectV = maxValue;
 
         Tree02_BST_base<Integer> tree = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
-        for (int i = 0; i < size; i++) {
-            int v = random.nextInt(max);
+        for (int i = 0; i < valueSize; i++) {
+            int v = random.nextInt(maxValue);
             tree.add(v);
-            minV = Math.min(v, minV);
+            expectV = Math.min(v, expectV);
         }
-//        BTreePrinter.print(tree.root, true);
 
-        if (tree.min() != minV) {
-            System.out.println("error minV=" + minV);
+        if (tree.min() != expectV) {
+            System.out.println("error expectV=" + expectV);
             System.out.println("error min=" + tree.min());
+            assert false;
         } else {
             System.out.println("OK");
         }
@@ -182,23 +186,21 @@ public class BST_test {
 
     @Test
     public void test_start3_min_AutoTest() {
-        int max = 1000;
-        int size = 100;
 
-        int maxV = -1;
+        int expectV = -1;
 
         Tree02_BST_base<Integer> tree = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
-        for (int i = 0; i < size; i++) {
-            int v = random.nextInt(max);
+        for (int i = 0; i < valueSize; i++) {
+            int v = random.nextInt(maxValue);
             tree.add(v);
-            maxV = Math.max(v, maxV);
+            expectV = Math.max(v, expectV);
         }
-//        BTreePrinter.print(tree.root, true);
 
-        if (tree.max() != maxV) {
-            System.out.println("error maxV=" + maxV);
+        if (tree.max() != expectV) {
+            System.out.println("error expectV=" + expectV);
             System.out.println("error max=" + tree.max());
+            assert false;
         } else {
             System.out.println("OK");
         }
@@ -206,15 +208,13 @@ public class BST_test {
 
     @Test
     public void test_start3_rank_AutoTest() {
-        int max = 20;
-        int size = 10;
 
-        List<Integer> list = new ArrayList<>(size);
+        List<Integer> list = new ArrayList<>(valueSize);
 
         Tree02_BST_base<Integer> tree = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
-        for (int i = 0; i < size; i++) {
-            int v = random.nextInt(max);
+        for (int i = 0; i < valueSize; i++) {
+            int v = random.nextInt(maxValue);
             if (tree.add(v)) {
                 list.add(v);
             }
@@ -234,22 +234,20 @@ public class BST_test {
 
     @Test
     public void test_start3_range_AutoTest() {
-        int max = 20;
-        int size = 10;
 
-        List<Integer> list = new ArrayList<>(size);
+        List<Integer> list = new ArrayList<>(valueSize);
 
         Tree02_BST_base<Integer> tree = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
-        for (int i = 0; i < size; i++) {
-            int v = random.nextInt(max);
+        for (int i = 0; i < valueSize; i++) {
+            int v = random.nextInt(maxValue);
             if (tree.add(v)) {
                 list.add(v);
             }
         }
         BTreePrinter.print(tree.root, true);
 
-        for (int i = 1; i <= size; i++) {
+        for (int i = 1; i <= valueSize; i++) {
             int min = random.nextInt(i);
             int max2 = random.nextInt(min + 10);
             List<Integer> range = tree.range(min, max2);

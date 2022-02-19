@@ -1,13 +1,39 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree;
 
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.AbsBSTTree;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.TreeNode;
 
 import java.io.PrintStream;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BTreePrinter {
+    
+    public static <V extends Comparable<V>> boolean cycleCheck(TreeNode<V> root) {
+        Set<V> set = new HashSet<>();
+        AtomicBoolean terminal = new AtomicBoolean(false);
+        V[] v = (V[]) new Integer[2];
+        AbsBSTTree.traverse(root, AbsBSTTree.Order.MidOrder, e -> {
+            if (terminal.get()) {
+                return false;
+            }
+            v[0] = v[1];
+            v[1] = e;
+            if (set.add(e)) {
+                return true;
+            }
+            terminal.set(true);
+            return false;
+        });
+        if (terminal.get()) {
+            System.err.println("循环val=" + v[1]);
+            System.err.println("val.pre=" + v[0]);
+            return true;
+        }
+        return false;
+    }
     
     // 来自网络
     
@@ -49,7 +75,8 @@ public class BTreePrinter {
                         System.out.print(nodeText);
                     }
                 } catch (Exception e) {
-                    System.err.println(e.getMessage());
+                    System.out.println();
+                    System.err.println("BTreePrinter.print error: " + e.getMessage());
                 }
             }
             sb.append("\r\n");
@@ -189,29 +216,25 @@ public class BTreePrinter {
     
     // 来自JDK9 sun.jvm.hotspot.utilities.RBTree
 
-    public static void printJDK9(TreeNode root) {
-        printOn(System.out, root);
-    }
-
-    private static void printOn(PrintStream tty, TreeNode root) {
-        printFromNode(root, tty, 0);
+    public static String printJDK9(TreeNode root) {
+        return printFromNode(root, new StringBuilder(), 0);
     }
     
-    private static void printFromNode(TreeNode node, PrintStream tty, int indentDepth) {
+    private static String printFromNode(TreeNode node, StringBuilder tty, int indentDepth) {
         for (int i = 0; i < indentDepth; i++) {
-            tty.print(" ");
+            tty.append(" ");
         }
 
-        tty.print("-");
+        tty.append("-");
         if (node == null) {
-            tty.println();
-            return;
+            tty.append("\r\n");
+            return "";
         }
 
-//        tty.println(" " + node.val + ((node.red) ? " (red)" : " (black)"));
-        tty.println(" " + fill(node, node.val));
-        printFromNode(node.getLeft(), tty, indentDepth + 2);
-        printFromNode(node.getRight(), tty, indentDepth + 2);
+        tty.append(" " + fill(node, node.val)).append("\r\n");
+        printFromNode(node.getLeft(), tty.append("L"), indentDepth + 1);
+        printFromNode(node.getRight(), tty.append("R"), indentDepth + 1);
+        return tty.toString();
     }
 
 

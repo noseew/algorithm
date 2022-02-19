@@ -25,6 +25,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
 
     @Override
     public boolean add(V v) {
+//        TreeNode<V> node = insert_recursive(root, v);
         TreeNode<V> node = insert_traverse(root, v);
         if (root == null) {
             root = node;
@@ -191,7 +192,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
 
     @Override
     public String toString() {
-        return BTreePrinter.print(root, false);
+        return BTreePrinter.printJDK9(root);
     }
 
     /***************************************** 通用方法 可重写 *****************************************************/
@@ -245,8 +246,8 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
      * 采用递归方式, 删除节点
      *
      * @param parent 以 parent 为root
-     * @param v      返回新的 parent 节点
-     * @return
+     * @param v
+     * @return 返回新的 parent/root 节点
      */
     protected TreeNode<V> remove_recursive(TreeNode<V> parent, V v) {
 
@@ -295,13 +296,19 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
         }
 
         TreeNode<V> xp = getParentNode(parent, v);
+        if (xp == null) {
+            // v == parent
+            return parent;
+        }
 
         TreeNode<V> x = newNode(v);
         x.parent = xp;
         if (less(v, xp.val)) {
             xp.left = x;
-        } else {
+        } else if (greater(v, xp.val)) {
             xp.right = x;
+        } else {
+            // 等值不处理
         }
         return x;
     }
@@ -321,6 +328,59 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
         return parent;
     }
 
+    /**
+     * 采用循环遍历方式, 删除节点
+     *
+     * @param parent
+     * @param v
+     * @return 返回新的 parent/root 节点
+     */
+    protected TreeNode<V> remove_traverse(TreeNode<V> parent, V v) {
+        if (parent == null) {
+            return null;
+        }
+        // 待删除的节点x
+        TreeNode<V> x = null, xp = null;
+        while (parent != null) {
+            if (eq(v, parent.val)) {
+                x = parent;
+                break;
+            }
+            xp = parent;
+            parent = less(v, parent.val) ? parent.left : parent.right;
+        }
+        if (x == null) {
+            return root;
+        }
+        if (x.right == null && x.left == null) {
+            if (xp == null) {
+                return null;
+            }
+            if (xp.left == x) {
+                xp.left = null;
+            } else {
+                xp.right = null;
+            }
+            return root;
+        }
+
+
+        if (x.right != null) {
+            TreeNode<V> minNode = getMinNode(x.right);
+            // 非叶子节点替换
+            x.val = minNode.val;
+            // 叶子节点删除
+            x.right = removeMinReturnNewParent(x.right);
+        } else if (x.left != null) {
+            TreeNode<V> maxNode = getMaxNode(x.left);
+            // 非叶子节点替换
+            x.val = maxNode.val;
+            // 叶子节点删除
+            x.left = removeMaxReturnNewParent(x.left);
+        }
+        return root;
+    }
+
     /***************************************** 工具 *****************************************************/
 
     /**
@@ -338,6 +398,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
             parent = max;
             max = max.right;
         }
+        // 如果最小节点有左叶子节点, 则需要将它们连接上
         parent.right = max.left;
         return max;
     }
@@ -357,6 +418,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
             parent = min;
             min = min.left;
         }
+        // 如果最小节点有右叶子节点, 则需要将它们连接上
         parent.left = min.right;
         return min;
     }
@@ -369,6 +431,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
      */
     protected TreeNode<V> removeMaxReturnNewParent(TreeNode<V> parent) {
         if (parent == null) {
+            // 删除自己就相当于返回null
             return null;
         }
         TreeNode<V> max = parent, maxParent = null;
@@ -376,8 +439,10 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
             maxParent = max;
             max = max.right;
         }
+        // 如果最小节点有左叶子节点, 则需要将它们连接上
         if (maxParent != null) maxParent.right = max.left;
-        return maxParent;
+        // 父节点如果有变化, 返回新的父节点
+        return maxParent != null ? parent : max.left;
     }
 
     /**
@@ -388,6 +453,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
      */
     protected TreeNode<V> removeMinReturnNewParent(TreeNode<V> parent) {
         if (parent == null) {
+            // 删除自己就相当于返回null
             return null;
         }
         TreeNode<V> min = parent, minParent = null;
@@ -395,8 +461,10 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
             minParent = min;
             min = min.left;
         }
-        if (minParent != null) parent.left = min.right;
-        return minParent;
+        // 如果最小节点有右叶子节点, 则需要将它们连接上
+        if (minParent != null) minParent.left = min.right;
+        // 父节点如果有变化, 返回新的父节点
+        return minParent != null ? parent : min.right;
     }
 
     protected TreeNode<V> getFloorNode(TreeNode<V> parent, V v) {
@@ -470,6 +538,9 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
     protected TreeNode<V> getParentNode(TreeNode<V> tree, V v) {
         TreeNode<V> p = tree, pp = null;
         while (p != null) {
+            if (eq(v, p.val)) {
+                return pp;
+            }
             pp = p;
             p = less(v, p.val) ? p.left : p.right;
         }

@@ -3,6 +3,8 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.no
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreePrinter;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.AbsBSTTree;
 
 import java.util.Objects;
 
@@ -46,6 +48,11 @@ public class TreeNode<V> {
         this.parent = parent;
         this.val = val;
         this.red = red;
+    }
+
+    @Override
+    public String toString() {
+        return BTreePrinter.printJDK9(this);
     }
 
     @Override

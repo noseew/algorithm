@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 
-public abstract class AbsBSTTree<V> {
+public abstract class AbsBSTTree<V extends Comparable<V>> {
 
     public static final Comparator<Integer> INT_C = Comparator.comparing(Integer::intValue);
     public static final Comparator<Double> DOUBLE_C = Comparator.comparing(Double::doubleValue);
@@ -53,15 +53,15 @@ public abstract class AbsBSTTree<V> {
      * 
      * @param node 节点
      * @param order 顺序 0-前序, 1-中序, 2-后序
-     * @param stop 执行操作, true-继续遍历, false-终止遍历
+     * @param goon 执行操作, true-继续遍历, false-终止遍历
      */
-    public void traverse(TreeNode<V> node, Order order, Predicate<V> stop) {
+    public static <V extends Comparable<V>> void traverse(TreeNode<V> node, Order order, Predicate<V> goon) {
         if (node == null) return;
-        if (order == Order.PreOrder && !stop.test(node.val)) return;
-        traverse(node.left, order, stop);
-        if (order == Order.MidOrder && !stop.test(node.val)) return;
-        traverse(node.right, order, stop);
-        if (order == Order.PostOrder && !stop.test(node.val)) return;
+        if (order == Order.PreOrder && !goon.test(node.val)) return;
+        traverse(node.left, order, goon);
+        if (order == Order.MidOrder && !goon.test(node.val)) return;
+        traverse(node.right, order, goon);
+        if (order == Order.PostOrder && !goon.test(node.val)) return;
     }
     
     public enum Order {
