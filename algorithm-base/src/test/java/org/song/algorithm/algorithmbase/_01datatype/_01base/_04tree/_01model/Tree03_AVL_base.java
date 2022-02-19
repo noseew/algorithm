@@ -14,6 +14,7 @@ import java.util.Comparator;
  * 新增的时候, 高度最多增加1, 在调整一次之后, 新增节点所在的树高度-1并且平衡, 从而达到平衡, 而不影响祖先或者其他子树的高度
  * 删除的时候, 高度可能降低, 在调整的过程中, 高度可能再次降低, 所以删除可能会有多次调整
  * 
+ * AVL 使用递归更方便?
  *
  * @param <V>
  */
@@ -103,53 +104,6 @@ public class Tree03_AVL_base<V extends Comparable<V>> extends Tree02_BST_base<V>
         // 需要调整
         parent = balanceInsertion(parent);
         return parent;
-    }
-
-    @Override
-    protected TreeNode<V> remove_traverse(TreeNode<V> parent, V v) {
-        if (parent == null) {
-            return null;
-        }
-        // 复用BST删除
-        
-        // 待删除的节点x, x的父节点xp
-        TreeNode<V> x = parent, xp = null;
-        do {
-            if (eq(v, x.val)) break;
-            xp = x;
-            x = less(v, x.val) ? x.left : x.right;
-        } while (x != null);
-
-        if (x == null) return parent; // 无需删除, 原样返回
-
-        // 待删除x是叶子结点
-        if (x.right == null && x.left == null) {
-            if (xp == null) {
-                size--;
-                return null;
-            }
-            if (xp.left == x) {
-                xp.left = null;
-            } else {
-                xp.right = null;
-            }
-            size--;
-            return root;
-        }
-
-        // 待删除x是非叶子结点, 要找到其前驱或后继节点代替它
-        if (x.right != null) {
-            TreeNode<V> minNode = getMinNode(x.right);
-            x.val = minNode.val;
-            x.right = removeMinReturnNewParent(x.right);
-        } else if (x.left != null) {
-            TreeNode<V> maxNode = getMaxNode(x.left);
-            x.val = maxNode.val;
-            x.left = removeMaxReturnNewParent(x.left);
-            x.red = maxNode.red;
-        }
-        size--;
-        return root;
     }
 
     /***************************************** 平衡处理-旋转 *****************************************************/

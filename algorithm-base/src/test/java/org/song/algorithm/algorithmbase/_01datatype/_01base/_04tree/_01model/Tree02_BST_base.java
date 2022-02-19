@@ -614,4 +614,18 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
     protected static <V> V keyOrNull(TreeNode<V> e) {
         return (e == null) ? null : e.val;
     }
+
+    protected boolean isLeft(TreeNode<V> p, TreeNode<V> x) {
+        if (p != null && x != null) {
+            return p.left.val == x.val;
+        }
+        return false;
+    }
+
+    protected boolean isRight(TreeNode<V> p, TreeNode<V> x) {
+        if (p != null && x != null) {
+            return p.right.val == x.val;
+        }
+        return false;
+    }
 }
