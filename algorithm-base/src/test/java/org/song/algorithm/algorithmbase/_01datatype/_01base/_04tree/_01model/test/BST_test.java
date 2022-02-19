@@ -6,13 +6,12 @@ import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Abs
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02_BST_base;
 
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class BST_test {
 
     private final int maxValue = 50;
-    private final int valueSize = 20;
+    private final int valueSize = 15;
 
     @Test
     public void test_start_add() {
@@ -145,6 +144,9 @@ public class BST_test {
                 set.add(v);
             }
         }
+//        assert BTreeUtils.eq(set, tree);
+//        System.out.println(BTreeUtils.print(tree.root, false));
+
         Iterator<Integer> iterator = set.iterator();
         while (iterator.hasNext()) {
             Integer next = iterator.next();

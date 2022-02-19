@@ -41,7 +41,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
 
     @Override
     public V remove(V v) {
-        root = remove_recursive(root, v);
+        root = remove_traverse(root, v);
         return null;
     }
 
@@ -347,32 +347,34 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
         if (parent == null) {
             return null;
         }
-        // 待删除的节点x
-        TreeNode<V> x = null, xp = null;
-        while (parent != null) {
-            if (eq(v, parent.val)) {
-                x = parent;
-                break;
-            }
-            xp = parent;
-            parent = less(v, parent.val) ? parent.left : parent.right;
-        }
-        if (x == null) {
-            return root;
-        }
+        // 待删除的节点x, x的父节点xp
+        TreeNode<V> x = parent, xp = null;
+        do {
+            if (eq(v, x.val)) break;
+            xp = x;
+            x = less(v, x.val) ? x.left : x.right;
+        } while (x != null);
+        
+        if (x == null) return parent; // 无需删除, 原样返回
+            
+        // 待删除x是叶子结点
         if (x.right == null && x.left == null) {
             if (xp == null) {
+                // 待删除节点是根节点, 直接返回新的根节点
+                size--;
                 return null;
             }
+            // 但删除节点不是根节点, 返回原来根节点
             if (xp.left == x) {
                 xp.left = null;
             } else {
                 xp.right = null;
             }
+            size--;
             return root;
         }
 
-
+        // 待删除x是非叶子结点, 要找到其前驱或后继节点代替它
         if (x.right != null) {
             TreeNode<V> minNode = getMinNode(x.right);
             // 非叶子节点替换
@@ -386,6 +388,7 @@ public class Tree02_BST_base<V extends Comparable<V>> extends AbsBSTTree<V> {
             // 叶子节点删除
             x.left = removeMaxReturnNewParent(x.left);
         }
+        size--;
         return root;
     }
 
