@@ -267,7 +267,7 @@ public abstract class Tree05_RB_abs<V extends Comparable<V>> extends Tree02_BST_
     }
 
     final protected void setRed(TreeNode<V> p) {
-        if (p != null) p.red = RED;
+        setColor(p, RED);
     }
 
     final protected boolean isBlack(TreeNode<V> p) {
@@ -275,7 +275,11 @@ public abstract class Tree05_RB_abs<V extends Comparable<V>> extends Tree02_BST_
     }
 
     final protected void setBlack(TreeNode<V> p) {
-        if (p != null) p.red = BLACK;
+        setColor(p, BLACK);
+    }
+    
+    final protected void setColor(TreeNode<V> p, boolean color) {
+        if (p != null) p.red = color;
     }
 
     final protected TreeNode<V> parent(TreeNode<V> p) {

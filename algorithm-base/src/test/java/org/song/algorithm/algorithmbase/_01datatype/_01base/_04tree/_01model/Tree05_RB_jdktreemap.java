@@ -300,10 +300,10 @@ public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree05_RB_abs
         return (p == null ? null : p.parent);
     }
 
-    private static <V> void setColor(TreeNode<V> p, boolean c) {
-        if (p != null)
-            p.red = c;
-    }
+//    private static <V> void setColor(TreeNode<V> p, boolean c) {
+//        if (p != null)
+//            p.red = c;
+//    }
 
     private static <V> TreeNode<V> leftOf(TreeNode<V> p) {
         return (p == null) ? null : p.left;

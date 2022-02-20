@@ -92,6 +92,8 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
         }
         size--;
         
+//        if (!x.red) balanceDeletion(x);
+        
         return root;
     }
 
@@ -136,6 +138,17 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
     @Override
     protected TreeNode<V> balanceDeletion(TreeNode<V> x) {
         while (x != root && isBlack(x)) {
+//        while (true) {
+//            if (x == null || x == root) {
+//                return root;
+//            } else if (parent(x) == null) {
+//                setBlack(x);
+//                return x;
+//            } else if (isRed(x)) {
+//                setBlack(x);
+//                return root;
+//            }
+            
             if (x == left(parent(x))) {
                 if (isRed(right(parent(x)))) {
                     setBlack(right(parent(x)));
@@ -152,7 +165,7 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
                         rightRotate(parent(x));
                         x = parent(x);
                     }
-                    right(parent(x)).red = parent(x).red;
+                    setColor(right(parent(x)), parent(x).red);
                     setBlack(parent(x));
                     setBlack(right(right(parent(x))));
                     leftRotate(parent(x));
@@ -173,7 +186,7 @@ public class Tree05_RB_base<V extends Comparable<V>> extends Tree05_RB_abs<V> {
                         setRed(left(parent(x)));
                         leftRotate(left(parent(x)));
                     }
-                    left(parent(x)).red = parent(x).red;
+                    setColor(left(parent(x)), parent(x).red);
                     setBlack(parent(x));
                     setBlack(left(left(parent(x))));
                     rightRotate(parent(x));

@@ -6,10 +6,6 @@ import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tre
 public class B3_test {
     private Tree04_B_base<String> tree = new Tree04_B_base<String>(3);    // degree为3
 
-    @Test
-    public void test_start1() {
-    }
-
     /**
      * 测试插入方法Case1
      */
