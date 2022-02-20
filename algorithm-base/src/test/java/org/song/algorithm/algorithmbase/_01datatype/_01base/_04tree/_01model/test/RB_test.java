@@ -3,7 +3,7 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.te
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreeUtils;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB_base;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB_jdkhashmap;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB_jdkhotspot;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB_jdktreemap;
 
 import java.util.*;
@@ -31,7 +31,10 @@ public class RB_test {
     public void test_start2() {
 
         Tree05_RB_base<Integer> tree = new Tree05_RB_base<>(Comparator.comparing(Integer::doubleValue));
+        
 //        Tree05_RB_jdkhashmap<Integer> tree = new Tree05_RB_jdkhashmap<>(Comparator.comparing(Integer::doubleValue));
+//        Tree05_RB_jdkhotspot<Integer> tree = new Tree05_RB_jdkhotspot<>(Comparator.comparing(Integer::doubleValue));
+//        Tree05_RB_jdktreemap<Integer> tree = new Tree05_RB_jdktreemap<>(Comparator.comparing(Integer::doubleValue));
         tree.add(55);
         tree.add(38);
         tree.add(76);
@@ -81,7 +84,7 @@ public class RB_test {
         Random random = new Random();
         for (int i = 0; i < valueSize; i++) {
             int v = random.nextInt(maxValue);
-            treemap.put(v);
+            treemap.add(v);
             if (rb.add(v)) {
                 set.add(v);
             }

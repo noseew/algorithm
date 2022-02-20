@@ -2,7 +2,6 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.te
 
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreeUtils;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB_base;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB_jdkhashmap;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB_jdkhotspot;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05_RB_jdktreemap;
@@ -33,7 +32,7 @@ public class RB_JDK_test {
         Random random = new Random();
         for (int i = 0; i < valueSize; i++) {
             int v = random.nextInt(maxValue);
-            tree.put(v);
+            tree.add(v);
         }
         BTreeUtils.print(tree.root, true);
     }
@@ -45,7 +44,7 @@ public class RB_JDK_test {
         Random random = new Random();
         for (int i = 0; i < valueSize; i++) {
             int v = random.nextInt(maxValue);
-            tree.put(v);
+            tree.add(v);
         }
         BTreeUtils.print(tree.root, true);
         BTreeUtils.printJDK9(tree.root);
@@ -60,13 +59,13 @@ public class RB_JDK_test {
         Random random = new Random();
         for (int i = 0; i < valueSize; i++) {
             int v = random.nextInt(maxValue);
-            treemap.put(v);
+            treemap.add(v);
             hashmap.add(v);
-            hotspot.put(v);
+            hotspot.add(v);
         }
-//        BTreeUtils.print(treemap.root, true);
-//        BTreeUtils.print(hashmap.root, true);
-//        BTreeUtils.print(hotspot.root, true);
+        BTreeUtils.print(treemap.root, true);
+        BTreeUtils.print(hashmap.root, true);
+        BTreeUtils.print(hotspot.root, true);
 
         System.out.println("(treemap, hashmap)");
         assert BTreeUtils.eq(treemap, hashmap);
@@ -85,11 +84,11 @@ public class RB_JDK_test {
         Random random = new Random();
         for (int i = 0; i < valueSize; i++) {
             int v = random.nextInt(maxValue);
-            treemap.put(v);
+            treemap.add(v);
             if (hashmap.add(v)) {
                 set.add(v);
             }
-            hotspot.put(v);
+            hotspot.add(v);
         }
 //        BTreeUtils.print(treemap.root, true);
 //        BTreeUtils.print(hashmap.root, true);

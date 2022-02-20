@@ -16,17 +16,19 @@ public class Tree05_RB_jdkhotspot<V extends Comparable<V>> extends Tree05_RB_abs
         super(comparator);
     }
 
-    public void put(V v) {
+    public boolean add(V v) {
         insertNode(v);
+        return true;
     }
 
-    public void del(V v) {
+    public V remove(V v) {
         TreeNode<V> delNode = search_recursive(root, v);
         if (delNode == null) {
-            return;
+            return null;
         }
         size--;
         deleteNode(delNode);
+        return null;
     }
 
     public void insertNode(V v) {

@@ -24,13 +24,13 @@ public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree05_RB_abs
         super(comparator);
     }
 
-    public V put(V v) {
+    public boolean add(V v) {
         TreeNode<V> t = root;
         if (root == null) {
             root = new TreeNode(v, RED);
             size++;
             modCount++;
-            return v;
+            return true;
         }
         int cmp;
         TreeNode<V> parent;
@@ -44,7 +44,7 @@ public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree05_RB_abs
                 t = t.right;
             } else {
                 t.setVal(v);
-                return v;
+                return true;
             }
         } while (t != null);
 
@@ -59,7 +59,7 @@ public class Tree05_RB_jdktreemap<V extends Comparable<V>> extends Tree05_RB_abs
         modCount++;
 
         root.red = BLACK;
-        return null;
+        return true;
     }
 
     @Override
