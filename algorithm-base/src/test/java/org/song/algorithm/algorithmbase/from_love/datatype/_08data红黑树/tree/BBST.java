@@ -37,7 +37,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._08data红黑树.tre
 // * @param child g和p需要交换的子树（本来是p的子树，后来会变成g的子树）
 // */
 // protected void afterRotate(Node<E> grand, Node<E> parent, Node<E> child) {
-// // 让parent称为子树的根节点
+//  让parent称为子树的根节点
 // parent.parent = grand.parent;
 // if (grand.isLeftChild()) { // grand是左子树
 // grand.parent.left = parent;
@@ -46,11 +46,11 @@ package org.song.algorithm.algorithmbase.from_love.datatype._08data红黑树.tre
 // } else { // grand是root节点
 // root = parent;
 // }
-// // 更新child的parent
+//  更新child的parent
 // if (child != null) {
 // child.parent = grand;
 // }
-// // 更新grand的parent
+//  更新grand的parent
 // grand.parent = parent;
 // }
 // /**
@@ -61,7 +61,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._08data红黑树.tre
 // Node<E> b, Node<E> c,
 // Node<E> d,
 // Node<E> e, Node<E> f) {
-// // 让d成为这棵子树的根节点
+//  让d成为这棵子树的根节点
 // d.parent = r.parent;
 // if (r.isLeftChild()) {
 // r.parent.left = d;
@@ -70,17 +70,17 @@ package org.song.algorithm.algorithmbase.from_love.datatype._08data红黑树.tre
 // } else {
 // root = d;
 // }
-// //b-c
+// b-c
 // b.right = c;
 // if (c != null) {
 // c.parent = b;
 // }
-// // e-f
+//  e-f
 // f.left = e;
 // if (e != null) {
 // e.parent = f;
 // }
-// // b-d-f
+//  b-d-f
 // d.left = b;
 // d.right = f;
 // b.parent = d;

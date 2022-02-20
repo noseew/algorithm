@@ -42,7 +42,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._03data链表.circle
 // rangeCheckForAdd(index);
 // if (index == 0) {
 // Node<E> newFirst = new Node<>(element, first);
-// // 拿到最后一个节点, 上面先不要直接改first, 否则下面找节点会出现问题
+//  拿到最后一个节点, 上面先不要直接改first, 否则下面找节点会出现问题
 // Node<E> last = (size == 0) ? newFirst : node(size - 1);
 // last.next = newFirst;
 // first = newFirst;

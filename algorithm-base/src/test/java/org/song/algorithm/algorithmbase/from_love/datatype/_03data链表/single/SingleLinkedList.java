@@ -6,7 +6,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._03data链表.single
 // */
 // public class SingleLinkedList<E> extends AbstractList<E> {
 // private Node<E> first;
-// // 链表中的节点
+//  链表中的节点
 // private static class Node<E> {
 // E element; // 节点元素
 // Node<E> next; // 节点指向下一个节点

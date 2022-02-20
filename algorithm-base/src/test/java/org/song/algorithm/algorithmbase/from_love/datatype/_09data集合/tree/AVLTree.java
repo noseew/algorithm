@@ -15,19 +15,19 @@
 // public AVLNode(E element, Node<E> parent) {
 // super(element, parent);
 // }
-// // 平衡因子
+//  平衡因子
 // public int balanceFactor() {
 // int leftHeight = left == null ? 0 : ((AVLNode<E>)left).height;
 // int rightHeight = right == null ? 0 : ((AVLNode<E>)right).height;
 // return leftHeight - rightHeight;
 // }
-// // 更新高度
+//  更新高度
 // public void updateHeight() {
 // int leftHeight = left == null ? 0 : ((AVLNode<E>)left).height;
 // int rightHeight = right == null ? 0 : ((AVLNode<E>)right).height;
 // height = 1 + Math.max(leftHeight, rightHeight);
 // }
-// // 获取左右子树中，高度最长的节点
+//  获取左右子树中，高度最长的节点
 // public Node<E> tallerChild() {
 // int leftHeight = left == null ? 0 : ((AVLNode<E>)left).height;
 // int rightHeight = right == null ? 0 : ((AVLNode<E>)right).height;
@@ -65,12 +65,12 @@
 // protected void afterAdd(Node<E> node) {
 // while ((node = node.parent) != null) { // 从当前节点探测根结点，逐个调整平衡
 // if (isBalanced(node)) { // 已经平衡
-// // 更新高度
+//  更新高度
 // updateHeight(node);
 // } else { // 不平衡
-// // 恢复平衡
+//  恢复平衡
 // rebalance(node);
-// // 只需要恢复了最下面那个不平衡的节点，则整棵树恢复平衡，无需继续往上探测
+//  只需要恢复了最下面那个不平衡的节点，则整棵树恢复平衡，无需继续往上探测
 // break;
 // }
 // }
@@ -79,10 +79,10 @@
 // protected void afterRemove(Node<E> node) {
 // while ((node = node.parent) != null) { // 从当前节点探测根结点，逐个调整平衡
 // if (isBalanced(node)) { // 已经平衡
-// // 更新高度
+//  更新高度
 // updateHeight(node);
 // } else { // 不平衡
-// // 恢复平衡
+//  恢复平衡
 // rebalance(node);
 // }
 // }
@@ -148,14 +148,14 @@
 // @Override
 // protected void afterRotate(Node<E> grand, Node<E> parent, Node<E> child) {
 // super.afterRotate(grand, parent, child);
-// // 更新高度
+//  更新高度
 // updateHeight(grand);
 // updateHeight(parent);
 // }
 // @Override
 // protected void rotate(Node<E> r, Node<E> b, Node<E> c, Node<E> d, Node<E> e, Node<E> f) {
 // super.rotate(r, b, c, d, e, f);
-// // 更新高度
+//  更新高度
 // updateHeight(b);
 // updateHeight(f);
 // updateHeight(d);

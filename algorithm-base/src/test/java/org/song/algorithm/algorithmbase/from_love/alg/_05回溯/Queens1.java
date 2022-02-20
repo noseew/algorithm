@@ -3,9 +3,9 @@ package org.song.algorithm.algorithmbase.from_love.alg._05回溯;
 // public static void main(String[] args) {
 // new Queens1().placeQueens(4);
 // }
-// // cols[row] = col; 表示第row行第col列摆放了皇后
+//  cols[row] = col; 表示第row行第col列摆放了皇后
 // int cols[];
-// // 一共有多少种合理的摆法
+//  一共有多少种合理的摆法
 // int ways = 0;
 // /**
 // * n皇后
@@ -20,7 +20,7 @@ package org.song.algorithm.algorithmbase.from_love.alg._05回溯;
 // * 从第 row 行开始摆放皇后
 // */
 // void place(int row) {
-// // 如果已经放到第n行,说明找到了一种n皇后的摆法
+//  如果已经放到第n行,说明找到了一种n皇后的摆法
 // if (row == cols.length) {
 // ways++;
 // show();
@@ -28,7 +28,7 @@ package org.song.algorithm.algorithmbase.from_love.alg._05回溯;
 // }
 // for (int col = 0; col < cols.length; col++) {
 // if (isValid(row, col)) {
-// // 在第row行第col列摆放皇后
+//  在第row行第col列摆放皇后
 // cols[row] = col;
 // place(row + 1);
 // }
@@ -39,13 +39,13 @@ package org.song.algorithm.algorithmbase.from_love.alg._05回溯;
 // */
 // boolean isValid(int row, int col) {
 // for (int i = 0; i < row; i++) {
-// // 第col列已经有皇后
+//  第col列已经有皇后
 // if (cols[i] == col) {
 // System.out.println("["+ row + "][" + col + "]=false");
 // return false;
 // }
-// // 第i行的皇后根第row行第col列格子处在同一斜线上
-// // 45度角斜线: y-y0 = (x-x0), 则 (y-y0)/(x-x0) = 1, 表示为45度角的斜线
+//  第i行的皇后根第row行第col列格子处在同一斜线上
+//  45度角斜线: y-y0 = (x-x0), 则 (y-y0)/(x-x0) = 1, 表示为45度角的斜线
 // if (row - i == Math.abs(col - cols[i])) {
 // System.out.println("["+ row + "][" + col + "]=false");
 // return false;

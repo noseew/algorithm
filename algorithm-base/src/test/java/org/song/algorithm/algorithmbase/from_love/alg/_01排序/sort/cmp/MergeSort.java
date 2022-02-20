@@ -8,7 +8,7 @@ package org.song.algorithm.algorithmbase.from_love.alg._01排序.sort.cmp;
 // private T[] leftArray;
 // @Override
 // protected void sort() {
-// // 准备一段临时的数组空间, 在merge操作中使用
+//  准备一段临时的数组空间, 在merge操作中使用
 // leftArray = (T[])new Comparable[array.length >> 1];
 // sort(0, array.length);
 // }
@@ -29,11 +29,11 @@ package org.song.algorithm.algorithmbase.from_love.alg._01排序.sort.cmp;
 // int li = 0, le = mid - begin; // 左边数组(基于leftArray)
 // int ri = mid, re = end;	// 右边数组(array)
 // int ai = begin; // array的索引
-// // 备份左边数组到leftArray
+//  备份左边数组到leftArray
 // for(int i = li; i < le; i++){
 // leftArray[i] = array[begin + i];
 // }
-// // 如果左边还没有结束
+//  如果左边还没有结束
 // while(li < le){ // li == le 左边结束, 则直接结束归并
 // if(ri < re && cmp(array[ri], leftArray[li]) < 0){ // cmp改为<=0会失去稳定性
 // array[ai++] = array[ri++]; // 右边<左边, 拷贝右边数组到array

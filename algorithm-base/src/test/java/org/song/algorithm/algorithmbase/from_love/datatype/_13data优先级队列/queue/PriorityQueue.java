@@ -6,9 +6,9 @@ package org.song.algorithm.algorithmbase.from_love.datatype._13data优先级队�
 // * @author yusael
 // */
 // public class PriorityQueue<E> {
-// // 利用二叉堆实现优先级队列
+//  利用二叉堆实现优先级队列
 // private BinaryHeap<E> heap;
-// // 通过 comparator 自定义优先级高低
+//  通过 comparator 自定义优先级高低
 // public PriorityQueue(Comparator<E> comparator) {
 // heap = new BinaryHeap<>(comparator);
 // }

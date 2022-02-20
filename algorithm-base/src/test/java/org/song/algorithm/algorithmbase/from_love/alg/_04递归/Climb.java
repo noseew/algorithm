@@ -1,12 +1,12 @@
 package org.song.algorithm.algorithmbase.from_love.alg._04递归;
 // public class Climb {
 // public static void main(String[] args) {
-// // n = 4; 
-// // 1 1 1 1
-// // 1 1 2
-// // 1 2 1
-// // 2 1 1
-// // 2 2
+//  n = 4; 
+//  1 1 1 1
+//  1 1 2
+//  1 2 1
+//  2 1 1
+//  2 2
 // System.out.println(new Climb().climbStairs0(10));
 // System.out.println(new Climb().climbStairs(10));
 // }

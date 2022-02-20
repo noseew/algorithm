@@ -14,8 +14,8 @@ package org.song.algorithm.algorithmbase.from_love.datatype._12data堆;
 // heap.add(90);
 // heap.add(65);
 // BinaryTrees.println(heap);
-// // heap.remove();
-// // BinaryTrees.println(heap);
+//  heap.remove();
+//  BinaryTrees.println(heap);
 // System.out.println(heap.replace(70));
 // BinaryTrees.println(heap);
 // }
@@ -37,13 +37,13 @@ package org.song.algorithm.algorithmbase.from_love.datatype._12data堆;
 // BinaryTrees.println(heap);
 // }
 // static void test4() {
-// // 新建一个小顶堆
+//  新建一个小顶堆
 // BinaryHeap<Integer> heap = new BinaryHeap<>(new Comparator<Integer>() {
 // public int compare(Integer o1, Integer o2) {
 // return o2 - o1;
 // }
 // });
-// // 找出最大的前k个数
+//  找出最大的前k个数
 // int k = 3;
 // Integer[] data = {51, 30, 39, 92, 74, 25, 16, 93, 
 // 91, 19, 54, 47, 73, 62, 76, 63, 35, 18, 
@@ -55,7 +55,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._12data堆;
 // heap.replace(data[i]); // logk
 // }
 // }
-// // O(nlogk)
+//  O(nlogk)
 // BinaryTrees.println(heap);
 // }
 // public static void main(String[] args) {

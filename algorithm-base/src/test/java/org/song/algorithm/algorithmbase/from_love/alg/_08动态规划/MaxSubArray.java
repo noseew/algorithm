@@ -11,7 +11,7 @@ package org.song.algorithm.algorithmbase.from_love.alg._08动态规划;
 // if (nums == null || nums.length == 0) return 0; // 非法数据监测
 // int dp = nums[0]; // 初始状态
 // int max = dp;
-// // 状态转移方程
+//  状态转移方程
 // for (int i = 1; i < nums.length; i++) {
 // if (dp > 0) {
 // dp = dp + nums[i];
@@ -26,7 +26,7 @@ package org.song.algorithm.algorithmbase.from_love.alg._08动态规划;
 // if (nums == null || nums.length == 0) return 0; // 非法数据检测
 // int[] dp = new int[nums.length]; 
 // int max = dp[0] = nums[0]; // 初始状态
-// // 状态转移方程
+//  状态转移方程
 // for (int i = 1; i < dp.length; i++) {
 // if (dp[i - 1] > 0) {
 // dp[i] = dp[i - 1] + nums[i];

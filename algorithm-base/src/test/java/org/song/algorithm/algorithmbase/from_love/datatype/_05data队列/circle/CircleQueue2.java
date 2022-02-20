@@ -7,7 +7,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._05data队列.circle
 // public class CircleQueue2<E> {
 // private int front; // 队头指针
 // private int size; // 元素数量
-// // 利用动态扩容数组实现的循环队列
+//  利用动态扩容数组实现的循环队列
 // private E elements[]; // 元素
 // public static final int DEFAULT_CAPACITY = 10; // 初始容量
 // public CircleQueue2() {
@@ -31,7 +31,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._05data队列.circle
 // public void clear() {
 // for (int i = 0; i < size; i++) {
 // elements[index(i)] = null;
-// // elements[(i + front) %elements.length] = null;
+//  elements[(i + front) %elements.length] = null;
 // }
 // size = 0;
 // front = 0;
@@ -42,7 +42,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._05data队列.circle
 // public E deQueue() {
 // E fronElement = elements[front];
 // elements[front] = null;
-// // front = (front + 1) % elements.length;
+//  front = (front + 1) % elements.length;
 // front = index(1);
 // size--;
 // return fronElement;
@@ -51,9 +51,9 @@ package org.song.algorithm.algorithmbase.from_love.datatype._05data队列.circle
 // * 从队尾入队
 // */
 // public void enQueue(E element) {
-// // 扩容
+//  扩容
 // ensureCapacity(size + 1);
-// // elements[(front + size) % elements.length] = element;
+//  elements[(front + size) % elements.length] = element;
 // elements[index(size)] = element;
 // size++;
 // }
@@ -63,20 +63,20 @@ package org.song.algorithm.algorithmbase.from_love.datatype._05data队列.circle
 // public E front() {
 // return elements[front];
 // }
-// // 将真实索引转换为循环队列上的索引
+//  将真实索引转换为循环队列上的索引
 // private int index(int index) {
 // return (front + index) % elements.length;
 // }
-// // 扩容
+//  扩容
 // private void ensureCapacity(int capacity) {
 // int oldCapacity = elements.length;
 // if (oldCapacity >= capacity)
 // return;
-// // 新容量为旧容量的 1.5 倍
+//  新容量为旧容量的 1.5 倍
 // int newCapacity = oldCapacity + (oldCapacity >> 1);
 // E[] newElements = (E[]) new Object[newCapacity];
 // for (int i = 0; i < size; i++) { // 旧数组中元素移到新数组
-// // newElements[i] = elements[(i + front) % elements.length];
+//  newElements[i] = elements[(i + front) % elements.length];
 // newElements[i] = elements[index(i)];
 // }
 // System.out.println("从" + oldCapacity + "扩容到" + newCapacity);

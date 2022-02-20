@@ -33,14 +33,14 @@ package org.song.algorithm.algorithmbase.from_love.datatype._15data二叉树的�
 // }
 // @Override
 // public String printString() {
-// // nodes用来存放所有的节点
+//  nodes用来存放所有的节点
 // List<List<Node>> nodes = new ArrayList<>();
 // fillNodes(nodes);
 // cleanNodes(nodes);
 // compressNodes(nodes);
 // addLineNodes(nodes);
 // int rowCount = nodes.size();
-// // 构建字符串
+//  构建字符串
 // StringBuilder string = new StringBuilder();
 // for (int i = 0; i < rowCount; i++) {
 // if (i != 0) {
@@ -76,11 +76,11 @@ package org.song.algorithm.algorithmbase.from_love.datatype._15data二叉树的�
 // */
 // private void fillNodes(List<List<Node>> nodes) {
 // if (nodes == null) return;
-// // 第一行
+//  第一行
 // List<Node> firstRowNodes = new ArrayList<>();
 // firstRowNodes.add(root);
 // nodes.add(firstRowNodes);
-// // 其他行
+//  其他行
 // while (true) {
 // List<Node> preRowNodes = nodes.get(nodes.size() - 1);
 // List<Node> rowNodes = new ArrayList<>();
@@ -104,7 +104,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._15data二叉树的�
 // }
 // }
 // }
-// // 全是null，就退出
+//  全是null，就退出
 // if (!notNull) break;
 // nodes.add(rowNodes);
 // }
@@ -116,32 +116,32 @@ package org.song.algorithm.algorithmbase.from_love.datatype._15data二叉树的�
 // if (nodes == null) return;
 // int rowCount = nodes.size();
 // if (rowCount < 2) return;
-// // 最后一行的节点数量
+//  最后一行的节点数量
 // int lastRowNodeCount = nodes.get(rowCount - 1).size();
-// // 每个节点之间的间距
+//  每个节点之间的间距
 // int nodeSpace = maxWidth + 2;
-// // 最后一行的长度
+//  最后一行的长度
 // int lastRowLength = lastRowNodeCount * maxWidth 
 // + nodeSpace * (lastRowNodeCount - 1);
-// // 空集合
+//  空集合
 // Collection<Object> nullSet = Collections.singleton(null);
 // for (int i = 0; i < rowCount; i++) {
 // List<Node> rowNodes = nodes.get(i);
 // int rowNodeCount = rowNodes.size();
-// // 节点左右两边的间距
+//  节点左右两边的间距
 // int allSpace = lastRowLength - (rowNodeCount - 1) * nodeSpace;
 // int cornerSpace = allSpace / rowNodeCount - maxWidth;
 // cornerSpace >>= 1;
 // int rowLength = 0;
 // for (int j = 0; j < rowNodeCount; j++) {
 // if (j != 0) {
-// // 每个节点之间的间距
+//  每个节点之间的间距
 // rowLength += nodeSpace;
 // }
 // rowLength += cornerSpace;
 // Node node = rowNodes.get(j);
 // if (node != null) {
-// // 居中（由于奇偶数的问题，可能有1个符号的误差）
+//  居中（由于奇偶数的问题，可能有1个符号的误差）
 // int deltaX = (maxWidth - node.width) >> 1;
 // node.x = rowLength + deltaX;
 // node.y = i;
@@ -149,7 +149,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._15data二叉树的�
 // rowLength += maxWidth;
 // rowLength += cornerSpace;
 // }
-// // 删除所有的null
+//  删除所有的null
 // rowNodes.removeAll(nullSet);
 // }
 // }
@@ -167,25 +167,25 @@ package org.song.algorithm.algorithmbase.from_love.datatype._15data二叉树的�
 // Node right = node.right;
 // if (left == null && right == null) continue;
 // if (left != null && right != null) {
-// // 让左右节点对称
+//  让左右节点对称
 // node.balance(left, right);
-// // left和right之间可以挪动的最小间距
+//  left和right之间可以挪动的最小间距
 // int leftEmpty = node.leftBoundEmptyLength();
 // int rightEmpty = node.rightBoundEmptyLength();
 // int empty = Math.min(leftEmpty, rightEmpty);
 // empty = Math.min(empty, (right.x - left.rightX()) >> 1);
-// // left、right的子节点之间可以挪动的最小间距
+//  left、right的子节点之间可以挪动的最小间距
 // int space = left.minLevelSpaceToRight(right) - MIN_SPACE;
 // space = Math.min(space >> 1, empty);
-// // left、right往中间挪动
+//  left、right往中间挪动
 // if (space > 0) {
 // left.translateX(space);
 // right.translateX(-space);
 // }
-// // 继续挪动
+//  继续挪动
 // space = left.minLevelSpaceToRight(right) - MIN_SPACE;
 // if (space < 1) continue;
-// // 可以继续挪动的间距
+//  可以继续挪动的间距
 // leftEmpty = node.leftBoundEmptyLength();
 // rightEmpty = node.rightBoundEmptyLength();
 // if (leftEmpty < 1 && rightEmpty < 1) continue;
@@ -225,12 +225,12 @@ package org.song.algorithm.algorithmbase.from_love.datatype._15data二叉树的�
 // top = new Node("┐");
 // curRow.add(top);
 // }
-// // 坐标
+//  坐标
 // top.x = topX;
 // top.y = parent.y;
 // child.y = parent.y + 2;
 // minX = Math.min(minX, child.x);
-// // 竖线
+//  竖线
 // Node bottom = new Node("│");
 // bottom.x = topX;
 // bottom.y = parent.y + 1;
@@ -297,7 +297,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._15data二叉树的�
 // * @return
 // */
 // private int topLineX() {
-// // 宽度的一半
+//  宽度的一半
 // int delta = width;
 // if (delta % 2 == 0) {
 // delta--;
@@ -361,9 +361,9 @@ package org.song.algorithm.algorithmbase.from_love.datatype._15data二叉树的�
 // private void balance(Node left, Node right) {
 // if (left == null || right == null)
 // return;
-// // 【left的尾字符】与【this的首字符】之间的间距
+//  【left的尾字符】与【this的首字符】之间的间距
 // int deltaLeft = x - left.rightX();
-// // 【this的尾字符】与【this的首字符】之间的间距
+//  【this的尾字符】与【this的首字符】之间的间距
 // int deltaRight = right.x - rightX();
 // int delta = Math.max(deltaLeft, deltaRight);
 // int newRightX = rightX() + delta;
@@ -399,7 +399,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._15data二叉树的�
 // List<Node> list = new ArrayList<>();
 // Queue<Node> queue = new LinkedList<>();
 // queue.offer(this);
-// // 层序遍历找出第level行的所有节点
+//  层序遍历找出第level行的所有节点
 // while (!queue.isEmpty()) {
 // Node node = queue.poll();
 // if (levelY == node.y) {
@@ -425,7 +425,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._15data二叉树的�
 // public void translateX(int deltaX) {
 // if (deltaX == 0) return;
 // x += deltaX;
-// // 如果是LineNode
+//  如果是LineNode
 // if (btNode == null) return;
 // if (left != null) {
 // left.translateX(deltaX);

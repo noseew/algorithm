@@ -1,29 +1,29 @@
 package org.song.algorithm.algorithmbase.from_love.alg._04递归;
 // public class Fib {
 // public static void main(String[] args) {
-// //		Fib fib = new Fib();
-// //		int n = 30;
-// //		Times.test("fib0", () -> {
-// //			System.out.println(fib.fib0(n));
-// //		});
-// //		Times.test("fib1", () -> {
-// //			System.out.println(fib.fib1(n));
-// //		});
-// //		Times.test("fib2", () -> {
-// //			System.out.println(fib.fib2(n));
-// //		});
-// //		Times.test("fib3", () -> {
-// //			System.out.println(fib.fib3(n));
-// //		});
-// //		Times.test("fib4", () -> {
-// //			System.out.println(fib.fib4(n));
-// //		});
-// //		Times.test("fib5", () -> {
-// //			System.out.println(fib.fib5(n));
-// //		});
-// //		Times.test("fib6", () -> {
-// //			System.out.println(fib.fib6(n));
-// //		});
+// 		Fib fib = new Fib();
+// 		int n = 30;
+// 		Times.test("fib0", () -> {
+// 			System.out.println(fib.fib0(n));
+// 		});
+// 		Times.test("fib1", () -> {
+// 			System.out.println(fib.fib1(n));
+// 		});
+// 		Times.test("fib2", () -> {
+// 			System.out.println(fib.fib2(n));
+// 		});
+// 		Times.test("fib3", () -> {
+// 			System.out.println(fib.fib3(n));
+// 		});
+// 		Times.test("fib4", () -> {
+// 			System.out.println(fib.fib4(n));
+// 		});
+// 		Times.test("fib5", () -> {
+// 			System.out.println(fib.fib5(n));
+// 		});
+// 		Times.test("fib6", () -> {
+// 			System.out.println(fib.fib6(n));
+// 		});
 // int i = 100;
 // System.out.println((i % 2) == (i & 1));
 // System.out.println((i * 2) == (i << 1));

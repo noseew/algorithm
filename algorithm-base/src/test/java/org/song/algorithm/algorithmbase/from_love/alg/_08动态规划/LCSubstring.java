@@ -11,7 +11,7 @@ package org.song.algorithm.algorithmbase.from_love.alg._08动态规划;
 // if (chars1.length == 0) return 0;
 // char[] chars2 = str2.toCharArray();
 // if (chars2.length == 0) return 0;
-// // 选取长度较短的作为列
+//  选取长度较短的作为列
 // int rowsLength = chars1.length;
 // int colsLength = chars2.length;
 // if (chars1.length < chars2.length) {
@@ -41,7 +41,7 @@ package org.song.algorithm.algorithmbase.from_love.alg._08动态规划;
 // if (chars1.length == 0) return 0;
 // char[] chars2 = str2.toCharArray();
 // if (chars2.length == 0) return 0;
-// // 选取长度较短的作为列
+//  选取长度较短的作为列
 // char[] rowsChars = chars1, colsChars = chars2;
 // if (chars1.length < chars2.length) {
 // colsChars = chars1;

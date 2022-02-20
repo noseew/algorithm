@@ -33,8 +33,8 @@ package org.song.algorithm.algorithmbase.from_love.datatype._11data哈希表.map
 // LinkedNode<K, V> node1 = (LinkedNode<K, V>) willNode;
 // LinkedNode<K, V> node2 = (LinkedNode<K, V>) removedNode;
 // if (node1 != node2) {
-// // 交换linkedWillNode和linkedRemovedNode在链表中的位置
-// // 交换prev
+//  交换linkedWillNode和linkedRemovedNode在链表中的位置
+//  交换prev
 // LinkedNode<K, V> tmp = node1.prev;
 // node1.prev = node2.prev;
 // node2.prev = tmp;
@@ -48,7 +48,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._11data哈希表.map
 // } else {
 // node2.prev.next = node2;
 // }
-// // 交换next
+//  交换next
 // tmp = node1.next;
 // node1.next = node2.next;
 // node2.next = tmp;

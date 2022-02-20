@@ -63,7 +63,7 @@ package org.song.algorithm.algorithmbase.from_love.alg._08动态规划;
 // */
 // static int lcs1(int[] nums1, int i, int[] nums2, int j) {
 // if (i == 0 || j == 0) return 0;
-// // 最后一个元素相等, 返回前面的公共子序列长度 + 1
+//  最后一个元素相等, 返回前面的公共子序列长度 + 1
 // if (nums1[i - 1] == nums2[j - 1]) {
 // return lcs1(nums1, i - 1, nums2, j - 1) + 1;
 // }

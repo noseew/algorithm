@@ -37,7 +37,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._14dataTrie;
 // }
 // public V add(String key, V value){
 // keyCheck(key);
-// // 创建根节点
+//  创建根节点
 // if(root == null){
 // root = new Node<>(null);
 // }
@@ -60,26 +60,26 @@ package org.song.algorithm.algorithmbase.from_love.datatype._14dataTrie;
 // node.value = value;
 // return oldValue;
 // }
-// // 新增一个单词
+//  新增一个单词
 // node.word = true;
 // node.value = value;
 // size++;
 // return null;
 // }
 // public V remove(String key){
-// // 找到最后一个节点
+//  找到最后一个节点
 // Node<V> node = node(key);
-// // 如果不是单词结尾，不用作任何处理
+//  如果不是单词结尾，不用作任何处理
 // if(node==null || !node.word) return null;
 // size--;
 // V oldValue = node.value;
-// // 如果还有子节点
+//  如果还有子节点
 // if(node.children!=null && !node.children.isEmpty()){
 // node.word = false;
 // node.value = null;
 // return oldValue; 
 // }
-// // 没有子节点
+//  没有子节点
 // Node<V> parent = null;
 // while((parent = node.parent) != null){
 // parent.children.remove(node.character);

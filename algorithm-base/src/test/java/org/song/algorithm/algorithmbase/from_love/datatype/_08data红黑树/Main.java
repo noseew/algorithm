@@ -17,16 +17,16 @@ package org.song.algorithm.algorithmbase.from_love.datatype._08data红黑树;
 // AVLTree<Integer> avl = new AVLTree<>();
 // for (int i = 0; i < data.length; i++) {
 // avl.add(data[i]);
-// //			System.out.println("【" + data[i] + "】");
-// //			BinaryTrees.println(avl);
-// //			System.out.println("---------------------------------------");
+// 			System.out.println("【" + data[i] + "】");
+// 			BinaryTrees.println(avl);
+// 			System.out.println("---------------------------------------");
 // }
-// //		for (int i = 0; i < data.length; i++) {
-// //			avl.remove(data[i]);
-// //			System.out.println("【" + data[i] + "】");
-// //			BinaryTrees.println(avl);
-// //			System.out.println("---------------------------------------");
-// //		}
+// 		for (int i = 0; i < data.length; i++) {
+// 			avl.remove(data[i]);
+// 			System.out.println("【" + data[i] + "】");
+// 			BinaryTrees.println(avl);
+// 			System.out.println("---------------------------------------");
+// 		}
 // BinaryTrees.println(avl);
 // }
 // static void test2() {

@@ -11,32 +11,32 @@ package org.song.algorithm.algorithmbase.from_love.alg._02并查集;
 // public class Main {
 // static final int count = 10000000;
 // public static void main(String[] args) {
-// //		testTime(new UnionFind_QF(count)); // 太慢了,不测试
-// //		testTime(new UnionFind_QU(count)); // 太慢了,不测试
+// 		testTime(new UnionFind_QF(count)); // 太慢了,不测试
+// 		testTime(new UnionFind_QU(count)); // 太慢了,不测试
 // testTime(new UnionFind_QU_S(count));
 // testTime(new UnionFind_QU_R(count));
 // testTime(new UnionFind_QU_R_PC(count));
 // testTime(new UnionFind_QU_R_PS(count));
 // testTime(new UnionFind_QU_R_PH(count));
 // testTime(new GenericUnionFind<Integer>());
-// //		GenericUnionFind<Student> uf = new GenericUnionFind<>();
-// //		Student stu1 = new Student(1, "jack");
-// //		Student stu2 = new Student(2, "rose");
-// //		Student stu3 = new Student(3, "jack");
-// //		Student stu4 = new Student(4, "rose");
-// //		uf.makeSet(stu1);
-// //		uf.makeSet(stu2);
-// //		uf.makeSet(stu3);
-// //		uf.makeSet(stu4);
-// //		
-// //		uf.union(stu1, stu2);
-// //		uf.union(stu3, stu4);
-// //		
-// //		uf.union(stu1, stu4);
-// //		
-// //		Asserts.test(uf.isSame(stu2, stu3));
-// //		Asserts.test(uf.isSame(stu3, stu4));
-// //		Asserts.test(!uf.isSame(stu1, stu3));
+// 		GenericUnionFind<Student> uf = new GenericUnionFind<>();
+// 		Student stu1 = new Student(1, "jack");
+// 		Student stu2 = new Student(2, "rose");
+// 		Student stu3 = new Student(3, "jack");
+// 		Student stu4 = new Student(4, "rose");
+// 		uf.makeSet(stu1);
+// 		uf.makeSet(stu2);
+// 		uf.makeSet(stu3);
+// 		uf.makeSet(stu4);
+// 		
+// 		uf.union(stu1, stu2);
+// 		uf.union(stu3, stu4);
+// 		
+// 		uf.union(stu1, stu4);
+// 		
+// 		Asserts.test(uf.isSame(stu2, stu3));
+// 		Asserts.test(uf.isSame(stu3, stu4));
+// 		Asserts.test(!uf.isSame(stu1, stu3));
 // }
 // static void testTime(GenericUnionFind<Integer> uf) {
 // for (int i = 0; i < count; i++) {

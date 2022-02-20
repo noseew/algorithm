@@ -2,15 +2,15 @@ package org.song.algorithm.algorithmbase.from_love.alg._04递归;
 // import java.util.Stack;
 // public class Main {
 // public static void main(String[] args) {
-// //		System.out.println(sum(100));
+// 		System.out.println(sum(100));
 // a(5);
-// //		log(5);
-// //		System.out.println(new Main().factorial(4));
+// 		log(5);
+// 		System.out.println(new Main().factorial(4));
 // }
-// //	int fib(int n) {
-// //		if (n <= 2) return 1;
-// //		return fib(n - 1) + fib(n - 2);
-// //	}
+// 	int fib(int n) {
+// 		if (n <= 2) return 1;
+// 		return fib(n - 1) + fib(n - 2);
+// 	}
 // int fib(int n) {
 // return fib(n, 1, 1);
 // }
@@ -39,23 +39,23 @@ package org.song.algorithm.algorithmbase.from_love.alg._04递归;
 // System.out.println(frame.v);
 // }
 // }
-// //	static void log(int n) {
-// //		if(n < 1) return;
-// //		log(n - 1);
-// //		int v = n + 10;
-// //		System.out.println(v);
-// //	}
-// //	int sum(int n) {
-// //		if(n <= 1) return n;
-// //		return sum(n - 1) + n; 
-// //	}
-// //	int sum(int n) {
-// //		int result = 0;
-// //		for (int i = 0; i <= n; i++) {
-// //			result += i;
-// //		}
-// //		return result;
-// //	}
+// 	static void log(int n) {
+// 		if(n < 1) return;
+// 		log(n - 1);
+// 		int v = n + 10;
+// 		System.out.println(v);
+// 	}
+// 	int sum(int n) {
+// 		if(n <= 1) return n;
+// 		return sum(n - 1) + n; 
+// 	}
+// 	int sum(int n) {
+// 		int result = 0;
+// 		for (int i = 0; i <= n; i++) {
+// 			result += i;
+// 		}
+// 		return result;
+// 	}
 // int sum(int n) {
 // if (n <= 1) return n;
 // return (1 + n) * n >> 1;

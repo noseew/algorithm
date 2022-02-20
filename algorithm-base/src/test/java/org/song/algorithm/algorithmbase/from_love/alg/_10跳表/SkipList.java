@@ -20,7 +20,7 @@ package org.song.algorithm.algorithmbase.from_love.alg._10跳表;
 // private Node<K, V> first; 
 // public SkipList(Comparator<K> comparator) {
 // this.comparator = comparator;
-// // 头节点的高度必须是跳表的最高层数(非有效层数)
+//  头节点的高度必须是跳表的最高层数(非有效层数)
 // first = new Node<>(null, null, MAX_LEVEL);
 // }
 // public SkipList() {
@@ -35,7 +35,7 @@ package org.song.algorithm.algorithmbase.from_love.alg._10跳表;
 // public V put(K key, V value) {
 // keyCheck(key);
 // Node<K, V> node = first;
-// // 前驱节点, 插入节点时要用到, 获取了前驱就相当于获取了后继
+//  前驱节点, 插入节点时要用到, 获取了前驱就相当于获取了后继
 // Node<K, V>[] prevs = new Node[level];
 // for (int i = level - 1; i >= 0 ; i--) {
 // int cmp = -1;
@@ -43,7 +43,7 @@ package org.song.algorithm.algorithmbase.from_love.alg._10跳表;
 // && (cmp = compare(key, node.nexts[i].key)) > 0) {
 // node = node.nexts[i];
 // }
-// // node.nexts[i].key >= key
+//  node.nexts[i].key >= key
 // if (cmp == 0) { // 节点原本就存在
 // V oldV = node.nexts[i].value;
 // node.nexts[i].value = value;
@@ -51,16 +51,16 @@ package org.song.algorithm.algorithmbase.from_love.alg._10跳表;
 // }
 // prevs[i] = node; // 保存前驱节点
 // }
-// // 新节点的层数(随机)
+//  新节点的层数(随机)
 // int newLevel = randomLevel();
-// // 添加新节点
+//  添加新节点
 // Node<K, V> newNode = new Node<>(key, value, newLevel);
-// // 设置新节点的前驱和后继(获取了前驱就相当于获取了后继)
+//  设置新节点的前驱和后继(获取了前驱就相当于获取了后继)
 // for (int i = 0; i < newLevel; i++) {
 // if (i >= level) { // 新节点的层数比有效层数高
-// // 头结点成为新节点的前驱
+//  头结点成为新节点的前驱
 // first.nexts[i] = newNode; // 让头节点指向新节点(头节点创建时是最高层)
-// // 后继结点默认指向null
+//  后继结点默认指向null
 // } else { // 新节点的层数比有效层数低
 // newNode.nexts[i] = prevs[i].nexts[i]; // 让新节点的后继节点指向(之前的)前驱的后继
 // prevs[i].nexts[i] = newNode; // 让前驱节点指向新节点
@@ -72,10 +72,10 @@ package org.song.algorithm.algorithmbase.from_love.alg._10跳表;
 // }
 // public V get(K key) {
 // keyCheck(key);
-// // first.next[3] == 21节点
-// // first.next[2] == 9节点
-// // first.next[1] == 6节点
-// // first.next[0] == 3节点
+//  first.next[3] == 21节点
+//  first.next[2] == 9节点
+//  first.next[1] == 6节点
+//  first.next[0] == 3节点
 // Node<K, V> node = first;
 // for (int i = level - 1; i >= 0 ; i--) {
 // int cmp = -1;
@@ -83,7 +83,7 @@ package org.song.algorithm.algorithmbase.from_love.alg._10跳表;
 // && (cmp = compare(key, node.nexts[i].key)) > 0) {
 // node = node.nexts[i];
 // }
-// // node.nexts[i].key >= key
+//  node.nexts[i].key >= key
 // if (cmp == 0) return node.nexts[i].value;
 // }
 // return null;
@@ -99,19 +99,19 @@ package org.song.algorithm.algorithmbase.from_love.alg._10跳表;
 // && (cmp = compare(key, node.nexts[i].key)) > 0) {
 // node = node.nexts[i];
 // }
-// // key <= node.nexts[i].key 
+//  key <= node.nexts[i].key 
 // if (cmp == 0) exist = true; // 存在
 // prevs[i] = node; // 保存前驱节点
 // }
 // if (!exist) return null; // 跳表中没有该元素, 无需删除
-// // 需要被删除的节点
-// // 此时该元素必然存在, 且node必然为最下面一层, 该元素的前驱节点 
+//  需要被删除的节点
+//  此时该元素必然存在, 且node必然为最下面一层, 该元素的前驱节点 
 // Node<K, V> removedNode = node.nexts[0];
-// // 设置后继
+//  设置后继
 // for (int i = 0 ; i < removedNode.nexts.length; i++) {
 // prevs[i].nexts[i] = removedNode.nexts[i];
 // }
-// // 更新跳表的层数
+//  更新跳表的层数
 // int newLevel = level;
 // while (--newLevel > 0 && first.nexts[newLevel] == null) {
 // level = newLevel;

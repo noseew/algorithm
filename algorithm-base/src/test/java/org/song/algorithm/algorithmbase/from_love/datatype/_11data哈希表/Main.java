@@ -120,12 +120,12 @@ package org.song.algorithm.algorithmbase.from_love.datatype._11data哈希表;
 // Asserts.test(map.size() == 20);
 // }
 // public static void main(String[] args) { 
-// //		test1();
-// //		test2(new HashMap<>());
-// //		test3(new HashMap<>());
-// //		test4(new HashMap<>());
-// //		test5(new HashMap<>());
-// //		test1();
+// 		test1();
+// 		test2(new HashMap<>());
+// 		test3(new HashMap<>());
+// 		test4(new HashMap<>());
+// 		test5(new HashMap<>());
+// 		test1();
 // test2(new LinkedHashMap<>());
 // test3(new LinkedHashMap<>());
 // test4(new LinkedHashMap<>());

@@ -6,11 +6,11 @@ package org.song.algorithm.algorithmbase.from_love.datatype._03data链表.single
 // */
 // public class SingleLinkedList2<E> extends AbstractList<E> {
 // private Node<E> first;
-// //**********************************
+// **********************************
 // public SingleLinkedList2() { // 初始化一个虚拟头结点
 // first = new Node<>(null, null);
 // };
-// //**********************************
+// **********************************
 // private static class Node<E> {
 // E element;
 // Node<E> next;
@@ -52,8 +52,8 @@ package org.song.algorithm.algorithmbase.from_love.datatype._03data链表.single
 // }
 // @Override
 // public int indexOf(E element) {
-// // 有个注意点, 如果传入元素为null, 则不能调用equals方法, 否则会空指针
-// // 因此需要对元素是否为null做分别处理
+//  有个注意点, 如果传入元素为null, 则不能调用equals方法, 否则会空指针
+//  因此需要对元素是否为null做分别处理
 // if (element == null) {
 // Node<E> node = first;
 // for (int i = 0; i < size; i++) {

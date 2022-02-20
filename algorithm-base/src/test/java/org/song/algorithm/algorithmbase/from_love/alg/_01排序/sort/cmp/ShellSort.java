@@ -9,9 +9,9 @@ package org.song.algorithm.algorithmbase.from_love.alg._01排序.sort.cmp;
 // public class ShellSort <T extends Comparable<T>> extends Sort<T>{
 // @Override
 // protected void sort() {
-// // 根据元素数量算出步长序列
+//  根据元素数量算出步长序列
 // List<Integer> stepSequence = sedgewickStepSequence();
-// // 按步长序列划分进行排序
+//  按步长序列划分进行排序
 // for (Integer step : stepSequence) {
 // sort(step); // 按step进行排序
 // }
@@ -20,11 +20,11 @@ package org.song.algorithm.algorithmbase.from_love.alg._01排序.sort.cmp;
 // * 分成step列进行排序
 // */
 // private void sort(int step){
-// // col: 第几列, column的简称
+//  col: 第几列, column的简称
 // for(int col = 0; col < step; col++){
-// // 插入排序
+//  插入排序
 // for(int begin = col + step; begin < array.length; begin += step){
-// // col、col+step、col+2*step、col+3*step
+//  col、col+step、col+2*step、col+3*step
 // int cur = begin;
 // while(cur > col && cmp(cur, cur - step) < 0){
 // swap(cur, cur - step);

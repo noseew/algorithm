@@ -38,7 +38,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._05data队列.circle
 // * 从队尾入队
 // */
 // public void enQueueRear(E element) {
-// // 头 1 r(2) null null null f(6) 7 8 9 尾
+//  头 1 r(2) null null null f(6) 7 8 9 尾
 // ensureCapacity(size + 1);
 // elements[index(size)] = element;
 // size++;
@@ -65,7 +65,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._05data队列.circle
 // /**
 // * 从队头出队
 // */
-// // 头 1 r(2) null null f(5) 6 7 8 9 尾
+//  头 1 r(2) null null f(5) 6 7 8 9 尾
 // public E deQueueFront() {
 // E frontElement = elements[front];
 // elements[front] = null;
@@ -85,16 +85,16 @@ package org.song.algorithm.algorithmbase.from_love.datatype._05data队列.circle
 // public E rear() {
 // return elements[index(size - 1)];
 // }
-// // 索引封装映射
+//  索引封装映射
 // private int index(int index) {
 // index += front;
 // if (index < 0) { // index 为负数
 // return index + elements.length;
 // }
-// // index 为正数
+//  index 为正数
 // return index % elements.length;
 // }
-// // 数组扩容
+//  数组扩容
 // private void ensureCapacity(int capacity) {
 // int oldCapacity = elements.length;
 // if (oldCapacity >= capacity)

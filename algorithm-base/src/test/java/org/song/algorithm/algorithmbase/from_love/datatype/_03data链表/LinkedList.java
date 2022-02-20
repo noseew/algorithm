@@ -52,8 +52,8 @@ package org.song.algorithm.algorithmbase.from_love.datatype._03data链表;
 // @Override
 // public void add(int index, E element) {
 // rangeCheckForAdd(index);
-// // size == 0
-// // index == 0
+//  size == 0
+//  index == 0
 // if (index == size) { // 往最后面添加元素
 // Node<E> oldLast = last;
 // last = new Node<>(oldLast, element, null);

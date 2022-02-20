@@ -25,7 +25,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._09data集合.set;
 // }
 // @Override
 // public void add(E element) {
-// //		if(list.contains(element)) return;
+// 		if(list.contains(element)) return;
 // int index = list.indexOf(element);
 // if(index == List.ELEMENT_NOT_FOUND){ // 没有该元素
 // list.add(element); // 没有就添加

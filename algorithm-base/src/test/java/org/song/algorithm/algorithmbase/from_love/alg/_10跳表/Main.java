@@ -6,7 +6,7 @@ package org.song.algorithm.algorithmbase.from_love.alg._10跳表;
 // public static void main(String[] args) {
 // SkipList<Integer, Integer> list = new SkipList<>();
 // test(list, 20, 10);
-// //		time();
+// 		time();
 // }
 // private static void time() {
 // TreeMap<Integer, Integer> map = new TreeMap<>();

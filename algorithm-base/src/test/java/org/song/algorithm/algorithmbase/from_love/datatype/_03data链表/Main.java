@@ -34,9 +34,9 @@ package org.song.algorithm.algorithmbase.from_love.datatype._03data链表;
 // }
 // public static void main(String[] args) {
 // josephus();
-// //		testList(new ArrayList<>());  // 动态数组
-// //		testList(new LinkedList<>()); // 双向链表
-// //		testList(new SingleCircleLinkedList<>()); // 单向循环链表
+// 		testList(new ArrayList<>());  // 动态数组
+// 		testList(new LinkedList<>()); // 双向链表
+// 		testList(new SingleCircleLinkedList<>()); // 单向循环链表
 // testList(new CircleLinkedList<>());
 // }
 // }

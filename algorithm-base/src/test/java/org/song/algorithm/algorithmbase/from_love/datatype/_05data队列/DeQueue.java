@@ -6,7 +6,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._05data队列;
 // * @author yusael
 // */
 // public class DeQueue <E> {
-// // 双向链表实现双端队列
+//  双向链表实现双端队列
 // private List<E> list = new LinkedList<>();
 // /**
 // * 元素的数量

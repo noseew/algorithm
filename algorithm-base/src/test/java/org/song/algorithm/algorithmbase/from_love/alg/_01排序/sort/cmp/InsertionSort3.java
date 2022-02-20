@@ -8,7 +8,7 @@ package org.song.algorithm.algorithmbase.from_love.alg._01排序.sort.cmp;
 // @Override
 // protected void sort() {
 // for(int begin = 1; begin < array.length; begin++){
-// // 将source位置的元素插入到dest位置
+//  将source位置的元素插入到dest位置
 // insert(begin, search(begin));
 // }
 // }
@@ -17,7 +17,7 @@ package org.song.algorithm.algorithmbase.from_love.alg._01排序.sort.cmp;
 // */
 // private void insert(int source, int dest){
 // T v = array[source];
-// // 将 [insertIndex, begin)范围内的元素往右边挪动一个单位
+//  将 [insertIndex, begin)范围内的元素往右边挪动一个单位
 // for(int i = source; i > dest; i--){
 // array[i] = array[i - 1];
 // }

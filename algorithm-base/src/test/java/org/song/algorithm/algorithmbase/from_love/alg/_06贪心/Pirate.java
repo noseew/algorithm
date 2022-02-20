@@ -11,7 +11,7 @@ package org.song.algorithm.algorithmbase.from_love.alg._06贪心;
 // Arrays.sort(weights); // 排序, 默认从小到大
 // int capacity = 30; // 最大容量
 // int weight = 0, count = 0;
-// // 每次优先选择重量最小的古董
+//  每次优先选择重量最小的古董
 // for (int i = 0; i < weights.length && weight < capacity; i++) {
 // int newWeight = weights[i] + weight;
 // if (newWeight <= capacity) {

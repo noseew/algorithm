@@ -19,7 +19,7 @@ package org.song.algorithm.algorithmbase.from_love.alg._04递归;
 // }
 // hanoi(n - 1, p1, p3, p2);
 // move(n, p1, p3);
-// // hanoi(1, p	1, p2, p3);
+//  hanoi(1, p	1, p2, p3);
 // hanoi(n - 1, p2, p1, p3);
 // }
 // }

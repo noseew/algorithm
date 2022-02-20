@@ -28,16 +28,16 @@ package org.song.algorithm.algorithmbase.from_love.datatype._11data哈希表.map
 // @Override
 // public V put(K key, V value) {
 // keyNotNullCheck(key);
-// // 添加第一个节点
+//  添加第一个节点
 // if (root == null) {
 // root = new Node<>(key, value, null);
 // size++;
-// // 新添加节点之后的处理
+//  新添加节点之后的处理
 // afterPut(root);
 // return null;
 // }
-// // 添加的不是第一个节点
-// // 找到父节点
+//  添加的不是第一个节点
+//  找到父节点
 // Node<K, V> parent = root;
 // Node<K, V> node = root;
 // int cmp = 0;
@@ -55,7 +55,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._11data哈希表.map
 // return oldValue;
 // }
 // } while (node != null);
-// // 看看插入到父节点的哪个位置
+//  看看插入到父节点的哪个位置
 // Node<K, V> newNode = new Node<>(key, value, parent);
 // if (cmp > 0) {
 // parent.right = newNode;
@@ -63,7 +63,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._11data哈希表.map
 // parent.left = newNode;
 // }
 // size++;
-// // 新添加节点之后的处理
+//  新添加节点之后的处理
 // afterPut(newNode);
 // return null;
 // }
@@ -117,20 +117,20 @@ package org.song.algorithm.algorithmbase.from_love.datatype._11data哈希表.map
 // size--;
 // V oldValue = node.value;
 // if (node.hasTwoChildren()) { // 度为2的节点
-// // 找到后继节点
+//  找到后继节点
 // Node<K, V> s = successor(node);
-// // 用后继节点的值覆盖度为2的节点的值
+//  用后继节点的值覆盖度为2的节点的值
 // node.key = s.key;
 // node.value = s.value;
-// // 删除后继节点
+//  删除后继节点
 // node = s;
 // }
-// // 删除node节点（node的度必然是1或者0）
+//  删除node节点（node的度必然是1或者0）
 // Node<K, V> replacement = node.left != null ? node.left : node.right;
 // if (replacement != null) { // node是度为1的节点
-// // 更改parent
+//  更改parent
 // replacement.parent = node.parent;
-// // 更改parent的left、right的指向
+//  更改parent的left、right的指向
 // if (node.parent == null) { // node是度为1的节点并且是根节点
 // root = replacement;
 // } else if (node == node.parent.left) {
@@ -138,7 +138,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._11data哈希表.map
 // } else { // node == node.parent.right
 // node.parent.right = replacement;
 // }
-// // 删除节点之后的处理
+//  删除节点之后的处理
 // afterRemove(replacement);
 // } else if (node.parent == null) { // node是叶子节点并且是根节点
 // root = null;
@@ -148,22 +148,22 @@ package org.song.algorithm.algorithmbase.from_love.datatype._11data哈希表.map
 // } else { // node == node.parent.right
 // node.parent.right = null;
 // }
-// // 删除节点之后的处理
+//  删除节点之后的处理
 // afterRemove(node);
 // }
 // return oldValue;
 // }
 // private void afterRemove(Node<K, V> node) {
-// // 如果删除的节点是红色
-// // 或者 用以取代删除节点的子节点是红色
+//  如果删除的节点是红色
+//  或者 用以取代删除节点的子节点是红色
 // if (isRed(node)) {
 // black(node);
 // return;
 // }
 // Node<K, V> parent = node.parent;
 // if (parent == null) return;
-// // 删除的是黑色叶子节点【下溢】
-// // 判断被删除的node是左还是右
+//  删除的是黑色叶子节点【下溢】
+//  判断被删除的node是左还是右
 // boolean left = parent.left == null || node.isLeftChild();
 // Node<K, V> sibling = left ? parent.right : parent.left;
 // if (left) { // 被删除的节点在左边，兄弟节点在右边
@@ -171,12 +171,12 @@ package org.song.algorithm.algorithmbase.from_love.datatype._11data哈希表.map
 // black(sibling);
 // red(parent);
 // rotateLeft(parent);
-// // 更换兄弟
+//  更换兄弟
 // sibling = parent.right;
 // }
-// // 兄弟节点必然是黑色
+//  兄弟节点必然是黑色
 // if (isBlack(sibling.left) && isBlack(sibling.right)) {
-// // 兄弟节点没有1个红色子节点，父节点要向下跟兄弟节点合并
+//  兄弟节点没有1个红色子节点，父节点要向下跟兄弟节点合并
 // boolean parentBlack = isBlack(parent);
 // black(parent);
 // red(sibling);
@@ -184,7 +184,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._11data哈希表.map
 // afterRemove(parent);
 // }
 // } else { // 兄弟节点至少有1个红色子节点，向兄弟节点借元素
-// // 兄弟节点的左边是黑色，兄弟要先旋转
+//  兄弟节点的左边是黑色，兄弟要先旋转
 // if (isBlack(sibling.right)) {
 // rotateRight(sibling);
 // sibling = parent.right;
@@ -199,12 +199,12 @@ package org.song.algorithm.algorithmbase.from_love.datatype._11data哈希表.map
 // black(sibling);
 // red(parent);
 // rotateRight(parent);
-// // 更换兄弟
+//  更换兄弟
 // sibling = parent.left;
 // }
-// // 兄弟节点必然是黑色
+//  兄弟节点必然是黑色
 // if (isBlack(sibling.left) && isBlack(sibling.right)) {
-// // 兄弟节点没有1个红色子节点，父节点要向下跟兄弟节点合并
+//  兄弟节点没有1个红色子节点，父节点要向下跟兄弟节点合并
 // boolean parentBlack = isBlack(parent);
 // black(parent);
 // red(sibling);
@@ -212,7 +212,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._11data哈希表.map
 // afterRemove(parent);
 // }
 // } else { // 兄弟节点至少有1个红色子节点，向兄弟节点借元素
-// // 兄弟节点的左边是黑色，兄弟要先旋转
+//  兄弟节点的左边是黑色，兄弟要先旋转
 // if (isBlack(sibling.left)) {
 // rotateLeft(sibling);
 // sibling = parent.left;
@@ -226,7 +226,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._11data哈希表.map
 // }
 // private Node<K, V> predecessor(Node<K, V> node) {
 // if (node == null) return null;
-// // 前驱节点在左子树当中（left.right.right.right....）
+//  前驱节点在左子树当中（left.right.right.right....）
 // Node<K, V> p = node.left;
 // if (p != null) {
 // while (p.right != null) {
@@ -234,17 +234,17 @@ package org.song.algorithm.algorithmbase.from_love.datatype._11data哈希表.map
 // }
 // return p;
 // }
-// // 从父节点、祖父节点中寻找前驱节点
+//  从父节点、祖父节点中寻找前驱节点
 // while (node.parent != null && node == node.parent.left) {
 // node = node.parent;
 // }
-// // node.parent == null
-// // node == node.parent.right
+//  node.parent == null
+//  node == node.parent.right
 // return node.parent;
 // }
 // private Node<K, V> successor(Node<K, V> node) {
 // if (node == null) return null;
-// // 前驱节点在左子树当中（right.left.left.left....）
+//  前驱节点在左子树当中（right.left.left.left....）
 // Node<K, V> p = node.right;
 // if (p != null) {
 // while (p.left != null) {
@@ -252,7 +252,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._11data哈希表.map
 // }
 // return p;
 // }
-// // 从父节点、祖父节点中寻找前驱节点
+//  从父节点、祖父节点中寻找前驱节点
 // while (node.parent != null && node == node.parent.right) {
 // node = node.parent;
 // }
@@ -273,25 +273,25 @@ package org.song.algorithm.algorithmbase.from_love.datatype._11data哈希表.map
 // }
 // private void afterPut(Node<K, V> node) {
 // Node<K, V> parent = node.parent;
-// // 添加的是根节点 或者 上溢到达了根节点
+//  添加的是根节点 或者 上溢到达了根节点
 // if (parent == null) {
 // black(node);
 // return;
 // }
-// // 如果父节点是黑色，直接返回
+//  如果父节点是黑色，直接返回
 // if (isBlack(parent)) return;
-// // 叔父节点
+//  叔父节点
 // Node<K, V> uncle = parent.sibling();
-// // 祖父节点
+//  祖父节点
 // Node<K, V> grand = red(parent.parent);
 // if (isRed(uncle)) { // 叔父节点是红色【B树节点上溢】
 // black(parent);
 // black(uncle);
-// // 把祖父节点当做是新添加的节点
+//  把祖父节点当做是新添加的节点
 // afterPut(grand);
 // return;
 // }
-// // 叔父节点不是红色
+//  叔父节点不是红色
 // if (parent.isLeftChild()) { // L
 // if (node.isLeftChild()) { // LL
 // black(parent);
@@ -325,7 +325,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._11data哈希表.map
 // afterRotate(grand, parent, child);
 // }
 // private void afterRotate(Node<K, V> grand, Node<K, V> parent, Node<K, V> child) {
-// // 让parent称为子树的根节点
+//  让parent称为子树的根节点
 // parent.parent = grand.parent;
 // if (grand.isLeftChild()) {
 // grand.parent.left = parent;
@@ -334,11 +334,11 @@ package org.song.algorithm.algorithmbase.from_love.datatype._11data哈希表.map
 // } else { // grand是root节点
 // root = parent;
 // }
-// // 更新child的parent
+//  更新child的parent
 // if (child != null) {
 // child.parent = grand;
 // }
-// // 更新grand的parent
+//  更新grand的parent
 // grand.parent = parent;
 // }
 // private Node<K, V> color(Node<K, V> node, boolean color) {

@@ -1,18 +1,18 @@
 package org.song.algorithm.algorithmbase.from_love.alg._11字符串;
 // public class KMP {
 // public static int indexOf(String text, String pattern) {
-// // 检测数据合法性
+//  检测数据合法性
 // if (text == null || pattern == null) return -1;
 // char[] textChars = text.toCharArray();
 // int tlen = textChars.length;
 // char[] patternChars = pattern.toCharArray();
 // int plen = patternChars.length;
 // if (tlen == 0 || plen == 0 || tlen < plen) return -1;
-// // next表
+//  next表
 // int[] next = next(pattern);
 // int pi = 0, ti = 0;
 // while (pi < plen && ti < tlen) {
-// // next表置-1的精妙之处, pi = -1 则 pi = 0, ti++ 相当于模式串后一一位
+//  next表置-1的精妙之处, pi = -1 则 pi = 0, ti++ 相当于模式串后一一位
 // if (pi < 0 || textChars[ti] == patternChars[pi]) {
 // ti++;
 // pi++;

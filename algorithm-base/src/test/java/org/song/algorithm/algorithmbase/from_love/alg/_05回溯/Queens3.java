@@ -6,16 +6,16 @@ package org.song.algorithm.algorithmbase.from_love.alg._05回溯;
 // public static void main(String[] args) {
 // new Queens3().place8Queens();
 // }
-// // 该变量不是必须, 仅仅是为了打印
+//  该变量不是必须, 仅仅是为了打印
 // int[] queens;
-// // 标记着某一列是否有皇后了
-// // 比如 00100111 代表0、1、2、5列已经有皇后
+//  标记着某一列是否有皇后了
+//  比如 00100111 代表0、1、2、5列已经有皇后
 // byte cols; // byte是8位
-// // 标记着某一对角线是否有皇后了(左上角->右下角)
+//  标记着某一对角线是否有皇后了(左上角->右下角)
 // short leftTop; // short是16位
-// // 标记着某一对角线是否有皇后了(右上角->左下角)
+//  标记着某一对角线是否有皇后了(右上角->左下角)
 // short rightTop; // short是16位
-// // 一共有多少种合理的摆法
+//  一共有多少种合理的摆法
 // int ways = 0;
 // /**
 // * n皇后
@@ -29,7 +29,7 @@ package org.song.algorithm.algorithmbase.from_love.alg._05回溯;
 // * 从第 row 行开始摆放皇后
 // */
 // void place(int row) {
-// // 如果已经放到第8行,说明找到了一种8皇后的摆法
+//  如果已经放到第8行,说明找到了一种8皇后的摆法
 // if (row == 8) {
 // ways++;
 // show();

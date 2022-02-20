@@ -11,11 +11,11 @@ package org.song.algorithm.algorithmbase.from_love.alg._08动态规划;
 // }
 // static int lengthOfLIS3(int[] nums) {
 // if (nums == null || nums.length == 0) return 0;
-// // 牌堆的数量
+//  牌堆的数量
 // int len = 0;
-// // 牌顶数组
+//  牌顶数组
 // int[] top = new int[nums.length];
-// // 遍历所有的牌
+//  遍历所有的牌
 // for (int num : nums) {
 // int begin = 0;
 // int end = len;
@@ -27,29 +27,29 @@ package org.song.algorithm.algorithmbase.from_love.alg._08动态规划;
 // begin = mid + 1;
 // }
 // }
-// // 覆盖牌顶
+//  覆盖牌顶
 // top[begin] = num;
-// // 检查是否要新建一个牌堆
+//  检查是否要新建一个牌堆
 // if (begin == len) len++;
 // }
 // return len;
 // }
 // static int lengthOfLIS2(int[] nums) {
 // if (nums == null || nums.length == 0) return 0;
-// // 牌堆的数量
+//  牌堆的数量
 // int len = 0;
-// // 牌顶数组
+//  牌顶数组
 // int[] top = new int[nums.length];
-// // 遍历所有的牌
+//  遍历所有的牌
 // for (int num : nums) {
 // int j = 0;
 // while (j < len) {
-// // 找到一个>=nums的牌顶
+//  找到一个>=nums的牌顶
 // if (top[j] >= num) {
 // top[j] = num;
 // break;
 // }
-// // 牌顶 < nums
+//  牌顶 < nums
 // j++;
 // }
 // if (j == len) { // 新建一个牌堆
@@ -66,7 +66,7 @@ package org.song.algorithm.algorithmbase.from_love.alg._08动态规划;
 // for (int i = 1; i < dp.length; i++) {
 // dp[i] = 1; // 默认只有一个元素时长度为1
 // for (int j = 0; j < i; j++) {
-// // 无法成为一个上升子序列
+//  无法成为一个上升子序列
 // if (nums[j] >= nums[i]) continue;
 // dp[i] = Math.max(dp[j] + 1, dp[i]);
 // }

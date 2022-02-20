@@ -18,7 +18,7 @@ package org.song.algorithm.algorithmbase.from_love.alg._03图;
 // }
 // };
 // public static void main(String[] args) {
-// //		testMultiSp();
+// 		testMultiSp();
 // test();
 // }
 // static void testMultiSp() {
@@ -67,22 +67,22 @@ package org.song.algorithm.algorithmbase.from_love.alg._03图;
 // }
 // static void test() {
 // ListGraph<String, Integer> graph = new ListGraph<>();
-// //		graph.addEdge("V0", "V1");
-// //		graph.addEdge("V1", "V0");
-// //		
-// //		graph.addEdge("V0", "V2");
-// //		graph.addEdge("V2", "V0");
-// //
-// //		graph.addEdge("V0", "V3");
-// //		graph.addEdge("V3", "V0");
-// //
-// //		graph.addEdge("V1", "V2");
-// //		graph.addEdge("V2", "V1");
-// //		
-// //		graph.addEdge("V2", "V3");
-// //		graph.addEdge("V3", "V2");
-// //		
-// //		graph.print();
+// 		graph.addEdge("V0", "V1");
+// 		graph.addEdge("V1", "V0");
+// 		
+// 		graph.addEdge("V0", "V2");
+// 		graph.addEdge("V2", "V0");
+// 
+// 		graph.addEdge("V0", "V3");
+// 		graph.addEdge("V3", "V0");
+// 
+// 		graph.addEdge("V1", "V2");
+// 		graph.addEdge("V2", "V1");
+// 		
+// 		graph.addEdge("V2", "V3");
+// 		graph.addEdge("V3", "V2");
+// 		
+// 		graph.print();
 // graph.addEdge("V1", "V0", 9);
 // graph.addEdge("V1", "V2", 3);
 // graph.addEdge("V2", "V0", 2);

@@ -13,11 +13,11 @@ package org.song.algorithm.algorithmbase.from_love.datatype._11data哈希表.mod
 // * 用来比较2个对象是否相等
 // */
 // public boolean equals(Object obj) {
-// // 内存地址
+//  内存地址
 // if (this == obj) return true;
 // if (obj == null || obj.getClass() != getClass()) return false;
-// // if (obj == null || !(obj instanceof Person)) return false;
-// // 比较成员变量
+//  if (obj == null || !(obj instanceof Person)) return false;
+//  比较成员变量
 // Person person = (Person) obj;
 // return person.age == age
 // && person.height == height

@@ -19,7 +19,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._09data集合.tree;
 // if (comparator != null) { // 比较器不为空，则使用比较器
 // return comparator.compare(e1, e2);
 // }
-// // 没有传入比较器，则要求元素本身必须实现Comparable接口
+//  没有传入比较器，则要求元素本身必须实现Comparable接口
 // return ((Comparable<E>)e1).compareTo(e2);
 // }
 // /**
@@ -44,17 +44,17 @@ package org.song.algorithm.algorithmbase.from_love.datatype._09data集合.tree;
 // */
 // public void add(E element) {
 // elementNotNullCheck(element); // 传入元素不能为空
-// // 添加第一个节点
+//  添加第一个节点
 // if (root == null) {
 // root = createNode(element, null);
 // size++;
-// // 新添加节点之后的处理
-// // BST中无需处理，为 AVL树 和 B树提供可覆盖的方法
+//  新添加节点之后的处理
+//  BST中无需处理，为 AVL树 和 B树提供可覆盖的方法
 // afterAdd(root); 
 // return;
 // }
-// // 添加的不是第一个节点
-// // 找到父节点
+//  添加的不是第一个节点
+//  找到父节点
 // Node<E> parent = root;
 // Node<E> node = root;
 // int cmp = 0;
@@ -66,13 +66,13 @@ package org.song.algorithm.algorithmbase.from_love.datatype._09data集合.tree;
 // } else if (cmp < 0) {
 // node = node.left;
 // } else { // 相等
-// // 相等时的操作按需求来定，这里选择了覆盖
+//  相等时的操作按需求来定，这里选择了覆盖
 // node.element = element;
 // return;
 // }
 // } while (node != null);
-// // 通过上面的while循环找到了要插入节点的父节点
-// // 看看插入到父节点的哪个位置
+//  通过上面的while循环找到了要插入节点的父节点
+//  看看插入到父节点的哪个位置
 // Node<E> newNode = createNode(element, parent);
 // if (cmp > 0) {
 // parent.right = newNode;
@@ -80,8 +80,8 @@ package org.song.algorithm.algorithmbase.from_love.datatype._09data集合.tree;
 // parent.left = newNode;
 // }
 // size++;
-// // 新添加节点之后的处理
-// // BST中无需处理，为 AVL树 和 B树提供可覆盖的方法
+//  新添加节点之后的处理
+//  BST中无需处理，为 AVL树 和 B树提供可覆盖的方法
 // afterAdd(newNode);
 // }
 // /**
@@ -94,22 +94,22 @@ package org.song.algorithm.algorithmbase.from_love.datatype._09data集合.tree;
 // if (node == null) return;
 // size--;
 // if (node.hasTwoChildren()) { // 度为2的节点
-// // 找到后继节点
+//  找到后继节点
 // Node<E> s = successor(node);
-// // 用后继节点的值覆盖度为2的节点的值
+//  用后继节点的值覆盖度为2的节点的值
 // node.element = s.element;
-// // 删除后继节点
-// // 这里是因为后面必然会删除node节点
-// // 所以直接将后继节点赋给node,在后面将它删除
+//  删除后继节点
+//  这里是因为后面必然会删除node节点
+//  所以直接将后继节点赋给node,在后面将它删除
 // node = s;
 // }
-// // 删除node节点（node的度必然是1或者0）
+//  删除node节点（node的度必然是1或者0）
 // Node<E> replacement = node.left != null ? node.left : node.right;
 // if (replacement != null) { // node是度为1的节点
-// // 核心：用子节点替代原节点的位置
-// // 更改parent
+//  核心：用子节点替代原节点的位置
+//  更改parent
 // replacement.parent = node.parent;
-// // 更改parent的left、right的指向
+//  更改parent的left、right的指向
 // if (node.parent == null) { // node是度为1的节点并且是根节点
 // root = replacement;
 // } else if (node == node.parent.left) {
@@ -117,11 +117,11 @@ package org.song.algorithm.algorithmbase.from_love.datatype._09data集合.tree;
 // } else { // node == node.parent.right
 // node.parent.right = replacement;
 // }
-// // 删除节点之后的处理，BST中无需处理，为 AVL树 和 B树提供可覆盖的方法
+//  删除节点之后的处理，BST中无需处理，为 AVL树 和 B树提供可覆盖的方法
 // afterRemove(replacement);
 // } else if (node.parent == null) { // node是叶子节点并且是根节点
 // root = null;
-// // 删除节点之后的处理，BST中无需处理，为 AVL树 和 B树提供可覆盖的方法
+//  删除节点之后的处理，BST中无需处理，为 AVL树 和 B树提供可覆盖的方法
 // afterRemove(node);
 // } else { // node是叶子节点，但不是根节点
 // if (node == node.parent.left) { // 是左子树
@@ -129,7 +129,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._09data集合.tree;
 // } else { // node == node.parent.right // 是右子树
 // node.parent.right = null;
 // }
-// // 删除节点之后的处理，BST中无需处理，为 AVL树 和 B树提供可覆盖的方法
+//  删除节点之后的处理，BST中无需处理，为 AVL树 和 B树提供可覆盖的方法
 // afterRemove(node);
 // }
 // }

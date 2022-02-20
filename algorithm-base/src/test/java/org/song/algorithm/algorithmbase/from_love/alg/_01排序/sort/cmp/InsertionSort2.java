@@ -11,7 +11,7 @@ package org.song.algorithm.algorithmbase.from_love.alg._01排序.sort.cmp;
 // int cur = begin; 
 // T v = array[begin]; // 将待插入元素备份
 // while(cur > 0 && cmp(v, array[cur-1]) < 0){
-// // 头部有序数据中比待插入元素大的，都朝尾部方向挪动1个位置
+//  头部有序数据中比待插入元素大的，都朝尾部方向挪动1个位置
 // array[cur] = array[cur - 1]; 
 // cur--;
 // }

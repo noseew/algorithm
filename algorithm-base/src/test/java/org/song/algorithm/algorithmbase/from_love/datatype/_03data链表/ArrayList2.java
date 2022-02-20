@@ -18,27 +18,27 @@ package org.song.algorithm.algorithmbase.from_love.datatype._03data链表;
 // this(DEFAULT_CAPACITY);
 // }
 // /****************↓封装好的功能函数，遇到再读*******************/
-// //	// 下标越界抛出的异常
-// //	private void outOfBounds(int index) {
-// //		throw new IndexOutOfBoundsException("Index:" + index + ", Size:" + size);
-// //	}
-// //	// 检查下标越界(不可访问或删除size位置)
-// //	private void rangeCheck(int index){
-// //		if(index < 0 || index >= size){
-// //			outOfBounds(index);
-// //		}
-// //	}
-// //	// 检查add()的下标越界(可以在size位置添加元素)
-// //	private void rangeCheckForAdd(int index) {
-// //		if (index < 0 || index > size) {
-// //			outOfBounds(index);
-// //		}
-// //	}
-// // 扩容
+// 	// 下标越界抛出的异常
+// 	private void outOfBounds(int index) {
+// 		throw new IndexOutOfBoundsException("Index:" + index + ", Size:" + size);
+// 	}
+// 	// 检查下标越界(不可访问或删除size位置)
+// 	private void rangeCheck(int index){
+// 		if(index < 0 || index >= size){
+// 			outOfBounds(index);
+// 		}
+// 	}
+// 	// 检查add()的下标越界(可以在size位置添加元素)
+// 	private void rangeCheckForAdd(int index) {
+// 		if (index < 0 || index > size) {
+// 			outOfBounds(index);
+// 		}
+// 	}
+//  扩容
 // private void ensureCapacity(int capacity){
 // int oldCapacity = elements.length;
 // if(oldCapacity >= capacity) return;
-// // 新容量为旧容量的1.5倍
+//  新容量为旧容量的1.5倍
 // int newCapacity = oldCapacity + (oldCapacity >> 1);
 // E[] newElements = (E[])new Object[newCapacity];
 // for (int i = 0; i < size; i++) {
@@ -47,12 +47,12 @@ package org.song.algorithm.algorithmbase.from_love.datatype._03data链表;
 // elements = newElements;
 // System.out.println("size="+oldCapacity+", 扩容到了"+newCapacity);
 // }
-// // 缩容
+//  缩容
 // private void trim(){
 // int oldCapacity = elements.length;
 // int newCapacity = oldCapacity >> 1; // 缩容为一半
 // if(size > newCapacity || newCapacity <= DEFAULT_CAPACITY) return;
-// // 剩余空间很多
+//  剩余空间很多
 // E[] newElements = (E[]) new Object[newCapacity];
 // for(int i = 0; i < size; i++){
 // newElements[i] = elements[i];
@@ -91,22 +91,22 @@ package org.song.algorithm.algorithmbase.from_love.datatype._03data链表;
 // public void add(int index, E element){ 
 // rangeCheckForAdd(index); // 检查下标越界
 // ensureCapacity(size + 1); // 确保容量够大
-// // 0 1 2 3 4 5 6 7 8 9	(index)
-// // 1 2 3 4 5 6 x x x x	(原数组)
-// // 在index=2处，插入9，元素全部后移
-// // 1 2 9 3 4 5 6 x x x	(add后数组)
+//  0 1 2 3 4 5 6 7 8 9	(index)
+//  1 2 3 4 5 6 x x x x	(原数组)
+//  在index=2处，插入9，元素全部后移
+//  1 2 9 3 4 5 6 x x x	(add后数组)
 // for (int i = size; i > index; i--) {
 // elements[i] = elements[i - 1];
 // }
 // elements[index] = element;
 // size++;
 // }
-// //	/*
-// //	 * 添加元素到最后面
-// //	 */
-// //	public void add(E element){
-// //		add(size, element);
-// //	}
+// 	/*
+// 	 * 添加元素到最后面
+// 	 */
+// 	public void add(E element){
+// 		add(size, element);
+// 	}
 // /**
 // * 设置index位置的元素
 // * @param index
@@ -136,10 +136,10 @@ package org.song.algorithm.algorithmbase.from_love.datatype._03data链表;
 // */
 // public E remove(int index){
 // rangeCheck(index);
-// // 0 1 2 3 4 5 	(index)
-// // 1 2 3 4 5 6 	(原数组)
-// // 删除index为2的元素，元素前移
-// // 1 2 4 5 6	(remove后的数组)
+//  0 1 2 3 4 5 	(index)
+//  1 2 3 4 5 6 	(原数组)
+//  删除index为2的元素，元素前移
+//  1 2 4 5 6	(remove后的数组)
 // E old = elements[index];
 // for (int i = index; i < size-1; i++) {
 // elements[i] = elements[i+1];
@@ -155,7 +155,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._03data链表;
 // */
 // public int indexOf(E element){
 // /*
-// // 不对 null 进行处理也可以，但是健壮性不够
+//  不对 null 进行处理也可以，但是健壮性不够
 // for (int i = 0; i < size; i++) {
 // if(elements[i].equals(element)) return i;
 // }
@@ -175,7 +175,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._03data链表;
 // * 清除所有元素
 // */
 // public void clear(){
-// // 使用泛型数组后要注意内存管理
+//  使用泛型数组后要注意内存管理
 // for (int i = 0; i < size; i++) {
 // elements[i] = null;
 // }
@@ -183,7 +183,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._03data链表;
 // }
 // @Override
 // public String toString() {
-// // 打印形式为: size=5, [99, 88, 77, 66, 55]
+//  打印形式为: size=5, [99, 88, 77, 66, 55]
 // StringBuilder string = new StringBuilder();
 // string.append("size=").append(size).append(", [");
 // for (int i = 0; i < size; i++) {

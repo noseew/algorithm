@@ -20,7 +20,7 @@ package org.song.algorithm.algorithmbase.from_love.alg._03图.graph;
 // public abstract void dfs(V begin, VertexVisitor<V> visitor); // 深度优先搜索
 // public abstract List<V> topologicalSort(); // 拓扑排序
 // public abstract Set<EdgeInfo<V, E>> mst(); // 最小生成树
-// //	public abstract Map<V, E> shortestPath(V begin); // 单源最短路径
+// 	public abstract Map<V, E> shortestPath(V begin); // 单源最短路径
 // public abstract Map<V, PathInfo<V, E>> shortestPath(V begin); // 返回路径信息的单源最短路径
 // public abstract Map<V, Map<V, PathInfo<V, E>>> shortestPath(); // 多源最短路径
 // public interface WeightManager<E> { // 管理权重

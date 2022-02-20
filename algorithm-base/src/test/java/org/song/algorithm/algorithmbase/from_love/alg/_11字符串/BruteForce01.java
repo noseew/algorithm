@@ -17,7 +17,7 @@ package org.song.algorithm.algorithmbase.from_love.alg._11字符串;
 // pi++;
 // } else {
 // ti = ti - pi + 1;
-// // ti -= pi - 1;
+//  ti -= pi - 1;
 // pi = 0;
 // }
 // }
@@ -27,7 +27,7 @@ package org.song.algorithm.algorithmbase.from_love.alg._11字符串;
 // * 蛮力匹配
 // */
 // public static int indexOf(String text, String pattern) {
-// // 检测数据合法性
+//  检测数据合法性
 // if (text == null || pattern == null) return -1;
 // char[] textChars = text.toCharArray();
 // int tlen = textChars.length;
@@ -41,7 +41,7 @@ package org.song.algorithm.algorithmbase.from_love.alg._11字符串;
 // pi++;
 // } else {
 // ti = ti - pi + 1;
-// // ti -= pi - 1;
+//  ti -= pi - 1;
 // pi = 0;
 // }
 // } 

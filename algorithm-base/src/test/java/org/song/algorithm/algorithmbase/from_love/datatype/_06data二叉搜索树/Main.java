@@ -16,7 +16,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._06data二叉搜索�
 // return e2.getAge() - e1.getAge();
 // }
 // }
-// // Integer类型的数据
+//  Integer类型的数据
 // public static void test1(){
 // Integer date[] = new Integer[] { 7, 4, 9, 2, 5, 8, 11, 3, 12, 1};
 // BinarySearchTree<Integer> bst = new BinarySearchTree<>();
@@ -25,9 +25,9 @@ package org.song.algorithm.algorithmbase.from_love.datatype._06data二叉搜索�
 // }
 // BinaryTrees.println(bst);
 // }
-// // Person类型的数据
+//  Person类型的数据
 // public static void test2(){
-// // Java，匿名类
+//  Java，匿名类
 // BinarySearchTree<Person> bst = new BinarySearchTree<>(new Comparator<Person>() {
 // @Override
 // public int compare(Person e1, Person e2) {
@@ -40,7 +40,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._06data二叉搜索�
 // }
 // BinaryTrees.println(bst);
 // }
-// // 保存打印结果
+//  保存打印结果
 // public static void test3(){
 // BinarySearchTree<Integer> bst = new BinarySearchTree<>();
 // for(int i = 0; i < 40; i++){
@@ -50,7 +50,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._06data二叉搜索�
 // string += "\n";
 // Files.writeToFile("F:/1.txt", string);
 // }
-// // add() 时值相等的处理
+//  add() 时值相等的处理
 // public static void test4(){
 // BinarySearchTree<Person> bst = new BinarySearchTree<>(new Comparator<Person>() {
 // @Override
@@ -64,24 +64,24 @@ package org.song.algorithm.algorithmbase.from_love.datatype._06data二叉搜索�
 // bst.add(new Person(10, "kali")); // add()时值相等最好覆盖，否则则不会替换
 // BinaryTrees.println(bst);
 // }
-// // 遍历
+//  遍历
 // public static void test5(){
-// //		Integer date[] = new Integer[] { 7, 4, 9, 2, 5, 8, 11, 3, 12, 1};
-// //		BinarySearchTree<Integer> bst = new BinarySearchTree<>();
-// //		for (int i = 0; i < date.length; i++) {
-// //			bst.add(date[i]);
-// //		}
-// //		BinaryTrees.println(bst);
-// //		System.out.print("\n前序遍历：");
-// //		bst.preOrderTraversal();
-// //		System.out.print("\n中序遍历：");
-// //		bst.inorderTraversal();
-// //		System.out.print("\n后序遍历：");
-// //		bst.postorderTraversal();
-// //		System.out.print("\n层序遍历：");
-// //		bst.levelOrderTraversal();
+// 		Integer date[] = new Integer[] { 7, 4, 9, 2, 5, 8, 11, 3, 12, 1};
+// 		BinarySearchTree<Integer> bst = new BinarySearchTree<>();
+// 		for (int i = 0; i < date.length; i++) {
+// 			bst.add(date[i]);
+// 		}
+// 		BinaryTrees.println(bst);
+// 		System.out.print("\n前序遍历：");
+// 		bst.preOrderTraversal();
+// 		System.out.print("\n中序遍历：");
+// 		bst.inorderTraversal();
+// 		System.out.print("\n后序遍历：");
+// 		bst.postorderTraversal();
+// 		System.out.print("\n层序遍历：");
+// 		bst.levelOrderTraversal();
 // }
-// // 访问器遍历
+//  访问器遍历
 // public static void test6(){
 // Integer date[] = new Integer[] { 7, 4, 9, 2, 5, 8, 11, 3, 12, 1};
 // BinarySearchTree<Integer> bst = new BinarySearchTree<>();
@@ -121,7 +121,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._06data二叉搜索�
 // }
 // });
 // }
-// // 高度
+//  高度
 // public static void test7(){
 // BinarySearchTree<Integer> bst = new BinarySearchTree<>();
 // for(int i = 0; i < 20; i++){
@@ -129,10 +129,10 @@ package org.song.algorithm.algorithmbase.from_love.datatype._06data二叉搜索�
 // }
 // BinaryTrees.print(bst);
 // System.out.println();
-// //		System.out.println(bst.height()1);//递归求高度
+// 		System.out.println(bst.height()1);//递归求高度
 // System.out.println(bst.height());
 // }
-// // 是否是完全二叉树
+//  是否是完全二叉树
 // public static void test8(){
 // /* 
 // *    7
@@ -148,7 +148,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._06data二叉搜索�
 // BinaryTrees.println(bst);
 // System.out.println(bst.isComplete());
 // }
-// // 是否包含某个结点
+//  是否包含某个结点
 // public static void test9(){
 // BinarySearchTree<Integer> bst = new BinarySearchTree<>();
 // Integer date[] = new Integer[] { 7, 4, 8, 1, 5};
@@ -158,7 +158,7 @@ package org.song.algorithm.algorithmbase.from_love.datatype._06data二叉搜索�
 // BinaryTrees.println(bst);
 // System.out.println(bst.contains(6));
 // }
-// // 删除节点
+//  删除节点
 // public static void test10(){
 // BinarySearchTree<Integer> bst = new BinarySearchTree<>();
 // Integer date[] = new Integer[] { 7, 4, 8, 1, 5};

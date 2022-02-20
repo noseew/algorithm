@@ -26,7 +26,7 @@ package org.song.algorithm.algorithmbase.from_love.alg._04递归;
 // }
 // }
 // while(lidNum >= lidToBeer) {
-// // 瓶盖换酒
+//  瓶盖换酒
 // int newBeers2 = lidNum/lidToBeer;
 // lidNum -= newBeers2 * lidToBeer;
 // newBeers(newBeers2);
