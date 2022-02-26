@@ -13,7 +13,7 @@ public class Linked_single_alg {
     private Linked_single_01.Node<Integer> initData(int count) {
         Linked_single_01<Integer> linked = new Linked_single_01<>();
         for (int i = 0; i < count; i++) {
-            linked.add(i);
+            linked.addTail(i);
         }
         return linked.head;
     }
