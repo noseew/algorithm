@@ -547,6 +547,45 @@ public class Linked_single_alg {
     }
 
     /**
+     * 合并两个有序 链表, 直接在原链表上合并
+     */
+    @Test
+    public void test_09_merge2() {
+        SingleNode<Integer> linked1 = initData(5);
+        SingleNode<Integer> linked2 = initData(3);
+
+        // 临时头结点
+        SingleNode<Integer> newHead = new SingleNode<>(null, -1);
+        SingleNode<Integer> n = newHead;
+        if (linked1 == null) {
+            newHead = linked2;
+        } else if (linked2 == null) {
+            newHead = linked1;
+        } else {
+            while (linked1 != null || linked2 != null) {
+                if (linked1 != null && linked2 != null) {
+                    if (linked1.value <= linked2.value) {
+                        n.next = linked1;
+                        linked1 = linked1.next;
+                    } else {
+                        n.next = linked2;
+                        linked2 = linked2.next;
+                    }
+                    n = n.next;
+                } else if (linked1 != null) {
+                    n.next = linked1;
+                    break;
+                } else {
+                    n.next = linked2;
+                    break;
+                }
+            }
+        }
+        // 跳过临时头结点
+        ListPrinter.printSingleList(newHead.next, true);
+    }
+
+    /**
      * 找出链表中间元素
      * 方式1: O(n^2)遍历2遍, 第一遍获取总长度, 第二遍获取其一半
      * 方式2: O(1)两个指针, p1,p2, p1逐个遍历, p2遍历的速度是p1的2倍, 当p2遍历到尾部的时候, p1就是中间位置
