@@ -19,16 +19,12 @@ import java.util.Objects;
  */
 public class Array_base_01<T> extends AbsList<T> {
 
-    private T[] datas;
-
-    private int size;
-
     public Array_base_01() {
         this(10);
     }
 
     public Array_base_01(int capacity) {
-        datas = (T[]) new Object[capacity];
+        super(capacity);
     }
 
     @Override

@@ -2,10 +2,15 @@ package org.song.algorithm.algorithmbase._01datatype._01base._01linear_list.list
 
 public abstract class AbsList<T> {
 
+    public T[] datas;
+
+    public int size;
+
     protected AbsList() {
     }
 
     protected AbsList(int capacity) {
+        this.datas = (T[]) new Object[capacity];
     }
 
     protected abstract void clean();
