@@ -1,12 +1,11 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._01linear_list.list._01model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import org.song.algorithm.algorithmbase._01datatype._01base._01linear_list.list._01model.node.SingleNode;
 
 public class Linked_single_01<T> {
 
-    public Node<T> head;
-    public Node<T> tail;
+    public SingleNode<T> head;
+    public SingleNode<T> tail;
     public int size;
 
     /**
@@ -17,10 +16,10 @@ public class Linked_single_01<T> {
     public void addTail(T val) {
         if (tail != null) {
             // 直接在尾指针后插入
-            tail.next = new Node<>(null, val);
+            tail.next = new SingleNode<>(null, val);
             tail = tail.next;
         } else {
-            head = new Node<>(null, val);
+            head = new SingleNode<>(null, val);
             tail = head;
         }
         size++;
@@ -38,20 +37,20 @@ public class Linked_single_01<T> {
         }
         if (index == 0) {
             if (head != null) {
-                head = new Node<>(head.next, val);
+                head = new SingleNode<>(head.next, val);
             } else {
-                head = new Node<>(null, val);
+                head = new SingleNode<>(null, val);
             }
         } else if (size == index) {
-            tail.next = new Node<>(null, val);
+            tail.next = new SingleNode<>(null, val);
         }
 
-        Node<T> prev = getPrevByIndex(index);
+        SingleNode<T> prev = getPrevByIndex(index);
         /*
         优先将新节点指向下一个指针(原链表此时不变)
         然后将原链表前驱节点指向新节点
          */
-        prev.next = new Node<>(prev.next, val);
+        prev.next = new SingleNode<>(prev.next, val);
         size++;
     }
 
@@ -62,7 +61,7 @@ public class Linked_single_01<T> {
         if (index == 0) {
             return head.value;
         }
-        Node<T> prev = getPrevByIndex(index);
+        SingleNode<T> prev = getPrevByIndex(index);
         return prev.next.value;
     }
 
@@ -72,17 +71,17 @@ public class Linked_single_01<T> {
         }
 
         if (head.value == val) {
-            Node<T> old = head;
+            SingleNode<T> old = head;
             head = head.next;
             size--;
             return old.value;
         }
 
-        Node<T> prevNode = getPrevByVal(val);
+        SingleNode<T> prevNode = getPrevByVal(val);
         if (prevNode == null) {
             return null;
         }
-        Node<T> delNode = prevNode.next;
+        SingleNode<T> delNode = prevNode.next;
         // 直接更改next指针, 即可完成删除
         prevNode.next = delNode.next;
         size--;
@@ -94,17 +93,17 @@ public class Linked_single_01<T> {
             throw new ArrayIndexOutOfBoundsException("index 超出");
         }
         if (index == 0) {
-            Node<T> old = head;
+            SingleNode<T> old = head;
             head = head.next;
             size--;
             return old.value;
         }
 
-        Node<T> prevNode = getPrevByIndex(index);
+        SingleNode<T> prevNode = getPrevByIndex(index);
         if (prevNode == null) {
             return null; 
         }
-        Node<T> delNode = prevNode.next;
+        SingleNode<T> delNode = prevNode.next;
         prevNode.next = delNode.next;
         size--;
         return delNode.value;
@@ -114,7 +113,7 @@ public class Linked_single_01<T> {
      * @param index
      * @return 返回null, 说明val是头结点或者没有匹配到对应的节点
      */
-    private Node<T> getPrevByIndex(int index) {
+    private SingleNode<T> getPrevByIndex(int index) {
         if (index + 1 > size) {
             throw new ArrayIndexOutOfBoundsException("index 超出");
         }
@@ -122,7 +121,7 @@ public class Linked_single_01<T> {
             // 如果是头结点, 直接返回空
             return null;
         }
-        Node<T> prev = null, n = head;
+        SingleNode<T> prev = null, n = head;
         while (n != null && index-- > 0) {
             prev = n;
             n = n.next;
@@ -135,12 +134,12 @@ public class Linked_single_01<T> {
      * @param val
      * @return 返回null, 说明val是头结点或者没有匹配到对应的节点
      */
-    private Node<T> getPrevByVal(T val) {
+    private SingleNode<T> getPrevByVal(T val) {
         if (head != null && head.value == val) {
             // 如果是头结点, 直接返回空
             return null;
         }
-        Node<T> prev = null, n = head;
+        SingleNode<T> prev = null, n = head;
         while (n != null && n.value != val) {
             prev = n;
             n = n.next;
@@ -151,26 +150,7 @@ public class Linked_single_01<T> {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("[");
-        Node<T> n = head;
-        while (n != null) {
-            sb.append(n.value).append(", ");
-            n = n.next;
-        }
-        sb.append("]");
-        return sb.toString();
+        return ListPrinter.printSingleList(head, false);
     }
 
-    @Data
-    @AllArgsConstructor
-    public static class Node<T> {
-        public Node<T> next;
-        public T value;
-        
-        @Override
-        public String toString() {
-            return value.toString();
-        }
-    }
 }

@@ -1,15 +1,21 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._01linear_list.list._01model;
 
+import org.song.algorithm.algorithmbase._01datatype._01base._01linear_list.list._01model.node.SingleNode;
+
 public class ListPrinter {
 
-    public static void printSingleList(Linked_single_01.Node<?> linked) {
-        if (linked == null) {
-            return;
+    public static String printSingleList(SingleNode head, boolean print) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        SingleNode n = head;
+        while (n != null) {
+            sb.append(n.value).append(",");
+            n = n.next;
         }
-        while (linked != null) {
-            System.out.println("<" + linked.value + ">");
-            System.out.println("↓");
-            linked = linked.next;
+        sb.append("]");
+        if (print) {
+            System.out.println(sb.toString());
         }
+        return sb.toString();
     }
 }

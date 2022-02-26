@@ -3,6 +3,7 @@ package org.song.algorithm.algorithmbase._01datatype._01base._01linear_list.list
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear_list.list._01model.Linked_single_01;
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear_list.list._01model.ListPrinter;
+import org.song.algorithm.algorithmbase._01datatype._01base._01linear_list.list._01model.node.SingleNode;
 import org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack.stack.Stack_base_01;
 
 /**
@@ -10,7 +11,7 @@ import org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack.stack
  */
 public class Linked_single_alg {
 
-    private Linked_single_01.Node<Integer> initData(int count) {
+    private SingleNode<Integer> initData(int count) {
         Linked_single_01<Integer> linked = new Linked_single_01<>();
         for (int i = 0; i < count; i++) {
             linked.addTail(i);
@@ -18,12 +19,12 @@ public class Linked_single_alg {
         return linked.head;
     }
 
-    private Linked_single_01.Node<Integer> initRingData() {
-        Linked_single_01.Node<Integer> node = initData(10);
+    private SingleNode<Integer> initRingData() {
+        SingleNode<Integer> node = initData(10);
 
-        Linked_single_01.Node node1 = node.next.next;
-        Linked_single_01.Node head = node;
-        Linked_single_01.Node tail = head;
+        SingleNode node1 = node.next.next;
+        SingleNode head = node;
+        SingleNode tail = head;
         while (head != null) {
             tail = head;
             head = head.next;
@@ -32,10 +33,10 @@ public class Linked_single_alg {
         return node;
     }
 
-    private Linked_single_01.Node<Integer> commonTailData(Linked_single_01.Node<Integer> head1) {
-        Linked_single_01.Node<Integer> head2 = initData(10);
-        Linked_single_01.Node<Integer> head2Tail = head2;
-        Linked_single_01.Node<Integer> head1Temp = head1;
+    private SingleNode<Integer> commonTailData(SingleNode<Integer> head1) {
+        SingleNode<Integer> head2 = initData(10);
+        SingleNode<Integer> head2Tail = head2;
+        SingleNode<Integer> head1Temp = head1;
 
         // head2 的尾结点指向 head1 的 index 节点
         int index = 5;
@@ -69,11 +70,11 @@ public class Linked_single_alg {
      */
     @Test
     public void test_01() {
-        Linked_single_01.Node<Integer> linked = initData(10);
+        SingleNode<Integer> linked = initData(10);
 
-        Linked_single_01.Node<Integer> head = linked;
-        Linked_single_01.Node<Integer> p1 = head;
-        Linked_single_01.Node<Integer> p2 = head;
+        SingleNode<Integer> head = linked;
+        SingleNode<Integer> p1 = head;
+        SingleNode<Integer> p2 = head;
 
         int k = 5;
 
@@ -92,8 +93,8 @@ public class Linked_single_alg {
      */
     @Test
     public void test_02_inversion_01() {
-        Linked_single_01.Node<Integer> linked = initData(10);
-        Linked_single_01.Node<Integer> prev = null, n = linked, next = null;
+        SingleNode<Integer> linked = initData(10);
+        SingleNode<Integer> prev = null, n = linked, next = null;
         while (n != null) {
             // 初始赋值
             if (next == null) {
@@ -109,7 +110,7 @@ public class Linked_single_alg {
             next = null;
         }
 
-        ListPrinter.printSingleList(prev);
+        ListPrinter.printSingleList(prev, true);
 
     }
 
@@ -119,17 +120,17 @@ public class Linked_single_alg {
      */
     @Test
     public void test_02_inversion_02() {
-        Linked_single_01.Node<Integer> linked = initData(10);
-        Linked_single_01.Node<Integer> prev = null, n = linked, next = null;
-        Linked_single_01.Node<Integer> newHead = inversion_02(prev, n, next);
+        SingleNode<Integer> linked = initData(10);
+        SingleNode<Integer> prev = null, n = linked, next = null;
+        SingleNode<Integer> newHead = inversion_02(prev, n, next);
 
-        ListPrinter.printSingleList(newHead);
+        ListPrinter.printSingleList(newHead, true);
 
     }
 
-    private Linked_single_01.Node<Integer> inversion_02(Linked_single_01.Node<Integer> prev,
-                                                        Linked_single_01.Node<Integer> n,
-                                                        Linked_single_01.Node<Integer> next) {
+    private SingleNode<Integer> inversion_02(SingleNode<Integer> prev,
+                                                        SingleNode<Integer> n,
+                                                        SingleNode<Integer> next) {
         if (n == null) {
             return prev;
         }
@@ -154,14 +155,14 @@ public class Linked_single_alg {
      */
     @Test
     public void test_02_inversion_03() {
-        Linked_single_01.Node<Integer> head = initData(10);
-        Linked_single_01.Node<Integer> newHead = null;
+        SingleNode<Integer> head = initData(10);
+        SingleNode<Integer> newHead = null;
         /*
          使用两个指针 head, newHead
          head用于遍历, newHead用户串新的链表
          */
         while (head != null) {
-            Linked_single_01.Node<Integer> next = head.next;
+            SingleNode<Integer> next = head.next;
             // 串新链
             head.next = newHead;
             // 记录上一个head
@@ -170,7 +171,7 @@ public class Linked_single_alg {
             head = next;
         }
 
-        ListPrinter.printSingleList(newHead);
+        ListPrinter.printSingleList(newHead, true);
 
     }
 
@@ -180,17 +181,17 @@ public class Linked_single_alg {
      */
     @Test
     public void test_02_inversion_04() {
-        Linked_single_01.Node<Integer> linked = initData(10);
-        Linked_single_01.Node<Integer> newHead = inversion_04(linked);
-        ListPrinter.printSingleList(newHead);
+        SingleNode<Integer> linked = initData(10);
+        SingleNode<Integer> newHead = inversion_04(linked);
+        ListPrinter.printSingleList(newHead, true);
     }
 
-    private Linked_single_01.Node<Integer> inversion_04(Linked_single_01.Node<Integer> head) {
+    private SingleNode<Integer> inversion_04(SingleNode<Integer> head) {
         if (head == null || head.next == null) {
             return head;
         }
 
-        Linked_single_01.Node<Integer> newHead = inversion_04(head.next);
+        SingleNode<Integer> newHead = inversion_04(head.next);
         // 类似于反向遍历
         head.next.next = head;
         // 反向将next值为null
@@ -207,18 +208,18 @@ public class Linked_single_alg {
      */
     @Test
     public void test_02_inversion_05() {
-        Linked_single_01.Node<Integer> linked = initData(10);
-        Linked_single_01.Node<Integer> newHead = inversion_05(linked);
-        ListPrinter.printSingleList(newHead);
+        SingleNode<Integer> linked = initData(10);
+        SingleNode<Integer> newHead = inversion_05(linked);
+        ListPrinter.printSingleList(newHead, true);
     }
 
-    public Linked_single_01.Node<Integer> inversion_05(Linked_single_01.Node<Integer> head) {
+    public SingleNode<Integer> inversion_05(SingleNode<Integer> head) {
         if (head == null || head.next == null) {
             return head;
         }
-        Linked_single_01.Node<Integer> next = head.next;
+        SingleNode<Integer> next = head.next;
         head.next = null;
-        Linked_single_01.Node<Integer> newHead = inversion_05(next);
+        SingleNode<Integer> newHead = inversion_05(next);
         next.next = head;
         return newHead;
     }
@@ -229,7 +230,7 @@ public class Linked_single_alg {
      */
     @Test
     public void test_03_inversionPrint_01() {
-        Linked_single_01.Node<Integer> linked = initData(10);
+        SingleNode<Integer> linked = initData(10);
         Stack_base_01<Integer> stack = new Stack_base_01<>();
         while (linked != null) {
             stack.push(linked.value);
@@ -248,16 +249,37 @@ public class Linked_single_alg {
      */
     @Test
     public void test_03_inversionPrint_02() {
-        Linked_single_01.Node<Integer> linked = initData(10);
+        SingleNode<Integer> linked = initData(10);
         inversionPrint_02(linked);
     }
 
-    private void inversionPrint_02(Linked_single_01.Node<Integer> linked) {
+    private void inversionPrint_02(SingleNode<Integer> linked) {
         if (linked == null) {
             return;
         }
         inversionPrint_02(linked.next);
         System.out.println(linked.value);
+    }
+
+    /**
+     * 获取链表中间节点值
+     * 方式
+     * 快慢指针, 慢指针一次一格, 快指针一次两格, 快指针走到头的时候, 慢指针所在的位置就是中间节点
+     */
+    @Test
+    public void test_04_midVal() {
+        SingleNode<Integer> linked = initData(9);
+        SingleNode<Integer> slow = linked;
+        SingleNode<Integer> fast = linked;
+
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+
+        ListPrinter.printSingleList(linked, true);
+        System.out.println("中间节点是: " + slow.value);
+        
     }
 
     /**
@@ -269,9 +291,9 @@ public class Linked_single_alg {
      */
     @Test
     public void test_04_hasRing() {
-        Linked_single_01.Node<Integer> linked = initRingData();
-        Linked_single_01.Node<Integer> slow = linked;
-        Linked_single_01.Node<Integer> fast = slow.next;
+        SingleNode<Integer> linked = initRingData();
+        SingleNode<Integer> slow = linked;
+        SingleNode<Integer> fast = slow.next;
 
         boolean hasRing = false;
         while (true) {
@@ -296,9 +318,9 @@ public class Linked_single_alg {
      */
     @Test
     public void test_05_ringSize() {
-        Linked_single_01.Node<Integer> linked = initRingData();
-        Linked_single_01.Node<Integer> slow = linked;
-        Linked_single_01.Node<Integer> fast = slow.next;
+        SingleNode<Integer> linked = initRingData();
+        SingleNode<Integer> slow = linked;
+        SingleNode<Integer> fast = slow.next;
 
         int ringSize = 0;
         while (true) {
@@ -331,13 +353,13 @@ public class Linked_single_alg {
      */
     @Test
     public void test_06_ringEntry() {
-        Linked_single_01.Node<Integer> linked = initRingData();
+        SingleNode<Integer> linked = initRingData();
 
         int ringSize = ringSize();
 
-        Linked_single_01.Node<Integer> slow = linked;
-        Linked_single_01.Node<Integer> fast = slow;
-        Linked_single_01.Node<Integer> entry = null;
+        SingleNode<Integer> slow = linked;
+        SingleNode<Integer> fast = slow;
+        SingleNode<Integer> entry = null;
 
         while (true) {
             if (ringSize > 0) {
@@ -361,9 +383,9 @@ public class Linked_single_alg {
      * 然后慢指针再走一圈, 即可确定环大小
      */
     public int ringSize() {
-        Linked_single_01.Node<Integer> linked = initRingData();
-        Linked_single_01.Node<Integer> slow = linked;
-        Linked_single_01.Node<Integer> fast = slow.next;
+        SingleNode<Integer> linked = initRingData();
+        SingleNode<Integer> slow = linked;
+        SingleNode<Integer> fast = slow.next;
 
         int ringSize = 0;
         while (true) {
@@ -397,9 +419,9 @@ public class Linked_single_alg {
      */
     @Test
     public void test_07_removeO1() {
-        Linked_single_01.Node<Integer> head = initData(10);
-        Linked_single_01.Node<Integer> oHead = head;
-        Linked_single_01.Node<Integer> waiteRemove = head.next.next;
+        SingleNode<Integer> head = initData(10);
+        SingleNode<Integer> oHead = head;
+        SingleNode<Integer> waiteRemove = head.next.next;
 
         if (waiteRemove.next != null) {
             // 非尾节点
@@ -407,7 +429,7 @@ public class Linked_single_alg {
             waiteRemove.next = waiteRemove.next.next;
         } else {
             // 是尾结点
-            Linked_single_01.Node<Integer> prev = head;
+            SingleNode<Integer> prev = head;
             while (head != null) {
                 if (head.value == waiteRemove.value) {
                     break;
@@ -419,7 +441,7 @@ public class Linked_single_alg {
             // 删除尾结点
             prev.next = null;
         }
-        ListPrinter.printSingleList(oHead);
+        ListPrinter.printSingleList(oHead, true);
     }
 
     /**
@@ -427,14 +449,14 @@ public class Linked_single_alg {
      */
     @Test
     public void test_08_commonTail() {
-        Linked_single_01.Node<Integer> head1 = initData(10);
-        Linked_single_01.Node<Integer> head2 = commonTailData(head1);
+        SingleNode<Integer> head1 = initData(10);
+        SingleNode<Integer> head2 = commonTailData(head1);
 //        ListPrinter.printSingleList(head1);
 //        System.out.println();
 //        ListPrinter.printSingleList(head2);
 
-        Linked_single_01.Node<Integer> head1Temp = head1;
-        Linked_single_01.Node<Integer> head2Temp = head2;
+        SingleNode<Integer> head1Temp = head1;
+        SingleNode<Integer> head2Temp = head2;
 
         int countHead1Count = 0;
         while (head1Temp != null) {
@@ -497,12 +519,12 @@ public class Linked_single_alg {
      */
     @Test
     public void test_09_merge() {
-        Linked_single_01.Node<Integer> linked1 = initData(5);
-        Linked_single_01.Node<Integer> linked2 = initData(3);
+        SingleNode<Integer> linked1 = initData(5);
+        SingleNode<Integer> linked2 = initData(3);
 
         // 临时头结点
-        Linked_single_01.Node<Integer> newLinkedHead = new Linked_single_01.Node<>(null, -1);
-        Linked_single_01.Node<Integer> newLinked = newLinkedHead;
+        SingleNode<Integer> newLinkedHead = new SingleNode<>(null, -1);
+        SingleNode<Integer> newLinked = newLinkedHead;
 
         while (linked1 != null && linked2 != null) {
             if (linked1.value < linked2.value) {
@@ -521,7 +543,7 @@ public class Linked_single_alg {
             newLinked.next = linked1;
         }
         // 跳过临时头结点
-        ListPrinter.printSingleList(newLinkedHead.next);
+        ListPrinter.printSingleList(newLinkedHead.next, true);
     }
 
     /**
@@ -531,8 +553,8 @@ public class Linked_single_alg {
      */
     @Test
     public void test_10_middle() {
-        Linked_single_01.Node<Integer> head = initData(9);
-        Linked_single_01.Node<Integer> p1 = head, p2 = head;
+        SingleNode<Integer> head = initData(9);
+        SingleNode<Integer> p1 = head, p2 = head;
 
         int middle = 0;
         while (p2 != null && p2.next != null) {
@@ -549,13 +571,13 @@ public class Linked_single_alg {
      */
     @Test
     public void test_11_exchangeNode() {
-        Linked_single_01.Node<Integer> head = initData(9);
-        Linked_single_01.Node<Integer> node1 = head.next, node2 = head.next.next.next;
+        SingleNode<Integer> head = initData(9);
+        SingleNode<Integer> node1 = head.next, node2 = head.next.next.next;
         Integer node1Val = node1.value;
         node1.value = node2.value;
         node2.value = node1Val;
 
-        ListPrinter.printSingleList(head);
+        ListPrinter.printSingleList(head, true);
     }
 
 }
