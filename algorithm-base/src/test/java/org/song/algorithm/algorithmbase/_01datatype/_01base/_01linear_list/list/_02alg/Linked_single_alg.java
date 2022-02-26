@@ -6,6 +6,8 @@ import org.song.algorithm.algorithmbase._01datatype._01base._01linear_list.list.
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear_list.list._01model.node.SingleNode;
 import org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack.stack.Stack_base_01;
 
+import java.util.Arrays;
+
 /**
  * 单向链表相关算法
  */
@@ -14,6 +16,17 @@ public class Linked_single_alg {
     private SingleNode<Integer> initData(int count) {
         Linked_single_01<Integer> linked = new Linked_single_01<>();
         for (int i = 0; i < count; i++) {
+            linked.addTail(i);
+        }
+        return linked.head;
+    }
+
+    private SingleNode<Integer> initDupData(int count) {
+        Linked_single_01<Integer> linked = new Linked_single_01<>();
+        for (int i = 0; i < count; i++) {
+            linked.addTail(i);
+        }
+        for (int i = 0; i < count / 2; i++) {
             linked.addTail(i);
         }
         return linked.head;
@@ -280,6 +293,39 @@ public class Linked_single_alg {
         ListPrinter.printSingleList(linked, true);
         System.out.println("中间节点是: " + slow.value);
         
+    }
+
+    /**
+     * 删除链表中重复元素
+     * 已知链表中最大元素是n
+     * 
+     * 思路: 采用 Set/数组/位图 进行重复标记
+     */
+    @Test
+    public void test_04_remove_dup() {
+        int max = 10;
+        SingleNode<Integer> linked = initDupData(max);
+
+        int[] set = new int[10];
+        Arrays.fill(set, -1);
+
+        SingleNode<Integer> n = linked, prev = null;
+        while (n != null) {
+            if (set[n.value] != n.value) {
+                set[n.value] = n.value;
+            } else {
+                if (prev.next.next != null) {
+                    prev.next = prev.next.next;
+                } else {
+                    prev.next = null;
+                }
+                n = prev.next;
+                continue;
+            }
+            prev = n;
+            n = n.next;
+        }
+        ListPrinter.printSingleList(linked, true);
     }
 
     /**
