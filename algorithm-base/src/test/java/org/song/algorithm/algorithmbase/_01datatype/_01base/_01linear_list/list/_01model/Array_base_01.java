@@ -74,6 +74,7 @@ public class Array_base_01<T> extends AbsList<T> {
             throw new ArrayIndexOutOfBoundsException(index);
         }
         ensureCapacity();
+        // 插入元素, 后续元素后移
         for (int i = size - 1; i >= index; i--) {
             datas[i + 1] = datas[i];
             if (i == index) {
@@ -87,6 +88,7 @@ public class Array_base_01<T> extends AbsList<T> {
     public T delete(int index) {
         if (index <= size - 1) {
             T oldVal = datas[index];
+            // 删除元素, 后续元素前移
             for (int j = index; j < size; j++) {
                 datas[j] = datas[j + 1];
                 if (j == size - 1) {

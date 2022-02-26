@@ -8,12 +8,50 @@ public class Linked_single_01<T> {
 
     public void add(T val) {
         if (tail != null) {
+            // 直接在尾指针后插入
             tail.next = new Node<>(null, val);
             tail = tail.next;
         } else {
             head = new Node<>(null, val);
             tail = head;
         }
+        size++;
+    }
+
+    /**
+     * 由于链表没有下标, 所以要遍历到指定的位置
+     * 
+     * @param val
+     * @param index
+     */
+    public void insert(T val, int index) {
+        if (size < index) {
+            return;
+        }
+        if (index == 0) {
+            if (head != null) {
+                head = new Node<>(head.next, val);
+            } else {
+                head = new Node<>(null, val);
+            }
+        } else if (size == index) {
+            tail.next = new Node<>(null, val);
+        }
+
+        Node n = null;
+        for (int i = 0; i < index; i++) {
+            if (n == null) {
+                n = head;
+                continue;
+            }
+            n = n.next;
+        }
+
+        /*
+        优先将新节点指向下一个指针(原链表此时不变)
+        然后将原链表前驱节点指向新节点
+         */
+        n.next = new Node<>(n.next, val);
         size++;
     }
 
@@ -44,6 +82,7 @@ public class Linked_single_01<T> {
                 if (prev == e) {
                     head = e.next;
                 } else {
+                    // 直接更改next指针, 即可完成删除
                     prev.next = e.next;
                 }
                 return e.value;
