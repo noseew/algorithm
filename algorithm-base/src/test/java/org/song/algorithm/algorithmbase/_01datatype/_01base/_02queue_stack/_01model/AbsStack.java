@@ -1,11 +1,11 @@
-package org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack;
+package org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack._01model;
 
-public abstract class AbsQueue<T> {
+public abstract class AbsStack<T> {
 
-    protected AbsQueue() {
+    protected AbsStack() {
     }
 
-    protected AbsQueue(int capacity) {
+    protected AbsStack(int capacity) {
     }
 
     protected abstract void clean();

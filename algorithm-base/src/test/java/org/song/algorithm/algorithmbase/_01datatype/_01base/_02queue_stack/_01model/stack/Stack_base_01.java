@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack.stack;
+package org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack._01model.stack;
 
 public class Stack_base_01<T> {
 

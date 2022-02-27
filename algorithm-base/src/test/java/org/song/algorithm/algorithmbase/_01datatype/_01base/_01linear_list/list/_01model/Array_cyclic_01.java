@@ -3,6 +3,8 @@ package org.song.algorithm.algorithmbase._01datatype._01base._01linear_list.list
 /**
  * 循环数组
  * 
+ * 循环数组一般用于循环队列
+ * 
  * @param <T>
  */
 public class Array_cyclic_01<T> extends AbsList<T> {
