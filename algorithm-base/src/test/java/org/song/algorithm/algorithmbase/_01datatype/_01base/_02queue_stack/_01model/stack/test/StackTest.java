@@ -7,7 +7,7 @@ import org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack._01mo
 import java.util.Random;
 import java.util.Stack;
 
-public class StackLinkTest {
+public class StackTest {
 
     private int maxVal = 100;
     private int maxSize = 50;

@@ -1,6 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model;
 
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.node.DuplexNode;
+import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.node.SingleNode;
 
 /**
  * 双向链表
@@ -154,6 +155,10 @@ public class Linked_double_01<T> extends AbsLine<T> {
 
     public DuplexNode<T> getHead() {
         return head;
+    }
+
+    public DuplexNode<T> getTail() {
+        return tail;
     }
 
     @Override

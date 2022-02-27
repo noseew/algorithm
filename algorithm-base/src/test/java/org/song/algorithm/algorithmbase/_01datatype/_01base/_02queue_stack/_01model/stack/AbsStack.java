@@ -1,5 +1,10 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack._01model.stack;
 
+/**
+ * 栈, 先进后出 FILO
+ * 
+ * @param <T>
+ */
 public abstract class AbsStack<T> {
 
     public AbsStack() {

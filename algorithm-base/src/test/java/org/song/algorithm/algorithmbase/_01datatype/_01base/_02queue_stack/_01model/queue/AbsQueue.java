@@ -1,29 +1,34 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack._01model.queue;
 
+/**
+ * 队列, 先进先出 FIFO
+ * 
+ * @param <T>
+ */
 public abstract class AbsQueue<T> {
 
-    protected AbsQueue() {
+    public AbsQueue() {
     }
 
-    protected AbsQueue(int capacity) {
+    public AbsQueue(int capacity) {
     }
 
-    protected abstract void clean();
+    public abstract void clean();
 
-    protected abstract boolean isEmpty();
+    public abstract boolean isEmpty();
 
-    protected abstract void length();
+    public abstract int length();
 
-    protected abstract T getTop();
+    public abstract T getTop();
     
-    protected abstract T getBottom();
+    public abstract T getBottom();
 
-    protected abstract void rpush(T v);
+    public abstract void rpush(T v);
 
-    protected abstract void lpush(T v);
+    public abstract void lpush(T v);
 
-    protected abstract T rpop();
+    public abstract T rpop();
 
-    protected abstract T lpop();
+    public abstract T lpop();
 
 }
