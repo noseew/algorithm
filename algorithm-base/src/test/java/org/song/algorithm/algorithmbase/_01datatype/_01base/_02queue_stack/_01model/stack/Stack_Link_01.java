@@ -46,4 +46,9 @@ public class Stack_Link_01<T> extends AbsStack<T> {
         SingleNode<T> top = linked.getHead();
         return top != null ? top.value : null;
     }
+
+    @Override
+    public String toString() {
+        return linked.toString();
+    }
 }

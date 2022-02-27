@@ -115,7 +115,13 @@ public class Array_base_01<T> extends AbsLine<T> {
 
     @Override
     public String toString() {
-        return "size=" + size + ", datas=" + Arrays.toString(data);
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for (int i = 0; i < size; i++) {
+            sb.append(data[i]).append(",");
+        }
+        sb.append("]");
+        return "size=" + size + ", datas=" + sb.toString();
     }
 
     /**
