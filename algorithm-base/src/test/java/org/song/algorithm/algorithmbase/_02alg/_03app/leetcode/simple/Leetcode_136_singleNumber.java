@@ -1,7 +1,7 @@
 package org.song.algorithm.algorithmbase._02alg._03app.leetcode.simple;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase._01datatype._01base._01linear.bit._03app.bitmap.BitMap_base_01;
+import org.song.algorithm.algorithmbase._01datatype._01base._01linear.bit._03app.bitmap._01model.BitMap01;
 
 import java.util.*;
 
@@ -108,8 +108,8 @@ public class Leetcode_136_singleNumber {
         }
 
         // 定义两个位图
-        BitMap_base_01.BitMap bitmap1 = new BitMap_base_01.BitMap(max);
-        BitMap_base_01.BitMap bitmap2 = new BitMap_base_01.BitMap(max);
+        BitMap01 bitmap1 = new BitMap01(max);
+        BitMap01 bitmap2 = new BitMap01(max);
 
         // 将数组数据放入位图
         for (int n : nums) {
@@ -151,8 +151,8 @@ public class Leetcode_136_singleNumber {
         }
 
         // 定义两个位图
-        BitMap_base_01.BitMap bitmap1 = new BitMap_base_01.BitMap(max - min + 1);
-        BitMap_base_01.BitMap bitmap2 = new BitMap_base_01.BitMap(max - min + 1);
+        BitMap01 bitmap1 = new BitMap01(max - min + 1);
+        BitMap01 bitmap2 = new BitMap01(max - min + 1);
 
         // 将数组数据放入位图
         for (int n : nums) {
