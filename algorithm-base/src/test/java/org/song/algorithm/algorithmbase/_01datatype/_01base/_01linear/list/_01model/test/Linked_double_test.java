@@ -1,14 +1,21 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.test;
 
 import org.junit.Test;
+import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.Linked_CycleDouble_01;
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.Linked_double_01;
 import org.springframework.util.StopWatch;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 public class Linked_double_test {
+
+    private int maxVal = 10;
+    private int maxSize = 20;
+
+    private Random r = new Random();
 
     @Test
     public void test_01_start() {
@@ -24,6 +31,32 @@ public class Linked_double_test {
         System.out.println();
         deque.delete(-1);
         System.out.println(deque.toString());
+    }
+
+    @Test
+    public void test_cycleDouble_start() {
+        Linked_CycleDouble_01<Integer> l1 = new Linked_CycleDouble_01<>();
+        
+        for (int i = 0; i < maxSize; i++) {
+            int val = r.nextInt(maxVal);
+            l1.rpush(val);
+        }
+        System.out.println(l1.toString());
+    }
+
+    @Test
+    public void test_cycleDouble_start2() {
+        Linked_CycleDouble_01<Integer> l1 = new Linked_CycleDouble_01<>();
+        Linked_double_01<Integer> l2 = new Linked_double_01<>();
+        
+        for (int i = 0; i < maxSize; i++) {
+            int val = r.nextInt(maxVal);
+            l1.rpush(val);
+            l2.rpush(val);
+        }
+        for (int i = 0; i < l1.length(); i++) {
+            assert l1.lpop() == l2.lpop();
+        }
     }
 
     /**

@@ -7,8 +7,12 @@ public class ListPrinter {
     public static String printSingleList(SingleNode head, boolean print) {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
+        int round = 0;
         SingleNode n = head;
-        while (n != null) {
+        while (n != null && round <= 1) {
+            if (n == head) {
+                round++;
+            }
             sb.append(n.value).append(",");
             n = n.next;
         }
