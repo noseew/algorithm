@@ -111,6 +111,31 @@ public class StringBase extends AbsString {
         return s[index];
     }
 
+    @Override
+    public boolean contains(AbsString sub) {
+        if (length() < sub.length()) {
+            return false;
+        }
+        // BF 暴力解法
+        int eqCount = 0; // 匹配成功次数(位置)
+        for (int start = 0; // 当前匹配到的位置, 成功的开始位置
+             start < length(); start++) {
+            for (int i = start, j = 0; i < length() && j < sub.length(); ) {
+                if (s[i] == sub.s[j]) {
+                    i++;
+                    j++;
+                    if (++eqCount == sub.length()) {
+                        return true; // 完全匹配
+                    }
+                } else {
+                    eqCount = 0; // 归零
+                    break; // start 从下一个开始继续对比
+                }
+            }
+        }
+        return false;
+    }
+
     private void checkIndex(int index) {
         if (index < 0 || index >= length()) {
             throw new RuntimeException("数组下标越界");

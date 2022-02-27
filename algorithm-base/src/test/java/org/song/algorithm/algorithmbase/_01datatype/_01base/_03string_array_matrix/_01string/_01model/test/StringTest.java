@@ -22,8 +22,26 @@ public class StringTest {
         assert str.remove(0, 3).eq(StringBase.ofChars('D', 'E', 'F'));
 
         assert str.charAt('C') == 2;
-        
+
         assert str.indexOf(2) == 'C';
+
+    }
+
+    @Test
+    public void testMatch() {
+        StringBase str = StringBase.ofChars('A', 'B', 'C', 'A', 'B', 'C', 'D', 'E', 'F');
+
+        assert str.contains(StringBase.ofChars('A', 'B'));
+
+        assert str.contains(StringBase.ofChars('B', 'C'));
+        
+        assert str.contains(StringBase.ofChars('A', 'B', 'C', 'D'));
+        
+        assert str.contains(StringBase.ofChars('F'));
+        
+        assert !str.contains(StringBase.ofChars('A', 'B', 'B'));
+        
+        assert !str.contains(StringBase.ofChars('G'));
 
     }
 }

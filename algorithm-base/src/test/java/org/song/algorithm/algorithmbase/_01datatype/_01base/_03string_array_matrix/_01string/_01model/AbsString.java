@@ -28,4 +28,6 @@ public abstract class AbsString {
 
     public abstract char indexOf(int index);
     
+    public abstract boolean contains(AbsString sub);
+    
 }
