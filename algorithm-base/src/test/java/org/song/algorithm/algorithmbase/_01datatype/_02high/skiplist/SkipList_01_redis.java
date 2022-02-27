@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase._01datatype._01base._01linear.list.skiplist;
+package org.song.algorithm.algorithmbase._01datatype._02high.skiplist;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

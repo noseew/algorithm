@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._03app.lru;
+package org.song.algorithm.algorithmbase._01datatype._03app.lru;
 
 import org.junit.jupiter.api.Test;
 
