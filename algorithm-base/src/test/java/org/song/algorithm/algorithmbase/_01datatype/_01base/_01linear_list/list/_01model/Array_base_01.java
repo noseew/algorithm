@@ -66,9 +66,9 @@ public class Array_base_01<T> extends AbsLine<T> {
     }
 
     @Override
-    public void add(T data) {
+    public void add(T v) {
         ensureCapacity();
-        this.data[++size - 1] = data;
+        this.data[++size - 1] = v;
     }
 
     @Override
@@ -76,12 +76,8 @@ public class Array_base_01<T> extends AbsLine<T> {
         checkIndexBound(index);
         ensureCapacity();
         // 插入元素, 后续元素后移
-        for (int i = size - 1; i >= index; i--) {
-            data[i + 1] = data[i];
-            if (i == index) {
-                data[i] = v;
-            }
-        }
+        rightMove(index);
+        data[index] = v;
         size++;
     }
 
@@ -92,12 +88,7 @@ public class Array_base_01<T> extends AbsLine<T> {
         if (index <= size - 1) {
             T oldVal = data[index];
             // 删除元素, 后续元素前移
-            for (int j = index; j < size; j++) {
-                data[j] = data[j + 1];
-                if (j == size - 1) {
-                    data[j] = null;
-                }
-            }
+            leftMove(index);
             size--;
             shrink();
             return oldVal;
@@ -106,45 +97,50 @@ public class Array_base_01<T> extends AbsLine<T> {
     }
 
     @Override
-    public T delete(T value) {
-        if (value == null) {
-            for (int i = 0; i < size; i++) {
-                if (data[i] == null) {
-                    for (int j = i; j < size; j++) {
-                        data[j] = data[j + 1];
-                        if (j == size - 1) {
-                            data[j] = null;
-                        }
-                    }
-                    size--;
-                    shrink();
-                    return null;
-                }
-            }
+    public T delete(T v) {
+        if (v == null) {
             return null;
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (data[i] == value) {
-                    T oldVal = data[i];
-                    for (int j = i; j < size; j++) {
-                        data[j] = data[j + 1];
-                        if (j == size - 1) {
-                            data[j] = null;
-                        }
-                    }
-                    size--;
-                    shrink();
-                    return oldVal;
-                }
-            }
-            return null;
-
         }
+        for (int i = 0; i < size; i++) {
+            if (data[i] == v) {
+                T oldVal = data[i];
+                leftMove(i);
+                size--;
+                shrink();
+                return oldVal;
+            }
+        }
+        return null;
     }
 
     @Override
     public String toString() {
         return "size=" + size + ", datas=" + Arrays.toString(data);
+    }
+
+    /**
+     * 元素左移, 从index开始
+     * 
+     * @param index
+     */
+    private void leftMove(int index) {
+        for (int j = index; j < size; j++) {
+            data[j] = data[j + 1];
+            if (j == size - 1) {
+                data[j] = null;
+            }
+        }
+    }
+
+    /**
+     * 元素右移, 截止到index
+     *
+     * @param index
+     */
+    private void rightMove(int index) {
+        for (int i = size - 1; i >= index; i--) {
+            data[i + 1] = data[i];
+        }
     }
 
     /**
