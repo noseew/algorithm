@@ -74,7 +74,7 @@ public class Linked_single_01<T> extends AbsLine<T> {
         checkIndexBound(index);
         
         if (index == 0) {
-            head = new SingleNode<>(head.next, v);
+            head = new SingleNode<>(head, v);
             size++;
             return;
         }
@@ -134,6 +134,10 @@ public class Linked_single_01<T> extends AbsLine<T> {
         prevNode.next = delNode.next;
         size--;
         return delNode.value;
+    }
+    
+    public SingleNode<T> getHead() {
+        return head;
     }
 
     @Override

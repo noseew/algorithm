@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear_list.list._01model.Linked_single_01;
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear_list.list._01model.ListPrinter;
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear_list.list._01model.node.SingleNode;
-import org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack._01model.stack.Stack_base_01;
+import org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack._01model.stack.Stack_Link_01;
 
 import java.util.Arrays;
 
@@ -244,7 +244,7 @@ public class Linked_single_alg {
     @Test
     public void test_03_inversionPrint_01() {
         SingleNode<Integer> linked = initData(10);
-        Stack_base_01<Integer> stack = new Stack_base_01<>();
+        Stack_Link_01<Integer> stack = new Stack_Link_01<>();
         while (linked != null) {
             stack.push(linked.value);
             linked = linked.next;

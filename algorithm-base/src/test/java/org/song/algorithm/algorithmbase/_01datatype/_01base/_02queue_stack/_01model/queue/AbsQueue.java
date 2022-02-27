@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack._01model;
+package org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack._01model.queue;
 
 public abstract class AbsQueue<T> {
 
