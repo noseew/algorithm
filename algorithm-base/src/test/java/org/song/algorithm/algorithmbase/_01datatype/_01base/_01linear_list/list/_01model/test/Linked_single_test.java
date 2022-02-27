@@ -34,6 +34,7 @@ public class Linked_single_test {
         Linked_single_01<Integer> linked = new Linked_single_01<>();
         List<Integer> list = new LinkedList<>();
         
+        // test get(index)
         for (int i = 0; i < maxSize; i++) {
             int val = r.nextInt(maxVal);
             linked.add(val);
@@ -42,11 +43,12 @@ public class Linked_single_test {
         for (int i = 0; i < maxSize; i++) {
             assert linked.get(i) == list.get(i);
         }
-        
+
+        // test delete(index)
         for (int i = 0; i < list.size(); i++) {
-            int val = r.nextInt(list.size() - 1);
-            linked.delete(val);
-            list.remove(val);
+            int index = r.nextInt(list.size() - 1);
+            linked.delete(index);
+            list.remove(index);
         }
         for (int i = 0; i < list.size(); i++) {
             assert linked.get(i) == list.get(i);
