@@ -17,7 +17,7 @@ import java.util.Objects;
  *
  * @param <T>
  */
-public class Array_base_01<T> extends AbsList<T> {
+public class Array_base_01<T> extends AbsLine<T> {
 
     public Array_base_01() {
         this(10);
@@ -62,6 +62,12 @@ public class Array_base_01<T> extends AbsList<T> {
             }
         }
         return -1;
+    }
+
+    @Override
+    public void add(T data) {
+        ensureCapacity();
+        datas[++size - 1] = data;
     }
 
     @Override
@@ -133,11 +139,6 @@ public class Array_base_01<T> extends AbsList<T> {
             return null;
 
         }
-    }
-
-    public void add(T data) {
-        ensureCapacity();
-        datas[++size - 1] = data;
     }
 
     /**

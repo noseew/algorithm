@@ -16,7 +16,7 @@ public class Linked_single_alg {
     private SingleNode<Integer> initData(int count) {
         Linked_single_01<Integer> linked = new Linked_single_01<>();
         for (int i = 0; i < count; i++) {
-            linked.addTail(i);
+            linked.add(i);
         }
         return linked.head;
     }
@@ -24,10 +24,10 @@ public class Linked_single_alg {
     private SingleNode<Integer> initDupData(int count) {
         Linked_single_01<Integer> linked = new Linked_single_01<>();
         for (int i = 0; i < count; i++) {
-            linked.addTail(i);
+            linked.add(i);
         }
         for (int i = 0; i < count / 2; i++) {
-            linked.addTail(i);
+            linked.add(i);
         }
         return linked.head;
     }

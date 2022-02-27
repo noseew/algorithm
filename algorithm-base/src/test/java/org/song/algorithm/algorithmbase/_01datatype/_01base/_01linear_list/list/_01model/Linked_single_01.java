@@ -2,59 +2,36 @@ package org.song.algorithm.algorithmbase._01datatype._01base._01linear_list.list
 
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear_list.list._01model.node.SingleNode;
 
-public class Linked_single_01<T> {
+public class Linked_single_01<T> extends AbsLine<T> {
 
     public SingleNode<T> head;
     public SingleNode<T> tail;
     public int size;
 
-    /**
-     * 链表的构建-尾插法, 正序
-     *
-     * @param val
-     */
-    public void addTail(T val) {
-        if (tail != null) {
-            // 直接在尾指针后插入
-            tail.next = new SingleNode<>(null, val);
-            tail = tail.next;
-        } else {
-            head = new SingleNode<>(null, val);
-            tail = head;
-        }
-        size++;
+    @Override
+    public String toString() {
+        return ListPrinter.printSingleList(head, false);
     }
 
-    /**
-     * 由于链表没有下标, 所以要遍历到指定的位置
-     *
-     * @param val
-     * @param index
-     */
-    public void insertByIndex(T val, int index) {
-        if (size < index) {
-            return;
-        }
-        if (index == 0) {
-            if (head != null) {
-                head = new SingleNode<>(head.next, val);
-            } else {
-                head = new SingleNode<>(null, val);
-            }
-        } else if (size == index) {
-            tail.next = new SingleNode<>(null, val);
-        }
-
-        SingleNode<T> prev = getPrevByIndex(index);
-        /*
-        优先将新节点指向下一个指针(原链表此时不变)
-        然后将原链表前驱节点指向新节点
-         */
-        prev.next = new SingleNode<>(prev.next, val);
-        size++;
+    @Override
+    public void clean() {
+        this.head = null;
+        this.tail = null;
+        this.size = 0;
     }
 
-    public T getByIndex(int index) {
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    @Override
+    public int length() {
+        return size;
+    }
+
+    @Override
+    public T get(int index) {
         if (index + 1 > size) {
             throw new ArrayIndexOutOfBoundsException("index 超出");
         }
@@ -65,30 +42,62 @@ public class Linked_single_01<T> {
         return prev.next.value;
     }
 
-    public T removeVal(T val) {
-        if (head == null) {
-            return null;
-        }
-
-        if (head.value == val) {
-            SingleNode<T> old = head;
-            head = head.next;
-            size--;
-            return old.value;
-        }
-
-        SingleNode<T> prevNode = getPrevByVal(val);
-        if (prevNode == null) {
-            return null;
-        }
-        SingleNode<T> delNode = prevNode.next;
-        // 直接更改next指针, 即可完成删除
-        prevNode.next = delNode.next;
-        size--;
-        return delNode.value;
+    @Override
+    public int indexOf(T v) {
+        return -1;
     }
 
-    public T removeIndex(int index) {
+    /**
+     * 链表的构建-尾插法, 正序
+     *
+     * @param v
+     */
+    @Override
+    public void add(T v) {
+        if (tail != null) {
+            // 直接在尾指针后插入
+            tail.next = new SingleNode<>(null, v);
+            tail = tail.next;
+        } else {
+            head = new SingleNode<>(null, v);
+            tail = head;
+        }
+        size++;
+    }
+
+    /**
+     * 由于链表没有下标, 所以要遍历到指定的位置
+     *
+     * @param v
+     * @param index
+     */
+    @Override
+    public void insert(T v, int index) {
+        if (size < index) {
+            return;
+        }
+        if (index == 0) {
+            if (head != null) {
+                head = new SingleNode<>(head.next, v);
+            } else {
+                head = new SingleNode<>(null, v);
+            }
+        } else if (size == index) {
+            tail.next = new SingleNode<>(null, v);
+        }
+
+        SingleNode<T> prev = getPrevByIndex(index);
+        /*
+        优先将新节点指向下一个指针(原链表此时不变)
+        然后将原链表前驱节点指向新节点
+         */
+        prev.next = new SingleNode<>(prev.next, v);
+        size++;
+
+    }
+
+    @Override
+    public T delete(int index) {
         if (index + 1 > size) {
             throw new ArrayIndexOutOfBoundsException("index 超出");
         }
@@ -101,9 +110,33 @@ public class Linked_single_01<T> {
 
         SingleNode<T> prevNode = getPrevByIndex(index);
         if (prevNode == null) {
-            return null; 
+            return null;
         }
         SingleNode<T> delNode = prevNode.next;
+        prevNode.next = delNode.next;
+        size--;
+        return delNode.value;
+    }
+
+    @Override
+    public T delete(T v) {
+        if (head == null) {
+            return null;
+        }
+
+        if (head.value == v) {
+            SingleNode<T> old = head;
+            head = head.next;
+            size--;
+            return old.value;
+        }
+
+        SingleNode<T> prevNode = getPrevByVal(v);
+        if (prevNode == null) {
+            return null;
+        }
+        SingleNode<T> delNode = prevNode.next;
+        // 直接更改next指针, 即可完成删除
         prevNode.next = delNode.next;
         size--;
         return delNode.value;
@@ -147,10 +180,4 @@ public class Linked_single_01<T> {
         // 遍历到最后还未找到, 此时 prev 应该置为null
         return prev.next != null ? prev : null;
     }
-
-    @Override
-    public String toString() {
-        return ListPrinter.printSingleList(head, false);
-    }
-
 }

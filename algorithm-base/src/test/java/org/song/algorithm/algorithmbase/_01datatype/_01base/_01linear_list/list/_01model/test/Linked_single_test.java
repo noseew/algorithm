@@ -19,13 +19,13 @@ public class Linked_single_test {
     @Test
     public void test_01_start() {
         Linked_single_01<Integer> linked = new Linked_single_01<>();
-        linked.addTail(1);
-        linked.addTail(2);
-        linked.addTail(3);
-        linked.addTail(4);
-        linked.addTail(5);
+        linked.add(1);
+        linked.add(2);
+        linked.add(3);
+        linked.add(4);
+        linked.add(5);
         System.out.println(linked.toString());
-        linked.removeVal(3);
+        linked.delete(3);
         System.out.println(linked.toString());
     }
 
@@ -36,20 +36,20 @@ public class Linked_single_test {
         
         for (int i = 0; i < maxSize; i++) {
             int val = r.nextInt(maxVal);
-            linked.addTail(val);
+            linked.add(val);
             list.add(val);
         }
         for (int i = 0; i < maxSize; i++) {
-            assert linked.getByIndex(i) == list.get(i);
+            assert linked.get(i) == list.get(i);
         }
         
         for (int i = 0; i < list.size(); i++) {
             int val = r.nextInt(list.size() - 1);
-            linked.removeIndex(val);
+            linked.delete(val);
             list.remove(val);
         }
         for (int i = 0; i < list.size(); i++) {
-            assert linked.getByIndex(i) == list.get(i);
+            assert linked.get(i) == list.get(i);
         }
         
         
@@ -74,7 +74,7 @@ public class Linked_single_test {
         stopWatch.start("Linked_single_02");
         Linked_single_01<String> linked = new Linked_single_01<>();
         for (int i = 0; i < num; i++) {
-            linked.addTail(UUID.randomUUID().toString());
+            linked.add(UUID.randomUUID().toString());
         }
         stopWatch.stop();
 
