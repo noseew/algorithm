@@ -20,6 +20,4 @@ public abstract class AbsStack<T> {
 
     protected abstract T pop();
 
-    protected abstract T delete(int index);
-
 }

@@ -15,11 +15,15 @@ public abstract class AbsQueue<T> {
     protected abstract void length();
 
     protected abstract T getTop();
+    
+    protected abstract T getBottom();
 
-    protected abstract void push(T v);
+    protected abstract void rpush(T v);
 
-    protected abstract T pop();
+    protected abstract void lpush(T v);
 
-    protected abstract T delete(int index);
+    protected abstract T rpop();
+
+    protected abstract T lpop();
 
 }
