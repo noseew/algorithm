@@ -19,19 +19,22 @@ import java.util.Objects;
  */
 public class Array_base_01<T> extends AbsLine<T> {
 
+    public T[] data;
+
+    public int size;
+
     public Array_base_01() {
         this(10);
+        data = (T[]) new Object[10];
     }
 
     public Array_base_01(int capacity) {
         super(capacity);
+        data = (T[]) new Object[capacity];
     }
 
     @Override
     public void clean() {
-        for (int i = 0; i < size; i++) {
-            datas[i] = null;
-        }
         size = 0;
         shrink();
     }
@@ -48,16 +51,14 @@ public class Array_base_01<T> extends AbsLine<T> {
 
     @Override
     public T get(int index) {
-        if (datas.length - 1 < index || index < 0) {
-            throw new ArrayIndexOutOfBoundsException(index);
-        }
-        return datas[index];
+        checkIndexBound(index);
+        return data[index];
     }
 
     @Override
     public int indexOf(T v) {
-        for (int i = 0; i < datas.length; i++) {
-            if (Objects.equals(datas[i], v)) {
+        for (int i = 0; i < data.length; i++) {
+            if (Objects.equals(data[i], v)) {
                 return i;
             }
         }
@@ -67,20 +68,18 @@ public class Array_base_01<T> extends AbsLine<T> {
     @Override
     public void add(T data) {
         ensureCapacity();
-        datas[++size - 1] = data;
+        this.data[++size - 1] = data;
     }
 
     @Override
     public void insert(T v, int index) {
-        if (datas.length - 1 < index || index < 0) {
-            throw new ArrayIndexOutOfBoundsException(index);
-        }
+        checkIndexBound(index);
         ensureCapacity();
         // 插入元素, 后续元素后移
         for (int i = size - 1; i >= index; i--) {
-            datas[i + 1] = datas[i];
+            data[i + 1] = data[i];
             if (i == index) {
-                datas[i] = v;
+                data[i] = v;
             }
         }
         size++;
@@ -88,13 +87,15 @@ public class Array_base_01<T> extends AbsLine<T> {
 
     @Override
     public T delete(int index) {
+        checkIndexBound(index);
+        
         if (index <= size - 1) {
-            T oldVal = datas[index];
+            T oldVal = data[index];
             // 删除元素, 后续元素前移
             for (int j = index; j < size; j++) {
-                datas[j] = datas[j + 1];
+                data[j] = data[j + 1];
                 if (j == size - 1) {
-                    datas[j] = null;
+                    data[j] = null;
                 }
             }
             size--;
@@ -108,11 +109,11 @@ public class Array_base_01<T> extends AbsLine<T> {
     public T delete(T value) {
         if (value == null) {
             for (int i = 0; i < size; i++) {
-                if (datas[i] == null) {
+                if (data[i] == null) {
                     for (int j = i; j < size; j++) {
-                        datas[j] = datas[j + 1];
+                        data[j] = data[j + 1];
                         if (j == size - 1) {
-                            datas[j] = null;
+                            data[j] = null;
                         }
                     }
                     size--;
@@ -123,12 +124,12 @@ public class Array_base_01<T> extends AbsLine<T> {
             return null;
         } else {
             for (int i = 0; i < size; i++) {
-                if (datas[i] == value) {
-                    T oldVal = datas[i];
+                if (data[i] == value) {
+                    T oldVal = data[i];
                     for (int j = i; j < size; j++) {
-                        datas[j] = datas[j + 1];
+                        data[j] = data[j + 1];
                         if (j == size - 1) {
-                            datas[j] = null;
+                            data[j] = null;
                         }
                     }
                     size--;
@@ -141,11 +142,16 @@ public class Array_base_01<T> extends AbsLine<T> {
         }
     }
 
+    @Override
+    public String toString() {
+        return "size=" + size + ", datas=" + Arrays.toString(data);
+    }
+
     /**
      * 确保容量
      */
     private void ensureCapacity() {
-        if (size >= datas.length - 1) {
+        if (size >= data.length - 1) {
             dilatation();
         }
     }
@@ -154,9 +160,9 @@ public class Array_base_01<T> extends AbsLine<T> {
      * 扩容
      */
     private void dilatation() {
-        T[] newData = (T[]) new Object[datas.length + (datas.length >> 1)];
-        System.arraycopy(datas, 0, newData, 0, datas.length);
-        datas = newData;
+        T[] newData = (T[]) new Object[data.length + (data.length >> 1)];
+        System.arraycopy(data, 0, newData, 0, data.length);
+        data = newData;
     }
 
     /**
@@ -164,17 +170,18 @@ public class Array_base_01<T> extends AbsLine<T> {
      */
     private void shrink() {
         double ratio = 0.3;
-        if ((double) size / (double) datas.length < ratio) {
-            T[] newData = (T[]) new Object[datas.length >> 1];
+        if ((double) size / (double) data.length < ratio) {
+            T[] newData = (T[]) new Object[data.length >> 1];
             if (size > 0) {
-                System.arraycopy(datas, 0, newData, 0, size);
+                System.arraycopy(data, 0, newData, 0, size);
             }
-            datas = newData;
+            data = newData;
         }
     }
-
-    @Override
-    public String toString() {
-        return "size=" + size + ", datas=" + Arrays.toString(datas);
+    
+    private void checkIndexBound(int index) {
+        if (index + 1 > size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("index 超出");
+        }
     }
 }

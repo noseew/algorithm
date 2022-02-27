@@ -44,11 +44,13 @@ public class Array_test {
             array.add(val);
             list.add(val);
         }
+        // test get(index)
         for (int i = 0; i < maxSize; i++) {
             assert array.get(i) == list.get(i);
         }
 
-        
+
+        // test delete(index)
         for (int i = 0; i < maxVal; i++) {
             array.delete(i);
             list.remove(i);
@@ -57,6 +59,7 @@ public class Array_test {
             assert array.get(i) == list.get(i);
         }
 
+        // test insert(index)
         array.clean();
         list.clear();
         for (int i = 0; i < maxSize; i++) {
