@@ -3,7 +3,11 @@ package org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack._01m
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.Array_base_01;
 
 /**
- * 数组实现队列
+ * 基于动态数组实现队列
+ * 如果队列的大小有限制, 则需要使用固定大小, 而不是动态扩容或者缩容, 
+ * 如果固定大小还使用数组实现的话, 动态的位置调整导致效率低下, 
+ * 如果不进行动态调整又会出现假溢出, 
+ * 改进方法可以参考循环数组
  * 
  * @param <T>
  */
@@ -19,6 +23,11 @@ public class Queue_Array_01<T> extends AbsQueue<T> {
     @Override
     public boolean isEmpty() {
         return array.isEmpty();
+    }
+
+    @Override
+    public boolean isFull() {
+        return false;
     }
 
     @Override

@@ -22,6 +22,11 @@ public class Queue_Link_01<T> extends AbsQueue<T> {
     }
 
     @Override
+    public boolean isFull() {
+        return false;
+    }
+
+    @Override
     public int length() {
         return linked.length();
     }

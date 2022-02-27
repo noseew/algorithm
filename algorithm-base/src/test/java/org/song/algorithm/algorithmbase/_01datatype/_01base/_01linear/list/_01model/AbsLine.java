@@ -26,4 +26,9 @@ public abstract class AbsLine<T> {
     
     public abstract T delete(T v);
 
+    public static void fill(Object[] a, Object val) {
+        for (int i = 0, len = a.length; i < len; i++)
+            a[i] = val;
+    }
+
 }

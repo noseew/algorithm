@@ -16,6 +16,8 @@ public abstract class AbsQueue<T> {
     public abstract void clean();
 
     public abstract boolean isEmpty();
+    
+    public abstract boolean isFull();
 
     public abstract int length();
 
