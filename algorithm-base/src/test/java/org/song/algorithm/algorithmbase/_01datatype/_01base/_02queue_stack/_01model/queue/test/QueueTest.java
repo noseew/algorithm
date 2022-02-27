@@ -1,10 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack._01model.queue.test;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack._01model.queue.Queue_Array_01;
-import org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack._01model.queue.Queue_CycleArray_01;
-import org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack._01model.queue.Queue_CycleLink_01;
-import org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack._01model.queue.Queue_Link_01;
+import org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack._01model.queue.*;
 
 import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -56,7 +53,7 @@ public class QueueTest {
     }
     
     @Test
-    public void queueCycle_test01() throws InterruptedException {
+    public void queueCycleArray_test01() throws InterruptedException {
 
         Queue_CycleArray_01<Integer> queue = new Queue_CycleArray_01<>(maxSize);
         ArrayBlockingQueue<Integer> q = new ArrayBlockingQueue<>(maxSize);
@@ -79,6 +76,34 @@ public class QueueTest {
         }
         for (int i = 0; i < queue.length(); i++) {
             assert queue.lpop() == q.poll();
+        }
+    }
+    
+    @Test
+    public void queueCycleArray_test02() throws InterruptedException {
+
+        Queue_CycleArray_01<Integer> q1 = new Queue_CycleArray_01<>(maxSize);
+        Queue_CycleArray_02<Integer> q2 = new Queue_CycleArray_02<>(maxSize);
+
+        for (int i = 0; i < maxSize; i++) {
+            int val = r.nextInt(maxVal);
+            q1.rpush(val);
+            q2.rpush(val);
+        }
+        assert q1.length() == q2.length();
+        for (int i = 0; i < q1.length(); i++) {
+            assert q1.lpop() == q2.lpop();
+        }
+        
+        
+        for (int i = 0; i < maxSize / 2; i++) {
+            int val = r.nextInt(maxVal);
+            q1.rpush(val);
+            q2.rpush(val);
+        }
+        assert q1.length() == q2.length();
+        for (int i = 0; i < q1.length(); i++) {
+            assert q1.lpop() == q2.lpop();
         }
     }
     
