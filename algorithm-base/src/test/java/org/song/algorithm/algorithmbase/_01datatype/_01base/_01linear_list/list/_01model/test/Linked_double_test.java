@@ -22,9 +22,8 @@ public class Linked_double_test {
         Integer rpop = deque.rpop();
         Integer lpop = deque.lpop();
         System.out.println();
-        deque.remove(-1);
+        deque.delete(-1);
         System.out.println(deque.toString());
-        System.out.println(deque.toPrettyString());
     }
 
     /**
