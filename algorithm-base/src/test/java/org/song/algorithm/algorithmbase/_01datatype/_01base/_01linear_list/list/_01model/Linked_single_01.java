@@ -9,11 +9,6 @@ public class Linked_single_01<T> extends AbsLine<T> {
     public int size;
 
     @Override
-    public String toString() {
-        return ListPrinter.printSingleList(head, false);
-    }
-
-    @Override
     public void clean() {
         this.head = null;
         this.tail = null;
@@ -32,12 +27,15 @@ public class Linked_single_01<T> extends AbsLine<T> {
 
     @Override
     public T get(int index) {
-        if (index + 1 > size) {
-            throw new ArrayIndexOutOfBoundsException("index 超出");
-        }
+        checkIndexBound(index);
+        
         if (index == 0) {
             return head.value;
         }
+        if (index == size - 1) {
+            return tail.value;
+        }
+        
         SingleNode<T> prev = getPrevByIndex(index);
         return prev.next.value;
     }
@@ -73,17 +71,17 @@ public class Linked_single_01<T> extends AbsLine<T> {
      */
     @Override
     public void insert(T v, int index) {
-        if (size < index) {
+        checkIndexBound(index);
+        
+        if (index == 0) {
+            head = new SingleNode<>(head.next, v);
+            size++;
             return;
         }
-        if (index == 0) {
-            if (head != null) {
-                head = new SingleNode<>(head.next, v);
-            } else {
-                head = new SingleNode<>(null, v);
-            }
-        } else if (size == index) {
+        if (size == index - 1) {
             tail.next = new SingleNode<>(null, v);
+            size++;
+            return;
         }
 
         SingleNode<T> prev = getPrevByIndex(index);
@@ -98,9 +96,8 @@ public class Linked_single_01<T> extends AbsLine<T> {
 
     @Override
     public T delete(int index) {
-        if (index + 1 > size) {
-            throw new ArrayIndexOutOfBoundsException("index 超出");
-        }
+        checkIndexBound(index);
+        
         if (index == 0) {
             SingleNode<T> old = head;
             head = head.next;
@@ -109,9 +106,6 @@ public class Linked_single_01<T> extends AbsLine<T> {
         }
 
         SingleNode<T> prevNode = getPrevByIndex(index);
-        if (prevNode == null) {
-            return null;
-        }
         SingleNode<T> delNode = prevNode.next;
         prevNode.next = delNode.next;
         size--;
@@ -140,6 +134,17 @@ public class Linked_single_01<T> extends AbsLine<T> {
         prevNode.next = delNode.next;
         size--;
         return delNode.value;
+    }
+
+    @Override
+    public String toString() {
+        return ListPrinter.printSingleList(head, false);
+    }
+    
+    private void checkIndexBound(int index) {
+        if (index + 1 > size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("index 超出");
+        }
     }
 
     /**
