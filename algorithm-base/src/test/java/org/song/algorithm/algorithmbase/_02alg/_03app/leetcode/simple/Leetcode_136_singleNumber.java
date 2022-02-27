@@ -1,7 +1,7 @@
 package org.song.algorithm.algorithmbase._02alg._03app.leetcode.simple;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase._01datatype._01base._01linear_list.bit._03app.bitmap.BitMap_base_01;
+import org.song.algorithm.algorithmbase._01datatype._01base._01linear.bit._03app.bitmap.BitMap_base_01;
 
 import java.util.*;
 

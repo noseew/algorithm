@@ -1,7 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack._01model.stack;
 
-import org.song.algorithm.algorithmbase._01datatype._01base._01linear_list.list._01model.Linked_single_01;
-import org.song.algorithm.algorithmbase._01datatype._01base._01linear_list.list._01model.node.SingleNode;
+import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.Linked_single_01;
+import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.node.SingleNode;
 
 /**
  * 链栈, 链表实现的栈
