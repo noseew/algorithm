@@ -1,6 +1,6 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack._01model.queue;
 
-import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.Linked_double_01;
+import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.LinkedDouble01;
 
 /**
  * 链表实现队列
@@ -9,7 +9,7 @@ import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01mo
  */
 public class Queue_Link_01<T> extends AbsQueue<T> {
 
-    private Linked_double_01<T> linked = new Linked_double_01<>();
+    private LinkedDouble01<T> linked = new LinkedDouble01<>();
     
     @Override
     public void clean() {

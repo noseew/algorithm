@@ -1,6 +1,6 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack._01model.queue;
 
-import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.Array_base_01;
+import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.ArrayBase01;
 
 /**
  * 基于动态数组实现队列
@@ -13,7 +13,7 @@ import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01mo
  */
 public class Queue_Array_01<T> extends AbsQueue<T> {
 
-    private Array_base_01<T> array = new Array_base_01<>();
+    private ArrayBase01<T> array = new ArrayBase01<>();
     
     @Override
     public void clean() {

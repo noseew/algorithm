@@ -2,33 +2,32 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree;
 
 import lombok.experimental.UtilityClass;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.AbsBSTTree;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02_BST_base;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02BST;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.TreeNode;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Predicate;
 
 @UtilityClass
 public class BTreeUtils {
 
-    public static boolean eq(Collection c, Tree02_BST_base tree) {
+    public static boolean eq(Collection c, Tree02BST tree) {
         if (c.size() != tree.size) {
             System.err.println("size diff: c.size=" + c.size());
             System.err.println("size diff: tree.size=" + tree.size());
             return false;
         }
         Collection set = new HashSet(tree.size);
-        Tree02_BST_base.traverse(tree.root, AbsBSTTree.Order.MidOrder, e -> set.add(e.val));
+        Tree02BST.traverse(tree.root, AbsBSTTree.Order.MidOrder, e -> set.add(e.val));
         return set.equals(c);
     }
 
-    public static boolean eq(Tree02_BST_base tree1, Tree02_BST_base tree2) {
+    public static boolean eq(Tree02BST tree1, Tree02BST tree2) {
         List<Object> list1 = new ArrayList<>(tree1.size);
         List<Object> list2 = new ArrayList<>(tree2.size);
 
-        Tree02_BST_base.traverse(tree1.root, AbsBSTTree.Order.MidOrder, e -> list1.add(e.val));
-        Tree02_BST_base.traverse(tree2.root, AbsBSTTree.Order.MidOrder, e -> list2.add(e.val));
+        Tree02BST.traverse(tree1.root, AbsBSTTree.Order.MidOrder, e -> list1.add(e.val));
+        Tree02BST.traverse(tree2.root, AbsBSTTree.Order.MidOrder, e -> list2.add(e.val));
 
         if (list1.size() != list2.size()) {
             System.err.println("size diff: list1.size=" + list1.size());

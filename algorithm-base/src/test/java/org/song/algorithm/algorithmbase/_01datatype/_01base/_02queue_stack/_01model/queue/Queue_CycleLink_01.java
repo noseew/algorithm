@@ -1,6 +1,6 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack._01model.queue;
 
-import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.Linked_CycleDouble_01;
+import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.LinkedDoubleCycle01;
 
 /**
  * 链表实现循环队列
@@ -9,7 +9,7 @@ import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01mo
  */
 public class Queue_CycleLink_01<T> extends AbsQueue<T> {
 
-    private Linked_CycleDouble_01<T> linked = new Linked_CycleDouble_01<>();
+    private LinkedDoubleCycle01<T> linked = new LinkedDoubleCycle01<>();
     private int capacity;
     
     public Queue_CycleLink_01(int capacity) {

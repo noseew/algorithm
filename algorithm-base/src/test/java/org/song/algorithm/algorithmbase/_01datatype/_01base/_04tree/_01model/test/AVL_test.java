@@ -3,8 +3,8 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.te
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree.BTreeUtils;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.AbsBSTTree;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02_BST_base;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03_AVL_base;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02BST;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03AVL;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -16,7 +16,7 @@ public class AVL_test {
 
     @Test
     public void test_01_start() {
-        Tree03_AVL_base<Integer> tree = new Tree03_AVL_base<>(Comparator.comparing(Integer::doubleValue));
+        Tree03AVL<Integer> tree = new Tree03AVL<>(Comparator.comparing(Integer::doubleValue));
 
         Random random = new Random();
         for (int i = 0; i < 30; i++) {
@@ -27,7 +27,7 @@ public class AVL_test {
 
     @Test
     public void test_remove() {
-        Tree03_AVL_base<Integer> tree = new Tree03_AVL_base<>(Comparator.comparing(Integer::doubleValue));
+        Tree03AVL<Integer> tree = new Tree03AVL<>(Comparator.comparing(Integer::doubleValue));
 
         for (int i = 0; i < 20; i++) {
             tree.add(i);
@@ -41,7 +41,7 @@ public class AVL_test {
     
     @Test
     public void test_remove2() {
-        Tree03_AVL_base<Integer> tree = new Tree03_AVL_base<>(Comparator.comparing(Integer::doubleValue));
+        Tree03AVL<Integer> tree = new Tree03AVL<>(Comparator.comparing(Integer::doubleValue));
         tree.add(55);
         tree.add(38);
         tree.add(76);
@@ -89,8 +89,8 @@ public class AVL_test {
     @Test
     public void test_diff_BST_add() {
         // avl 和 bst 是否是同一棵树
-        Tree03_AVL_base<Integer> avl = new Tree03_AVL_base<>(Comparator.comparing(Integer::doubleValue));
-        Tree02_BST_base<Integer> bst = new Tree02_BST_base<>(Comparator.comparing(Integer::doubleValue));
+        Tree03AVL<Integer> avl = new Tree03AVL<>(Comparator.comparing(Integer::doubleValue));
+        Tree02BST<Integer> bst = new Tree02BST<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
         for (int i = 0; i < valueSize; i++) {
             int v = random.nextInt(maxValue);
@@ -107,7 +107,7 @@ public class AVL_test {
 
     @Test
     public void test_isBalance() {
-        Tree03_AVL_base<Integer> avl = new Tree03_AVL_base<>(Comparator.comparing(Integer::doubleValue));
+        Tree03AVL<Integer> avl = new Tree03AVL<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
         for (int i = 0; i < valueSize; i++) {
             int v = random.nextInt(maxValue);
@@ -116,10 +116,10 @@ public class AVL_test {
 
         AtomicBoolean balance = new AtomicBoolean(true);
 
-        Tree02_BST_base.traverse(avl.root, AbsBSTTree.Order.MidOrder, 
+        Tree02BST.traverse(avl.root, AbsBSTTree.Order.MidOrder, 
                 e -> {
-                    boolean goon = Math.abs(Math.abs(Tree02_BST_base.getHeight_recursive(e.left))
-                            - Math.abs(Tree02_BST_base.getHeight_recursive(e.right))) <= 1;
+                    boolean goon = Math.abs(Math.abs(Tree02BST.getHeight_recursive(e.left))
+                            - Math.abs(Tree02BST.getHeight_recursive(e.right))) <= 1;
                     if (!goon) {
                         // 不平衡
                         balance.set(false);
@@ -144,7 +144,7 @@ public class AVL_test {
 
         Set<Integer> set = new HashSet<>(valueSize);
 
-        Tree03_AVL_base<Integer> tree = new Tree03_AVL_base<>(Comparator.comparing(Integer::doubleValue));
+        Tree03AVL<Integer> tree = new Tree03AVL<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
         for (int i = 0; i < valueSize; i++) {
             int v = random.nextInt(maxValue);

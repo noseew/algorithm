@@ -1,10 +1,10 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack._01model.stack;
 
-import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.Array_base_01;
+import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.ArrayBase01;
 
 public class Stack_Array_01<T> extends AbsStack<T> {
 
-    private Array_base_01<T> array = new Array_base_01<>();
+    private ArrayBase01<T> array = new ArrayBase01<>();
 
     @Override
     public void clean() {

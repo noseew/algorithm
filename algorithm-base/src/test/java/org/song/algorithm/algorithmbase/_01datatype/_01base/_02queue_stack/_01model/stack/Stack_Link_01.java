@@ -1,6 +1,6 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack._01model.stack;
 
-import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.Linked_single_01;
+import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.LinkedSingle01;
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.node.SingleNode;
 
 /**
@@ -10,7 +10,7 @@ import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01mo
  */
 public class Stack_Link_01<T> extends AbsStack<T> {
 
-    private Linked_single_01<T> linked = new Linked_single_01<>();
+    private LinkedSingle01<T> linked = new LinkedSingle01<>();
 
     public void push(T val) {
         if (linked.isEmpty()) {

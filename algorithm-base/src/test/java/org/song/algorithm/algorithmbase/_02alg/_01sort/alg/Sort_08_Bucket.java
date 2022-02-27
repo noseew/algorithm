@@ -1,7 +1,7 @@
 package org.song.algorithm.algorithmbase._02alg._01sort.alg;
 
 import org.junit.Test;
-import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.Array_base_01;
+import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.ArrayBase01;
 import org.song.algorithm.algorithmbase._02alg._01sort.AbstractSort;
 
 /*
@@ -47,7 +47,7 @@ public class Sort_08_Bucket {
         public void sort(Comparable[] cs) {
             
             int bucketSize = 10;
-            Array_base_01<Comparable>[] buckets = initBucket(bucketSize);
+            ArrayBase01<Comparable>[] buckets = initBucket(bucketSize);
 
             // 数据分配入桶
             distributionBucket((Integer[]) cs, buckets);
@@ -55,7 +55,7 @@ public class Sort_08_Bucket {
             // 分桶排序
             int index = 0;
             AbstractSort sort = new Sort_03_Insert.InsertSort();
-            for (Array_base_01<Comparable> bucket : buckets) {
+            for (ArrayBase01<Comparable> bucket : buckets) {
                 if (bucket.isEmpty()) {
                     continue;
                 }
@@ -73,11 +73,11 @@ public class Sort_08_Bucket {
             }
         }
 
-        private Array_base_01<Comparable>[] initBucket(int bucketSize) {
+        private ArrayBase01<Comparable>[] initBucket(int bucketSize) {
             // 初始化桶
-            Array_base_01<Comparable>[] buckets = new Array_base_01[bucketSize];
+            ArrayBase01<Comparable>[] buckets = new ArrayBase01[bucketSize];
             for (int i = 0; i < bucketSize; i++) {
-                buckets[i] = new Array_base_01<Comparable>();
+                buckets[i] = new ArrayBase01<Comparable>();
             }
             return buckets;
         }
@@ -90,7 +90,7 @@ public class Sort_08_Bucket {
          * @param datas
          * @param buckets
          */
-        private void distributionBucket(Integer[] datas, Array_base_01<Comparable>[] buckets) {
+        private void distributionBucket(Integer[] datas, ArrayBase01<Comparable>[] buckets) {
             // 数据值的范围
             Integer max = null, min = null;
             for (Integer c : datas) {

@@ -1,7 +1,7 @@
 package org.song.algorithm.algorithmbase._02alg._01sort.alg;
 
 import org.junit.Test;
-import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.Array_base_01;
+import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.ArrayBase01;
 import org.song.algorithm.algorithmbase._02alg._01sort.AbstractSort;
 
 /*
@@ -42,7 +42,7 @@ public class Sort_09_Radix {
 
             for (int i = 0; i < maxDigit; i++) {
                 // 经过第i个桶, 先按照第1位, 进行分桶和收集, 然后按照第2位, 以此类推, 每一次的分桶和收集, 都是该位数的数字进行排序了
-                Array_base_01<Comparable>[] byMod = distributionByDigitsMod(datas, i);
+                ArrayBase01<Comparable>[] byMod = distributionByDigitsMod(datas, i);
                 collect(byMod, cs);
             }
 
@@ -55,9 +55,9 @@ public class Sort_09_Radix {
          * @param datas
          * @param digit
          */
-        private Array_base_01<Comparable>[] distributionByDigitsMod(Integer[] datas, int digit) {
+        private ArrayBase01<Comparable>[] distributionByDigitsMod(Integer[] datas, int digit) {
 
-            Array_base_01<Comparable>[] buckets = initBucket(10);
+            ArrayBase01<Comparable>[] buckets = initBucket(10);
 
             for (Integer d : datas) {
                 // 定位到第几个桶, 并放入
@@ -98,9 +98,9 @@ public class Sort_09_Radix {
          * @param buckets
          * @param cs
          */
-        private void collect(Array_base_01<Comparable>[] buckets, Comparable[] cs) {
+        private void collect(ArrayBase01<Comparable>[] buckets, Comparable[] cs) {
             int index = 0;
-            for (Array_base_01<Comparable> bucket : buckets) {
+            for (ArrayBase01<Comparable> bucket : buckets) {
                 if (bucket.isEmpty()) {
                     continue;
                 }
@@ -111,11 +111,11 @@ public class Sort_09_Radix {
             }
         }
 
-        private Array_base_01<Comparable>[] initBucket(int bucketSize) {
+        private ArrayBase01<Comparable>[] initBucket(int bucketSize) {
             // 初始化桶
-            Array_base_01<Comparable>[] buckets = new Array_base_01[bucketSize];
+            ArrayBase01<Comparable>[] buckets = new ArrayBase01[bucketSize];
             for (int i = 0; i < bucketSize; i++) {
-                buckets[i] = new Array_base_01<Comparable>();
+                buckets[i] = new ArrayBase01<Comparable>();
             }
             return buckets;
         }
