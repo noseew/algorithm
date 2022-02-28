@@ -64,6 +64,20 @@ public class LinkedSingle01<T> extends AbsLine<T> {
     }
 
     /**
+     * 链表的构建-头插法, 倒序
+     *
+     * @param val
+     */
+    public void addHead(T val) {
+        // 尾插法, 新节点是头结点
+        head = new SingleNode<>(head, val);
+        if (tail == null) {
+            tail = head;
+        }
+        size++;
+    }
+
+    /**
      * 由于链表没有下标, 所以要遍历到指定的位置
      *
      * @param v

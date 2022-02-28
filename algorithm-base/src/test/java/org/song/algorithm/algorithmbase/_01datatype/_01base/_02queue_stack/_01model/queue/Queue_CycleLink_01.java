@@ -60,16 +60,20 @@ public class Queue_CycleLink_01<T> extends AbsQueue<T> {
         linked.rpush(v);
     }
 
-    @Deprecated
     @Override
     public void lpush(T v) {
-        throw new RuntimeException("暂不支持双端队列");
+        if (isFull()) {
+            throw new RuntimeException("队列已满");
+        }
+        linked.lpush(v);
     }
 
-    @Deprecated
     @Override
     public T rpop() {
-        throw new RuntimeException("暂不支持双端队列");
+        if (isEmpty()) {
+            throw new RuntimeException("队列已满");
+        }
+        return linked.rpop();
     }
 
     @Override

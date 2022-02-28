@@ -21,14 +21,33 @@ public class LinkedDoubleCycle01<T> extends LinkedDouble01<T> {
         size++;
     }
 
-    @Deprecated
     public void lpush(T val) {
-        throw new RuntimeException("暂不支持双端队列");
+        if (head != null) {
+            head.prev = new DuplexNode<>(tail, head, val);
+            head = (DuplexNode<T>) head.prev;
+            tail.next = head;
+        } else {
+            head = new DuplexNode<>(null, null, val);
+            tail = head;
+        }
+        size++;
     }
 
-    @Deprecated
     public T rpop() {
-        throw new RuntimeException("暂不支持双端队列");
+        if (tail != null) {
+            T value = tail.value;
+            if (tail.next != null) {
+                ((DuplexNode<T>) tail.next).prev = tail.prev;
+            }
+            if (tail.prev != null) {
+                tail.prev.next = tail.next;
+            }
+            tail = (DuplexNode<T>) tail.prev;
+            size--;
+            return value;
+        } else {
+            return null;
+        }
     }
 
     public T lpop() {
