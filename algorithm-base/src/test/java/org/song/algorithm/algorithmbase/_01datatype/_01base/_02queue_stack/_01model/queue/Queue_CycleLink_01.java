@@ -9,7 +9,7 @@ import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01mo
  */
 public class Queue_CycleLink_01<T> extends AbsQueue<T> {
 
-    private LinkedDoubleCycle01<T> linked = new LinkedDoubleCycle01<>();
+    private final LinkedDoubleCycle01<T> linked = new LinkedDoubleCycle01<>();
     private int capacity;
     
     public Queue_CycleLink_01(int capacity) {
@@ -71,7 +71,7 @@ public class Queue_CycleLink_01<T> extends AbsQueue<T> {
     @Override
     public T rpop() {
         if (isEmpty()) {
-            throw new RuntimeException("队列已满");
+            throw new RuntimeException("队列为空");
         }
         return linked.rpop();
     }
@@ -79,7 +79,7 @@ public class Queue_CycleLink_01<T> extends AbsQueue<T> {
     @Override
     public T lpop() {
         if (isEmpty()) {
-            throw new RuntimeException("队列已满");
+            throw new RuntimeException("队列为空");
         }
         return linked.lpop();
     }
