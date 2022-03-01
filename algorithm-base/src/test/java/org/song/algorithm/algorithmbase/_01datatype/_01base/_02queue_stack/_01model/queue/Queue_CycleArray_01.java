@@ -78,8 +78,8 @@ public class Queue_CycleArray_01<T> extends AbsQueue<T> {
     @Override
     public void rpush(T v) {
         if (isFull()) throw new RuntimeException("队列已满");
-        // 直接将元素放入end下标, 防止下标越界需要取余, 然后end后移
-        data[end % data.length] = v;
+        // 直接将元素放入end下标, 防止下标越界需要取余, 然后end后移, 并恢复到可控范围内
+        data[end = (end % data.length)] = v;
         end++;
         size++;
     }
@@ -87,7 +87,7 @@ public class Queue_CycleArray_01<T> extends AbsQueue<T> {
     @Override
     public void lpush(T v) {
         if (isFull()) throw new RuntimeException("队列已满");
-        // start 前移, 防止出现负数 所以加上 length
+        // start 前移, 防止出现负数 所以加上 length, 并恢复到可控范围内
         data[start = (start - 1 + data.length) % data.length] = v;
         size++;
     }
@@ -104,8 +104,8 @@ public class Queue_CycleArray_01<T> extends AbsQueue<T> {
     @Override
     public T lpop() {
         if (isEmpty()) throw new RuntimeException("队列为空");
-        // 直接将start元素取出, 防止下标越界需要取余, 然后start后移
-        T v = data[start % data.length];
+        // 直接将start元素取出, 防止下标越界需要取余, 然后start后移, 并恢复到可控范围内
+        T v = data[start = (start % data.length)];
         start++;
         size--;
         return v;
