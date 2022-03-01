@@ -29,9 +29,9 @@ public class Queue_CycleArray_01<T> extends AbsQueue<T> {
             2. +1后数组大小就可能不是2的次幂数, (为什么大小要设置为2次幂数? 一些场景为了提高效率)
     3. 可以通过增加一个容量字段来解决上述问题
      */
-    private T[] data;
-    private int start, end;
-    private int size;
+    protected T[] data;
+    protected int start, end;
+    protected int size;
 
     public Queue_CycleArray_01(int capacity) {
         data = (T[]) new Object[capacity];
@@ -92,12 +92,23 @@ public class Queue_CycleArray_01<T> extends AbsQueue<T> {
 
     @Override
     public void lpush(T v) {
-        throw new RuntimeException("暂不支持双端队列");
+        if (isFull()) {
+            throw new RuntimeException("队列已满");
+        }
+        // start 前移, 防止出现负数 所以加上 length
+        data[(--start + data.length) % data.length] = v;
+        size++;
     }
 
     @Override
     public T rpop() {
-        throw new RuntimeException("暂不支持双端队列");
+        if (isEmpty()) {
+            throw new RuntimeException("队列为空");
+        }
+        // 直接将end元素取出, 防止出现负数 所以加上 length
+        T v = data[--end % data.length];
+        size--;
+        return v;
     }
 
     @Override

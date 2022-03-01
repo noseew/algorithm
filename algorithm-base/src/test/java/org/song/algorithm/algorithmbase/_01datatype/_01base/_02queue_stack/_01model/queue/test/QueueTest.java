@@ -108,6 +108,34 @@ public class QueueTest {
     }
     
     @Test
+    public void queueCycleArray_test03() {
+
+        Queue_CycleArray_01<Integer> q1 = new Queue_CycleArray_01<>(maxSize);
+        Queue_CycleArray_02<Integer> q2 = new Queue_CycleArray_02<>(maxSize);
+
+        for (int i = 0; i < maxSize; i++) {
+            int val = r.nextInt(maxVal);
+            q1.rpush(val);
+            q2.lpush(val);
+        }
+        assert q1.length() == q2.length();
+        for (int i = 0; i < q1.length(); i++) {
+            assert q1.lpop() == q2.rpop();
+        }
+        
+        
+        for (int i = 0; i < maxSize / 2; i++) {
+            int val = r.nextInt(maxVal);
+            q1.rpush(val);
+            q2.lpush(val);
+        }
+        assert q1.length() == q2.length();
+        for (int i = 0; i < q1.length(); i++) {
+            assert q1.lpop() == q2.rpop();
+        }
+    }
+    
+    @Test
     public void queueCycle_test02() throws InterruptedException {
 
         Queue_CycleArray_01<Integer> q1 = new Queue_CycleArray_01<>(maxSize);

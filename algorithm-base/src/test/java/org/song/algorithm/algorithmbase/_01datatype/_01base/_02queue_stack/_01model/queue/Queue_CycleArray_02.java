@@ -1,66 +1,21 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack._01model.queue;
 
-import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.AbsLine;
-
 /**
  * 循环数组实现队列
  * 优化效率
  *
  * @param <T>
  */
-public class Queue_CycleArray_02<T> extends AbsQueue<T> {
+public class Queue_CycleArray_02<T> extends Queue_CycleArray_01<T> {
 
-    /*
-    循环数组, 
-    数组大小必须是2次幂数
-     */
-    private T[] data;
-    private int start, end;
-    private int size;
     private int capacity;
 
     public Queue_CycleArray_02(int capacity) {
-        capacity = upPower(capacity);
-        data = (T[]) new Object[capacity];
-    }
-
-    @Override
-    public void clean() {
-        AbsLine.fill(data, null);
-        start = 0;
-        end = 0;
-        size = 0;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0; // 采用size大小来判断
-    }
-
-    @Override
-    public boolean isFull() {
-        return size == data.length; // 采用size大小来判断
-    }
-
-    @Override
-    public int length() {
-        return size; // 采用size大小来判断
-    }
-
-    @Override
-    public T getTop() {
-        if (isEmpty()) {
-            return null;
-        }
-        return data[start];
-    }
-
-    @Override
-    public T getBottom() {
-        if (isEmpty()) {
-            return null;
-        }
-        return data[end - 1];
+        /*
+        循环数组, 
+        数组大小必须是2次幂数
+         */
+        super(capacity = upPower(capacity));
     }
 
     @Override
@@ -76,12 +31,23 @@ public class Queue_CycleArray_02<T> extends AbsQueue<T> {
 
     @Override
     public void lpush(T v) {
-        throw new RuntimeException("暂不支持双端队列");
+        if (isFull()) {
+            throw new RuntimeException("队列已满");
+        }
+        // start 前移, 防止出现负数 所以加上 length
+        data[(--start + data.length) & (capacity - 1)] = v;
+        size++;
     }
 
     @Override
     public T rpop() {
-        throw new RuntimeException("暂不支持双端队列");
+        if (isEmpty()) {
+            throw new RuntimeException("队列为空");
+        }
+        // 直接将end元素取出, 防止出现负数 所以加上 length
+        T v = data[(--end + data.length) & (capacity - 1)];
+        size--;
+        return v;
     }
 
     @Override
