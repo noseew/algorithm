@@ -190,13 +190,17 @@ public class LinkedSingle01<T> extends AbsLine<T> {
      * @param val
      * @return 返回null, 说明val是头结点或者没有匹配到对应的节点
      */
-    private SingleNode<T> getPrevByVal(T val) {
+    protected SingleNode<T> getPrevByVal(T val) {
         if (head != null && head.value == val) {
             // 如果是头结点, 直接返回空
             return null;
         }
         SingleNode<T> prev = null, n = head;
-        while (n != null && n.value != val) {
+        int cycle = 0; // 如果是是循环链表, 防止无限循环
+        while (n != null && n.value != val && cycle < 2) {
+            if (n == head) {
+                cycle++;
+            }
             prev = n;
             n = n.next;
         }
