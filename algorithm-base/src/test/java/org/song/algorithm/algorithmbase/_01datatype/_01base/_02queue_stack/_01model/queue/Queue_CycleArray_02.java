@@ -8,21 +8,20 @@ package org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack._01m
  */
 public class Queue_CycleArray_02<T> extends Queue_CycleArray_01<T> {
 
-    private int capacity;
+    private final int capacity;
 
     public Queue_CycleArray_02(int capacity) {
         /*
         循环数组, 
         数组大小必须是2次幂数
          */
-        super(capacity = upPower(capacity));
+        super(upPower(capacity));
+        this.capacity = upPower(capacity);
     }
 
     @Override
     public void rpush(T v) {
-        if (isFull()) {
-            throw new RuntimeException("队列已满");
-        }
+        if (isFull()) throw new RuntimeException("队列已满");
         // 直接将元素放入end下标, 防止下标越界需要取余, 然后end后移
         data[end & (capacity - 1)] = v;
         end++;
@@ -31,9 +30,7 @@ public class Queue_CycleArray_02<T> extends Queue_CycleArray_01<T> {
 
     @Override
     public void lpush(T v) {
-        if (isFull()) {
-            throw new RuntimeException("队列已满");
-        }
+        if (isFull()) throw new RuntimeException("队列已满");
         // start 前移, 防止出现负数 所以加上 length
         data[(--start + data.length) & (capacity - 1)] = v;
         size++;
@@ -41,9 +38,7 @@ public class Queue_CycleArray_02<T> extends Queue_CycleArray_01<T> {
 
     @Override
     public T rpop() {
-        if (isEmpty()) {
-            throw new RuntimeException("队列为空");
-        }
+        if (isEmpty()) throw new RuntimeException("队列为空");
         // 直接将end元素取出, 防止出现负数 所以加上 length
         T v = data[(--end + data.length) & (capacity - 1)];
         size--;
@@ -52,9 +47,7 @@ public class Queue_CycleArray_02<T> extends Queue_CycleArray_01<T> {
 
     @Override
     public T lpop() {
-        if (isEmpty()) {
-            throw new RuntimeException("队列为空");
-        }
+        if (isEmpty()) throw new RuntimeException("队列为空");
         // 直接将start元素取出, 防止下标越界需要取余, 然后start后移
         T v = data[start & (capacity - 1)];
         start++;
