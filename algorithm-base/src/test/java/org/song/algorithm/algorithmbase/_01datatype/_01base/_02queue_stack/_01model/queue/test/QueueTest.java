@@ -134,4 +134,32 @@ public class QueueTest {
             assert q1.lpop() == q2.lpop();
         }
     }
+    
+    @Test
+    public void queueCycleLink_test() {
+
+        Queue_CycleLink_01<Integer> q1 = new Queue_CycleLink_01<>(maxSize);
+        Queue_CycleLink_01<Integer> q2 = new Queue_CycleLink_01<>(maxSize);
+
+        for (int i = 0; i < maxSize; i++) {
+            int val = r.nextInt(maxVal);
+            q1.rpush(val);
+            q2.lpush(val);
+        }
+        assert q1.length() == q2.length();
+        for (int i = 0; i < q1.length(); i++) {
+            assert q1.lpop() == q2.rpop();
+        }
+        
+        
+        for (int i = 0; i < maxSize / 2; i++) {
+            int val = r.nextInt(maxVal);
+            q1.rpush(val);
+            q2.lpush(val);
+        }
+        assert q1.length() == q2.length();
+        for (int i = 0; i < q1.length(); i++) {
+            assert q1.lpop() == q2.rpop();
+        }
+    }
 }
