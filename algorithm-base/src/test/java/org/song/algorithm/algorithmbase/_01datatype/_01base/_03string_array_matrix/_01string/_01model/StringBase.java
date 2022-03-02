@@ -119,7 +119,7 @@ public class StringBase extends AbsString {
         // BF 暴力解法
         int eqCount = 0; // 匹配成功次数(位置)
         for (int start = 0; // 当前匹配到的位置, 成功的开始位置
-             start < length(); start++) {
+             start < length() - (sub.length() - 1); start++) {
             for (int i = start, j = 0; i < length() && j < sub.length(); ) {
                 if (s[i] == sub.s[j]) {
                     i++;
