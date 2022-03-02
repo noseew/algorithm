@@ -4,7 +4,6 @@ import org.junit.Test;
 import org.song.algorithm.algorithmbase._02alg._01sort.AbstractSort;
 import org.song.algorithm.algorithmbase._02alg._01sort.alg.Sort_06_Quick;
 import org.song.algorithm.algorithmbase._02alg._02search.AbstractSearch;
-import org.song.algorithm.algorithmbase.from_ma.QuickSort;
 
 /*
 二分查找
