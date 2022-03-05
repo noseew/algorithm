@@ -13,7 +13,10 @@ public class ListPrinter {
             if (n == head) {
                 round++;
             }
-            sb.append(n.value).append(",");
+            sb.append(n.value);
+            if (n.next != null) {
+                sb.append(",");
+            }
             n = n.next;
         }
         sb.append("]");
