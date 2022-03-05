@@ -41,6 +41,21 @@ public class LinkedSingle01<T> extends AbsLine<T> {
     }
 
     @Override
+    public void set(T v, int index) {
+        checkIndexBound(index);
+
+        if (index == 0) {
+            head.value = v;
+        }
+        if (index == size - 1) {
+            tail.value = v;
+        }
+
+        SingleNode<T> prev = getPrevByIndex(index);
+        prev.next.value = v;
+    }
+
+    @Override
     public int indexOf(T v) {
         return -1;
     }

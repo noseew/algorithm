@@ -16,6 +16,8 @@ public abstract class AbsLine<T> {
 
     public abstract T get(int index);
 
+    public abstract void set(T v, int index);
+
     public abstract int indexOf(T v);
 
     public abstract void add(T v);

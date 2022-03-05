@@ -55,6 +55,12 @@ public class ArrayBase01<T> extends AbsLine<T> {
     }
 
     @Override
+    public void set(T v, int index) {
+        checkIndexBound(index);
+        data[index] = v;
+    }
+
+    @Override
     public int indexOf(T v) {
         for (int i = 0; i < data.length; i++) {
             if (Objects.equals(data[i], v)) {

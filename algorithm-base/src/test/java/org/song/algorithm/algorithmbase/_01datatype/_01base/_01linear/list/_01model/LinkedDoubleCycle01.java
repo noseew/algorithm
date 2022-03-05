@@ -75,6 +75,12 @@ public class LinkedDoubleCycle01<T> extends LinkedDouble01<T> {
 
     @Deprecated
     @Override
+    public void set(T v, int index) {
+        throw new RuntimeException("暂不支持该操作");
+    }
+
+    @Deprecated
+    @Override
     public int indexOf(T v) {
         throw new RuntimeException("暂不支持该操作");
     }

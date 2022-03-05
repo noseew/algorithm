@@ -84,6 +84,11 @@ public class LinkedDouble01<T> extends AbsLine<T> {
     }
 
     @Override
+    public void set(T v, int index) {
+        getByIndex(index).value = v;
+    }
+
+    @Override
     public int indexOf(T v) {
         return -1;
     }
