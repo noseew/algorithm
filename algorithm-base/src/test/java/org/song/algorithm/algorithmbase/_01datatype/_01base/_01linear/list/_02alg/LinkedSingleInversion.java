@@ -140,8 +140,15 @@ public class LinkedSingleInversion {
             return head;
         }
 
+        /*
+        先递归链表到尾部, 使用线程栈来存放递归的元素, 每一个栈都保存有一个节点head, 当递归到尾部的时候, 第一个返回的就是尾部元素
+         */
         SingleNode<Integer> newHead = recursion02(head.next);
         // 类似于反向遍历
+        /*
+        相当于 newHead.next = head; 但是不能用此行, 因为最终要返回新的head, 所以 newHead 引用不能变化
+        所以这里用 head.next.next = head;
+         */
         head.next.next = head;
         // 反向将next值为null
         head.next = null;
