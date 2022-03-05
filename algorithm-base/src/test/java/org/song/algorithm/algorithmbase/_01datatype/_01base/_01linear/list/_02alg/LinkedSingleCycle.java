@@ -48,6 +48,17 @@ public class LinkedSingleCycle {
      * 这样如果有环, 快指针迟早会追上慢指针, slow == fast, 注意slow, fast初始选择不要相等
      */
     private boolean isHasRing(SingleNode<Integer> linked) {
+        /*
+        注意: 
+        1. 快慢指针初始值不能相等, 因为相等是相遇的条件, 防止出现误判
+        2. 快慢指针的前进步进选择, l环大小, s慢步进, f快步进
+        什么情况下一定会相遇
+            如果s/f至少有一个能遍历完l中所有的数, 则无论另一个怎么取, 他们一定会相遇
+            示例: s=1, 或者l/s不能整除
+        什么情况下不会相遇
+            如果s/f两个无论如何都不能遍历完l中所有的数, 则他们可能永远不能相遇
+            示例: l/s能整除, 
+         */
         SingleNode<Integer> slow = linked, fast = slow.next;
 
         while (fast != null && fast.next != null) { // fast 走到头了, 说明没有环
