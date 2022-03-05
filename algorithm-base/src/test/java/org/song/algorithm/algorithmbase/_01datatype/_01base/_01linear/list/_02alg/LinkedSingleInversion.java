@@ -118,6 +118,7 @@ public class LinkedSingleInversion {
                                                      SingleNode<Integer> n) {
         /*
         利用递归的方式进行遍历, 每次都将前中2个节点传入递归, 递归方法进行重新反向关联
+        n==null说明递归到链表尾部, 所以需要返回它的前驱节点, 也就是新的头结点
          */
         if (n == null) return prev;
         SingleNode<Integer> next = n.next;
@@ -136,12 +137,16 @@ public class LinkedSingleInversion {
     }
 
     private static SingleNode<Integer> recursion02(SingleNode<Integer> head) {
-        if (head == null || head.next == null) {
+        // 不能没有节点
+        if (head == null 
+                // 不能总返回null, 1. 需要返回的是尾节点, 来当新的头结点
+                || head.next == null) {
             return head;
         }
 
         /*
         先递归链表到尾部, 使用线程栈来存放递归的元素, 每一个栈都保存有一个节点head, 当递归到尾部的时候, 第一个返回的就是尾部元素
+        newHead 返回的永远是尾节点, 
          */
         SingleNode<Integer> newHead = recursion02(head.next);
         // 类似于反向遍历
@@ -152,7 +157,7 @@ public class LinkedSingleInversion {
         head.next.next = head;
         // 反向将next值为null
         head.next = null;
-        // 返回最新的head
+        // 返回最新的head, newHead 返回的永远是尾节点, 并不随着递归的出栈入栈深度而变化
         return newHead;
     }
 
