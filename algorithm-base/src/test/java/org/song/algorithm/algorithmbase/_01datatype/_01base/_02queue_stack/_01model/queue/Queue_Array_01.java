@@ -48,7 +48,7 @@ public class Queue_Array_01<T> extends AbsQueue<T> {
         if (array.isEmpty()) {
             return null;
         }
-        return array.get(array.size - 1);
+        return array.get(array.length() - 1);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class Queue_Array_01<T> extends AbsQueue<T> {
         if (array.isEmpty()) {
             return null;
         } else {
-            return array.delete(array.size - 1);
+            return array.delete(array.length() - 1);
         } 
     }
 

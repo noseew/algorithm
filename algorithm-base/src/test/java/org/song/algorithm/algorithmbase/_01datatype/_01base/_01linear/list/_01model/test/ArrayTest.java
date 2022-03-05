@@ -2,6 +2,7 @@ package org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01m
 
 import org.junit.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.ArrayBase01;
+import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.ArrayBase02;
 import org.springframework.util.StopWatch;
 
 import java.util.ArrayList;
@@ -75,6 +76,34 @@ public class ArrayTest {
         }
         for (int i = 0; i < maxSize; i++) {
             assert array.get(i) == list.get(i);
+        }
+    }
+
+    @Test
+    public void test_auto_test02() {
+        ArrayBase01<Integer> array = new ArrayBase01<>(5);
+        ArrayBase02<Integer> array2 = new ArrayBase02<>(5);
+
+        for (int i = 0; i < maxSize; i++) {
+            int val = r.nextInt(maxVal);
+            array.add(val);
+            array2.add(val);
+        }
+        // test get(index)
+        for (int i = 0; i < maxSize; i++) {
+            assert array.get(i) == array2.get(i);
+        }
+
+        // test insert(index)
+        array.clean();
+        array2.clean();
+        for (int i = 0; i < maxSize; i++) {
+            int val = r.nextInt(maxVal);
+            array.add(val);
+            array2.add(val);
+        }
+        for (int i = 0; i < maxSize; i++) {
+            assert array.get(i) == array2.get(i);
         }
     }
 

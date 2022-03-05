@@ -18,9 +18,9 @@ import java.util.Objects;
  */
 public class ArrayBase01<T> extends AbsLine<T> {
 
-    public T[] data;
+    protected T[] data;
 
-    public int size;
+    protected int size;
 
     public ArrayBase01() {
         this(10);
@@ -134,7 +134,7 @@ public class ArrayBase01<T> extends AbsLine<T> {
      * 
      * @param index
      */
-    private void leftMove(int index) {
+    protected void leftMove(int index) {
         for (int j = index; j < size; j++) {
             data[j] = data[j + 1];
             if (j == size - 1) {
@@ -148,7 +148,7 @@ public class ArrayBase01<T> extends AbsLine<T> {
      *
      * @param index
      */
-    private void rightMove(int index) {
+    protected void rightMove(int index) {
         for (int i = size - 1; i >= index; i--) {
             data[i + 1] = data[i];
         }
@@ -157,7 +157,7 @@ public class ArrayBase01<T> extends AbsLine<T> {
     /**
      * 确保容量
      */
-    private void ensureCapacity() {
+    protected void ensureCapacity() {
         if (size >= data.length - 1) {
             dilatation();
         }
@@ -166,7 +166,7 @@ public class ArrayBase01<T> extends AbsLine<T> {
     /**
      * 扩容
      */
-    private void dilatation() {
+    protected void dilatation() {
         T[] newData = (T[]) new Object[data.length + (data.length >> 1)];
         System.arraycopy(data, 0, newData, 0, data.length);
         data = newData;
@@ -175,7 +175,7 @@ public class ArrayBase01<T> extends AbsLine<T> {
     /**
      * 收缩
      */
-    private void shrink() {
+    protected void shrink() {
         double ratio = 0.3;
         if ((double) size / (double) data.length < ratio) {
             T[] newData = (T[]) new Object[data.length >> 1];
@@ -185,8 +185,8 @@ public class ArrayBase01<T> extends AbsLine<T> {
             data = newData;
         }
     }
-    
-    private void checkIndexBound(int index) {
+
+    protected void checkIndexBound(int index) {
         if (index + 1 > size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("index 超出");
         }
