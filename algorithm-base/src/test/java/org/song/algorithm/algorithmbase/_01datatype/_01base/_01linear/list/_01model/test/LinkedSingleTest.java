@@ -2,6 +2,7 @@ package org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01m
 
 import org.junit.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.LinkedSingle01;
+import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.LinkedSingle02;
 import org.springframework.util.StopWatch;
 
 import java.util.LinkedList;
@@ -52,6 +53,34 @@ public class LinkedSingleTest {
         }
         for (int i = 0; i < list.size(); i++) {
             assert linked.get(i) == list.get(i);
+        }
+        
+        
+    }
+
+    @Test
+    public void test_auto_test02() {
+        LinkedSingle01<Integer> linked = new LinkedSingle01<>();
+        LinkedSingle02<Integer> linked2 = new LinkedSingle02<>();
+        
+        // test get(index)
+        for (int i = 0; i < maxSize; i++) {
+            int val = r.nextInt(maxVal);
+            linked.add(val);
+            linked2.add(val);
+        }
+        for (int i = 0; i < maxSize; i++) {
+            assert linked.get(i) == linked2.get(i);
+        }
+
+        // test delete(index)
+        for (int i = 0; i < linked2.length(); i++) {
+            int index = r.nextInt(linked2.length() - 1);
+            linked.delete(index);
+            linked2.delete(index);
+        }
+        for (int i = 0; i < linked2.length(); i++) {
+            assert linked.get(i) == linked2.get(i);
         }
         
         
