@@ -20,28 +20,30 @@ package org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model;
 public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
 
     public HashMap_base_03() {
-        datas = new Entry[initCapacity];
+        super();
     }
 
     public HashMap_base_03(int capacity) {
-        datas = new Entry[initCapacity = upPower(capacity)];
+        super(capacity);
     }
 
     @Override
     public V get(K k) {
         int hash = hash(k);
         int index = getIndex(hash, datas.length);
-
-        Entry<K, V> head = (Entry<K, V>) datas[index];
+        // 表示链表头
+        Entry<K, V> head = datas[index];
         if (head == null) {
             return null;
         } else if (hash == hash(head.k) && (k == head.k || head.k.equals(k))) {
             return head.val;
         } else {
+            // 遍历链表
             Entry<K, V> pre = head, next;
             while (pre != null) {
-                next = (Entry<K, V>) pre.next;
+                next = pre.next;
                 if (next == null) break;
+                // 找到了, 返回他
                 if (hash == hash(next.k) && (k == next.k || next.k.equals(k))) return next.val;
                 pre = next;
             }
@@ -55,29 +57,35 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
         int index = getIndex(hash, datas.length);
 
         Entry<K, V> oldEntry = null;
-        Entry<K, V> head = (Entry<K, V>) datas[index];
+        Entry<K, V> head = datas[index];
         if (head == null) {
+            // 没有 则新增
             datas[index] = new Entry<>(k, v, null, hash);
         } else if (hash == hash(head.k) && (k == head.k || head.k.equals(k))) {
-            datas[index] = new Entry<>(k, v, (Entry<K, V>) head.next, hash);
+            // 有 则替换
+            datas[index] = new Entry<>(k, v, head.next, hash);
             return head.val;
         } else {
+            // 在链表中查找
             Entry<K, V> pre = head, next;
             while (pre != null) {
-                next = (Entry<K, V>) pre.next;
+                next = pre.next;
+                // 没找到 啥也不做
                 if (next == null) break;
                 if (hash == hash(next.k) && (k == next.k || next.k.equals(k))) {
+                    // 找到了, 则替换
                     oldEntry = next;
-                    pre.next = new Entry<>(k, v, (Entry<K, V>) next.next, hash);
+                    pre.next = new Entry<>(k, v, next.next, hash);
                     return oldEntry.val;
                 }
                 pre = next;
             }
+            // 放在链表尾部
             pre.next = new Entry<>(k, v, null, hash);
         }
-        size++;
+        size++; // 容量增加
         ensureCapacity();
-        return null;
+        return oldEntry != null ? oldEntry.val : null;
     }
 
     @Override
@@ -85,18 +93,22 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
         int hash = hash(k);
         int index = getIndex(hash, datas.length);
 
-        Entry<K, V> head = (Entry<K, V>) datas[index];
+        Entry<K, V> head = datas[index];
         if (head == null) {
+            // 没有 返回空
             return null;
         } else if (hash == hash(head.k) && (k == head.k || head.k.equals(k))) {
-            datas[index] = head.next;
+            // 找到了 直接返回
+            datas[index] = head.next; // 用下一个节点替换
             size--;
             return head.val;
         } else {
+            // 在链表中查找
             Entry<K, V> pre = head, next;
             while (pre != null) {
-                next = (Entry<K, V>) pre.next;
+                next = pre.next;
                 if (next == null) break;
+                // 找到了 删除并返回他
                 if (hash == hash(next.k) && (k == next.k || next.k.equals(k))) {
                     pre.next = next.next;
                     size--;
@@ -113,8 +125,9 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
      */
     @Override
     protected void dilatation() {
+        // 扩容2倍
         Entry<K, V>[] newDatas = new Entry[datas.length << 1];
-
+        // 遍历数组
         for (int i = 0; i < datas.length; i++) {
             if (datas[i] == null) {
                 continue;
@@ -133,16 +146,16 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
                 1. 遍历单向链表, 详情参见 Linked_single_02 单向链表遍历删除问题
                 2. 由于需要保持头元素用于移动整个列表, 所以要多出两个变量 headOld headNew
              */
-            Entry<K, V> headOld = (Entry<K, V>) datas[i],
+            Entry<K, V> headOld = datas[i],
                     prevOld = headOld,
                     headNew = null,
                     prevNew = null,
                     n = prevOld;
 
             while (n != null) {
-                Entry<K, V> next = (Entry<K, V>) n.next;
-                int index = getIndex(n.hash, datas.length);
-                if (index == 0) {
+                Entry<K, V> next = n.next;
+                int index = getIndex(n.hash, newDatas.length);
+                if (index == i) {
                     // 不需要移动
                     if (n != prevOld) {
                         prevOld = n;
@@ -153,7 +166,7 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
                         // 是头元素, 更换头元素
                         headOld = next;
                         datas[i] = next;
-                        prevOld = (Entry<K, V>) datas[i];
+                        prevOld = datas[i];
                     } else {
                         // 不是头元素, 跳过需要移动的元素
                         prevOld.next = next;
@@ -168,7 +181,7 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
                     } else {
                         // 在新链表尾部添加
                         prevNew.next = n;
-                        prevNew = (Entry<K, V>) prevNew.next;
+                        prevNew = prevNew.next;
                     }
                 }
                 n = next;
@@ -194,17 +207,4 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
         return hash & (length - 1);
     }
 
-    protected static class Entry<K, V> extends AbstractMap.Entry<K, V> {
-        // 新增一个指针, 不需要重复计算了
-        int hash;
-
-        public Entry(K k, V val, Entry<K, V> next) {
-            super(k, val, next);
-        }
-
-        public Entry(K k, V val, Entry<K, V> next, int hash) {
-            super(k, val, next);
-            this.hash = hash;
-        }
-    }
 }

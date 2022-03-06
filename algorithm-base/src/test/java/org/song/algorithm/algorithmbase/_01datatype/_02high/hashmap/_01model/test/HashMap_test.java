@@ -51,8 +51,8 @@ public class HashMap_test {
          */
         for (int j = 0; j < 10000; j++) {
 //            HashMap_base_01<Integer, Integer> map1 = new HashMap_base_01<>();
-            HashMap_base_02<Integer, Integer> map1 = new HashMap_base_02<>();
-//            HashMap_base_03<Integer, Integer> map1 = new HashMap_base_03<>();
+//            HashMap_base_02<Integer, Integer> map1 = new HashMap_base_02<>();
+            HashMap_base_03<Integer, Integer> map1 = new HashMap_base_03<>();
 //            HashMap_clash_01<Integer, Integer> map1 = new HashMap_clash_01<>();
             for (int i = 0; i < maxSize; i++) {
                 int k = r.nextInt(maxVal);
@@ -95,9 +95,9 @@ public class HashMap_test {
         HashMap<Integer, Integer> map0 = new HashMap<>();
         HashMap_base_01<Integer, Integer> map1 = new HashMap_base_01<>();
         HashMap_base_02<Integer, Integer> map2 = new HashMap_base_02<>();
-        HashMap_base_03<Integer, Integer> map3 = new HashMap_base_03<>();
+//        HashMap_base_03<Integer, Integer> map3 = new HashMap_base_03<>();
 //        HashMap_base_04<Integer, Integer> map4 = new HashMap_base_04<>();
-        HashMap_clash_01<Integer, Integer> map5 = new HashMap_clash_01<>();
+//        HashMap_clash_01<Integer, Integer> map5 = new HashMap_clash_01<>();
 
         for (int i = 0; i < maxSize; i++) {
             int k = r.nextInt(maxVal);
@@ -106,23 +106,23 @@ public class HashMap_test {
             map0.put(k, v);
             map1.put(k, v);
             map2.put(k, v);
-            map3.put(k, v);
+//            map3.put(k, v);
 //            map4.put(k, v);
-            map5.put(k, v);
+//            map5.put(k, v);
         }
 
         for (int i = 0; i < maxSize; i++) {
             Integer v0 = map0.get(i);
             Integer v1 = map1.get(i);
             Integer v2 = map2.get(i);
-            Integer v3 = map3.get(i);
+//            Integer v3 = map3.get(i);
 //            Integer v4 = map4.get(i);
-            Integer v5 = map5.get(i);
+//            Integer v5 = map5.get(i);
             assert eq(v0, v1);
             assert eq(v0, v2);
-            assert eq(v0, v3);
+//            assert eq(v0, v3);
 //            assert eq(v0, v4);
-            assert eq(v0, v5);
+//            assert eq(v0, v5);
         }
 
         for (int i = 0; i < maxSize; i++) {
@@ -130,23 +130,23 @@ public class HashMap_test {
             map0.remove(v);
             map1.remove(v);
             map2.remove(v);
-            map3.remove(v);
+//            map3.remove(v);
 //            map4.remove(v);
-            map5.remove(v);
+//            map5.remove(v);
         }
 
         for (int i = 0; i < maxSize; i++) {
             Integer v0 = map0.get(i);
             Integer v1 = map1.get(i);
             Integer v2 = map2.get(i);
-            Integer v3 = map3.get(i);
+//            Integer v3 = map3.get(i);
 //            Integer v4 = map4.get(i);
-            Integer v5 = map5.get(i);
+//            Integer v5 = map5.get(i);
             assert eq(v0, v1);
             assert eq(v0, v2);
-            assert eq(v0, v3);
+//            assert eq(v0, v3);
 //            assert eq(v0, v4);
-            assert eq(v0, v5);
+//            assert eq(v0, v5);
         }
     }
 

@@ -23,6 +23,14 @@ public abstract class AbstractMap<K, V> {
         K k;
         V val;
         Entry<K, V> next;
+        // 新增一个指针, 不需要重复计算了, 不同的实现方式, 可能用不到这个字段
+        int hash;
+
+        public Entry(K k, V val, Entry<K, V> next) {
+            this.k = k;
+            this.val = val;
+            this.next = next;
+        }
 
         @Override
         public String toString() {
