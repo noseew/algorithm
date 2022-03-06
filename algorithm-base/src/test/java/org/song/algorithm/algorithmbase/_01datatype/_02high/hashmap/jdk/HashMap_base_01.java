@@ -6,15 +6,15 @@ package org.song.algorithm.algorithmbase._01datatype._02high.hashmap.jdk;
  * @param <K>
  * @param <V>
  */
-public class HashMap_base_01<K, V> {
+public class HashMap_base_01<K, V> extends AbstractMap<K, V> {
 
-    private Entry<K, V>[] datas;
+    protected Entry<K, V>[] datas;
 
-    private double dilatationRatio = 0.75;
+    protected double dilatationRatio = 0.75;
 
-    private int initCapacity = 1 << 3;
+    protected int initCapacity = 1 << 3;
 
-    private int size;
+    protected int size;
 
     public HashMap_base_01() {
         datas = new Entry[initCapacity];
@@ -24,6 +24,7 @@ public class HashMap_base_01<K, V> {
         datas = new Entry[initCapacity = capacity];
     }
 
+    @Override
     public V get(K k) {
         int hash = hash(k);
         Entry<K, V> head = datas[hash % datas.length];
@@ -47,6 +48,7 @@ public class HashMap_base_01<K, V> {
         return null;
     }
 
+    @Override
     public V put(K k, V v) {
         int hash = hash(k);
         Entry<K, V> oldEntry = null;
@@ -76,6 +78,7 @@ public class HashMap_base_01<K, V> {
         return null;
     }
 
+    @Override
     public V remove(K k) {
         int hash = hash(k);
         Entry<K, V> head = datas[hash % datas.length];
@@ -106,7 +109,7 @@ public class HashMap_base_01<K, V> {
     /**
      * 确保容量
      */
-    private void ensureCapacity() {
+    protected void ensureCapacity() {
         if ((double) size / (double) datas.length > dilatationRatio) {
             dilatation();
         }
@@ -115,7 +118,7 @@ public class HashMap_base_01<K, V> {
     /**
      * 扩容
      */
-    private void dilatation() {
+    protected void dilatation() {
         Entry<K, V>[] newDatas = new Entry[datas.length << 1];
         for (Entry<K, V> head : datas) {
             while (head != null) {
@@ -128,7 +131,7 @@ public class HashMap_base_01<K, V> {
         datas = newDatas;
     }
 
-    private void putNewEntry(Entry<K, V>[] newDatas, Entry<K, V> entry) {
+    protected void putNewEntry(Entry<K, V>[] newDatas, Entry<K, V> entry) {
         K k = entry.k;
         V v = entry.val;
 
@@ -156,18 +159,5 @@ public class HashMap_base_01<K, V> {
             return 0;
         }
         return System.identityHashCode(k);
-    }
-
-    class Entry<K, V> {
-
-        K k;
-        V val;
-        Entry<K, V> next;
-
-        public Entry(K k, V val, Entry<K, V> next) {
-            this.k = k;
-            this.val = val;
-            this.next = next;
-        }
     }
 }
