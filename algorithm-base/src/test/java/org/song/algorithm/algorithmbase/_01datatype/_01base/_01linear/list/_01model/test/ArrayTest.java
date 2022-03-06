@@ -80,6 +80,24 @@ public class ArrayTest {
     }
 
     @Test
+    public void test_share_test() {
+        ArrayBase02<Integer> array2 = new ArrayBase02<>(4);
+        maxSize = 10;
+
+        for (int i = 0; i < maxSize; i++) {
+            int val = r.nextInt(maxVal);
+            array2.add(val);
+        }
+
+        array2.clean();
+        for (int i = 0; i < maxSize; i++) {
+            int val = r.nextInt(maxVal);
+            array2.add(val);
+        }
+    }
+
+
+    @Test
     public void test_auto_test02() {
         ArrayBase01<Integer> array = new ArrayBase01<>(5);
         ArrayBase02<Integer> array2 = new ArrayBase02<>(5);

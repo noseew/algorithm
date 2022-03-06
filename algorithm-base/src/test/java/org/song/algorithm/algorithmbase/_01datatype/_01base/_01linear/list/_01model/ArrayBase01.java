@@ -123,7 +123,10 @@ public class ArrayBase01<T> extends AbsLine<T> {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
         for (int i = 0; i < size; i++) {
-            sb.append(data[i]).append(",");
+            sb.append(data[i]);
+            if (i != size - 1) {
+                sb.append(",");
+            }
         }
         sb.append("]");
         return "size=" + size + ", datas=" + sb.toString();

@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * 基于数组
  * 
- * 扩容采用复杂度均摊, 未完成
+ * 扩容采用复杂度均摊
  *
  * @param <T>
  */
@@ -15,7 +15,7 @@ public class ArrayBase02<T> extends ArrayBase01<T> {
     
     protected int process;
     
-    protected volatile boolean processing;
+    protected boolean processing;
     
 
     public ArrayBase02() {
@@ -24,6 +24,15 @@ public class ArrayBase02<T> extends ArrayBase01<T> {
 
     public ArrayBase02(int capacity) {
         super(capacity);
+    }
+
+    @Override
+    public void clean() {
+        size = 0;
+        process = 0;
+        processing = false;
+        data2 = null;
+        shrink();
     }
     
     @Override
@@ -87,7 +96,10 @@ public class ArrayBase02<T> extends ArrayBase01<T> {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
         for (int i = 0; i < size; i++) {
-            sb.append(currentData(i)[i]).append(",");
+            sb.append(currentData(i)[i]);
+            if (i != size - 1) {
+                sb.append(",");
+            }
         }
         sb.append("]");
         return "size=" + size + ", datas=" + sb.toString();
@@ -117,7 +129,7 @@ public class ArrayBase02<T> extends ArrayBase01<T> {
      */
     @Override
     protected void ensureCapacity() {
-        if (size >= data.length - 1) {
+        if (size >= data.length) {
             if (processing) {
                 // 如果出现, 扩容中且容量不够了, 则扩容倍数必须是原来的2倍
                 throw new RuntimeException("不可能出现的异常");
@@ -152,13 +164,14 @@ public class ArrayBase02<T> extends ArrayBase01<T> {
         if (!processing) {
             return;
         }
-        if (process < data2.length - 1) {
+        if (process < data2.length) {
             // 均摊复制, 每次复制一次
             data[process] = data2[process];
             process++;
         } else {
             // 复制完成
             data2 = null;
+            process = 0;
             processing = false;
         }
     }
