@@ -117,46 +117,6 @@ public class HashMap_base_02<K, V> extends HashMap_base_01<K, V> {
         return n <= 0 ? 16 : n + 1;
     }
 
-    /**
-     * 扩容
-     */
-    @Override
-    protected void dilatation() {
-        Entry<K, V>[] newDatas = new Entry[datas.length << 1];
-        for (Entry<K, V> head : datas) {
-            while (head != null) {
-                Entry<K, V> next = head.next;
-                head.next = null;
-                putNewEntry(newDatas, head);
-                head = next;
-            }
-        }
-        datas = newDatas;
-    }
-
-    @Override
-    protected void putNewEntry(Entry<K, V>[] newDatas, Entry<K, V> entry) {
-
-        int index = getIndex(hash(entry.k), datas.length);
-
-        Entry<K, V> head = newDatas[index];
-        if (head == null) {
-            newDatas[index] = entry;
-        } else {
-            // 头插法, 只需要遍历一次链表
-            entry.next = head;
-            newDatas[index] = entry;
-
-            // 尾插法, 需要多遍历一次链表
-//            Entry<K, V> pre = head, next = pre.next;
-//            while (next != null) {
-//                pre = next;
-//                next = pre.next;
-//            }
-//            pre.next = entry;
-        }
-    }
-
     @Override
     protected int hash(K k) {
         if (k == null) {
