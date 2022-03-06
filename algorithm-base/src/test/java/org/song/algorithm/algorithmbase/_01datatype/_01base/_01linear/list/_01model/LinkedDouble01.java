@@ -150,13 +150,7 @@ public class LinkedDouble01<T> extends AbsLine<T> {
 
         DuplexNode<T> node = getByVal(v);
         if (node != null) {
-            if (node.prev != null) {
-                node.prev.next = node.next;
-            }
-            if (node.next != null) {
-                ((DuplexNode<T>) node.next).prev = node.prev;
-            }
-            size--;
+            deleteNode(node);
             return node.value;
         }
         return null;
@@ -173,6 +167,18 @@ public class LinkedDouble01<T> extends AbsLine<T> {
     @Override
     public String toString() {
         return ListPrinter.printSingleList(head, false);
+    }
+    
+    protected void deleteNode(DuplexNode<T> node) {
+        if (node != null) {
+            if (node.prev != null) {
+                node.prev.next = node.next;
+            }
+            if (node.next != null) {
+                ((DuplexNode<T>) node.next).prev = node.prev;
+            }
+            size--;
+        }
     }
 
     private void checkIndexBound(int index) {

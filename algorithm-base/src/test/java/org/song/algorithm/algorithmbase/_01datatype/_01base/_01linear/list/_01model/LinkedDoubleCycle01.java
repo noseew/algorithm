@@ -104,9 +104,8 @@ public class LinkedDoubleCycle01<T> extends LinkedDouble01<T> {
     }
 
     @Override
-    @Deprecated
     public T delete(T v) {
-        throw new RuntimeException("暂不支持该操作");
+        return super.delete(v);
     }
 
     public DuplexNode<T> getHead() {
