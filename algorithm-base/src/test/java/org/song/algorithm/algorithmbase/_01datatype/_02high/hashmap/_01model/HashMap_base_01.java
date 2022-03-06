@@ -1,7 +1,5 @@
 package org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model;
 
-import java.util.Arrays;
-
 /**
  * 实现简单功能的 HashMap, 模仿JDK中的HashMap
  * 1. 数组+链表
@@ -58,6 +56,7 @@ public class HashMap_base_01<K, V> extends AbstractMap<K, V> {
     public V put(K k, V v) {
         int hash = hash(k);
         int index = getIndex(hash, datas.length);
+
         Entry<K, V> oldEntry = null;
         Entry<K, V> head = datas[index];
         if (head == null) {
@@ -94,6 +93,7 @@ public class HashMap_base_01<K, V> extends AbstractMap<K, V> {
     public V remove(K k) {
         int hash = hash(k);
         int index = getIndex(hash, datas.length);
+
         Entry<K, V> head = datas[index];
         if (head == null) {
             // 没有 返回空
