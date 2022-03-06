@@ -16,9 +16,9 @@ import java.util.Objects;
 public class ArrayBase02<T> extends ArrayBase01<T> {
 
     protected T[] data2;
-    
+    // 复制进度, 从0开始, 截止到原数组末尾下表
     protected int process;
-    
+    // 是否正在复制
     protected boolean processing;
     
 
@@ -76,7 +76,7 @@ public class ArrayBase02<T> extends ArrayBase01<T> {
             copy();
         }
         ensureCapacity();
-        // 直接对主数组操作
+        // 直接对主数组操作, 1. 空间足够, 2. 省的再次复制
         this.data[++size - 1] = v;
     }
 
@@ -161,7 +161,7 @@ public class ArrayBase02<T> extends ArrayBase01<T> {
     }
 
     /**
-     * 均摊复制
+     * 均摊复制, 每个操作(增删改查)都来均摊这个复制操作, 这就是均摊复杂度
      * 复制方向 data2 -> data
      */
     protected void copy() {
