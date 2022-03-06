@@ -170,7 +170,9 @@ public class ArrayBase01<T> extends AbsLine<T> {
      * 扩容
      */
     protected void dilatation() {
-        T[] newData = (T[]) new Object[data.length + (data.length >> 1)];
+        int append = data.length >> 1;
+        append = append <= 0 ? 1 : append;
+        T[] newData = (T[]) new Object[data.length + append];
         System.arraycopy(data, 0, newData, 0, data.length);
         data = newData;
     }

@@ -98,10 +98,11 @@ public class ArrayTest {
 
 
     @Test
-    public void test_auto_test02() {
-        ArrayBase01<Integer> array = new ArrayBase01<>(5);
-        ArrayBase02<Integer> array2 = new ArrayBase02<>(5);
-
+    public void test_auto_share02() {
+        ArrayBase01<Integer> array = new ArrayBase01<>(1);
+        ArrayBase02<Integer> array2 = new ArrayBase02<>(1);
+        maxSize = 10_0000;
+        
         for (int i = 0; i < maxSize; i++) {
             int val = r.nextInt(maxVal);
             array.add(val);
@@ -122,6 +123,45 @@ public class ArrayTest {
         }
         for (int i = 0; i < maxSize; i++) {
             assert array.get(i) == array2.get(i);
+        }
+    }
+
+    /**
+     * 这里显示, 这个均摊复杂度并没有提高效率
+     */
+    @Test
+    public void test_share_perf02() {
+        ArrayBase01<Integer> array1 = new ArrayBase01<>(4);
+        ArrayBase02<Integer> array2 = new ArrayBase02<>(4);
+
+        maxSize = 1_000_0000;
+
+        StopWatch sw = new StopWatch();
+
+        sw.start("array1");
+        for (int i = 0; i < maxSize; i++) {
+            int val = r.nextInt(maxVal);
+            array1.add(val);
+        }
+        for (int i = 0; i < maxSize; i++) {
+            array1.get(i);
+        }
+        sw.stop();
+
+        sw.start("array2");
+        for (int i = 0; i < maxSize; i++) {
+            int val = r.nextInt(maxVal);
+            array2.add(val);
+        }
+        for (int i = 0; i < maxSize; i++) {
+            array2.get(i);
+        }
+        sw.stop();
+
+        System.out.println(sw.prettyPrint());
+
+        for (int i = 0; i < maxSize; i++) {
+            assert array1.get(i) == array2.get(i);
         }
     }
 
