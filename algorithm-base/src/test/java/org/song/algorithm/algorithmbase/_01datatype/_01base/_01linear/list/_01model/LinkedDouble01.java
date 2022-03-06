@@ -63,6 +63,11 @@ public class LinkedDouble01<T> extends AbsLine<T> {
 
     @Override
     public void clean() {
+        /*
+        这里仅仅是断开 GC root 指针, 
+        JDK中不仅清空了这些, 还清空了每一个节点的指针, 
+        目的: 1. 尽快的GC, 2. 节点可能会被迭代器对象引用, 清空他们可以尽快的释放迭代器
+         */
         this.head = null;
         this.tail = null;
         this.size = 0;
