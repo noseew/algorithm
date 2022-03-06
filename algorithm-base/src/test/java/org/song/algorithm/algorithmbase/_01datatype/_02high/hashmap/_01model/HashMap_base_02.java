@@ -1,11 +1,16 @@
-package org.song.algorithm.algorithmbase._01datatype._02high.hashmap.jdk;
+package org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model;
 
 /**
  * 实现简单功能的 HashMap, 模仿JDK中的HashMap
  *
  * 相比较 HashMap_base_01
- * 1. 增加 hash 扰动算法
- * 2. 采用 & 替换 % 计算下标
+ * 1. 数组+链表
+ * 2. 数组容量随意
+ * 3. 链表采用 头插法或尾插法
+ * 4. 扩容采用2倍
+ * 变化
+ * 1. 增加 hash 扰动算法, hash计算将高16位纳入计算范围
+ * 2. 采用 & 替换 % 计算下标, 效率较高
  *
  * @param <K>
  * @param <V>
@@ -22,8 +27,9 @@ public class HashMap_base_02<K, V> extends HashMap_base_01<K, V> {
 
     @Override
     public V get(K k) {
-        int hash = hash(k);
-        Entry<K, V> head = datas[hash & (datas.length - 1)];
+        int index = getIndex(hash(k), datas.length);
+        
+        Entry<K, V> head = datas[index];
         if (head == null) {
             return null;
         } else if (head.k.equals(k)) {
@@ -32,12 +38,8 @@ public class HashMap_base_02<K, V> extends HashMap_base_01<K, V> {
             Entry<K, V> pre = head, next;
             while (pre != null) {
                 next = pre.next;
-                if (next == null) {
-                    break;
-                }
-                if (next.k.equals(k)) {
-                    return next.val;
-                }
+                if (next == null) break;
+                if (next.k.equals(k)) return next.val;
                 pre = next;
             }
         }
@@ -46,9 +48,7 @@ public class HashMap_base_02<K, V> extends HashMap_base_01<K, V> {
 
     @Override
     public V put(K k, V v) {
-        int hash = hash(k);
-        int len = datas.length;
-        int index = hash & (len - 1);
+        int index = getIndex(hash(k), datas.length);
 
         Entry<K, V> oldEntry = null;
         Entry<K, V> head = datas[index];
@@ -56,13 +56,12 @@ public class HashMap_base_02<K, V> extends HashMap_base_01<K, V> {
             datas[index] = new Entry<>(k, v, null);
         } else if (head.k.equals(k)) {
             datas[index] = new Entry<>(k, v, head.next);
+            return head.val;
         } else {
             Entry<K, V> pre = head, next;
             while (pre != null) {
                 next = pre.next;
-                if (next == null) {
-                    break;
-                }
+                if (next == null) break;
                 if (next.k.equals(k)) {
                     oldEntry = next;
                     pre.next = new Entry<>(k, v, next.next);
@@ -79,8 +78,7 @@ public class HashMap_base_02<K, V> extends HashMap_base_01<K, V> {
 
     @Override
     public V remove(K k) {
-        int hash = hash(k);
-        int index = hash & (datas.length - 1);
+        int index = getIndex(hash(k), datas.length);
 
         Entry<K, V> head = datas[index];
         if (head == null) {
@@ -136,9 +134,7 @@ public class HashMap_base_02<K, V> extends HashMap_base_01<K, V> {
     @Override
     protected void putNewEntry(Entry<K, V>[] newDatas, Entry<K, V> entry) {
 
-        int hash = hash(entry.k);
-        int len = newDatas.length;
-        int index = hash & (len - 1);
+        int index = getIndex(hash(entry.k), datas.length);
 
         Entry<K, V> head = newDatas[index];
         if (head == null) {
@@ -159,11 +155,19 @@ public class HashMap_base_02<K, V> extends HashMap_base_01<K, V> {
     }
 
     @Override
-    public int hash(K k) {
+    protected int hash(K k) {
         if (k == null) {
             return 0;
         }
+        // 相同的值 x, 在不同的JVM进程中返回的值可能不同, 但在同一个JVM进程中相同
         int hash = System.identityHashCode(k);
+//        int hash = k.hashCode();
+        // 高16位也参与计算, hash扰动算法
         return hash ^ (hash >>> 16);
+    }
+
+    @Override
+    protected int getIndex(int hash, int length) {
+        return hash & (length - 1);
     }
 }

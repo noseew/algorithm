@@ -1,7 +1,7 @@
 package org.song.algorithm.algorithmbase._02alg._02search.alg;
 
 import org.junit.Test;
-import org.song.algorithm.algorithmbase._01datatype._02high.hashmap.jdk.HashMap_base_03;
+import org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model.HashMap_base_03;
 import org.song.algorithm.algorithmbase._02alg._01sort.AbstractSort;
 import org.song.algorithm.algorithmbase._02alg._02search.AbstractSearch;
 

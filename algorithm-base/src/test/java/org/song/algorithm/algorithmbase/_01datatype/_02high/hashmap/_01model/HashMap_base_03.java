@@ -1,17 +1,23 @@
-package org.song.algorithm.algorithmbase._01datatype._02high.hashmap.jdk;
+package org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model;
 
 /**
  * 实现简单功能的 HashMap, 模仿JDK中的HashMap
  *
  * 相比较 HashMap_base_01
+ * 1. 数组+链表
+ * 2. 数组容量随意
+ * 3. 链表采用 头插法或尾插法
+ * 4. 扩容采用2倍
+ * 1. 增加 hash 扰动算法, hash计算将高16位纳入计算范围
+ * 2. 采用 & 替换 % 计算下标, 效率较高
+ * 变化
  * 1. 扩容的头插法, 改成优化后的尾插法
- * 2. 链表中部分元素无用重新计算索引, 扩容的时候, 节点中存储有当前节点的hash值, 所以只要不需要移动, 就不需要重新计算hash值
+ * 2. 链表中部分元素无用重新计算索引, 节点中存储有当前节点的hash值, 扩容的时候, 就不需要重新计算hash值
  *
  * @param <K>
  * @param <V>
  */
 public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
-
 
     public HashMap_base_03() {
         datas = new Entry[initCapacity];
@@ -24,7 +30,9 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
     @Override
     public V get(K k) {
         int hash = hash(k);
-        Entry<K, V> head = (Entry<K, V>) datas[hash & (datas.length - 1)];
+        int index = getIndex(hash, datas.length);
+
+        Entry<K, V> head = (Entry<K, V>) datas[index];
         if (head == null) {
             return null;
         } else if (head.k.equals(k)) {
@@ -33,12 +41,8 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
             Entry<K, V> pre = head, next;
             while (pre != null) {
                 next = (Entry<K, V>) pre.next;
-                if (next == null) {
-                    break;
-                }
-                if (next.k.equals(k)) {
-                    return next.val;
-                }
+                if (next == null) break;
+                if (next.k.equals(k)) return next.val;
                 pre = next;
             }
         }
@@ -48,8 +52,7 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
     @Override
     public V put(K k, V v) {
         int hash = hash(k);
-        int len = datas.length;
-        int index = hash & (len - 1);
+        int index = getIndex(hash, datas.length);
 
         Entry<K, V> oldEntry = null;
         Entry<K, V> head = (Entry<K, V>) datas[index];
@@ -57,13 +60,12 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
             datas[index] = new Entry<>(k, v, null, hash);
         } else if (head.k.equals(k)) {
             datas[index] = new Entry<>(k, v, (Entry<K, V>) head.next, hash);
+            return head.val;
         } else {
             Entry<K, V> pre = head, next;
             while (pre != null) {
                 next = (Entry<K, V>) pre.next;
-                if (next == null) {
-                    break;
-                }
+                if (next == null) break;
                 if (next.k.equals(k)) {
                     oldEntry = next;
                     pre.next = new Entry<>(k, v, (Entry<K, V>) next.next, hash);
@@ -81,7 +83,7 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
     @Override
     public V remove(K k) {
         int hash = hash(k);
-        int index = hash & (datas.length - 1);
+        int index = getIndex(hash, datas.length);
 
         Entry<K, V> head = (Entry<K, V>) datas[index];
         if (head == null) {
@@ -94,9 +96,7 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
             Entry<K, V> pre = head, next;
             while (pre != null) {
                 next = (Entry<K, V>) pre.next;
-                if (next == null) {
-                    break;
-                }
+                if (next == null) break;
                 if (next.k.equals(k)) {
                     pre.next = next.next;
                     size--;
@@ -141,7 +141,8 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
 
             while (n != null) {
                 Entry<K, V> next = (Entry<K, V>) n.next;
-                if ((n.hash & datas.length) == 0) {
+                int index = getIndex(n.hash, datas.length);
+                if (index == 0) {
                     // 不需要移动
                     if (n != prevOld) {
                         prevOld = n;
@@ -181,7 +182,7 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
             }
             if (headNew != null) {
                 // 需要移动的链表
-                int index = headNew.hash & (newDatas.length - 1);
+                int index = getIndex(headNew.hash, newDatas.length);
                 newDatas[index] = headNew;
             }
         }
@@ -189,18 +190,12 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
     }
 
     @Override
-    public int hash(K k) {
-        if (k == null) {
-            return 0;
-        }
-        // 相同的值 x, 在不同的JVM进程中返回的值可能不同, 但在同一个JVM进程中相同
-        int hash = System.identityHashCode(k);
-//        int hash = k.hashCode();
-        return hash ^ (hash >>> 16);
+    protected int getIndex(int hash, int length) {
+        return hash & (length - 1);
     }
 
     protected static class Entry<K, V> extends AbstractMap.Entry<K, V> {
-
+        // 新增一个指针, 不需要重复计算了
         int hash;
 
         public Entry(K k, V val, Entry<K, V> next) {

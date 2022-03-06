@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase._01datatype._02high.hashmap.jdk;
+package org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model;
 
 /**
  * 实现简单功能的 HashMap, 模仿JDK中的HashMap

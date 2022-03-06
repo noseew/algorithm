@@ -1,13 +1,21 @@
-package org.song.algorithm.algorithmbase._01datatype._02high.hashmap.jdk;
+package org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model.test;
 
 import org.junit.Test;
+import org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model.*;
 import org.song.algorithm.algorithmbase.utils.StopWatchUtils;
 import org.springframework.util.StopWatch;
 
 import java.util.HashMap;
+import java.util.Objects;
+import java.util.Random;
 import java.util.UUID;
 
 public class HashMap_test {
+
+    private int maxVal = 500;
+    private int maxSize = 50;
+
+    private Random r = new Random();
 
     @Test
     public void test_01_start() {
@@ -42,6 +50,66 @@ public class HashMap_test {
     public void hash_test() {
         System.out.println(System.identityHashCode("1"));
         System.out.println("1".hashCode());
+    }
+
+    @Test
+    public void test_auto01() {
+        HashMap<Integer, Integer> map0 = new HashMap<>();
+        HashMap_base_01<Integer, Integer> map1 = new HashMap_base_01<>();
+        HashMap_base_02<Integer, Integer> map2 = new HashMap_base_02<>();
+        HashMap_base_03<Integer, Integer> map3 = new HashMap_base_03<>();
+//        HashMap_base_04<Integer, Integer> map4 = new HashMap_base_04<>();
+        HashMap_clash_01<Integer, Integer> map5 = new HashMap_clash_01<>();
+
+        for (int i = 0; i < maxSize; i++) {
+            int k = r.nextInt(maxVal);
+            int v = r.nextInt(maxVal);
+
+            map0.put(k, v);
+            map1.put(k, v);
+            map2.put(k, v);
+            map3.put(k, v);
+//            map4.put(k, v);
+            map5.put(k, v);
+        }
+
+        for (int i = 0; i < maxSize; i++) {
+            Integer v0 = map0.get(i);
+            Integer v1 = map1.get(i);
+            Integer v2 = map2.get(i);
+            Integer v3 = map3.get(i);
+//            Integer v4 = map4.get(i);
+            Integer v5 = map5.get(i);
+            assert eq(v0, v1);
+            assert eq(v0, v2);
+            assert eq(v0, v3);
+//            assert eq(v0, v4);
+            assert eq(v0, v5);
+        }
+
+        for (int i = 0; i < maxSize; i++) {
+            int v = r.nextInt(maxVal / 2);
+            map0.remove(v);
+            map1.remove(v);
+            map2.remove(v);
+            map3.remove(v);
+//            map4.remove(v);
+            map5.remove(v);
+        }
+
+        for (int i = 0; i < maxSize; i++) {
+            Integer v0 = map0.get(i);
+            Integer v1 = map1.get(i);
+            Integer v2 = map2.get(i);
+            Integer v3 = map3.get(i);
+//            Integer v4 = map4.get(i);
+            Integer v5 = map5.get(i);
+            assert eq(v0, v1);
+            assert eq(v0, v2);
+            assert eq(v0, v3);
+//            assert eq(v0, v4);
+            assert eq(v0, v5);
+        }
     }
 
     /**
@@ -200,6 +268,13 @@ public class HashMap_test {
         stopWatch.stop();
 
         System.out.println(stopWatch.prettyPrint());
+    }
+
+    private static boolean eq(Object o1, Object o2) {
+        if (o1 == null  && o2 == null) {
+            return true;
+        }
+        return Objects.equals(o1, o2);
     }
 }
 

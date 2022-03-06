@@ -1,6 +1,7 @@
-package org.song.algorithm.algorithmbase._01datatype._02high.hashmap.jdk;
+package org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model.test;
 
 import org.junit.Test;
+import org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model.HashMap_clash_01;
 
 public class HashMap_clash_test {
 

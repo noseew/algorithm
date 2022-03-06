@@ -1,7 +1,13 @@
-package org.song.algorithm.algorithmbase._01datatype._02high.hashmap.jdk;
+package org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model;
+
+import java.util.Arrays;
 
 /**
  * 实现简单功能的 HashMap, 模仿JDK中的HashMap
+ * 1. 数组+链表
+ * 2. 数组容量随意
+ * 3. 链表采用 头插法或尾插法
+ * 4. 扩容采用2倍
  *
  * @param <K>
  * @param <V>
@@ -26,22 +32,21 @@ public class HashMap_base_01<K, V> extends AbstractMap<K, V> {
 
     @Override
     public V get(K k) {
-        int hash = hash(k);
-        Entry<K, V> head = datas[hash % datas.length];
+        int index = getIndex(hash(k), datas.length);
+        // 表示链表头
+        Entry<K, V> head = datas[index];
         if (head == null) {
             return null;
         } else if (head.k.equals(k)) {
             return head.val;
         } else {
+            // 遍历链表
             Entry<K, V> pre = head, next;
             while (pre != null) {
                 next = pre.next;
-                if (next == null) {
-                    break;
-                }
-                if (next.k.equals(k)) {
-                    return next.val;
-                }
+                if (next == null) break;
+                // 找到了, 返回他
+                if (next.k.equals(k)) return next.val;
                 pre = next;
             }
         }
@@ -50,51 +55,58 @@ public class HashMap_base_01<K, V> extends AbstractMap<K, V> {
 
     @Override
     public V put(K k, V v) {
-        int hash = hash(k);
+        int index = getIndex(hash(k), datas.length);
         Entry<K, V> oldEntry = null;
-        Entry<K, V> head = datas[hash % datas.length];
+        Entry<K, V> head = datas[index];
         if (head == null) {
-            datas[hash % datas.length] = new Entry<>(k, v, null);
+            // 没有 则新增
+            datas[index] = new Entry<>(k, v, null);
         } else if (head.k.equals(k)) {
-            datas[hash % datas.length] = new Entry<>(k, v, head.next);
+            // 有 则替换
+            datas[index] = new Entry<>(k, v, head.next);
+            return head.val;
         } else {
+            // 在链表中查找
             Entry<K, V> pre = head, next;
             while (pre != null) {
                 next = pre.next;
-                if (next == null) {
-                    break;
-                }
+                // 没找到 啥也不做
+                if (next == null) break;
                 if (next.k.equals(k)) {
+                    // 找到了, 则替换
                     oldEntry = next;
                     pre.next = new Entry<>(k, v, next.next);
                     return oldEntry.val;
                 }
                 pre = next;
             }
+            // 放在链表尾部
             pre.next = new Entry<>(k, v, null);
         }
-        size++;
+        size++; // 容量增加
         ensureCapacity();
-        return null;
+        return oldEntry != null ? oldEntry.val : null;
     }
 
     @Override
     public V remove(K k) {
-        int hash = hash(k);
-        Entry<K, V> head = datas[hash % datas.length];
+        int index = getIndex(hash(k), datas.length);
+        Entry<K, V> head = datas[index];
         if (head == null) {
+            // 没有 返回空
             return null;
         } else if (head.k.equals(k)) {
-            datas[hash % datas.length] = head.next;
+            // 找到了 直接返回
+            datas[index] = head.next; // 用下一个节点替换
             size--;
             return head.val;
         } else {
+            // 在链表中查找
             Entry<K, V> pre = head, next;
             while (pre != null) {
                 next = pre.next;
-                if (next == null) {
-                    break;
-                }
+                if (next == null) break;
+                // 找到了 删除并返回他
                 if (next.k.equals(k)) {
                     pre.next = next.next;
                     size--;
@@ -119,8 +131,11 @@ public class HashMap_base_01<K, V> extends AbstractMap<K, V> {
      * 扩容
      */
     protected void dilatation() {
+        // 扩容2倍
         Entry<K, V>[] newDatas = new Entry[datas.length << 1];
+        // 遍历数组
         for (Entry<K, V> head : datas) {
+            // 遍历链表
             while (head != null) {
                 Entry<K, V> next = head.next;
                 head.next = null;
@@ -135,14 +150,18 @@ public class HashMap_base_01<K, V> extends AbstractMap<K, V> {
         K k = entry.k;
         V v = entry.val;
 
-        int hash = hash(k);
-        Entry<K, V> head = newDatas[hash % newDatas.length];
+        /*
+        重新计算 hash 和 index, 来判断它的具体位置
+         */
+        int index = getIndex(hash(k), newDatas.length);
+
+        Entry<K, V> head = newDatas[index];
         if (head == null) {
-            newDatas[hash % newDatas.length] = entry;
+            newDatas[index] = entry;
         } else {
             // 头插法
             entry.next = head;
-            newDatas[hash % newDatas.length] = entry;
+            newDatas[index] = entry;
 
             // 尾插法
 //            Entry<K, V> pre = head, next = pre.next;
@@ -154,10 +173,36 @@ public class HashMap_base_01<K, V> extends AbstractMap<K, V> {
         }
     }
 
-    public int hash(K k) {
+    protected int hash(K k) {
         if (k == null) {
             return 0;
         }
         return System.identityHashCode(k);
+    }
+
+    protected int getIndex(int hash, int length) {
+        return hash % length;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("size=").append(size);
+        sb.append("\r\n");
+        for (Entry<K, V> data : datas) {
+            if (data != null) {
+                // 遍历链表
+                Entry<K, V> pre = data, next;
+                while (pre != null) {
+                    next = pre.next;
+                    sb.append(pre.toString());
+                    if (next == null) break;
+                    sb.append(",");
+                    pre = next;
+                }
+                sb.append("\r\n");
+            }
+        }
+        return sb.toString();
     }
 }

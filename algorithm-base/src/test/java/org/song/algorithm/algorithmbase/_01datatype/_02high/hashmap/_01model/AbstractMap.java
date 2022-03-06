@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase._01datatype._02high.hashmap.jdk;
+package org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model;
 
 import lombok.AllArgsConstructor;
 
@@ -23,5 +23,10 @@ public abstract class AbstractMap<K, V> {
         K k;
         V val;
         Entry<K, V> next;
+
+        @Override
+        public String toString() {
+            return k + "=>" + val ;
+        }
     }
 }
