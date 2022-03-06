@@ -22,11 +22,12 @@ public class HashMap_clash_01<K, V> extends HashMap_base_03<K, V> {
 
     @Override
     public V get(K k) {
-        int index = getIndex(hash(k), datas.length);
+        int hash = hash(k);
+        int index = getIndex(hash, datas.length);
         Entry<K, V> head = (Entry<K, V>) datas[index];
         if (head == null) {
             return null; // 不存在
-        } else if (head.k.equals(k)) {
+        } else if (hash == hash(head.k) && (k == head.k || head.k.equals(k))) {
             return head.val; // 相等直接返回
         } else {
             for (int i = 0; i < datas.length; i++) {
@@ -50,7 +51,7 @@ public class HashMap_clash_01<K, V> extends HashMap_base_03<K, V> {
         Entry<K, V> head = (Entry<K, V>) datas[index];
         if (head == null) {
             datas[index] = new Entry<>(k, v, null, hash);
-        } else if (head.k.equals(k)) {
+        } else if (hash == hash(head.k) && (k == head.k || head.k.equals(k))) {
             datas[index] = new Entry<>(k, v, null, hash);
             return head.val;
         } else {
@@ -83,13 +84,13 @@ public class HashMap_clash_01<K, V> extends HashMap_base_03<K, V> {
 
     @Override
     public V remove(K k) {
-
-        int index = getIndex(hash(k), datas.length);
+        int hash = hash(k);
+        int index = getIndex(hash, datas.length);
 
         Entry<K, V> head = (Entry<K, V>) datas[index];
         if (head == null) {
             return null;
-        } else if (head.k.equals(k)) {
+        } else if (hash == hash(head.k) && (k == head.k || head.k.equals(k))) {
             size--;
             datas[index] = null;
             return head.val;

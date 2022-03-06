@@ -32,12 +32,13 @@ public class HashMap_base_01<K, V> extends AbstractMap<K, V> {
 
     @Override
     public V get(K k) {
-        int index = getIndex(hash(k), datas.length);
+        int hash = hash(k);
+        int index = getIndex(hash, datas.length);
         // 表示链表头
         Entry<K, V> head = datas[index];
         if (head == null) {
             return null;
-        } else if (head.k.equals(k)) {
+        } else if (hash == hash(head.k) && (k == head.k || head.k.equals(k))) {
             return head.val;
         } else {
             // 遍历链表
@@ -46,7 +47,7 @@ public class HashMap_base_01<K, V> extends AbstractMap<K, V> {
                 next = pre.next;
                 if (next == null) break;
                 // 找到了, 返回他
-                if (next.k.equals(k)) return next.val;
+                if (hash == hash(next.k) && (k == next.k || next.k.equals(k))) return next.val;
                 pre = next;
             }
         }
@@ -55,13 +56,14 @@ public class HashMap_base_01<K, V> extends AbstractMap<K, V> {
 
     @Override
     public V put(K k, V v) {
-        int index = getIndex(hash(k), datas.length);
+        int hash = hash(k);
+        int index = getIndex(hash, datas.length);
         Entry<K, V> oldEntry = null;
         Entry<K, V> head = datas[index];
         if (head == null) {
             // 没有 则新增
             datas[index] = new Entry<>(k, v, null);
-        } else if (head.k.equals(k)) {
+        } else if (hash == hash(head.k) && (k == head.k || head.k.equals(k))) {
             // 有 则替换
             datas[index] = new Entry<>(k, v, head.next);
             return head.val;
@@ -72,7 +74,7 @@ public class HashMap_base_01<K, V> extends AbstractMap<K, V> {
                 next = pre.next;
                 // 没找到 啥也不做
                 if (next == null) break;
-                if (next.k.equals(k)) {
+                if (hash == hash(next.k) && (k == next.k || next.k.equals(k))) {
                     // 找到了, 则替换
                     oldEntry = next;
                     pre.next = new Entry<>(k, v, next.next);
@@ -90,12 +92,13 @@ public class HashMap_base_01<K, V> extends AbstractMap<K, V> {
 
     @Override
     public V remove(K k) {
-        int index = getIndex(hash(k), datas.length);
+        int hash = hash(k);
+        int index = getIndex(hash, datas.length);
         Entry<K, V> head = datas[index];
         if (head == null) {
             // 没有 返回空
             return null;
-        } else if (head.k.equals(k)) {
+        } else if (hash == hash(head.k) && (k == head.k || head.k.equals(k))) {
             // 找到了 直接返回
             datas[index] = head.next; // 用下一个节点替换
             size--;
@@ -107,7 +110,7 @@ public class HashMap_base_01<K, V> extends AbstractMap<K, V> {
                 next = pre.next;
                 if (next == null) break;
                 // 找到了 删除并返回他
-                if (next.k.equals(k)) {
+                if (hash == hash(next.k) && (k == next.k || next.k.equals(k))) {
                     pre.next = next.next;
                     size--;
                     return next.val;
@@ -177,7 +180,8 @@ public class HashMap_base_01<K, V> extends AbstractMap<K, V> {
         if (k == null) {
             return 0;
         }
-        return System.identityHashCode(k);
+//        return System.identityHashCode(k); // 注意, 此函数同样的值计算的hash可能不相等(128以内相等), 待研究
+        return k.hashCode();
     }
 
     protected int getIndex(int hash, int length) {
@@ -189,10 +193,13 @@ public class HashMap_base_01<K, V> extends AbstractMap<K, V> {
         StringBuilder sb = new StringBuilder();
         sb.append("size=").append(size);
         sb.append("\r\n");
-        for (Entry<K, V> data : datas) {
+        int count = 0;
+        for (int i = 0; i < datas.length; i++) {
+            Entry<K, V> data = datas[i];
             if (data != null) {
                 // 遍历链表
                 Entry<K, V> pre = data, next;
+                sb.append(count++).append("-").append(i).append(": ");
                 while (pre != null) {
                     next = pre.next;
                     sb.append(pre.toString());
@@ -203,6 +210,7 @@ public class HashMap_base_01<K, V> extends AbstractMap<K, V> {
                 sb.append("\r\n");
             }
         }
+        
         return sb.toString();
     }
 }

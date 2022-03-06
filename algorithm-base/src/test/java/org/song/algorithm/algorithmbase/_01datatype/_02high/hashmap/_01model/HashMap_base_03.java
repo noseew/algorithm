@@ -35,14 +35,14 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
         Entry<K, V> head = (Entry<K, V>) datas[index];
         if (head == null) {
             return null;
-        } else if (head.k.equals(k)) {
+        } else if (hash == hash(head.k) && (k == head.k || head.k.equals(k))) {
             return head.val;
         } else {
             Entry<K, V> pre = head, next;
             while (pre != null) {
                 next = (Entry<K, V>) pre.next;
                 if (next == null) break;
-                if (next.k.equals(k)) return next.val;
+                if (hash == hash(next.k) && (k == next.k || next.k.equals(k))) return next.val;
                 pre = next;
             }
         }
@@ -58,7 +58,7 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
         Entry<K, V> head = (Entry<K, V>) datas[index];
         if (head == null) {
             datas[index] = new Entry<>(k, v, null, hash);
-        } else if (head.k.equals(k)) {
+        } else if (hash == hash(head.k) && (k == head.k || head.k.equals(k))) {
             datas[index] = new Entry<>(k, v, (Entry<K, V>) head.next, hash);
             return head.val;
         } else {
@@ -66,7 +66,7 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
             while (pre != null) {
                 next = (Entry<K, V>) pre.next;
                 if (next == null) break;
-                if (next.k.equals(k)) {
+                if (hash == hash(next.k) && (k == next.k || next.k.equals(k))) {
                     oldEntry = next;
                     pre.next = new Entry<>(k, v, (Entry<K, V>) next.next, hash);
                     return oldEntry.val;
@@ -88,7 +88,7 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
         Entry<K, V> head = (Entry<K, V>) datas[index];
         if (head == null) {
             return null;
-        } else if (head.k.equals(k)) {
+        } else if (hash == hash(head.k) && (k == head.k || head.k.equals(k))) {
             datas[index] = head.next;
             size--;
             return head.val;
@@ -97,7 +97,7 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
             while (pre != null) {
                 next = (Entry<K, V>) pre.next;
                 if (next == null) break;
-                if (next.k.equals(k)) {
+                if (hash == hash(next.k) && (k == next.k || next.k.equals(k))) {
                     pre.next = next.next;
                     size--;
                     return next.val;

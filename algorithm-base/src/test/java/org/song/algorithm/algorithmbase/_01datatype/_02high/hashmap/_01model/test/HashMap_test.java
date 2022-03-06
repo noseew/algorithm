@@ -12,10 +12,20 @@ import java.util.UUID;
 
 public class HashMap_test {
 
-    private int maxVal = 500;
-    private int maxSize = 50;
+    private int maxVal = 5000;
+    private int maxSize = 500;
 
     private Random r = new Random();
+
+    @Test
+    public void testHash() {
+        // 相等
+        System.out.println(System.identityHashCode(1));
+        System.out.println(System.identityHashCode(1));
+        // 不相等
+        System.out.println(System.identityHashCode(129));
+        System.out.println(System.identityHashCode(129));
+    }
 
     @Test
     public void test_01_start() {
@@ -30,6 +40,34 @@ public class HashMap_test {
         System.out.println(map.get("1"));
         System.out.println(map.remove("2"));
         System.out.println();
+    }
+
+    @Test
+    public void test_01_start2() {
+        
+        /*
+        System.identityHashCode() 函数有坑
+        
+         */
+        for (int j = 0; j < 10000; j++) {
+//            HashMap_base_01<Integer, Integer> map1 = new HashMap_base_01<>();
+            HashMap_base_02<Integer, Integer> map1 = new HashMap_base_02<>();
+//            HashMap_base_03<Integer, Integer> map1 = new HashMap_base_03<>();
+//            HashMap_clash_01<Integer, Integer> map1 = new HashMap_clash_01<>();
+            for (int i = 0; i < maxSize; i++) {
+                int k = r.nextInt(maxVal);
+                int v = r.nextInt(maxVal);
+                map1.put(k, v);
+                Integer v1 = map1.get(k);
+                boolean eq = eq(v, v1);
+                if (!eq) {
+                    map1.get(k);
+                    map1.put(k, v);
+                    assert eq;
+                }
+            }
+            
+        }
     }
 
     @Test

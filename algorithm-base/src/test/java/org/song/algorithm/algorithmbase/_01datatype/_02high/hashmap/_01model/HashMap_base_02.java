@@ -27,19 +27,20 @@ public class HashMap_base_02<K, V> extends HashMap_base_01<K, V> {
 
     @Override
     public V get(K k) {
-        int index = getIndex(hash(k), datas.length);
+        int hash = hash(k);
+        int index = getIndex(hash, datas.length);
         
         Entry<K, V> head = datas[index];
         if (head == null) {
             return null;
-        } else if (head.k.equals(k)) {
+        } else if (hash == hash(head.k) && (k == head.k || head.k.equals(k))) {
             return head.val;
         } else {
             Entry<K, V> pre = head, next;
             while (pre != null) {
                 next = pre.next;
                 if (next == null) break;
-                if (next.k.equals(k)) return next.val;
+                if (hash == hash(next.k) && (k == next.k || next.k.equals(k))) return next.val;
                 pre = next;
             }
         }
@@ -48,13 +49,14 @@ public class HashMap_base_02<K, V> extends HashMap_base_01<K, V> {
 
     @Override
     public V put(K k, V v) {
-        int index = getIndex(hash(k), datas.length);
+        int hash = hash(k);
+        int index = getIndex(hash, datas.length);
 
         Entry<K, V> oldEntry = null;
         Entry<K, V> head = datas[index];
         if (head == null) {
             datas[index] = new Entry<>(k, v, null);
-        } else if (head.k.equals(k)) {
+        } else if (hash == hash(head.k) && (k == head.k || head.k.equals(k))) {
             datas[index] = new Entry<>(k, v, head.next);
             return head.val;
         } else {
@@ -62,7 +64,7 @@ public class HashMap_base_02<K, V> extends HashMap_base_01<K, V> {
             while (pre != null) {
                 next = pre.next;
                 if (next == null) break;
-                if (next.k.equals(k)) {
+                if (hash == hash(next.k) && (k == next.k || next.k.equals(k))) {
                     oldEntry = next;
                     pre.next = new Entry<>(k, v, next.next);
                     return oldEntry.val;
@@ -78,12 +80,13 @@ public class HashMap_base_02<K, V> extends HashMap_base_01<K, V> {
 
     @Override
     public V remove(K k) {
-        int index = getIndex(hash(k), datas.length);
+        int hash = hash(k);
+        int index = getIndex(hash, datas.length);
 
         Entry<K, V> head = datas[index];
         if (head == null) {
             return null;
-        } else if (head.k.equals(k)) {
+        } else if (hash == hash(head.k) && (k == head.k || head.k.equals(k))) {
             datas[index] = head.next;
             size--;
             return head.val;
@@ -94,7 +97,7 @@ public class HashMap_base_02<K, V> extends HashMap_base_01<K, V> {
                 if (next == null) {
                     break;
                 }
-                if (next.k.equals(k)) {
+                if (hash == hash(next.k) && (k == next.k || next.k.equals(k))) {
                     pre.next = next.next;
                     size--;
                     return next.val;
@@ -160,8 +163,8 @@ public class HashMap_base_02<K, V> extends HashMap_base_01<K, V> {
             return 0;
         }
         // 相同的值 x, 在不同的JVM进程中返回的值可能不同, 但在同一个JVM进程中相同
-        int hash = System.identityHashCode(k);
-//        int hash = k.hashCode();
+//        int hash = System.identityHashCode(k); // 注意, 此函数同样的值计算的hash可能不相等(128以内相等), TODO 待研究
+        int hash = k.hashCode();
         // 高16位也参与计算, hash扰动算法
         return hash ^ (hash >>> 16);
     }
