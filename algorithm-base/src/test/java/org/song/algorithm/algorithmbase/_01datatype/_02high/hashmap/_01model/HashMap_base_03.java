@@ -122,6 +122,7 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
 
     /**
      * 扩容
+     * TODO 代码有误, 没有分离干净, 待修复
      */
     @Override
     protected void dilatation() {
