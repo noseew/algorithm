@@ -1,7 +1,5 @@
 package org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model;
 
-import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.node.SingleNode;
-
 /**
  * 实现简单功能的 HashMap, 模仿JDK中的HashMap
  *
