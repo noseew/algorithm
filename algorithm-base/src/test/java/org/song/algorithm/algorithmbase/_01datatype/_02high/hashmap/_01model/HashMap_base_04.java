@@ -15,6 +15,7 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
 
     protected int treeCapacity = 8; // 变成树的阈值
     protected int linkedCapacity = 6; // 变成链表的阈值
+    protected boolean dilatation = false;// 是否正在扩容
 
     public HashMap_base_04() {
         super();
@@ -49,7 +50,24 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
 
     @Override
     public V put(K k, V v) {
-        int hash = hash(k);
+        Entry<K, V> entry = new Entry<>(k, v, null);
+        entry.hash = hash(k);
+        return putNode(entry, datas);
+    }
+
+    /**
+     * 单独提供一个方法是因为
+     * 1. 新增的时候使用
+     * 2. 扩容的时候使用
+     * 
+     * @param entry
+     * @param datas
+     * @return
+     */
+    protected V putNode(Entry<K, V> entry, Entry<K, V>[] datas) {
+        K k = entry.k;
+        V v = entry.val;
+        int hash = entry.hash;
         int index = getIndex(hash, datas.length);
 
         Entry<K, V> oldEntry = null;
@@ -92,6 +110,7 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
         size++; // 容量增加
         ensureCapacity();
         return oldEntry != null ? oldEntry.val : null;
+        
     }
 
     @Override
@@ -139,7 +158,12 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
      */
     protected void ensureCapacity() {
         if ((double) size / (double) datas.length > dilatationRatio) {
-            dilatation();
+            // 防止扩容的时候循环扩容
+            if (!dilatation) {
+                dilatation = true;
+                dilatation();
+                dilatation = false;
+            }
         }
     }
 
@@ -159,7 +183,7 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
             if (head instanceof TreeNode) {
                 // 树迁移
                 TreeNode<K, V> treeHead = (TreeNode<K, V>) head;
-                traverse(treeHead);
+                traverse(treeHead, newDatas);
             } else {
                 // 链表迁移
                 Entry<K, V> headOld = null, // 原位置头
@@ -212,11 +236,11 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
         datas = newDatas;
     }
 
-    protected void traverse(TreeNode<K, V> node) {
+    protected void traverse(TreeNode<K, V> node, Entry<K, V>[] newDatas) {
         if (node == null) return;
-        put(node.k, node.val);
-        traverse(node.left);
-        traverse(node.right);
+        putNode(node, newDatas);
+        traverse(node.left, newDatas);
+        traverse(node.right, newDatas);
     }
 
     /**
@@ -336,6 +360,9 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
 
         boolean add(K k, V v) {
             int size = this.size;
+            if (root == null) {
+                root = this;
+            }
             root = insert_recursive(root, k, v);
             return size > this.size;
         }
