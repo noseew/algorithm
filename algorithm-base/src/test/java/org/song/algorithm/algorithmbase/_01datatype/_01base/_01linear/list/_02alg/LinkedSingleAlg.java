@@ -400,4 +400,49 @@ public class LinkedSingleAlg {
         ListPrinter.printSingleList(head, true);
     }
 
+    /**
+     * 将一个链表拆分成两个链表,
+     * 单向链表, 仅需一次遍历
+     */
+    @Test
+    public void test_split() {
+        SingleNode<Integer> head = initData(9);
+        // 奇数链表
+        SingleNode<Integer> headOld = null, tailOld = null;
+        // 偶数链表
+        SingleNode<Integer> headNew = null, tailNew = null;
+
+        SingleNode<Integer> n = head;
+
+        while (n != null) {
+            SingleNode<Integer> next = n.next;
+            if (n.value % 2 == 1) {
+                if (headOld == null) {
+                    headOld = n;
+                    tailOld = n;
+                    headOld.next = null;
+                } else {
+                    tailOld.next = n;
+                    tailOld = tailOld.next;
+                    tailOld.next = null;
+                }
+            } else {
+                if (headNew == null) {
+                    headNew = n;
+                    tailNew = n;
+                    headNew.next = null;
+                } else {
+                    tailNew.next = n;
+                    tailNew = tailNew.next;
+                    tailNew.next = null;
+                }
+            }
+            n = next;
+        }
+        System.out.println(headOld);
+        System.out.println(headNew);
+
+
+    }
+
 }

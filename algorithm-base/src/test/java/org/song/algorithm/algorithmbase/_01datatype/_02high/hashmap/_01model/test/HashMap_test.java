@@ -52,8 +52,8 @@ public class HashMap_test {
         for (int j = 0; j < 10000; j++) {
 //            HashMap_base_01<Integer, Integer> map1 = new HashMap_base_01<>();
 //            HashMap_base_02<Integer, Integer> map1 = new HashMap_base_02<>();
-//            HashMap_base_03<Integer, Integer> map1 = new HashMap_base_03<>();
-            HashMap_clash_01<Integer, Integer> map1 = new HashMap_clash_01<>();
+            HashMap_base_03<Integer, Integer> map1 = new HashMap_base_03<>();
+//            HashMap_clash_01<Integer, Integer> map1 = new HashMap_clash_01<>();
             for (int i = 0; i < maxSize; i++) {
                 int k = r.nextInt(maxVal);
                 int v = r.nextInt(maxVal);

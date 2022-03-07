@@ -1,5 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model;
 
+import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.node.SingleNode;
+
 /**
  * 实现简单功能的 HashMap, 模仿JDK中的HashMap
  *
@@ -122,7 +124,6 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
 
     /**
      * 扩容
-     * TODO 代码有误, 没有分离干净, 待修复
      */
     @Override
     protected void dilatation() {
@@ -147,42 +148,36 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
                 1. 遍历单向链表, 详情参见 Linked_single_02 单向链表遍历删除问题
                 2. 由于需要保持头元素用于移动整个列表, 所以要多出两个变量 headOld headNew
              */
-            Entry<K, V> headOld = datas[i],
-                    prevOld = headOld,
-                    headNew = null,
-                    prevNew = null,
-                    n = prevOld;
+            Entry<K, V> headOld = null, // 原位置头
+                    tailOld = null, // 原位置尾
+                    headNew = null, // 新位置头
+                    tailNew = null, // 新位置尾
+                    n = datas[i];
 
             while (n != null) {
                 Entry<K, V> next = n.next;
                 int index = getIndex(n.hash, newDatas.length);
                 if (index == i) {
                     // 不需要移动
-                    if (n != prevOld) {
-                        prevOld = n;
+                    if (headOld == null) {
+                        headOld = n;
+                        tailOld = n;
+                        headOld.next = null;
+                    } else {
+                        tailOld.next = n;
+                        tailOld = tailOld.next;
+                        tailOld.next = null;
                     }
                 } else {
                     // 需要移动
-                    if (n == prevOld) {
-                        // 是头元素, 更换头元素
-                        headOld = next;
-                        datas[i] = next;
-                        prevOld = datas[i];
-                    } else {
-                        // 不是头元素, 跳过需要移动的元素
-                        prevOld.next = next;
-                    }
-                    // 开始移动
-                    // 新链表
-                    if (prevNew == null) {
-                        // 初始化新链表
+                    if (headNew == null) {
                         headNew = n;
-                        prevNew = headNew;
+                        tailNew = n;
                         headNew.next = null;
                     } else {
-                        // 在新链表尾部添加
-                        prevNew.next = n;
-                        prevNew = prevNew.next;
+                        tailNew.next = n;
+                        tailNew = tailNew.next;
+                        tailNew.next = null;
                     }
                 }
                 n = next;
@@ -190,7 +185,6 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
 
             if (headOld != null) {
                 // 不需要移动的链表
-//                newDatas[headOld.hash & (newDatas.length - 1)] = headOld;
                 newDatas[i] = headOld;
                 datas[i] = null;
             }
