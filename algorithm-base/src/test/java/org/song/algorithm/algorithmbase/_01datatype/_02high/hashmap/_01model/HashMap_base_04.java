@@ -137,17 +137,20 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
             }
         } else {
             // 在链表中查找
-            Entry<K, V> pre = head, next;
-            while (pre != null) {
-                next = pre.next;
-                if (next == null) break;
+            Entry<K, V> pre = null, next = head;
+            while (next != null) {
                 // 找到了 删除并返回他
                 if (hash == hash(next.k) && (k == next.k || next.k.equals(k))) {
-                    pre.next = next.next;
+                    if (pre == null) {
+                        datas[index] = next.next;
+                    } else {
+                        pre.next = next.next;
+                    }
                     size--;
                     return next.val;
                 }
                 pre = next;
+                next = next.next;
             }
         }
         return null;
@@ -273,15 +276,15 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
      */
     protected Entry<K, V> intoLinked(TreeNode<K, V> treeHead) {
         Entry<K, V> headTemp = new Entry<>(null, null, null);
-        traverse(treeHead, headTemp, null);
+        traverse(treeHead, headTemp);
         return headTemp.next;
     }
 
-    protected void traverse(TreeNode<K, V> node, Entry<K, V> head, Entry<K, V> next) {
+    protected void traverse(TreeNode<K, V> node, Entry<K, V> head) {
         if (node == null) return;
         head.next = new Entry<>(node.k, node.val, null);
-        traverse(node.left, next, next.next);
-        traverse(node.right, next, next.next);
+        traverse(node.left, head.next);
+        traverse(node.right, head.next);
     }
 
     @Override
