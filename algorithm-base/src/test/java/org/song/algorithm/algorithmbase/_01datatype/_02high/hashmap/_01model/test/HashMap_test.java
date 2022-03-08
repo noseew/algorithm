@@ -74,6 +74,18 @@ public class HashMap_test {
                 int k = r.nextInt(maxVal / 2);
                 map1.remove(k);
             }
+            for (int i = 0; i < maxSize; i++) {
+                int k = r.nextInt(maxVal);
+                int v = r.nextInt(maxVal);
+                map1.put(k, v);
+                Integer v1 = map1.get(k);
+                boolean eq = eq(v, v1);
+                if (!eq) {
+                    map1.get(k);
+                    map1.put(k, v);
+                    assert eq;
+                }
+            }
             
         }
     }

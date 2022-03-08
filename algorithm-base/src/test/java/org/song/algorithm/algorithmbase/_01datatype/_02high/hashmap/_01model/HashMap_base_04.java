@@ -83,6 +83,7 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
                 return v; // 插入失败
             }
             datas[index] = treeHead.root; // 更新头结点
+            treeHead.root.root = treeHead.root.root;
         } else {
             // 向链表中插入
             Entry<K, V> pre = head;
@@ -105,6 +106,7 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
             if (count >= treeCapacity) {
                 // 树化并更新头结点
                 datas[index] = intoTree(head);
+                ((TreeNode<K, V>) datas[index]).root = (TreeNode<K, V>) datas[index];
             }
         }
         size++; // 容量增加
