@@ -26,11 +26,11 @@ public abstract class AbstractMap<K, V> {
 
     @AllArgsConstructor
     protected static class Entry<K, V> {
-        K k;
-        V val;
-        Entry<K, V> next;
+        public K k;
+        public V val;
+        public Entry<K, V> next;
         // 新增一个指针, 不需要重复计算了, 不同的实现方式, 可能用不到这个字段
-        int hash;
+        public int hash;
 
         public Entry(K k, V val, Entry<K, V> next) {
             this.k = k;
