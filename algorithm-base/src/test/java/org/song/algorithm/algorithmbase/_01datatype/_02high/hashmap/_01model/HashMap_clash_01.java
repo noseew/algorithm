@@ -4,6 +4,7 @@ package org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model;
  * 实现简单功能的 HashMap,
  * <p>
  * 冲突处理方式: 采用开放定址法, 使用线性探测找到下一个空格
+ * 效率上远低于链地址法, 优点在于空间占用较低
  *
  * @param <K>
  * @param <V>
@@ -24,7 +25,7 @@ public class HashMap_clash_01<K, V> extends HashMap_base_03<K, V> {
     public V get(K k) {
         int hash = hash(k);
         int index = getIndex(hash, datas.length);
-        Entry<K, V> head = (Entry<K, V>) datas[index];
+        Entry<K, V> head = datas[index];
         if (head == null) {
             return null; // 不存在
         } else if (hash == hash(head.k) && (k == head.k || head.k.equals(k))) {
@@ -34,7 +35,7 @@ public class HashMap_clash_01<K, V> extends HashMap_base_03<K, V> {
                 // 遍历数组
                 int nextIndex = (index + i) % datas.length;
                 AbstractMap.Entry<K, V> entry = datas[nextIndex];
-                if (entry != null && entry.k.equals(k)) {
+                if (entry != null && (hash == hash(entry.k) && (k == entry.k || entry.k.equals(k)))) {
                     // 找到了, 返回他
                     return entry.val;
                 }
@@ -48,9 +49,11 @@ public class HashMap_clash_01<K, V> extends HashMap_base_03<K, V> {
         int hash = hash(k);
         int index = getIndex(hash, datas.length);
 
-        Entry<K, V> head = (Entry<K, V>) datas[index];
+        Entry<K, V> head = datas[index];
+        boolean added = false;
         if (head == null) {
             datas[index] = new Entry<>(k, v, null, hash);
+            added = true;
         } else if (hash == hash(head.k) && (k == head.k || head.k.equals(k))) {
             datas[index] = new Entry<>(k, v, null, hash);
             return head.val;
@@ -63,10 +66,10 @@ public class HashMap_clash_01<K, V> extends HashMap_base_03<K, V> {
             for (int i = 0; i < datas.length; i++) {
                 // 遍历数组, 哪个有空放哪
                 int nextIndex = (index + i) % datas.length;
-                Entry<K, V> entry = (Entry<K, V>) datas[nextIndex];
+                Entry<K, V> entry = datas[nextIndex];
                 if (entry != null) {
                     // 相等替换
-                    if (entry.k.equals(k)) {
+                    if (hash == hash(entry.k) && (k == entry.k || entry.k.equals(k))) {
                         datas[nextIndex] = new Entry<>(k, v, null, hash);
                         return entry.val;
                     }
@@ -74,12 +77,13 @@ public class HashMap_clash_01<K, V> extends HashMap_base_03<K, V> {
                 }
                 // 不等 直接放入
                 datas[nextIndex] = new Entry<>(k, v, null, hash);
+                added = true;
                 break;
             }
         }
         size++;
         ensureCapacity();
-        return null;
+        return added ? null : v;
     }
 
     @Override
@@ -87,7 +91,7 @@ public class HashMap_clash_01<K, V> extends HashMap_base_03<K, V> {
         int hash = hash(k);
         int index = getIndex(hash, datas.length);
 
-        Entry<K, V> head = (Entry<K, V>) datas[index];
+        Entry<K, V> head = datas[index];
         if (head == null) {
             return null;
         } else if (hash == hash(head.k) && (k == head.k || head.k.equals(k))) {
@@ -126,8 +130,7 @@ public class HashMap_clash_01<K, V> extends HashMap_base_03<K, V> {
     protected void dilatation() {
         Entry<K, V>[] newDatas = new Entry[datas.length << 1];
 
-        for (int i = 0; i < datas.length; i++) {
-            Entry<K, V> entry = (Entry<K, V>) datas[i];
+        for (Entry<K, V> entry : datas) {
             if (entry == null) {
                 continue;
             }
@@ -137,15 +140,14 @@ public class HashMap_clash_01<K, V> extends HashMap_base_03<K, V> {
             if (head == null) {
                 newDatas[index] = entry;
             } else {
-                for (int j = 0; j < newDatas.length; j++) {
-                    int nextIndex = (index + i) % datas.length;
+                for (int i = 0; i < newDatas.length; i++) {
+                    int nextIndex = (index + i) % newDatas.length;
                     if (newDatas[nextIndex] == null) {
                         newDatas[nextIndex] = entry;
                         break;
                     }
                 }
             }
-
         }
         datas = newDatas;
     }
@@ -154,9 +156,14 @@ public class HashMap_clash_01<K, V> extends HashMap_base_03<K, V> {
         StringBuilder sb = new StringBuilder();
         sb.append("size=").append(size);
         sb.append("\r\n");
-        for (AbstractMap.Entry<K, V> data : datas) {
+        int count = 0;
+        for (int i = 0; i < datas.length; i++) {
+            AbstractMap.Entry<K, V> data = datas[i];
+            sb.append(count++).append("-").append(i);
             if (data != null) {
-                sb.append(data.toString());
+                sb.append(": ").append(data.toString());
+                sb.append("\r\n");
+            } else {
                 sb.append("\r\n");
             }
         }

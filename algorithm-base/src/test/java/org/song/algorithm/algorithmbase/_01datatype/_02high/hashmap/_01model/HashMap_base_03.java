@@ -56,11 +56,12 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
         int hash = hash(k);
         int index = getIndex(hash, datas.length);
 
-        Entry<K, V> oldEntry = null;
         Entry<K, V> head = datas[index];
+        boolean added = false;
         if (head == null) {
             // 没有 则新增
             datas[index] = new Entry<>(k, v, null, hash);
+            added = true;
         } else if (hash == hash(head.k) && (k == head.k || head.k.equals(k))) {
             // 有 则替换
             datas[index] = new Entry<>(k, v, head.next, hash);
@@ -74,18 +75,18 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
                 if (next == null) break;
                 if (hash == hash(next.k) && (k == next.k || next.k.equals(k))) {
                     // 找到了, 则替换
-                    oldEntry = next;
                     pre.next = new Entry<>(k, v, next.next, hash);
-                    return oldEntry.val;
+                    return next.val;
                 }
                 pre = next;
             }
             // 放在链表尾部
             pre.next = new Entry<>(k, v, null, hash);
+            added = true;
         }
         size++; // 容量增加
         ensureCapacity();
-        return oldEntry != null ? oldEntry.val : null;
+        return added ? null : v;
     }
 
     @Override

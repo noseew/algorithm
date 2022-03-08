@@ -14,6 +14,12 @@ public abstract class AbstractMap<K, V> {
 
     public abstract V get(K k);
 
+    /**
+     * 
+     * @param k
+     * @param v
+     * @return 返回 null: 插入成功, 非null: 替换成功
+     */
     public abstract V put(K k, V v);
 
     public abstract V remove(K k);

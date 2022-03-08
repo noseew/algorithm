@@ -13,7 +13,7 @@ import java.util.UUID;
 public class HashMap_test {
 
     private int maxVal = 50_0000;
-    private int maxSize = 5000;
+    private int maxSize = 500;
 
     private Random r = new Random();
 
@@ -49,22 +49,23 @@ public class HashMap_test {
         System.identityHashCode() 函数有坑
         
          */
-        for (int j = 0; j < 10000; j++) {
+        for (int j = 0; j < 100; j++) {
 //            HashMap_base_01<Integer, Integer> map1 = new HashMap_base_01<>();
 //            HashMap_base_02<Integer, Integer> map1 = new HashMap_base_02<>();
 //            HashMap_base_03<Integer, Integer> map1 = new HashMap_base_03<>();
-            HashMap_base_04<Integer, Integer> map1 = new HashMap_base_04<>();
-//            HashMap_clash_01<Integer, Integer> map1 = new HashMap_clash_01<>();
+//            HashMap_base_04<Integer, Integer> map1 = new HashMap_base_04<>();
+            HashMap_clash_01<Integer, Integer> map1 = new HashMap_clash_01<>();
             for (int i = 0; i < maxSize; i++) {
                 int k = r.nextInt(maxVal);
                 int v = r.nextInt(maxVal);
-                map1.put(k, v);
-                Integer v1 = map1.get(k);
-                boolean eq = eq(v, v1);
-                if (!eq) {
-                    map1.get(k);
-                    map1.put(k, v);
-                    assert eq;
+                if (map1.put(k, v) == null) {
+                    Integer v1 = map1.get(k);
+                    boolean eq = eq(v, v1);
+                    if (!eq) {
+                        map1.get(k);
+                        map1.put(k, v);
+                        assert eq;
+                    }
                 }
             }
 
@@ -77,17 +78,20 @@ public class HashMap_test {
             for (int i = 0; i < maxSize; i++) {
                 int k = r.nextInt(maxVal);
                 int v = r.nextInt(maxVal);
-                map1.put(k, v);
-                Integer v1 = map1.get(k);
-                boolean eq = eq(v, v1);
-                if (!eq) {
-                    map1.get(k);
-                    map1.put(k, v);
-                    assert eq;
+                if (map1.put(k, v) == null) {
+                    Integer v1 = map1.get(k);
+                    boolean eq = eq(v, v1);
+                    if (!eq) {
+                        map1.get(k);
+                        map1.put(k, v);
+                        assert eq;
+                    }
                 }
             }
             
         }
+
+        System.out.println("OK");
     }
 
     @Test

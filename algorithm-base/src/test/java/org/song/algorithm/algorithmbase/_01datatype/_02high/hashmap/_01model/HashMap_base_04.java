@@ -70,12 +70,13 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
         int hash = entry.hash;
         int index = getIndex(hash, datas.length);
 
-        Entry<K, V> oldEntry = null;
         Entry<K, V> head = datas[index];
+        boolean added = false;
 
         if (head == null) {
             // 没有 则新增
             datas[index] = new Entry<>(k, v, null, hash);
+            added = true;
         } else if (head instanceof TreeNode) {
             // 向树中插入
             TreeNode<K, V> treeHead = (TreeNode<K, V>) head;
@@ -83,6 +84,7 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
                 return v; // 插入失败
             }
             datas[index] = treeHead.root; // 更新头结点
+            added = true;
         } else {
             // 向链表中插入
             Entry<K, V> pre = head;
@@ -91,12 +93,12 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
                 count++;
                 if (hash == hash(pre.k) && (k == pre.k || pre.k.equals(k))) {
                     // 找到了, 则替换
-                    oldEntry = pre;
                     datas[index] = new Entry<>(k, v, pre.next, hash);
-                    return oldEntry.val;
+                    return pre.val;
                 } else if (pre.next == null) {
                     // 放在链表尾部
                     pre.next = new Entry<>(k, v, null, hash);
+                    added = true;
                     break;
                 }
                 pre = pre.next;
@@ -109,7 +111,7 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
         }
         size++; // 容量增加
         ensureCapacity();
-        return oldEntry != null ? oldEntry.val : null;
+        return added ? null : v;
         
     }
 
