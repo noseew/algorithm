@@ -227,7 +227,6 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
                 if (headOld != null) {
                     // 不需要移动的链表
                     newDatas[i] = headOld;
-                    datas[i] = null;
                 }
                 if (headNew != null) {
                     // 需要移动的链表
@@ -235,6 +234,8 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
                     newDatas[index] = headNew;
                 }
             }
+            // help GC
+            datas[i] = null;
         }
         datas = newDatas;
     }
