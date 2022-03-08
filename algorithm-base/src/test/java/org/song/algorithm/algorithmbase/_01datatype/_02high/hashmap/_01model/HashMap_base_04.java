@@ -330,9 +330,9 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
             return "";
         }
 
-        tty.append(" " + node.val).append("\r\n");
-        printFromNode(node.left, tty.append("L"), indentDepth + 1);
-        printFromNode(node.right, tty.append("R"), indentDepth + 1);
+        tty.append(node.k).append("=>").append(node.val).append("\r\n");
+        printFromNode(node.left, tty.append("\tL"), indentDepth + 1);
+        printFromNode(node.right, tty.append("\tR"), indentDepth + 1);
         return tty.toString();
     }
 

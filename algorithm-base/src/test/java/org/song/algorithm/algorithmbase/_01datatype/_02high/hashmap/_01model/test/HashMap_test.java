@@ -12,8 +12,8 @@ import java.util.UUID;
 
 public class HashMap_test {
 
-    private int maxVal = 5000;
-    private int maxSize = 500;
+    private int maxVal = 50_0000;
+    private int maxSize = 5000;
 
     private Random r = new Random();
 
@@ -67,6 +67,8 @@ public class HashMap_test {
                     assert eq;
                 }
             }
+
+            System.out.println();
 
             for (int i = 0; i < maxSize; i++) {
                 int k = r.nextInt(maxVal / 2);
