@@ -1,5 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model;
 
+import javax.swing.text.MaskFormatter;
+
 /**
  * 实现简单功能的 HashMap,
  * <p>
@@ -164,7 +166,7 @@ public class HashMap_openAddressing_02<K, V> extends HashMap_openAddressing_01<K
             if (hash == hash(entry.k) && (k == entry.k || entry.k.equals(k))) {
                 return nextIndex;
             }
-            nextIndex = (currentIndex - i) % datas.length;
+            nextIndex = Math.abs(currentIndex - i) % datas.length;
             entry = datas[nextIndex];
             if (entry == null) return nextIndex;
             if (hash == hash(entry.k) && (k == entry.k || entry.k.equals(k))) {

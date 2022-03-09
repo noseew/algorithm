@@ -182,7 +182,7 @@ public class HashMap_base_01<K, V> extends AbstractMap<K, V> {
             return 0;
         }
 //        return System.identityHashCode(k); // 注意, 此函数同样的值计算的hash可能不相等(128以内相等), 待研究
-        return k.hashCode();
+        return Math.abs(k.hashCode());
     }
 
     protected int getIndex(int hash, int length) {
