@@ -28,7 +28,7 @@ public class Dict_base_01<K, V> extends HashMap_base_03<K, V> {
 
     @Override
     public V get(K k) {
-        dilatationIndex(dilatation);
+        dilatationIndex();
         V v = get(datas, k);
         if (v == null && dilatation >= 0) {
             return get(datas1, k);
@@ -61,7 +61,7 @@ public class Dict_base_01<K, V> extends HashMap_base_03<K, V> {
 
     @Override
     public V put(K k, V v) {
-        dilatationIndex(dilatation);
+        dilatationIndex();
         if (dilatation >= 0) {
             V put = put(datas1, k, v);
             remove(datas, k);
@@ -109,10 +109,13 @@ public class Dict_base_01<K, V> extends HashMap_base_03<K, V> {
 
     @Override
     public V remove(K k) {
-        dilatationIndex(dilatation);
+        dilatationIndex();
         V v = remove(datas, k);
-        V v2 = remove(datas1, k);
-        return v != null ? v : v2;
+        if (datas1 != null) {
+            V v2 = remove(datas1, k);
+            return v != null ? v : v2;
+        }
+        return v;
     }
     
     protected V remove(AbstractMap.Entry<K, V>[] datas, K k) {
@@ -152,28 +155,34 @@ public class Dict_base_01<K, V> extends HashMap_base_03<K, V> {
     @Override
     protected void ensureCapacity() {
         if ((double) size / (double) datas.length > dilatationRatio) {
-            if (dilatation == -1) dilatation = 0;
-            dilatationIndex(dilatation);
+            if (dilatation >= 0) {
+                // 正在扩容, 不处理
+                return;
+            }
+            dilatation = 0;
+            // 扩容2倍
+            if (datas1 == null) {
+                datas1 = new Entry[datas.length << 1];
+            }
+            dilatationIndex();
         }
     }
 
     /**
      * 扩容
-     * 
-     * @param index 本次需要处理的原数组下标
      */
-    protected void dilatationIndex(int index) {
-        if (index < 0) {
+    protected void dilatationIndex() {
+        if (dilatation < 0) {
             return;
         }
-        // 扩容2倍
-        if (datas1 == null) {
-            datas1 = new Entry[datas.length << 1];
+        Entry<K, V> head = null;
+        while (head == null && dilatation < datas.length) {
+            head = datas[dilatation];
+            if (head == null) {
+                dilatation++;
+            }
         }
-        Entry<K, V> head = datas[index];
-        while (head == null && index < datas.length) {
-            head = datas[index++];
-        }
+
         if (head == null) {
             // 扩容完成
             dilatation = -1;
@@ -181,9 +190,7 @@ public class Dict_base_01<K, V> extends HashMap_base_03<K, V> {
             datas1 = null;
             return;
         }
-        
-        dilatation = index;
-        
+
         Entry<K, V> headOld = null, // 原位置头
                 tailOld = null, // 原位置尾
                 headNew = null, // 新位置头
@@ -193,7 +200,7 @@ public class Dict_base_01<K, V> extends HashMap_base_03<K, V> {
         while (n != null) {
             Entry<K, V> next = n.next;
             int newIndex = getIndex(n.hash, datas1.length);
-            if (index == newIndex) {
+            if (dilatation == newIndex) {
                 // 不需要移动
                 if (headOld == null) {
                     headOld = n;
@@ -221,14 +228,54 @@ public class Dict_base_01<K, V> extends HashMap_base_03<K, V> {
 
         if (headOld != null) {
             // 不需要移动的链表
-            datas1[index] = headOld;
+            // 新位置可能已经有数据了, 所以要拼接在其后面
+            if (datas1[dilatation] != null) {
+                tailOld.next = datas1[dilatation];
+            }
+            datas1[dilatation] = headOld;
         }
-        datas[index] = null;
+        datas[dilatation] = null;
         if (headNew != null) {
             // 需要移动的链表
             int newIndex = getIndex(headNew.hash, datas1.length);
+            // 新位置可能已经有数据了, 所以要拼接在其后面
+            if (datas1[newIndex] != null) {
+                tailNew.next = datas1[newIndex];
+            }
             datas1[newIndex] = headNew;
         }
     }
 
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("data").append("\r\n");
+        sb.append(super.toString());
+        if (datas1 == null) {
+            return sb.toString();
+        }
+        sb.append("\r\n").append("dilatation=").append(dilatation)
+                .append("\r\n").append("data1").append("\r\n");
+        sb.append("\r\n");
+        int count = 0;
+        for (int i = 0; i < datas1.length; i++) {
+            Entry<K, V> data = datas1[i];
+            if (data != null) {
+                // 遍历链表
+                Entry<K, V> pre = data, next;
+                sb.append(count++).append("-").append(i).append(": ");
+                while (pre != null) {
+                    next = pre.next;
+                    sb.append(pre.toString());
+                    if (next == null) break;
+                    sb.append(",");
+                    pre = next;
+                }
+                sb.append("\r\n");
+            }
+        }
+
+        return sb.toString();
+    }
 }
