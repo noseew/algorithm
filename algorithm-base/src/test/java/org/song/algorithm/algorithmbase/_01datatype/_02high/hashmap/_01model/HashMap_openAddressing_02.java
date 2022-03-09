@@ -3,7 +3,7 @@ package org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model;
 /**
  * 实现简单功能的 HashMap,
  * <p>
- * 冲突处理方式: 采用开放定址法, 使用线性探测找到下一个空格
+ * 冲突处理方式: 采用开放定址法, 使用2次探测找到下一个空格
  * 效率上远低于链地址法, 优点在于空间占用较低
  *
  * @param <K>
@@ -31,7 +31,7 @@ public class HashMap_openAddressing_02<K, V> extends HashMap_openAddressing_01<K
         } else if (hash == hash(head.k) && (k == head.k || head.k.equals(k))) {
             return head.val; // 相等直接返回
         } else {
-            int nextIndex = detect(datas, index, k, hash);
+            int nextIndex = detect2Power(datas, index, k, hash);
             if (nextIndex < 0) {
                 return null;
             }
@@ -63,7 +63,7 @@ public class HashMap_openAddressing_02<K, V> extends HashMap_openAddressing_01<K
              线性探测, 使用线性探测找到下一个空格 并放入
              如果到数组末尾, 则从头开始
              */
-            int nextIndex = detect(datas, index, k, hash);
+            int nextIndex = detect2Power(datas, index, k, hash);
             if (nextIndex < 0) {
                 return v;
             }
@@ -80,24 +80,6 @@ public class HashMap_openAddressing_02<K, V> extends HashMap_openAddressing_01<K
         size++;
         ensureCapacity();
         return added ? null : v;
-    }
-
-    /**
-     * 线性探测
-     */
-    protected int detect(Entry<K, V>[] datas, int currentIndex, K k, int hash) {
-        for (int i = 0; i < datas.length; i++) {
-            // 遍历数组, 哪个有空放哪
-            int nextIndex = (currentIndex + i) % datas.length;
-            Entry<K, V> entry = datas[nextIndex];
-            if (entry == null) {
-                return nextIndex;
-            }
-            if (hash == hash(entry.k) && (k == entry.k || entry.k.equals(k))) {
-                return nextIndex;
-            }
-        }
-        return -1;
     }
 
     /**
@@ -135,7 +117,7 @@ public class HashMap_openAddressing_02<K, V> extends HashMap_openAddressing_01<K
             datas[index] = null;
             return head.val;
         } else {
-            int nextIndex = detect(datas, index, k, hash);
+            int nextIndex = detect2Power(datas, index, k, hash);
             if (nextIndex < 0) {
                 return null;
             }
