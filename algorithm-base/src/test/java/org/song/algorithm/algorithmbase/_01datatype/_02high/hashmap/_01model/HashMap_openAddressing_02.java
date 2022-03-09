@@ -31,7 +31,7 @@ public class HashMap_openAddressing_02<K, V> extends HashMap_openAddressing_01<K
         } else if (hash == hash(head.k) && (k == head.k || head.k.equals(k))) {
             return head.val; // 相等直接返回
         } else {
-            int nextIndex = detect2Power(datas, index, k, hash);
+            int nextIndex = detect(datas, index, k, hash);
             if (nextIndex < 0) {
                 return null;
             }
@@ -63,7 +63,7 @@ public class HashMap_openAddressing_02<K, V> extends HashMap_openAddressing_01<K
              线性探测, 使用线性探测找到下一个空格 并放入
              如果到数组末尾, 则从头开始
              */
-            int nextIndex = detect2Power(datas, index, k, hash);
+            int nextIndex = detect(datas, index, k, hash);
             if (nextIndex < 0) {
                 return v;
             }
@@ -82,28 +82,6 @@ public class HashMap_openAddressing_02<K, V> extends HashMap_openAddressing_01<K
         return added ? null : v;
     }
 
-    /**
-     * 二次探测
-     */
-    protected int detect2Power(Entry<K, V>[] datas, int currentIndex, K k, int hash) {
-        for (int i = 1; i < datas.length; i *= 2) {
-            // 遍历数组, 哪个有空放哪
-            int nextIndex = (currentIndex + i) % datas.length;
-            Entry<K, V> entry = datas[nextIndex];
-            if (entry == null) return nextIndex;
-            if (hash == hash(entry.k) && (k == entry.k || entry.k.equals(k))) {
-                return nextIndex;
-            }
-            nextIndex = (currentIndex - i) % datas.length;
-            entry = datas[nextIndex];
-            if (entry == null) return nextIndex;
-            if (hash == hash(entry.k) && (k == entry.k || entry.k.equals(k))) {
-                return nextIndex;
-            }
-        }
-        return -1;
-    }
-
     @Override
     public V remove(K k) {
         int hash = hash(k);
@@ -117,7 +95,7 @@ public class HashMap_openAddressing_02<K, V> extends HashMap_openAddressing_01<K
             datas[index] = null;
             return head.val;
         } else {
-            int nextIndex = detect2Power(datas, index, k, hash);
+            int nextIndex = detect(datas, index, k, hash);
             if (nextIndex < 0) {
                 return null;
             }
@@ -168,6 +146,32 @@ public class HashMap_openAddressing_02<K, V> extends HashMap_openAddressing_01<K
             }
         }
         datas = newDatas;
+    }
+
+    /**
+     * 二次探测
+     * 当前位置如果有数据, 就线性往下一个位置堂测, 找的顺序是[1^2,-(1^2),2^2,-(2^2)...], 采用前后2次方数的位置进行探测, 直到找到空位即可
+     * 优点, 解决线性探测数据堆积的问题
+     * 缺点, 找到下个位置概率降低, 存储数据失败率变高
+     */
+    @Override
+    protected int detect(Entry<K, V>[] datas, int currentIndex, K k, int hash) {
+        for (int i = 1; i < datas.length; i *= 2) {
+            // 遍历数组, 哪个有空放哪
+            int nextIndex = (currentIndex + i) % datas.length;
+            Entry<K, V> entry = datas[nextIndex];
+            if (entry == null) return nextIndex;
+            if (hash == hash(entry.k) && (k == entry.k || entry.k.equals(k))) {
+                return nextIndex;
+            }
+            nextIndex = (currentIndex - i) % datas.length;
+            entry = datas[nextIndex];
+            if (entry == null) return nextIndex;
+            if (hash == hash(entry.k) && (k == entry.k || entry.k.equals(k))) {
+                return nextIndex;
+            }
+        }
+        return -1;
     }
 
     @Override

@@ -82,46 +82,6 @@ public class HashMap_openAddressing_01<K, V> extends HashMap_base_03<K, V> {
         return added ? null : v;
     }
 
-    /**
-     * 线性探测
-     */
-    protected int detect(Entry<K, V>[] datas, int currentIndex, K k, int hash) {
-        for (int i = 0; i < datas.length; i++) {
-            // 遍历数组, 哪个有空放哪
-            int nextIndex = (currentIndex + i) % datas.length;
-            Entry<K, V> entry = datas[nextIndex];
-            if (entry == null) {
-                return nextIndex;
-            }
-            if (hash == hash(entry.k) && (k == entry.k || entry.k.equals(k))) {
-                return nextIndex;
-            }
-        }
-        return -1;
-    }
-
-    /**
-     * 二次探测
-     */
-    protected int detect2Power(Entry<K, V>[] datas, int currentIndex, K k, int hash) {
-        for (int i = 1; i < datas.length; i *= 2) {
-            // 遍历数组, 哪个有空放哪
-            int nextIndex = (currentIndex + i) % datas.length;
-            Entry<K, V> entry = datas[nextIndex];
-            if (entry == null) return nextIndex;
-            if (hash == hash(entry.k) && (k == entry.k || entry.k.equals(k))) {
-                return nextIndex;
-            }
-            nextIndex = (currentIndex - i) % datas.length;
-            entry = datas[nextIndex];
-            if (entry == null) return nextIndex;
-            if (hash == hash(entry.k) && (k == entry.k || entry.k.equals(k))) {
-                return nextIndex;
-            }
-        }
-        return -1;
-    }
-
     @Override
     public V remove(K k) {
         int hash = hash(k);
@@ -186,6 +146,26 @@ public class HashMap_openAddressing_01<K, V> extends HashMap_base_03<K, V> {
             }
         }
         datas = newDatas;
+    }
+
+    /**
+     * 线性探测
+     * 当前位置如果有数据, 就线性往下一个位置堂测, 直到找到空位即可
+     * 缺点, 冲突较多时, 这些线性探测存储的数据都会集中到一个区域
+     */
+    protected int detect(Entry<K, V>[] datas, int currentIndex, K k, int hash) {
+        for (int i = 0; i < datas.length; i++) {
+            // 遍历数组, 哪个有空放哪
+            int nextIndex = (currentIndex + i) % datas.length;
+            Entry<K, V> entry = datas[nextIndex];
+            if (entry == null) {
+                return nextIndex;
+            }
+            if (hash == hash(entry.k) && (k == entry.k || entry.k.equals(k))) {
+                return nextIndex;
+            }
+        }
+        return -1;
     }
 
     @Override
