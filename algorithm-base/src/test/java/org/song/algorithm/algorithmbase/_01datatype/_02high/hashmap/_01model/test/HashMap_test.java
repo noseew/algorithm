@@ -123,7 +123,7 @@ public class HashMap_test {
         HashMap_base_02<Integer, Integer> map2 = new HashMap_base_02<>();
         HashMap_base_03<Integer, Integer> map3 = new HashMap_base_03<>();
         HashMap_base_04<Integer, Integer> map4 = new HashMap_base_04<>();
-//        HashMap_clash_01<Integer, Integer> map5 = new HashMap_clash_01<>();
+        Dict_base_01<Integer, Integer> map5 = new Dict_base_01<>();
 
         for (int i = 0; i < maxSize; i++) {
             int k = r.nextInt(maxVal);
@@ -134,7 +134,7 @@ public class HashMap_test {
             map2.put(k, v);
             map3.put(k, v);
             map4.put(k, v);
-//            map5.put(k, v);
+            map5.put(k, v);
         }
 
         for (int i = 0; i < maxSize; i++) {
@@ -143,12 +143,12 @@ public class HashMap_test {
             Integer v2 = map2.get(i);
             Integer v3 = map3.get(i);
             Integer v4 = map4.get(i);
-//            Integer v5 = map5.get(i);
+            Integer v5 = map5.get(i);
             assert eq(v0, v1);
             assert eq(v0, v2);
             assert eq(v0, v3);
             assert eq(v0, v4);
-//            assert eq(v0, v5);
+            assert eq(v0, v5);
         }
 
         for (int i = 0; i < maxSize; i++) {
@@ -158,7 +158,7 @@ public class HashMap_test {
             map2.remove(v);
             map3.remove(v);
             map4.remove(v);
-//            map5.remove(v);
+            map5.remove(v);
         }
 
         for (int i = 0; i < maxSize; i++) {
@@ -167,13 +167,67 @@ public class HashMap_test {
             Integer v2 = map2.get(i);
             Integer v3 = map3.get(i);
             Integer v4 = map4.get(i);
-//            Integer v5 = map5.get(i);
+            Integer v5 = map5.get(i);
             assert eq(v0, v1);
             assert eq(v0, v2);
             assert eq(v0, v3);
             assert eq(v0, v4);
-//            assert eq(v0, v5);
+            assert eq(v0, v5);
         }
+    }
+
+    /**
+     * 不严谨测试
+     * 渐进式rehash效率高约 5%
+     */
+    @Test
+    public void test_perf_01() {
+        int num = 50_0000;
+        StopWatch stopWatch = new StopWatch();
+
+        StopWatchUtils.warnup(() -> {
+            HashMap_base_03<String, String> map = new HashMap_base_03<>();
+            for (int i = 0; i < num; i++) {
+                map.put(UUID.randomUUID().toString(), "");
+            }
+            Dict_base_01<String, String> map2 = new Dict_base_01<>();
+            for (int i = 0; i < num; i++) {
+                map2.put(UUID.randomUUID().toString(), "");
+            }
+        });
+        
+        
+
+        StopWatchUtils.run(stopWatch, "Dict_base_01", () -> {
+            Dict_base_01<String, String> map = new Dict_base_01<>();
+            for (int i = 0; i < num; i++) {
+                map.put(UUID.randomUUID().toString(), "");
+            }
+        });
+
+        StopWatchUtils.run(stopWatch, "HashMap_base_03", () -> {
+            HashMap_base_03<String, String> map2 = new HashMap_base_03<>();
+            for (int i = 0; i < num; i++) {
+                map2.put(UUID.randomUUID().toString(), "");
+            }
+        });
+
+        StopWatchUtils.run(stopWatch, "HashMap_base_03", () -> {
+            HashMap_base_03<String, String> map2 = new HashMap_base_03<>();
+            for (int i = 0; i < num; i++) {
+                map2.put(UUID.randomUUID().toString(), "");
+            }
+        });
+
+        StopWatchUtils.run(stopWatch, "Dict_base_01", () -> {
+            Dict_base_01<String, String> map = new Dict_base_01<>();
+            for (int i = 0; i < num; i++) {
+                map.put(UUID.randomUUID().toString(), "");
+            }
+        });
+
+        System.out.println(stopWatch.prettyPrint());
+        System.out.println(StopWatchUtils.calculate(stopWatch));
     }
 
     /**
