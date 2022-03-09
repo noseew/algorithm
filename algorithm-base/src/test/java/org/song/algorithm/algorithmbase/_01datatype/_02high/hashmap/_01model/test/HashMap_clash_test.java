@@ -1,13 +1,13 @@
 package org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model.test;
 
 import org.junit.Test;
-import org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model.HashMap_clash_01;
+import org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model.HashMap_openAddressing_01;
 
 public class HashMap_clash_test {
 
     @Test
     public void test_01_start() {
-        HashMap_clash_01<String, String> map = new HashMap_clash_01<>();
+        HashMap_openAddressing_01<String, String> map = new HashMap_openAddressing_01<>();
         map.put("1", "1");
         map.put("2", "2");
         map.put("3", "3");

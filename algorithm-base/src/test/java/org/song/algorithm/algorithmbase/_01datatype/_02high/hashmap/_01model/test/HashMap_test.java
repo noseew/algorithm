@@ -2,7 +2,6 @@ package org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model.te
 
 import org.junit.Test;
 import org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model.*;
-import org.song.algorithm.algorithmbase._01datatype._02high.hashmap.redis.Dict_base_01;
 import org.song.algorithm.algorithmbase.utils.StopWatchUtils;
 import org.springframework.util.StopWatch;
 
@@ -55,8 +54,8 @@ public class HashMap_test {
 //            HashMap_base_02<Integer, Integer> map1 = new HashMap_base_02<>();
 //            HashMap_base_03<Integer, Integer> map1 = new HashMap_base_03<>();
 //            HashMap_base_04<Integer, Integer> map1 = new HashMap_base_04<>();
-//            HashMap_clash_01<Integer, Integer> map1 = new HashMap_clash_01<>();
-            Dict_base_01<Integer, Integer> map1 = new Dict_base_01<>();
+            HashMap_openAddressing_01<Integer, Integer> map1 = new HashMap_openAddressing_01<>();
+//            Dict_base_01<Integer, Integer> map1 = new Dict_base_01<>();
             for (int i = 0; i < maxSize; i++) {
                 int k = r.nextInt(maxVal);
                 int v = r.nextInt(maxVal);

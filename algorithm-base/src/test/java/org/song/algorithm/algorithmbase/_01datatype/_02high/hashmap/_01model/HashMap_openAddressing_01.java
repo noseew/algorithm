@@ -9,15 +9,15 @@ package org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model;
  * @param <K>
  * @param <V>
  */
-public class HashMap_clash_01<K, V> extends HashMap_base_03<K, V> {
+public class HashMap_openAddressing_01<K, V> extends HashMap_base_03<K, V> {
 
     protected double dilatationRatio = 0.6;
 
-    public HashMap_clash_01() {
+    public HashMap_openAddressing_01() {
         super();
     }
 
-    public HashMap_clash_01(int capacity) {
+    public HashMap_openAddressing_01(int capacity) {
         super(capacity);
     }
 
@@ -31,14 +31,14 @@ public class HashMap_clash_01<K, V> extends HashMap_base_03<K, V> {
         } else if (hash == hash(head.k) && (k == head.k || head.k.equals(k))) {
             return head.val; // 相等直接返回
         } else {
-            for (int i = 0; i < datas.length; i++) {
-                // 遍历数组
-                int nextIndex = (index + i) % datas.length;
-                AbstractMap.Entry<K, V> entry = datas[nextIndex];
-                if (entry != null && (hash == hash(entry.k) && (k == entry.k || entry.k.equals(k)))) {
-                    // 找到了, 返回他
-                    return entry.val;
-                }
+            int nextIndex = detect(datas, index, k, hash);
+            if (nextIndex < 0) {
+                return null;
+            }
+            AbstractMap.Entry<K, V> entry = datas[nextIndex];
+            if (entry != null && (hash == hash(entry.k) && (k == entry.k || entry.k.equals(k)))) {
+                // 找到了, 返回他
+                return entry.val;
             }
         }
         return null;
@@ -60,30 +60,66 @@ public class HashMap_clash_01<K, V> extends HashMap_base_03<K, V> {
         } else {
             /*
              冲突处理
-             采用开放定址法, 使用线性探测找到下一个空格 并放入
+             线性探测, 使用线性探测找到下一个空格 并放入
              如果到数组末尾, 则从头开始
              */
-            for (int i = 0; i < datas.length; i++) {
-                // 遍历数组, 哪个有空放哪
-                int nextIndex = (index + i) % datas.length;
-                Entry<K, V> entry = datas[nextIndex];
-                if (entry != null) {
-                    // 相等替换
-                    if (hash == hash(entry.k) && (k == entry.k || entry.k.equals(k))) {
-                        datas[nextIndex] = new Entry<>(k, v, null, hash);
-                        return entry.val;
-                    }
-                    continue;
-                }
+            int nextIndex = detect(datas, index, k, hash);
+            if (nextIndex < 0) {
+                return v;
+            }
+            Entry<K, V> entry = datas[nextIndex];
+            if (entry == null) {
                 // 不等 直接放入
                 datas[nextIndex] = new Entry<>(k, v, null, hash);
                 added = true;
-                break;
+            } else if (hash == hash(entry.k) && (k == entry.k || entry.k.equals(k))) {
+                datas[nextIndex] = new Entry<>(k, v, null, hash);
+                return entry.val;
             }
         }
         size++;
         ensureCapacity();
         return added ? null : v;
+    }
+
+    /**
+     * 线性探测
+     */
+    protected int detect(Entry<K, V>[] datas, int currentIndex, K k, int hash) {
+        for (int i = 0; i < datas.length; i++) {
+            // 遍历数组, 哪个有空放哪
+            int nextIndex = (currentIndex + i) % datas.length;
+            Entry<K, V> entry = datas[nextIndex];
+            if (entry == null) {
+                return nextIndex;
+            }
+            if (hash == hash(entry.k) && (k == entry.k || entry.k.equals(k))) {
+                return nextIndex;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * 二次探测
+     */
+    protected int detect2Power(Entry<K, V>[] datas, int currentIndex, K k, int hash) {
+        for (int i = 1; i < datas.length; i *= 2) {
+            // 遍历数组, 哪个有空放哪
+            int nextIndex = (currentIndex + i) % datas.length;
+            Entry<K, V> entry = datas[nextIndex];
+            if (entry == null) return nextIndex;
+            if (hash == hash(entry.k) && (k == entry.k || entry.k.equals(k))) {
+                return nextIndex;
+            }
+            nextIndex = (currentIndex - i) % datas.length;
+            entry = datas[nextIndex];
+            if (entry == null) return nextIndex;
+            if (hash == hash(entry.k) && (k == entry.k || entry.k.equals(k))) {
+                return nextIndex;
+            }
+        }
+        return -1;
     }
 
     @Override
@@ -99,16 +135,16 @@ public class HashMap_clash_01<K, V> extends HashMap_base_03<K, V> {
             datas[index] = null;
             return head.val;
         } else {
-            for (int i = 0; i < datas.length; i++) {
-                int nextIndex = (index + i) % datas.length;
-                Entry<K, V> entry = (Entry<K, V>) datas[nextIndex];
-                if (entry != null && entry.k.equals(k)) {
-                    datas[nextIndex] = null;
-                    size--;
-                    return entry.val;
-                }
+            int nextIndex = detect(datas, index, k, hash);
+            if (nextIndex < 0) {
+                return null;
             }
-
+            Entry<K, V> entry = datas[nextIndex];
+            if (entry != null && entry.k.equals(k)) {
+                datas[nextIndex] = null;
+                size--;
+                return entry.val;
+            }
         }
         return null;
     }
@@ -151,6 +187,7 @@ public class HashMap_clash_01<K, V> extends HashMap_base_03<K, V> {
         }
         datas = newDatas;
     }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
