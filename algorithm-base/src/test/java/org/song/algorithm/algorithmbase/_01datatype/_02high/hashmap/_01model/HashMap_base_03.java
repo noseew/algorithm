@@ -27,29 +27,6 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
         super(capacity);
     }
 
-    @Override
-    public V get(K k) {
-        int hash = hash(k);
-        int index = getIndex(hash, datas.length);
-        // 表示链表头
-        Entry<K, V> head = datas[index];
-        if (head == null) {
-            return null;
-        } else if (hash == hash(head.k) && (k == head.k || head.k.equals(k))) {
-            return head.val;
-        } else {
-            // 遍历链表
-            Entry<K, V> pre = head, next;
-            while (pre != null) {
-                next = pre.next;
-                if (next == null) break;
-                // 找到了, 返回他
-                if (hash == hash(next.k) && (k == next.k || next.k.equals(k))) return next.val;
-                pre = next;
-            }
-        }
-        return null;
-    }
 
     @Override
     public V put(K k, V v) {
@@ -67,7 +44,7 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
             datas[index] = new Entry<>(k, v, head.next, hash);
             return head.val;
         } else {
-            // 在链表中查找
+            // 在链表中查找, 新增插入的时候必须用尾插法, 因为还需要和链表中数据对比
             Entry<K, V> pre = head, next;
             while (pre != null) {
                 next = pre.next;
@@ -87,38 +64,6 @@ public class HashMap_base_03<K, V> extends HashMap_base_02<K, V> {
         size++; // 容量增加
         ensureCapacity();
         return added ? null : v;
-    }
-
-    @Override
-    public V remove(K k) {
-        int hash = hash(k);
-        int index = getIndex(hash, datas.length);
-
-        Entry<K, V> head = datas[index];
-        if (head == null) {
-            // 没有 返回空
-            return null;
-        } else if (hash == hash(head.k) && (k == head.k || head.k.equals(k))) {
-            // 找到了 直接返回
-            datas[index] = head.next; // 用下一个节点替换
-            size--;
-            return head.val;
-        } else {
-            // 在链表中查找
-            Entry<K, V> pre = head, next;
-            while (pre != null) {
-                next = pre.next;
-                if (next == null) break;
-                // 找到了 删除并返回他
-                if (hash == hash(next.k) && (k == next.k || next.k.equals(k))) {
-                    pre.next = next.next;
-                    size--;
-                    return next.val;
-                }
-                pre = next;
-            }
-        }
-        return null;
     }
 
     /**

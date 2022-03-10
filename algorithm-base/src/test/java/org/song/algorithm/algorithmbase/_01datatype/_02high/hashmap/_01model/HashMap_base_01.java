@@ -68,7 +68,7 @@ public class HashMap_base_01<K, V> extends AbstractMap<K, V> {
             datas[index] = new Entry<>(k, v, head.next);
             return head.val;
         } else {
-            // 在链表中查找
+            // 在链表中查找, 新增插入的时候必须用尾插法, 因为还需要和链表中数据对比
             Entry<K, V> pre = head, next;
             while (pre != null) {
                 next = pre.next;
