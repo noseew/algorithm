@@ -140,6 +140,7 @@ public class SkipListBase01<K extends Comparable<K>, V> {
         } else {
             // 存在则更新
         }
+        head = headerIndex.node;
         return null;
     }
     
@@ -165,6 +166,64 @@ public class SkipListBase01<K extends Comparable<K>, V> {
             down = down.down;
         }
         return head;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        Node<K, V> hn = head.next;
+        // 链表遍历
+        while (hn != null) {
+
+            sb.append(hn.k).append("=").append(hn.v);
+
+            Index<K, V> hi = headerIndex;
+            // 索引遍历
+            hi = nextIndexHead(hi.node);
+            if (hi != null && hi.node == hn) {
+                while (hi != null) {
+                    sb.append("[]");
+                    hi = hi.down;
+                }
+                sb.append("\r\n");
+            } else {
+                // 链表遍历
+                sb.append("\r\n");
+                hn = hn.next;
+            }
+        }
+        return sb.toString();
+    }
+
+    private Index<K, V> nextIndexHead(Node<K, V> node) {
+        if (node == null || node.next == null) {
+            return null;
+        }
+        Node<K, V> nextNode = node.next;
+
+        // 跳索引
+        Index<K, V> y = headerIndex;
+        while (y != null) { // y轴遍历
+            Index<K, V> x = y.next, xh = y;
+            while (x != null) { // x轴遍历
+                if (x.node == nextNode) {
+                    // 停止
+                    return x;
+                }
+                if (x.node.score > nextNode.score) {
+                    // 遍历链表
+                    nextNode = nextNode.next;
+                    continue;
+                }
+
+                xh = x;
+                // 向右
+                x = x.next;
+            }
+            // 向下
+            y = xh.down;
+        }
+        return null;
     }
 
     @Data

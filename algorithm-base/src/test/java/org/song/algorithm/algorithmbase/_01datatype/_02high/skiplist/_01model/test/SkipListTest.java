@@ -21,6 +21,7 @@ public class SkipListTest {
             int key = r.nextInt(maxVal);
             int score = r.nextInt(maxVal);
             skip1.put(key, val, score);
+            System.out.println(skip1.toString());
             
         }
         
