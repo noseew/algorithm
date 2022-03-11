@@ -25,7 +25,7 @@ public abstract class AbstractMap<K, V> {
     public abstract V remove(K k);
 
     @AllArgsConstructor
-    protected static class Entry<K, V> {
+    public static class Entry<K, V> {
         public K k;
         public V val;
         public Entry<K, V> next;
