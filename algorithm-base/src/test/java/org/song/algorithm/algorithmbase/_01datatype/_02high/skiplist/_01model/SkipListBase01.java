@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase._01datatype._02high.skiplist;
+package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model;
 
 import lombok.*;
 import org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model.HashMap_base_04;
@@ -8,20 +8,34 @@ import java.util.Random;
 /**
  */
 public class SkipListBase01<K extends Comparable<K>, V> {
-    
+    /**
+     * map为了O(1)的方式定位到结点, 同时做到结点去重
+     */
     private HashMap_base_04<K, Node<K, V>> hashMap;
-
+    /**
+     * 跳表的所有的遍历都是从 headerIndex 开始
+     * 最高层的索引永远在 headerIndex 中, 并且永远比其他最高索引高1层
+     * 索引层的node结点中 分值为-1, 用于标记他是空结点或者头结点
+     */
     private Index<K, V> headerIndex;
+    /**
+     * 为了O(1)的方式方便获取最小和最大节点
+     * 同时也可以全量遍历链表
+     */
     private Node<K, V> head, tail;
 
     private long size;
 
     /**
-     * 索引层从1开始, 第一层也就是数据节点所在, 
+     * 索引层从1开始
      * 数据链表不属于任何层
+     * 默认最大索引层为32层
      */
     private int maxLevel;
-    
+    /**
+     * 当前索引中的最高level, 
+     * 等于headerIndex的level - 1
+     */
     private int currentLevel = 1;
     
     private Random r = new Random();
@@ -30,7 +44,11 @@ public class SkipListBase01<K extends Comparable<K>, V> {
         // 临时头索引节点
         headerIndex = new Index<>();
         // 临时头node节点
-        headerIndex.node = new Node<>(null, null, -1, null);
+        headerIndex.node = new Node<>();
+        headerIndex.node.score = -1; // 头结点分值最小, 其他分值必须 >= 0
+
+        headerIndex.down = new Index<>();
+        headerIndex.down.node = headerIndex.node;
         hashMap = new HashMap_base_04<>(8);
         maxLevel = 32;
     }
