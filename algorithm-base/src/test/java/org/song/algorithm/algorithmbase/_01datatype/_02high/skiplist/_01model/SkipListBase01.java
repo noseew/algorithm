@@ -1,6 +1,8 @@
 package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.ArrayBase01;
 import org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model.HashMap_base_04;
 
@@ -290,7 +292,7 @@ public class SkipListBase01<K extends Comparable<K>, V> {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("size=").append(hashMap.size())
-                .append("indexCount=").append(indexCount)
+                .append(", indexCount=").append(indexCount)
                 .append("\r\n");
         Index<K, V> hi = headerIndex;
         Node<K, V> hn = headerIndex.node;
@@ -348,8 +350,17 @@ public class SkipListBase01<K extends Comparable<K>, V> {
         while (oneLevel != null && oneLevel.level > 1) oneLevel = oneLevel.down;
         // 找到下一个索引的第1层
         Node<K, V> nextIndexNode = null;
+        boolean match = false; // 是否匹配到自己
         while (oneLevel != null) {
-            if (oneLevel.node.score >= node.score && node != oneLevel.node) {
+            // 用于处理分数相同的索引遍历问题, 遍历总是遍历下一个索引
+            if (oneLevel.node.score == node.score) {
+                if (node == oneLevel.node) {
+                    match = true;
+                } else if (match) {
+                    nextIndexNode = oneLevel.node;
+                    break;
+                }
+            } else if (oneLevel.node.score >= node.score) {
                 nextIndexNode = oneLevel.node;
                 break;
             }
@@ -366,14 +377,12 @@ public class SkipListBase01<K extends Comparable<K>, V> {
             Index<K, V> x = y.next;
             while (x != null) { // x轴遍历
                 if (x.node == nextIndexNode) {
-                    // 停止
-                    return x;
-                } else if (x.node.score < nextIndexNode.score) {
-                    // 向右
-                    x = x.next;
-                } else {
-                    break;
+                    return x; // 找到了
+                } else if (x.node.score > nextIndexNode.score) {
+                    break; // 超过了
                 }
+                // 向右
+                x = x.next;
             }
             // 向下
             y = y.down;

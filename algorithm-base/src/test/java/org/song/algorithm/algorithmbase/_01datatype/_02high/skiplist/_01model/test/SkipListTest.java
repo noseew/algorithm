@@ -9,7 +9,7 @@ import java.util.Random;
 public class SkipListTest {
 
     private int maxVal = 1000;
-    private int maxSize = 50;
+    private int maxSize = 100;
 
     private Random r = new Random();
     
@@ -20,12 +20,13 @@ public class SkipListTest {
         for (int i = 0; i < maxSize; i++) {
             int val = r.nextInt(maxVal);
             int key = r.nextInt(maxVal);
-            int score = r.nextInt(maxVal);
+            int score = r.nextInt(maxVal / 50);
             skip1.put(key, val, score);
             System.out.println();
             System.out.println(skip1.toString());
             
         }
+        System.out.println(skip1.toString());
 
         ArrayBase01<Integer> values = skip1.getByScore(-1, -1);
         System.out.println(values);
