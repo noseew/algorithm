@@ -1,6 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model.test;
 
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.ArrayBase01;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model.SkipListBase01;
 
 import java.util.Random;
@@ -25,6 +26,15 @@ public class SkipListTest {
             System.out.println(skip1.toString());
             
         }
-        
+
+        ArrayBase01<Integer> values = skip1.getByScore(-1, -1);
+        System.out.println(values);
+
+        values = skip1.getByScore(-1, 50);
+        System.out.println(values);
+
+        values = skip1.getByScore(50, -1);
+        System.out.println(values);
+
     }
 }

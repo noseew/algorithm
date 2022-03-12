@@ -1,8 +1,12 @@
 package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model;
 
 import lombok.*;
+import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.ArrayBase01;
 import org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model.HashMap_base_04;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -147,6 +151,94 @@ public class SkipListBase01<K extends Comparable<K>, V> {
             }
         } else {
             // 存在则更新
+        }
+        return null;
+    }
+    
+    public V get(K k) {
+        Node<K, V> node = hashMap.get(k);
+        if (node == null) {
+            return null;
+        }
+        return node.v;
+    }
+
+    /**
+     * 根据分数范围获取, 分数左开右闭, -1表示全部
+     * 
+     * @param min
+     * @param max
+     * @return
+     */
+    public ArrayBase01<V> getByScore(double min, double max) {
+        ArrayBase01<V> vals = new ArrayBase01<>();
+        ArrayBase01<Node<K, V>> nodes = getNodes(min, max);
+        for (int i = 0; i < nodes.length(); i++) {
+            vals.add(nodes.get(i).getV());
+        }
+        return vals;
+    }
+
+    protected ArrayBase01<Node<K, V>> getNodes(double min, double max) {
+        // 跳索引
+        Index<K, V> y = headerIndex, yh = null;
+        Node<K, V> minNode = null;
+        while (y != null) { // y轴遍历
+            Index<K, V> x = y.next, xh = y;
+            while (x != null) { // x轴遍历
+                if (x.node.score >= min) {
+                    // 找到了
+                    break;
+                }
+                xh = x;
+                // 向右
+                x = x.next;
+            }
+            minNode = xh.node;
+            yh = y;
+            // 向下
+            y = xh.down;
+        }
+        ArrayBase01<Node<K, V>> nodes = new ArrayBase01<>();
+        if (minNode == null) {
+            return nodes;
+        }
+        Node<K, V> node = minNode;
+        while (node != null) {
+            if ((node.score != -1) 
+                    && (min == -1 || node.score >= min)  
+                    && (node.score < max || max == -1)) {
+                nodes.add(node);
+            }
+            node = node.next;
+        }
+        return nodes;
+    }
+
+    /**
+     * 找到节点的索引头, 如果该节点没有索引, 则返回空
+     * 
+     * @param k
+     * @param score
+     * @return
+     */
+    protected Index<K, V> getIndexHead(K k, double score) {
+        // 跳索引
+        Index<K, V> y = headerIndex, yh = null;
+        while (y != null) { // y轴遍历
+            Index<K, V> x = y.next, xh = y;
+            while (x != null) { // x轴遍历
+                if (x.node.score == score && Objects.equals(k, x.node.k)) {
+                    // 找到了
+                    return x;
+                }
+                xh = x;
+                // 向右
+                x = x.next;
+            }
+            yh = y;
+            // 向下
+            y = xh.down;
         }
         return null;
     }
