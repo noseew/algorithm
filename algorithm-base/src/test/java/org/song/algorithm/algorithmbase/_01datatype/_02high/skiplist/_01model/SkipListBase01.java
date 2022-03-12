@@ -23,7 +23,7 @@ public class SkipListBase01<K extends Comparable<K>, V> {
      * 为了O(1)的方式方便获取最小和最大节点
      * 同时也可以全量遍历链表
      */
-    private Node<K, V> head, tail;
+//    private Node<K, V> head, tail;
 
     private long size;
 
@@ -106,12 +106,12 @@ public class SkipListBase01<K extends Comparable<K>, V> {
                     headerIndex = new Index<>(null, headerIndex, headerIndex.node, headerIndex.level + 1);
                     headerIndex.down.next = newIndex;
 
-                    // 从下1层开始, 因为上一层索引已经关联
+                    // 从下1层开始, 因为上一层索引已经关联, 由于headerIndex比其他都高1层, 所以这里是下2层
                     y = headerIndex.down.down;
                     n = newIndex.down;
                 } else {
                     y = headerIndex.down;
-                    for (int level = headerIndex.down.level; level > newIndex.level; level--) {
+                    for (int level = y.level; level > newIndex.level; level--) {
                         // head 索引下跳到和新索引相同层
                         y = y.down;
                     }
@@ -123,7 +123,7 @@ public class SkipListBase01<K extends Comparable<K>, V> {
                     Index<K, V> x = y.next, xh = y;
                     while (x != null) { // x轴遍历
                         if (x.node.score > score) {
-                            // 跳过了, 串索引
+                            // 跳过了, 串索引, 新索引在中间
                             n.next = x;
                             xh.next = n;
                             break;
@@ -132,6 +132,11 @@ public class SkipListBase01<K extends Comparable<K>, V> {
                         // 向右
                         x = x.next;
                     }
+                    if (x == null) {
+                        // 跳过了, 串索引, 新索引在右边
+                        xh.next = n;
+                    }
+                    
                     // 向下
                     y = xh.down;
                     // 新索引同时向下
@@ -141,7 +146,6 @@ public class SkipListBase01<K extends Comparable<K>, V> {
         } else {
             // 存在则更新
         }
-        head = headerIndex.node;
         return null;
     }
 
@@ -187,15 +191,14 @@ public class SkipListBase01<K extends Comparable<K>, V> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        if (head == null) {
-            return "";
-        }
+        sb.append("size=").append(size).append("\r\n");
         Index<K, V> hi = headerIndex;
         Node<K, V> hn = headerIndex.node;
         
+        int count = 0;
         while (hn != null) {
             // 链表遍历
-            sb.append(hn.score).append(": ")
+            sb.append(count++).append(": ").append(hn.score).append(": ")
                     .append("(").append(wrap(hn.k)).append("=").append(wrap(hn.v)).append(") ");
             if (hi != null && hi.node == hn) {
                 // 索引遍历
@@ -230,29 +233,37 @@ public class SkipListBase01<K extends Comparable<K>, V> {
         if (node == null || node.next == null) {
             return null;
         }
-        Node<K, V> nextNode = node.next;
-
+        Index<K, V> oneLevel = headerIndex;
+        while (oneLevel != null && oneLevel.level > 1) oneLevel = oneLevel.down;
+        Node<K, V> nextIndexNode = null;
+        while (oneLevel != null) {
+            if (oneLevel.node.score >= node.score && node != oneLevel.node) {
+                nextIndexNode = oneLevel.node;
+                break;
+            }
+            oneLevel = oneLevel.next;
+        }
+        if (nextIndexNode == null) {
+            return null;
+        }
+        
         // 跳索引
         Index<K, V> y = headerIndex;
         while (y != null) { // y轴遍历
-            Index<K, V> x = y.next, xh = y;
+            Index<K, V> x = y.next;
             while (x != null) { // x轴遍历
-                if (x.node == nextNode) {
+                if (x.node == nextIndexNode) {
                     // 停止
                     return x;
+                } else if (x.node.score < nextIndexNode.score) {
+                    // 向右
+                    x = x.next;
+                } else {
+                    break;
                 }
-                if (x.node.score > nextNode.score) {
-                    // 遍历链表
-                    nextNode = nextNode.next;
-                    continue;
-                }
-
-                xh = x;
-                // 向右
-                x = x.next;
             }
             // 向下
-            y = xh.down;
+            y = y.down;
         }
         return null;
     }

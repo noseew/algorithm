@@ -7,8 +7,8 @@ import java.util.Random;
 
 public class SkipListTest {
 
-    private int maxVal = 100;
-    private int maxSize = 10;
+    private int maxVal = 500;
+    private int maxSize = 50;
 
     private Random r = new Random();
     
@@ -21,6 +21,7 @@ public class SkipListTest {
             int key = r.nextInt(maxVal);
             int score = r.nextInt(maxVal);
             skip1.put(key, val, score);
+            System.out.println();
             System.out.println(skip1.toString());
             
         }
