@@ -4,8 +4,6 @@ import lombok.*;
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.ArrayBase01;
 import org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model.HashMap_base_04;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
@@ -43,6 +41,8 @@ public class SkipListBase01<K extends Comparable<K>, V> {
      */
     
     private Random r = new Random();
+
+    protected int indexCount = 0;
     
     public SkipListBase01() {
         // 临时头node节点
@@ -281,6 +281,7 @@ public class SkipListBase01<K extends Comparable<K>, V> {
 
             head.down = down;
         }
+        if (head != null) indexCount++;
         return head;
     }
 
