@@ -9,7 +9,7 @@ import java.util.Random;
 public class SkipListTest {
 
     private int maxVal = 1000;
-    private int maxSize = 100;
+    private int maxSize = 50;
 
     private Random r = new Random();
     

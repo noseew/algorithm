@@ -122,6 +122,11 @@ public class HashMap_base_01<K, V> extends AbstractMap<K, V> {
         return null;
     }
 
+    @Override
+    public int size() {
+        return size;
+    }
+
     /**
      * 确保容量
      */

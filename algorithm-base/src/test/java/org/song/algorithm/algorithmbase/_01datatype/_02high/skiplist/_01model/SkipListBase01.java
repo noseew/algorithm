@@ -27,8 +27,6 @@ public class SkipListBase01<K extends Comparable<K>, V> {
      */
 //    private Node<K, V> head, tail;
 
-    private long size;
-
     /**
      * 索引层从1开始
      * 数据链表不属于任何层
@@ -43,6 +41,7 @@ public class SkipListBase01<K extends Comparable<K>, V> {
     private Random r = new Random();
 
     protected int indexCount = 0;
+    protected int no = 0;
     
     public SkipListBase01() {
         // 临时头node节点
@@ -53,12 +52,11 @@ public class SkipListBase01<K extends Comparable<K>, V> {
     }
     
     public V put(K k, V v, double score) {
-        Node<K, V> newNode = new Node<>(k, v, score, null);
+        Node<K, V> newNode = new Node<>(k, v, score, null, no++, 0);
         Node<K, V> exitNode = hashMap.get(k);
         if (exitNode == null) {
             // 不存在, 加入map
             hashMap.put(k, newNode);
-            size++;
             // 加入跳表
 
             // 跳索引
@@ -66,7 +64,7 @@ public class SkipListBase01<K extends Comparable<K>, V> {
             while (y != null) { // y轴遍历
                 Index<K, V> x = y.next, xh = y;
                 while (x != null) { // x轴遍历
-                    if (x.node.score > score) {
+                    if (x.node.score >= score) {
                         // 跳过了, 停止
                         break;
                     }
@@ -89,7 +87,7 @@ public class SkipListBase01<K extends Comparable<K>, V> {
                     // 到了链表尾部
                     break;
                 }
-                if (next.score > score) {
+                if (next.score >= score) {
                     break;
                 }
                 prev = next;
@@ -128,7 +126,7 @@ public class SkipListBase01<K extends Comparable<K>, V> {
                 while (y != null) { // y轴遍历
                     Index<K, V> x = y.next, xh = y;
                     while (x != null) { // x轴遍历
-                        if (x.node.score > score) {
+                        if (x.node.score >= score) {
                             // 跳过了, 串索引, 新索引在中间
                             n.next = x;
                             xh.next = n;
@@ -281,22 +279,30 @@ public class SkipListBase01<K extends Comparable<K>, V> {
 
             head.down = down;
         }
-        if (head != null) indexCount++;
+        if (head != null) {
+            indexCount++;
+            newNode.ic = head.level;
+        }
         return head;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("size=").append(size).append("\r\n");
+        sb.append("size=").append(hashMap.size())
+                .append("indexCount=").append(indexCount)
+                .append("\r\n");
         Index<K, V> hi = headerIndex;
         Node<K, V> hn = headerIndex.node;
         
         int count = 0;
         while (hn != null) {
             // 链表遍历
-            sb.append(count++).append(": ").append(hn.score).append(": ")
-                    .append("(").append(wrap(hn.k)).append("=").append(wrap(hn.v)).append(") ");
+            sb.append(count++).append(". ")
+                    .append(" no=").append(hn.no)
+                    .append(" ic=").append(hn.ic)
+                    .append("\t")
+                    .append(hn.score).append("{").append(wrap(hn.k)).append(":").append(wrap(hn.v)).append("} ");
             if (hi != null && hi.node == hn) {
                 // 索引遍历, 逆序
                 reversed(hi, sb);
@@ -393,6 +399,10 @@ public class SkipListBase01<K extends Comparable<K>, V> {
         V v;
         double score;
         Node<K, V> next;
+        // 用于debug调试, 新增编号
+        int no;
+        // 用于debug调试, 拥有索引层数
+        int ic;
     }
     
 }
