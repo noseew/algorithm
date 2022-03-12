@@ -32,17 +32,25 @@ public class SkipListBase01<K extends Comparable<K>, V> {
     /**
      * 索引层从1开始
      * 数据链表不属于任何层
-     * 默认最大索引层为32层
+     * 默认最大索引层为32层, 数据在2^31次方内, 始终保持索引的随机特性, 跳表的效率不会有太多变化
      */
-    private int maxLevel = 32;
+    private final int maxLevel = 32;
     /**
      * 当前索引中的最高level, 
      * 等于headerIndex的level - 1
      */
     
-    private Random r = new Random();
+    private final Random r = new Random();
 
+    /**
+     * 用于 debug 调试
+     * 有索引的node数量
+     */
     protected int indexCount = 0;
+    /**
+     * 用于 debug 调试
+     * node的插入顺序
+     */
     protected int no = 0;
     
     public SkipListBase01() {
@@ -161,6 +169,56 @@ public class SkipListBase01<K extends Comparable<K>, V> {
             return null;
         }
         return node.v;
+    }
+
+    public V remove(K k) {
+        // 从map中删除
+        Node<K, V> removedNode = hashMap.remove(k);
+        if (removedNode == null) {
+            return null;
+        }
+        double score = removedNode.score;
+        // 从跳表中删除
+
+        // 跳索引
+        Index<K, V> y = headerIndex, yh = null;
+        while (y != null) { // y轴遍历
+            Index<K, V> x = y.next, xh = y;
+            while (x != null) { // x轴遍历
+                if (x.node.score == score && Objects.equals(k, x.node.k)) {
+                    // 找到了, 停止
+                    break;
+                }
+                xh = x;
+                // 向右
+                x = x.next;
+            }
+            yh = y;
+            // 向下
+            y = xh.down;
+        }
+        // 到了最底层
+        Node<K, V> prev = null, next = null;
+        prev = yh.node;
+
+        // 遍历链表
+        while (prev != null && prev.score <= score) {
+            next = prev.next;
+            if (next == removedNode) {
+                // 找到待删除node
+                break;
+            }
+            prev = next;
+        }
+
+        // 从链表中删除 next
+        prev.next = next.next;
+        
+        // 删除索引 TODO
+        
+
+
+        return removedNode.v;
     }
 
     /**
