@@ -108,8 +108,10 @@ public class SkipListBase01<K extends Comparable<K>, V> {
 
                     // 从下1层开始, 因为上一层索引已经关联, 由于headerIndex比其他都高1层, 所以这里是下2层
                     y = headerIndex.down.down;
+                    // 新的 需要生层的索引, 最高层因为是新的, 这里已经关联, 所以需要从下面层开始
                     n = newIndex.down;
                 } else {
+                    // head索引下降到和新索引相同的高度在进行串索引
                     y = headerIndex.down;
                     for (int level = y.level; level > newIndex.level; level--) {
                         // head 索引下跳到和新索引相同层
@@ -151,6 +153,8 @@ public class SkipListBase01<K extends Comparable<K>, V> {
 
     /**
      * 随机获取层数, 从1开始, 最低0层, 表示不构建索引, 最高层数 == headerIndex 的层数
+     * 有0.5的概率不会生成索引
+     * 从低位开始, 连续1的个数就是索引的层数
      * 
      * @return
      */
@@ -168,10 +172,10 @@ public class SkipListBase01<K extends Comparable<K>, V> {
     }
 
     /**
-     * 构建索引, 
+     * 构建索引, 并返回索引头
      * 
-     * @param level
-     * @param newNode
+     * @param level 需要生成多少层索引
+     * @param newNode 索引关联的node
      * @return
      */
     protected Index<K, V> buildIndex(int level, Node<K, V> newNode) {
@@ -201,8 +205,9 @@ public class SkipListBase01<K extends Comparable<K>, V> {
             sb.append(count++).append(": ").append(hn.score).append(": ")
                     .append("(").append(wrap(hn.k)).append("=").append(wrap(hn.v)).append(") ");
             if (hi != null && hi.node == hn) {
-                // 索引遍历
+                // 索引遍历, 逆序
                 reversed(hi, sb);
+                // 下一个索引头
                 hi = nextIndexHead(hi.node);
             }
             sb.append("\r\n");
@@ -229,12 +234,20 @@ public class SkipListBase01<K extends Comparable<K>, V> {
         sb.append("<-[").append(index.level).append("]");
     }
 
+    /**
+     * 获取下一个索引的头索引节点
+     * 
+     * @param node
+     * @return
+     */
     private Index<K, V> nextIndexHead(Node<K, V> node) {
         if (node == null || node.next == null) {
             return null;
         }
+        // 从第1层开始
         Index<K, V> oneLevel = headerIndex;
         while (oneLevel != null && oneLevel.level > 1) oneLevel = oneLevel.down;
+        // 找到下一个索引的第1层
         Node<K, V> nextIndexNode = null;
         while (oneLevel != null) {
             if (oneLevel.node.score >= node.score && node != oneLevel.node) {
@@ -243,11 +256,12 @@ public class SkipListBase01<K extends Comparable<K>, V> {
             }
             oneLevel = oneLevel.next;
         }
+        // 如果接下来没有索引, 返回空
         if (nextIndexNode == null) {
             return null;
         }
         
-        // 跳索引
+        // 跳索引, 跳到下一个索引的索引头
         Index<K, V> y = headerIndex;
         while (y != null) { // y轴遍历
             Index<K, V> x = y.next;
