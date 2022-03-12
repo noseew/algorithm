@@ -190,26 +190,40 @@ public class SkipListBase01<K extends Comparable<K>, V> {
         if (head == null) {
             return "";
         }
-        Node<K, V> hn = head.next;
-        // 链表遍历
+        Index<K, V> hi = headerIndex;
+        Node<K, V> hn = headerIndex.node;
+        
         while (hn != null) {
-
-            sb.append(hn.score).append(": ").append(hn.k).append("=").append(hn.v).append(" ");
-            Index<K, V> hi = headerIndex;
-            // 索引遍历
-            hi = nextIndexHead(hi.node);
-            if (hi != null && hi.node == hn) {
-                while (hi != null) {
-                    sb.append("[").append(hi.level).append("]");
-                    hi = hi.down;
-                }
-                sb.append("\r\n");
-            }
             // 链表遍历
+            sb.append(hn.score).append(": ")
+                    .append("(").append(wrap(hn.k)).append("=").append(wrap(hn.v)).append(") ");
+            if (hi != null && hi.node == hn) {
+                // 索引遍历
+                reversed(hi, sb);
+                hi = nextIndexHead(hi.node);
+            }
             sb.append("\r\n");
             hn = hn.next;
         }
         return sb.toString();
+    }
+    
+    private String wrap(Object o) {
+        String s = String.valueOf(o == null ? "" : o);
+        StringBuilder sb = new StringBuilder();
+        int max = 4;
+        for (int i = 0; i < max - s.length(); i++) {
+            sb.append(" ");
+        }
+        return sb.append(s).toString();
+    }
+    
+    private void reversed(Index<K, V> index, StringBuilder sb) {
+        if (index == null) {
+            return;
+        }
+        reversed(index.down, sb);
+        sb.append("<-[").append(index.level).append("]");
     }
 
     private Index<K, V> nextIndexHead(Node<K, V> node) {
