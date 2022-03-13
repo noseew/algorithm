@@ -10,6 +10,17 @@ import java.util.Objects;
 import java.util.Random;
 
 /**
+ * 跳表
+ * 结合 redis 的跳表和 JDK 的跳表特性
+ * 1. 支持分数 排序/查找/删除 (redis的特性)
+ * 2. 根据key有唯一性, 使用hashmap存储 (redis的特性, JDK中采用key排序作为唯一性校验)
+ * 3. 存储key-val (JDK中有key和val, redis中只有key)
+ * 4. 跳表索引采用二维链表形式 (参考JDK, redis中开始数组+链表形式)
+ * 5. 数据节点node 1) hashmap中存储, 保证其唯一性, 2) 跳表中存储, 保证分数查找的O(logn)效率, (参考redis)
+ * 
+ * 待实现
+ * 1. 根据分值获取排名
+ * 
  */
 public class SkipListBase01<K extends Comparable<K>, V> {
     /**
@@ -209,6 +220,7 @@ public class SkipListBase01<K extends Comparable<K>, V> {
 
     /**
      * 从跳表中删除node节点, 如果节点有索引, 一并删除
+     * TODO 是否考虑降低 headerIndex 索引层数?
      *
      * @param removedNode
      */
