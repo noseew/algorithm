@@ -186,7 +186,10 @@ public class SkipListBase01<K extends Comparable<K>, V> {
             Index<K, V> x = y.next, xh = y;
             while (x != null) { // x轴遍历
                 if (x.node.score == score && Objects.equals(k, x.node.k)) {
-                    // 找到了, 停止
+                    // 找到了, 删除索引
+                    xh.next = x.next;
+                    break;
+                } else if (x.node.score > score) {
                     break;
                 }
                 xh = x;
@@ -213,10 +216,6 @@ public class SkipListBase01<K extends Comparable<K>, V> {
 
         // 从链表中删除 next
         prev.next = next.next;
-        
-        // 删除索引 TODO
-        
-
 
         return removedNode.v;
     }
