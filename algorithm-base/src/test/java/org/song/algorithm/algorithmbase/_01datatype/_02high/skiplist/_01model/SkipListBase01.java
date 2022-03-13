@@ -346,7 +346,7 @@ public class SkipListBase01<K extends Comparable<K>, V> {
         Node<K, V> prev = head, next = null;
         while (prev != null) {
             next = prev.next;
-            if (Objects.equals(next, k)) break;
+            if (Objects.equals(next.k, k)) break;
             prev = next;
         }
         return prev;

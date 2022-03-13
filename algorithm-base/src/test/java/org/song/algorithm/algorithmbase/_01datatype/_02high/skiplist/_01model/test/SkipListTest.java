@@ -95,11 +95,13 @@ public class SkipListTest {
                 skip1.remove(key);
 
                 ArrayBase01<SkipListBase01.Node<Integer, Integer>> nodes = skip1.getNodesByScore(score, score + 1);
-                boolean has = false;
+                boolean noHas = true;
                 for (int k = 0; k < nodes.length(); k++) {
-                    has = has || nodes.get(k).getK().equals(key);
+                    noHas = noHas && !nodes.get(k).getK().equals(key);
                 }
-                assert has;
+                if (!noHas) {
+                    assert noHas;
+                }
             }
 
             System.out.println("remove OK");
@@ -139,7 +141,10 @@ public class SkipListTest {
                 }
             }
             System.out.println("getMinVal getMaxVal OK");
-            
+
+
+            skip1.removeByScore(minScore, maxScore);
+            System.out.println("removeByScore OK");
         }
 
 
