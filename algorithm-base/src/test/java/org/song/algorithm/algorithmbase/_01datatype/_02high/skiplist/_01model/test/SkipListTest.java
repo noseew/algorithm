@@ -68,7 +68,13 @@ public class SkipListTest {
 
             ArrayBase01<SkipListBase01.Node<Integer, Integer>> byScore = skip1.getNodes(-1, -1);
             for (int k = 0; k < byScore.length() - 1; k++) {
-                assert byScore.get(k).getScore() <= byScore.get(k + 1).getScore();
+                boolean b = byScore.get(k).getScore() <= byScore.get(k + 1).getScore();
+                if (!b) {
+                    skip1.getNodes(-1, -1);
+                    byScore.get(k);
+                    byScore.get(k + 1);
+                    assert b;
+                }
             }
             int max = maxVal / 10;
             byScore = skip1.getNodes(-1, max);

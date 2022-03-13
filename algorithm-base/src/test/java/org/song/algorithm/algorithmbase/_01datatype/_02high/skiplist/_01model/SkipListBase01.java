@@ -126,94 +126,114 @@ public class SkipListBase01<K extends Comparable<K>, V> {
     }
 
     protected void putNode(Node<K, V> newNode) {
-        // 跳索引
-        Index<K, V> y = headerIndex, yh = null;
-        while (y != null) { // y轴遍历
-            Index<K, V> x = y.next, xh = y;
-            while (x != null) { // x轴遍历
-                if (x.node.score >= newNode.score) {
-                    // 跳过了, 停止
-                    break;
-                }
-                xh = x;
-                // 向右
-                x = x.next;
-            }
-            yh = y;
-            // 向下
-            y = xh.down;
-        }
-        // 到了最底层
-        Node<K, V> prev = null, next = null;
-        prev = yh.node;
 
-        // 遍历链表
-        while (prev != null && prev.score < newNode.score) {
-            next = prev.next;
-            if (next == null) {
-                // 到了链表尾部
-                break;
-            }
-            if (next.score >= newNode.score) {
-                break;
-            }
-            prev = next;
-        }
-
+        Node<K, V> prev = getPrevNodeByScore(newNode.score);
         // 串链表
         newNode.next = prev.next;
         prev.next = newNode;
 
         // 新建索引
         Index<K, V> newIndex = buildIndex(buildLevel(), newNode);
-
-        if (newIndex != null) {
-            Index<K, V> n;
-            // 索引升层
-            if (newIndex.level >= headerIndex.level) {
-                // 生层同时串最上层索引
-                headerIndex = new Index<>(null, headerIndex, headerIndex.node, headerIndex.level + 1);
-                headerIndex.down.next = newIndex;
-
-                // 从下1层开始, 因为上一层索引已经关联, 由于headerIndex比其他都高1层, 所以这里是下2层
-                y = headerIndex.down.down;
-                // 新的 需要生层的索引, 最高层因为是新的, 这里已经关联, 所以需要从下面层开始
-                n = newIndex.down;
-            } else {
-                // head索引下降到和新索引相同的高度在进行串索引
-                y = headerIndex.down;
-                for (int level = y.level; level > newIndex.level; level--) {
-                    // head 索引下跳到和新索引相同层
-                    y = y.down;
-                }
-                n = newIndex;
-            }
-
-            // 串索引
-            while (y != null) { // y轴遍历
-                Index<K, V> x = y.next, xh = y;
-                while (x != null) { // x轴遍历
-                    if (x.node.score >= newNode.score) {
-                        // 跳过了, 串索引, 新索引在中间
-                        n.next = x;
-                        xh.next = n;
-                        break;
-                    }
-                    xh = x;
-                    // 向右
-                    x = x.next;
-                }
-                if (x == null) {
-                    // 跳过了, 串索引, 新索引在右边
-                    xh.next = n;
-                }
-
-                // 向下
-                y = xh.down;
-                // 新索引同时向下
-                n = n.down;
-            }
+        if (newIndex == null) {
+            return;
         }
+        // y 前/左一个索引, n当前新增的索引
+        Index<K, V> y, n;
+        // 索引升层
+        if (newIndex.level >= headerIndex.level) {
+            // 生层同时串最上层索引
+            headerIndex = new Index<>(null, headerIndex, headerIndex.node, headerIndex.level + 1);
+            headerIndex.down.next = newIndex;
+
+            // 从下1层开始, 因为上一层索引已经关联, 由于headerIndex比其他都高1层, 所以这里是下2层
+            y = headerIndex.down.down;
+            // 新的 需要生层的索引, 最高层因为是新的, 这里已经关联, 所以需要从下面层开始
+            n = newIndex.down;
+        } else {
+            // head索引下降到和新索引相同的高度在进行串索引
+            y = headerIndex.down;
+            for (int level = y.level; level > newIndex.level; level--) {
+                // head 索引下跳到和新索引相同层
+                y = y.down;
+            }
+            n = newIndex;
+        }
+
+        // 串索引
+        while (y != null) { // y轴遍历
+            Index<K, V> x = y.next, xh = y;
+            while (x != null) { // x轴遍历
+                if (x.node.score >= newNode.score) {
+                    // 跳过了, 串索引, 新索引在中间
+                    n.next = x;
+                    xh.next = n;
+                    break;
+                }
+                xh = x;
+                // 向右
+                x = x.next;
+            }
+            if (x == null) {
+                // 跳过了, 串索引, 新索引在右边
+                xh.next = n;
+            }
+
+            // 向下
+            y = xh.down;
+            // 新索引同时向下
+            n = n.down;
+        }
+    }
+
+    /**
+     * 根据分数, 找到其前1个node,
+     * 可能有多个相同分数的node, 这里只返回 < 分数的最后一个, 可能还需要从node链表中获取真正的node前一个
+     *
+     * @param score
+     * @return
+     */
+    protected Node<K, V> getPrevNodeByScore(double score) {
+
+        Node<K, V> prev = null;
+        // 跳索引
+        Index<K, V> y = headerIndex;
+        while (y != null) { // y轴遍历
+            Index<K, V> x = y.next, xh = y;
+            while (x != null) { // x轴遍历
+                if (x.node.score >= score) {
+                    // 找到了
+                    break;
+                }
+                xh = x;
+                // 向右
+                x = x.next;
+            }
+            prev = xh.node;
+            // 向下
+            y = xh.down;
+        }
+        while (prev != null) {
+            Node<K, V> next = prev.next;
+            if (next == null || next.score >= score) break;
+            prev = next;
+        }
+        return prev;
+    }
+
+    /**
+     * 根据k, 在head中找到k其前1个node
+     *
+     * @param head
+     * @return
+     */
+    protected Node<K, V> getPrevNodeByNode(Node<K, V> head, K k) {
+        Node<K, V> prev = head, next = null;
+        while (prev != null) {
+            next = prev.next;
+            if (Objects.equals(next, k)) break;
+            prev = next;
+        }
+        return prev;
     }
 
     /**
@@ -223,9 +243,8 @@ public class SkipListBase01<K extends Comparable<K>, V> {
      */
     protected void removeNode(Node<K, V> removedNode) {
         double score = removedNode.score;
-        // 从跳表中删除
 
-        // 跳索引
+        // 跳索引 删除索引
         Index<K, V> y = headerIndex, yh = null;
         while (y != null) { // y轴遍历
             Index<K, V> x = y.next, xh = y;
@@ -247,92 +266,33 @@ public class SkipListBase01<K extends Comparable<K>, V> {
             y = xh.down;
         }
         // 到了最底层
-        Node<K, V> prev = null, next = null;
-        prev = yh.node;
+        Node<K, V> prev = getPrevNodeByNode(yh.node, removedNode.k);
 
-        // 遍历链表
-        while (prev != null && prev.score <= score) {
-            next = prev.next;
-            if (next == removedNode) {
-                // 找到待删除node
-                break;
-            }
-            prev = next;
-        }
-
-        // 从链表中删除 next
+        // 从链表中删除
         if (prev == null) {
             return;
         }
-        if (next != null) {
-            prev.next = next.next;
-        } else {
-            prev.next = null;
-        }
+        prev.next = prev.next.next;
     }
 
     public ArrayBase01<Node<K, V>> getNodes(double min, double max) {
-        // 跳索引
-        Index<K, V> y = headerIndex, yh = null;
-        Node<K, V> minNode = null;
-        while (y != null) { // y轴遍历
-            Index<K, V> x = y.next, xh = y;
-            while (x != null) { // x轴遍历
-                if (x.node.score >= min) {
-                    // 找到了
-                    break;
-                }
-                xh = x;
-                // 向右
-                x = x.next;
-            }
-            minNode = xh.node;
-            yh = y;
-            // 向下
-            y = xh.down;
-        }
+        Node<K, V> minNode = getPrevNodeByScore(min);
         ArrayBase01<Node<K, V>> nodes = new ArrayBase01<>();
         if (minNode == null) {
             return nodes;
         }
-        Node<K, V> node = minNode;
-        while (node != null) {
-            if ((node.score != -1) 
-                    && (min == -1 || node.score >= min)  
-                    && (node.score < max || max == -1)) {
-                nodes.add(node);
+        while (minNode != null) {
+            if ((minNode.score != -1)
+                    && (min == -1 || minNode.score >= min)
+                    && (minNode.score < max || max == -1)) {
+                nodes.add(minNode);
             }
-            node = node.next;
+            if (max != -1 && minNode.score >= max) {
+                break;
+            }
+            minNode = minNode.next;
         }
         return nodes;
-    }
-
-    /**
-     * 找到节点的索引头, 如果该节点没有索引, 则返回空
-     * 
-     * @param k
-     * @param score
-     * @return
-     */
-    protected Index<K, V> getIndexHead(K k, double score) {
-        // 跳索引
-        Index<K, V> y = headerIndex, yh = null;
-        while (y != null) { // y轴遍历
-            Index<K, V> x = y.next, xh = y;
-            while (x != null) { // x轴遍历
-                if (x.node.score == score && Objects.equals(k, x.node.k)) {
-                    // 找到了
-                    return x;
-                }
-                xh = x;
-                // 向右
-                x = x.next;
-            }
-            yh = y;
-            // 向下
-            y = xh.down;
-        }
-        return null;
     }
 
     /**
