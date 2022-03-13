@@ -59,9 +59,7 @@ public abstract class AbstractSkipList<K extends Comparable<K>, V> {
     @NoArgsConstructor
     protected static class Index<K extends Comparable<K>, V> {
         Index<K, V> next;
-        Index<K, V> down; // 链表索引使用
         Node<K, V> node;
-        int level; // 链表索引使用
     }
 
     @Data
