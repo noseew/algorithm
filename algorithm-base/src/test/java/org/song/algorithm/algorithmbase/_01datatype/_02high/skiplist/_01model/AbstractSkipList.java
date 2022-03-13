@@ -32,6 +32,8 @@ public abstract class AbstractSkipList<K extends Comparable<K>, V> {
      */
     protected final int maxLevel = 32;
 
+    protected double minScore = -1; // 最小分值, 只能出现在 headerIndex 中, 用户数据最小分值从0开始
+
     protected final Random r = new Random();
 
     public abstract V put(K k, V v, double score);
@@ -57,9 +59,9 @@ public abstract class AbstractSkipList<K extends Comparable<K>, V> {
     @NoArgsConstructor
     protected static class Index<K extends Comparable<K>, V> {
         Index<K, V> next;
-        Index<K, V> down;
+        Index<K, V> down; // 链表索引使用
         Node<K, V> node;
-        int level;
+        int level; // 链表索引使用
     }
 
     @Data
@@ -70,10 +72,7 @@ public abstract class AbstractSkipList<K extends Comparable<K>, V> {
         V v;
         double score;
         Node<K, V> next;
-        // 用于debug调试, 新增编号
-        int no;
-        // 用于debug调试, 拥有索引层数
-        int ic;
+        int ic; // 用于debug调试, 拥有索引层数
 
         @Override
         public String toString() {

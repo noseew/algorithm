@@ -27,18 +27,11 @@ import java.util.Objects;
  */
 public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList<K, V> {
 
-    protected double minScore = -1; // 最小分值, 只能出现在 headerIndex 中, 用户数据最小分值从0开始
-
     /**
      * 用于 debug 调试
      * 有索引的node数量
      */
     protected int indexCount = 0;
-    /**
-     * 用于 debug 调试
-     * node的插入顺序
-     */
-    protected int NO = 0;
     
     public SkipListBase01() {
         // 临时头node节点
@@ -51,7 +44,7 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
     @Override
     public V put(K k, V v, double score) {
         checkMinScorePut(score);
-        Node<K, V> newNode = new Node<>(k, v, score, null, NO++, 0);
+        Node<K, V> newNode = new Node<>(k, v, score, null, 0);
         Node<K, V> exitNode = hashMap.get(k);
         if (exitNode == null) {
             // 不存在
@@ -140,7 +133,6 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
     public void clean() {
         hashMap.clean();
         indexCount = 0;
-        NO = 0;
         Node<K, V> node = new Node<>();
         node.score = minScore;
         headerIndex = buildIndex(1, node);
@@ -448,7 +440,6 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
         while (hn != null) {
             // 链表遍历
             sb.append(count++).append(". ")
-                    .append(" no=").append(hn.no)
                     .append(" ic=").append(hn.ic)
                     .append("\t")
                     .append(hn.score).append("{").append(wrap(hn.k)).append(":").append(wrap(hn.v)).append("} ");
