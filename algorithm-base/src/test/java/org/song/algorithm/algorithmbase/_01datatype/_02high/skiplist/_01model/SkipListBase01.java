@@ -23,16 +23,12 @@ public class SkipListBase01<K extends Comparable<K>, V> {
      * 索引层的node结点中 分值为-1, 用于标记他是空结点或者头结点
      */
     private Index<K, V> headerIndex;
-    /**
-     * 为了O(1)的方式方便获取最小和最大节点
-     * 同时也可以全量遍历链表
-     */
-//    private Node<K, V> head, tail;
 
     /**
      * 索引层从1开始
      * 数据链表不属于任何层
-     * 默认最大索引层为32层, 数据在2^31次方内, 始终保持索引的随机特性, 跳表的效率不会有太多变化
+     * 默认最大索引层为32层, 数据在2^32次方内, 始终保持索引的随机特性, 跳表的效率不会有太多变化
+     * 因为headerIndex比其他索引高1层, 所以headerIndex最多能到33层
      */
     private final int maxLevel = 32;
     /**
@@ -41,6 +37,9 @@ public class SkipListBase01<K extends Comparable<K>, V> {
      */
     
     private final Random r = new Random();
+    
+    protected double maxScore = 0; // 用户最大分值, 跟随用户传入数据变化而变化, 用户获取尾节点
+    protected double minScore = -1; // 最小分值, 只能出现在 headerIndex 中, 用户数据最小分值从0开始
 
     /**
      * 用于 debug 调试
@@ -56,14 +55,16 @@ public class SkipListBase01<K extends Comparable<K>, V> {
     public SkipListBase01() {
         // 临时头node节点
         Node<K, V> node = new Node<>();
-        node.score = -1; // 头结点分值最小, 其他分值必须 >= 0
+        node.score = minScore; // 头结点分值最小, 其他分值必须 >= 0
         // 临时头索引节点, 初始1层
         headerIndex = buildIndex(1, node);
     }
     
     public V put(K k, V v, double score) {
+        checkMinScorePut(score);
         Node<K, V> newNode = new Node<>(k, v, score, null, NO++, 0);
         Node<K, V> exitNode = hashMap.get(k);
+        maxScore = Math.max(maxScore, score);
         if (exitNode == null) {
             // 不存在
             hashMap.put(k, newNode);
@@ -98,30 +99,75 @@ public class SkipListBase01<K extends Comparable<K>, V> {
 
         return removedNode.v;
     }
-    
-    public void clean() {
-        hashMap.clean();
-        indexCount = 0;
-        NO = 0;
-        Node<K, V> node = new Node<>();
-        node.score = -1;
-        headerIndex = buildIndex(1, node);
+
+    public V getMinVal() {
+        Node<K, V> minNode = getMinNode();
+        if (minNode != null) {
+            return minNode.v;
+        }
+        return null;
+    }
+
+    public V getMaxVal() {
+        Node<K, V> maxNode = getMaxNode();
+        if (maxNode != null) {
+            return maxNode.v;
+        }
+        return null;
     }
 
     /**
      * 根据分数范围获取, 分数左开右闭, -1表示全部
-     * 
+     *
      * @param min
      * @param max
      * @return
      */
     public ArrayBase01<V> getByScore(double min, double max) {
+        checkMinScoreQuery(min);
         ArrayBase01<V> vals = new ArrayBase01<>();
-        ArrayBase01<Node<K, V>> nodes = getNodes(min, max);
+        ArrayBase01<Node<K, V>> nodes = getNodesByScore(min, max);
         for (int i = 0; i < nodes.length(); i++) {
             vals.add(nodes.get(i).getV());
         }
         return vals;
+    }
+
+    public ArrayBase01<V> removeByScore(double min, double max) {
+        ArrayBase01<V> vals = new ArrayBase01<>();
+        ArrayBase01<Node<K, V>> nodes = removeNode(min, max);
+        for (int i = 0; i < nodes.length(); i++) {
+            vals.add(nodes.get(i).v);
+        }
+        return vals;
+    }
+
+    public void clean() {
+        hashMap.clean();
+        indexCount = 0;
+        maxScore = 0;
+        NO = 0;
+        Node<K, V> node = new Node<>();
+        node.score = minScore;
+        headerIndex = buildIndex(1, node);
+    }
+
+    public int size() {
+        return hashMap.size();
+    }
+    
+    /************************************* 内部通用方法 *************************************/
+    
+    protected Node<K, V> getMinNode() {
+        return headerIndex.node.next;
+    }
+
+    protected Node<K, V> getMaxNode() {
+        ArrayBase01<Node<K, V>> nodes = getNodesByScore(maxScore, -1);
+        if (nodes.length() == 0) {
+            return null;
+        }
+        return nodes.get(nodes.length() - 1);
     }
 
     protected void put(Node<K, V> newNode) {
@@ -173,6 +219,23 @@ public class SkipListBase01<K extends Comparable<K>, V> {
         Node<K, V> prev = getPrevNodeByNode(yh.node, removedNode.k);
         // 从链表中删除
         if (prev != null) prev.next = prev.next.next;
+    }
+
+    /**
+     * 根据分数范围删除node, 同时返回这些node
+     * 这里是循环调用删除单个node的方法, 所以效率平均O(nlogn), 需要优化 TODO
+     * 
+     * @param min
+     * @param max
+     * @return
+     */
+    protected ArrayBase01<Node<K, V>> removeNode(double min, double max) {
+        checkMinScoreQuery(min);
+        ArrayBase01<Node<K, V>> nodes = getNodesByScore(min, max);
+        for (int i = 0; i < nodes.length(); i++) {
+            remove(nodes.get(i));
+        }
+        return nodes;
     }
 
     /**
@@ -289,14 +352,21 @@ public class SkipListBase01<K extends Comparable<K>, V> {
         return prev;
     }
 
-    public ArrayBase01<Node<K, V>> getNodes(double min, double max) {
+    /**
+     * 根据分数范围, 返回nodes, 这里用public是为了测试, 不应该返回出去node的
+     * 
+     * @param min
+     * @param max
+     * @return
+     */
+    public ArrayBase01<Node<K, V>> getNodesByScore(double min, double max) {
         Node<K, V> minNode = getPrevNodeByScore(min);
         ArrayBase01<Node<K, V>> nodes = new ArrayBase01<>();
         if (minNode == null) {
             return nodes;
         }
         while (minNode != null) {
-            if ((minNode.score != -1)
+            if ((minNode.score != minScore)
                     && (min == -1 || minNode.score >= min)
                     && (minNode.score < max || max == -1)) {
                 nodes.add(minNode);
@@ -321,7 +391,7 @@ public class SkipListBase01<K extends Comparable<K>, V> {
         int nextInt = r.nextInt(Integer.MAX_VALUE);
         int level = 0;
         // 最高层数 == headerIndex 的层数
-        for (int i = 0; i < headerIndex.level; i++) {
+        for (int i = 0; i < headerIndex.level && i <= maxLevel; i++) {
             if ((nextInt & 0B1) != 0B1) break;
             nextInt = nextInt >>> 1;
             level++;
@@ -354,6 +424,20 @@ public class SkipListBase01<K extends Comparable<K>, V> {
         return head;
     }
 
+    private void checkMinScorePut(double min) {
+        if (min < 0) {
+            throw new RuntimeException("min 不能小于 0");
+        }
+    }
+
+    private void checkMinScoreQuery(double min) {
+        if (min < -1) {
+            throw new RuntimeException("min 不能小于 -1");
+        }
+    }
+
+    /************************************* 打印方法 *************************************/
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
