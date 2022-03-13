@@ -1,13 +1,8 @@
 package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.ArrayBase01;
-import org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model.HashMap_base_04;
 
 import java.util.Objects;
-import java.util.Random;
 
 /**
  * 跳表
@@ -17,39 +12,21 @@ import java.util.Random;
  * 3. 存储key-val (JDK中有key和val, redis中只有key)
  * 4. 跳表索引采用二维链表形式 (参考JDK, redis中开始数组+链表形式)
  * 5. 数据节点node 1) hashmap中存储, 保证其唯一性, 2) 跳表中存储, 保证分数查找的O(logn)效率, (参考redis)
- * 
+ *
  * 待实现
  * 1. 根据分值获取排名
- * 
+ *
+ * 跳表的特性
+ * 1. 新增/删除/查找 平均O(logn), 最坏O(n), 最好O(1)
+ * 2. 索引高度随机, 高度越高概率越低
+ * 3. 数据链表有序
+ *
+ * 实现的特点
+ * 1. 索引层采用二维链表 参考JDK实现
+ *
  */
-public class SkipListBase01<K extends Comparable<K>, V> {
-    /**
-     * map为了O(1)的方式定位到结点, 同时做到结点去重
-     */
-    private HashMap_base_04<K, Node<K, V>> hashMap = new HashMap_base_04<>(8);
-    /**
-     * 跳表的所有的遍历都是从 headerIndex 开始
-     * 最高层的索引永远在 headerIndex 中, 并且永远比其他最高索引高1层
-     * 最底层索引层从开始
-     * 索引层的node结点中 分值为-1, 用于标记他是空结点或者头结点
-     */
-    private Index<K, V> headerIndex;
+public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList<K, V> {
 
-    /**
-     * 索引层从1开始
-     * 数据链表不属于任何层
-     * 默认最大索引层为32层, 数据在2^32次方内, 始终保持索引的随机特性, 跳表的效率不会有太多变化
-     * 因为headerIndex比其他索引高1层, 所以headerIndex最多能到33层
-     */
-    private final int maxLevel = 32;
-    /**
-     * 当前索引中的最高level, 
-     * 等于headerIndex的level - 1
-     */
-    
-    private final Random r = new Random();
-    
-    protected double maxScore = 0; // 用户最大分值, 跟随用户传入数据变化而变化, 用户获取尾节点
     protected double minScore = -1; // 最小分值, 只能出现在 headerIndex 中, 用户数据最小分值从0开始
 
     /**
@@ -70,12 +47,12 @@ public class SkipListBase01<K extends Comparable<K>, V> {
         // 临时头索引节点, 初始1层
         headerIndex = buildIndex(1, node);
     }
-    
+
+    @Override
     public V put(K k, V v, double score) {
         checkMinScorePut(score);
         Node<K, V> newNode = new Node<>(k, v, score, null, NO++, 0);
         Node<K, V> exitNode = hashMap.get(k);
-        maxScore = Math.max(maxScore, score);
         if (exitNode == null) {
             // 不存在
             hashMap.put(k, newNode);
@@ -92,6 +69,7 @@ public class SkipListBase01<K extends Comparable<K>, V> {
         }
     }
 
+    @Override
     public V get(K k) {
         Node<K, V> node = hashMap.get(k);
         if (node == null) {
@@ -100,6 +78,7 @@ public class SkipListBase01<K extends Comparable<K>, V> {
         return node.v;
     }
 
+    @Override
     public V remove(K k) {
         // 从map中删除
         Node<K, V> removedNode = hashMap.remove(k);
@@ -111,6 +90,7 @@ public class SkipListBase01<K extends Comparable<K>, V> {
         return removedNode.v;
     }
 
+    @Override
     public V getMinVal() {
         Node<K, V> minNode = getMinNode();
         if (minNode != null) {
@@ -119,6 +99,7 @@ public class SkipListBase01<K extends Comparable<K>, V> {
         return null;
     }
 
+    @Override
     public V getMaxVal() {
         Node<K, V> maxNode = getMaxNode();
         if (maxNode != null) {
@@ -134,6 +115,7 @@ public class SkipListBase01<K extends Comparable<K>, V> {
      * @param max
      * @return
      */
+    @Override
     public ArrayBase01<V> getByScore(double min, double max) {
         checkMinScoreQuery(min);
         ArrayBase01<V> vals = new ArrayBase01<>();
@@ -144,6 +126,7 @@ public class SkipListBase01<K extends Comparable<K>, V> {
         return vals;
     }
 
+    @Override
     public ArrayBase01<V> removeByScore(double min, double max) {
         ArrayBase01<V> vals = new ArrayBase01<>();
         ArrayBase01<Node<K, V>> nodes = removeNode(min, max);
@@ -153,16 +136,17 @@ public class SkipListBase01<K extends Comparable<K>, V> {
         return vals;
     }
 
+    @Override
     public void clean() {
         hashMap.clean();
         indexCount = 0;
-        maxScore = 0;
         NO = 0;
         Node<K, V> node = new Node<>();
         node.score = minScore;
         headerIndex = buildIndex(1, node);
     }
 
+    @Override
     public int size() {
         return hashMap.size();
     }
@@ -174,11 +158,12 @@ public class SkipListBase01<K extends Comparable<K>, V> {
     }
 
     protected Node<K, V> getMaxNode() {
-        ArrayBase01<Node<K, V>> nodes = getNodesByScore(maxScore, -1);
-        if (nodes.length() == 0) {
-            return null;
-        }
-        return nodes.get(nodes.length() - 1);
+//        ArrayBase01<Node<K, V>> nodes = getNodesByScore(maxScore, -1);
+//        if (nodes.length() == 0) {
+//            return null;
+//        }
+//        return nodes.get(nodes.length() - 1);
+        return null;
     }
 
     protected void put(Node<K, V> newNode) {
@@ -358,7 +343,7 @@ public class SkipListBase01<K extends Comparable<K>, V> {
         Node<K, V> prev = head, next = null;
         while (prev != null) {
             next = prev.next;
-            if (Objects.equals(next.k, k)) break;
+            if (next != null && Objects.equals(next.k, k)) break;
             prev = next;
         }
         return prev;
@@ -550,35 +535,6 @@ public class SkipListBase01<K extends Comparable<K>, V> {
             y = y.down;
         }
         return null;
-    }
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    protected static class Index<K extends Comparable<K>, V> {
-        Index<K, V> next;
-        Index<K, V> down;
-        Node<K, V> node;
-        int level;
-    }
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class Node<K, V> {
-        K k;
-        V v;
-        double score;
-        Node<K, V> next;
-        // 用于debug调试, 新增编号
-        int no;
-        // 用于debug调试, 拥有索引层数
-        int ic;
-
-        @Override
-        public String toString() {
-            return k + "=" + v + "(" + score + ")";
-        }
     }
     
 }

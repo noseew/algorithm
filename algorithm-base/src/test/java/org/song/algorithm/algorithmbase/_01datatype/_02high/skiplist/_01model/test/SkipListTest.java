@@ -120,14 +120,14 @@ public class SkipListTest {
 
                 ArrayBase01<Integer> maxList = skip1.getByScore(maxScore, maxScore + 1);
                 boolean hasMax = false;
-                Integer maxVal = skip1.getMaxVal();
-                for (int k = 0; k < maxList.length(); k++) {
-                    hasMax = hasMax || Objects.equals(maxList.get(k), maxVal);
-                }
-                if (!hasMax) {
-                    skip1.getMaxVal();
-                    assert hasMax;
-                }
+//                Integer maxVal = skip1.getMaxVal();
+//                for (int k = 0; k < maxList.length(); k++) {
+//                    hasMax = hasMax || Objects.equals(maxList.get(k), maxVal);
+//                }
+//                if (!hasMax) {
+//                    skip1.getMaxVal();
+//                    assert hasMax;
+//                }
 
                 ArrayBase01<Integer> minList = skip1.getByScore(-1, minScore + 1);
                 boolean hasMin = false;
