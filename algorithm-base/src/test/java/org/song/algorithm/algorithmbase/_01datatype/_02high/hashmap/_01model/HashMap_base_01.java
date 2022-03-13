@@ -123,6 +123,12 @@ public class HashMap_base_01<K, V> extends AbstractMap<K, V> {
     }
 
     @Override
+    public void clean() {
+        datas = new Entry[initCapacity];
+        size = 0;
+    }
+
+    @Override
     public int size() {
         return size;
     }

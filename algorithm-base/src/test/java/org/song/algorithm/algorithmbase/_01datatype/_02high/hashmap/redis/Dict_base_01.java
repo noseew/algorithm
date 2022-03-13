@@ -115,6 +115,13 @@ public class Dict_base_01<K, V> extends HashMap_base_03<K, V> {
         }
         return v;
     }
+
+    @Override
+    public void clean() {
+        super.clean();
+        datas1 = null;
+        dilatation = -1;
+    }
     
     protected V remove(AbstractMap.Entry<K, V>[] datas, K k) {
         int hash = hash(k);

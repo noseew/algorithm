@@ -157,6 +157,12 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
         }
         return null;
     }
+    
+    @Override
+    public void clean() {
+        super.clean();
+        dilatation = false;
+    }
 
     /**
      * 确保容量

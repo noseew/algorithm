@@ -23,6 +23,8 @@ public abstract class AbstractMap<K, V> {
     public abstract V put(K k, V v);
 
     public abstract V remove(K k);
+
+    public abstract void clean();
     
     public abstract int size();
 
