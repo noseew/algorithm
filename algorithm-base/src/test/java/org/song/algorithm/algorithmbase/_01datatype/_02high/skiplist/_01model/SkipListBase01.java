@@ -68,15 +68,14 @@ public class SkipListBase01<K extends Comparable<K>, V> {
             // 不存在
             hashMap.put(k, newNode);
             // 加入跳表
-            putNode(newNode);
+            put(newNode);
             return null;
         } else {
             // 存在则更新
-            removeNode(exitNode);
-            hashMap.remove(k);
+            remove(exitNode);
             hashMap.put(k, newNode);
             // 加入跳表
-            putNode(newNode);
+            put(newNode);
             return exitNode.v;
         }
     }
@@ -95,7 +94,7 @@ public class SkipListBase01<K extends Comparable<K>, V> {
         if (removedNode == null) {
             return null;
         }
-        removeNode(removedNode);
+        remove(removedNode);
 
         return removedNode.v;
     }
@@ -125,8 +124,7 @@ public class SkipListBase01<K extends Comparable<K>, V> {
         return vals;
     }
 
-    protected void putNode(Node<K, V> newNode) {
-
+    protected void put(Node<K, V> newNode) {
         Node<K, V> prev = getPrevNodeByScore(newNode.score);
         // 串链表
         newNode.next = prev.next;
@@ -160,13 +158,37 @@ public class SkipListBase01<K extends Comparable<K>, V> {
         }
 
         // 串索引
-        while (y != null) { // y轴遍历
-            Index<K, V> x = y.next, xh = y;
+        addIndex(y, n);
+    }
+
+    /**
+     * 从跳表中删除node节点, 如果节点有索引, 一并删除
+     *
+     * @param removedNode
+     */
+    protected void remove(Node<K, V> removedNode) {
+        // 删除索引
+        Index<K, V> yh = removeIndex(removedNode.k, removedNode.score);
+        // 找到 prev
+        Node<K, V> prev = getPrevNodeByNode(yh.node, removedNode.k);
+        // 从链表中删除
+        if (prev != null) prev.next = prev.next.next;
+    }
+
+    /**
+     * 向索引中添加新索引
+     *
+     * @param indexHead 头索引, 注意和headerIndex的区别, 这里的indexHead是headerIndex降低层数和newIndex层数相同的head
+     * @param newIndex  新索引, 串好了层数, 同时必须包含node,
+     */
+    protected void addIndex(Index<K, V> indexHead, Index<K, V> newIndex) {
+        while (indexHead != null) { // y轴遍历
+            Index<K, V> x = indexHead.next, xh = indexHead;
             while (x != null) { // x轴遍历
-                if (x.node.score >= newNode.score) {
+                if (x.node.score >= newIndex.node.score) {
                     // 跳过了, 串索引, 新索引在中间
-                    n.next = x;
-                    xh.next = n;
+                    newIndex.next = x;
+                    xh.next = newIndex;
                     break;
                 }
                 xh = x;
@@ -175,14 +197,45 @@ public class SkipListBase01<K extends Comparable<K>, V> {
             }
             if (x == null) {
                 // 跳过了, 串索引, 新索引在右边
-                xh.next = n;
+                xh.next = newIndex;
             }
 
             // 向下
-            y = xh.down;
+            indexHead = xh.down;
             // 新索引同时向下
-            n = n.down;
+            newIndex = newIndex.down;
         }
+    }
+
+    /**
+     * 删除索引, 同时返回该索引的前一个第1层的索引
+     *
+     * @param k     索引所关联的node.k
+     * @param score 索引所关联的分数
+     * @return
+     */
+    protected Index<K, V> removeIndex(K k, double score) {
+        Index<K, V> y = headerIndex, yh = null;
+        while (y != null) { // y轴遍历
+            Index<K, V> x = y.next, xh = y;
+            while (x != null) { // x轴遍历
+                if (x.node.score == score && Objects.equals(k, x.node.k)) {
+                    // 找到了, 删除索引
+                    xh.next = x.next;
+                    break;
+                } else if (x.node.score < score) {
+                    xh = x;
+                    // 向右
+                    x = x.next;
+                    continue;
+                }
+                break;
+            }
+            yh = y;
+            // 向下
+            y = xh.down;
+        }
+        return yh;
     }
 
     /**
@@ -234,45 +287,6 @@ public class SkipListBase01<K extends Comparable<K>, V> {
             prev = next;
         }
         return prev;
-    }
-
-    /**
-     * 从跳表中删除node节点, 如果节点有索引, 一并删除
-     *
-     * @param removedNode
-     */
-    protected void removeNode(Node<K, V> removedNode) {
-        double score = removedNode.score;
-
-        // 跳索引 删除索引
-        Index<K, V> y = headerIndex, yh = null;
-        while (y != null) { // y轴遍历
-            Index<K, V> x = y.next, xh = y;
-            while (x != null) { // x轴遍历
-                if (x.node.score == score && Objects.equals(removedNode.k, x.node.k)) {
-                    // 找到了, 删除索引
-                    xh.next = x.next;
-                    break;
-                } else if (x.node.score < score) {
-                    xh = x;
-                    // 向右
-                    x = x.next;
-                    continue;
-                }
-                break;
-            }
-            yh = y;
-            // 向下
-            y = xh.down;
-        }
-        // 到了最底层
-        Node<K, V> prev = getPrevNodeByNode(yh.node, removedNode.k);
-
-        // 从链表中删除
-        if (prev == null) {
-            return;
-        }
-        prev.next = prev.next.next;
     }
 
     public ArrayBase01<Node<K, V>> getNodes(double min, double max) {
