@@ -1,5 +1,8 @@
 package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.ArrayBase01;
 
 import java.util.Objects;
@@ -19,11 +22,6 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
     protected int indexCount = 0;
 
     public SkipListBase02() {
-        // 临时头node节点
-        Node<K, V> node = new Node<>();
-        node.score = minScore; // 头结点分值最小, 其他分值必须 >= 0
-        // 临时头索引节点, 初始1层
-        headerIndex = buildIndex(1, node);
     }
 
     @Override
@@ -117,9 +115,6 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
     @Override
     public void clean() {
         hashMap.clean();
-        Node<K, V> node = new Node<>();
-        node.score = minScore;
-        headerIndex = buildIndex(1, node);
     }
 
     @Override
@@ -130,7 +125,7 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
     /************************************* 内部通用方法 *************************************/
 
     protected Node<K, V> getMinNode() {
-        return headerIndex.node.next;
+        return null;
     }
 
     protected Node<K, V> getMaxNode() {
@@ -224,22 +219,6 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
     protected Node<K, V> getPrevNodeByScore(double score) {
 
         Node<K, V> prev = null;
-        // 跳索引
-        ArrayIndex<K, V> yHead = (ArrayIndex<K, V>) headerIndex;
-        ArrayIndex<K, V>[] y = yHead.array;
-        for (int yLen = y.length - 1; yLen >= 0; yLen--) {
-            ArrayIndex<K, V> xPrev = y[yLen];
-            while (xPrev != null) {
-                ArrayIndex<K, V> x = (ArrayIndex<K, V>) xPrev.next;
-                
-            }
-        }
-        
-        while (prev != null) {
-            Node<K, V> next = prev.next;
-            if (next == null || next.score >= score) break;
-            prev = next;
-        }
         return prev;
     }
 
@@ -309,10 +288,7 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
      */
     protected ArrayIndex<K, V> buildIndex(int level, Node<K, V> newNode) {
         // 构建索引
-        ArrayIndex<K, V> head = ArrayIndex.instance(newNode, level);
-        for (int i = 1; i < level; i++) {
-            head.array[i] = ArrayIndex.instance(newNode);
-        }
+        ArrayIndex<K, V> head = null;
         return head;
     }
 
@@ -333,28 +309,6 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("size=").append(hashMap.size())
-                .append(", indexCount=").append(indexCount)
-                .append("\r\n");
-        ArrayIndex<K, V> hi = (ArrayIndex<K, V>)headerIndex;
-        Node<K, V> hn = headerIndex.node;
-
-        int count = 0;
-        while (hn != null) {
-            // 链表遍历
-            sb.append(count++).append(". ")
-                    .append(" ic=").append(hn.ic)
-                    .append("\t")
-                    .append(hn.score).append("{").append(wrap(hn.k)).append(":").append(wrap(hn.v)).append("} ");
-            if (hi != null && hi.node == hn) {
-                // 索引遍历, 逆序
-                reversed(hi, sb);
-                // 下一个索引头
-                hi = nextIndexHead(hi.node);
-            }
-            sb.append("\r\n");
-            hn = hn.next;
-        }
         return sb.toString();
     }
 
@@ -386,68 +340,20 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
         if (node == null || node.next == null) {
             return null;
         }
-        // 从第1层开始
-        ArrayIndex<K, V> oneLevel = (ArrayIndex<K, V>) headerIndex;
-        oneLevel = oneLevel.array[oneLevel.array.length - 1];
-        
-        // 找到下一个索引的第1层
-        Node<K, V> nextIndexNode = null;
-        boolean match = false; // 是否匹配到自己
-        while (oneLevel != null) {
-            // 用于处理分数相同的索引遍历问题, 遍历总是遍历下一个索引
-            if (oneLevel.node.score == node.score) {
-                if (node == oneLevel.node) {
-                    match = true;
-                } else if (match) {
-                    nextIndexNode = oneLevel.node;
-                    break;
-                }
-            } else if (oneLevel.node.score >= node.score) {
-                nextIndexNode = oneLevel.node;
-                break;
-            }
-            oneLevel = (ArrayIndex<K, V>)oneLevel.next;
-        }
-        // 如果接下来没有索引, 返回空
-        if (nextIndexNode == null) {
-            return null;
-        }
-
-        // 跳索引, 跳到下一个索引的索引头
-        ArrayIndex<K, V> y = (ArrayIndex<K, V>) headerIndex;
-        while (y != null) { // y轴遍历
-            ArrayIndex<K, V> x = (ArrayIndex<K, V>) y.next;
-            while (x != null) { // x轴遍历
-                if (x.node == nextIndexNode) {
-                    return x; // 找到了
-                } else if (x.node.score > nextIndexNode.score) {
-                    break; // 超过了
-                }
-                // 向右
-                x = (ArrayIndex<K, V>) x.next;
-            }
-            // 向下
-//            y = y.down;
-        }
         return null;
     }
 
-    protected static class ArrayIndex<K extends Comparable<K>, V> extends Index<K, V> {
-        ArrayIndex<K, V>[] array;
+    protected static class ArrayIndex<K extends Comparable<K>, V> {
+        Index<K, V>[] array;
+        int rank;
+        Node<K, V> node;
+    }
 
-        public static <K extends Comparable<K>, V> ArrayIndex<K, V> instance(Node<K, V> node,
-                                                                             int level) {
-            ArrayIndex<K, V> index = new ArrayIndex<>();
-            index.node = node;
-            index.array = new ArrayIndex[level];
-            index.array[0] = index;
-            return index;
-        }
-        public static <K extends Comparable<K>, V> ArrayIndex<K, V> instance(Node<K, V> node) {
-            ArrayIndex<K, V> index = new ArrayIndex<>();
-            index.node = node;
-            return index;
-        }
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    protected static class Index<K extends Comparable<K>, V> {
+        ArrayIndex<K, V> next;
     }
 
 }

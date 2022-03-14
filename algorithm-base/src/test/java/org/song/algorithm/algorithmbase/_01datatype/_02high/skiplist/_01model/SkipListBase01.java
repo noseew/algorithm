@@ -27,6 +27,13 @@ import java.util.Objects;
  *
  */
 public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList<K, V> {
+    /**
+     * 跳表的所有的遍历都是从 headerIndex 开始
+     * 最高层的索引永远在 headerIndex 中, 并且永远比其他最高索引高1层
+     * 最底层索引层从开始
+     * 索引层的node结点中 分值为-1, 用于标记他是空结点或者头结点
+     */
+    protected LinkIndex<K, V> headerIndex, maxIndex;
 
     /**
      * 用于 debug 调试
@@ -530,7 +537,9 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
     }
 
     @Data
-    protected static class LinkIndex<K extends Comparable<K>, V> extends Index<K, V> {
+    protected static class LinkIndex<K extends Comparable<K>, V> {
+        LinkIndex<K, V> next;
+        Node<K, V> node;
         LinkIndex<K, V> down;
         int level;
 
