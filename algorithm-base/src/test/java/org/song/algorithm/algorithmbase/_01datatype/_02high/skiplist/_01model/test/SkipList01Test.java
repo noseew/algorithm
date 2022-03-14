@@ -7,7 +7,7 @@ import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model.Sk
 import java.util.Objects;
 import java.util.Random;
 
-public class SkipListTest {
+public class SkipList01Test {
 
     private int maxVal = 1000;
     private int maxSize = 50;
