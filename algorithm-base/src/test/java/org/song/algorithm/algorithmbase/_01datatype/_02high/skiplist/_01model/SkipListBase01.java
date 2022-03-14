@@ -536,6 +536,13 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
         return null;
     }
 
+    /**
+     * 索引节点
+     * 二维单向链表
+     *
+     * @param <K>
+     * @param <V>
+     */
     @Data
     protected static class LinkIndex<K extends Comparable<K>, V> {
         LinkIndex<K, V> next;

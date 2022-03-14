@@ -343,8 +343,23 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
         return null;
     }
 
+    /**
+     * 和链表实现的方式不同
+     * 索引分为两个结构
+     * 1. 索引的节点, 索引节点只有一个指针, 指向的是自己关联的下一跳的索引数组的地址; 如何定位到当前节点的下一跳是哪个节点呢? 只需要找到相同的数组下标即可
+     * 2. 索引数组, 包含多个索引节点
+     *
+     * @param <K>
+     * @param <V>
+     */
     protected static class ArrayIndex<K extends Comparable<K>, V> {
+        /**
+         * 存储下一个索引地址的数组
+         */
         Index<K, V>[] array;
+        /**
+         * 当前索引的排名, 从1开始
+         */
         int rank;
         Node<K, V> node;
     }
@@ -353,6 +368,9 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
     @AllArgsConstructor
     @NoArgsConstructor
     protected static class Index<K extends Comparable<K>, V> {
+        /**
+         * 指向下一个索引的地址
+         */
         ArrayIndex<K, V> next;
     }
 
