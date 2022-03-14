@@ -174,7 +174,9 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
         System.arraycopy(array, 0, newArray, 0, array.length);
         headerIndex.array = newArray;
 
-        headerIndex.array[headerIndex.array.length - 1].next = newIndex;
+        Index<K, V> index = new Index<>();
+        index.next = newIndex;
+        headerIndex.array[headerIndex.array.length - 1] = index;
     }
 
     /**
@@ -215,7 +217,7 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
      * @param newIndex 新索引, 串好了层数, 同时必须包含node,
      */
     protected void addIndex(int startIndex, ArrayIndex<K, V> newIndex) {
-        ArrayIndex<K, V> y = this.headerIndex, yh = null;
+        ArrayIndex<K, V> y = this.headerIndex, yh = y;
         for (int i = startIndex; i >= 0; i--) { // y轴遍历
             while (y.array[i].next != null) { // x轴遍历
                 if (y.array[i].next.node.score >= newIndex.node.score) {
@@ -250,7 +252,7 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
      * @return
      */
     protected Node<K, V> getPrevNodeByScore(double score) {
-        ArrayIndex<K, V> y = this.headerIndex, yh = null;
+        ArrayIndex<K, V> y = this.headerIndex, yh = y;
         for (int i = y.array.length - 1; i >= 0; i--) { // y轴遍历
             while (y.array[i].next != null
                     && y.array[i].next.node.score < score) { // x轴遍历
@@ -415,7 +417,7 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
         sb.append("<-[");
         for (int i = 1; i <= index.array.length; i++) {
             sb.append(i);
-            if (i < index.array.length) sb.append("|");
+            if (i < index.array.length) sb.append(", ");
         }
         sb.append("]");
     }
