@@ -159,9 +159,10 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
         // 索引升层
         if (newIndex.array.length >= headerIndex.array.length) {
             upHead(newIndex);
-            startIndex = headerIndex.array.length - 2;
+            // 第一层已经建立关联, 所以从第2层开始(head多1层, 所以-3)
+            startIndex = headerIndex.array.length - 3;
         } else {
-            startIndex = headerIndex.array.length - 1;
+            startIndex = headerIndex.array.length - 2;
         }
 
         // 串索引
@@ -176,7 +177,10 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
 
         Index<K, V> index = new Index<>();
         index.next = newIndex;
-        headerIndex.array[headerIndex.array.length - 1] = index;
+        // 原头index上移
+        headerIndex.array[headerIndex.array.length - 1] = headerIndex.array[headerIndex.array.length - 2];
+        // 构建多出来的索引
+        headerIndex.array[headerIndex.array.length - 2] = index;
     }
 
     /**
@@ -212,11 +216,14 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
     }
 
     /**
-     * 向索引中添加新索引
+     * 向索引中添加新索引 TODO
      *
-     * @param newIndex 新索引, 串好了层数, 同时必须包含node,
+     * @param newIndex
      */
     protected void addIndex(int startIndex, ArrayIndex<K, V> newIndex) {
+        if (startIndex < 0) {
+            return;
+        }
         ArrayIndex<K, V> y = this.headerIndex, yh = y;
         for (int i = startIndex; i >= 0; i--) { // y轴遍历
             while (y.array[i].next != null) { // x轴遍历
@@ -350,8 +357,8 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
         for (int i = 0; i < array.length; i++) {
             array[i] = new Index<>();
         }
+        newNode.ic = level;
         head.array = array;
-        head.rank = 0;
         head.node = newNode;
         indexCount = level;
         return head;
@@ -452,10 +459,6 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
          * 存储下一个索引地址的数组
          */
         Index<K, V>[] array;
-        /**
-         * 当前索引的排名, 从1开始
-         */
-        int rank;
         Node<K, V> node;
     }
 
@@ -467,6 +470,10 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
          * 指向下一个索引的地址
          */
         ArrayIndex<K, V> next;
+        /**
+         * 当前索引的排名, 从1开始
+         */
+        int rank;
     }
 
 }
