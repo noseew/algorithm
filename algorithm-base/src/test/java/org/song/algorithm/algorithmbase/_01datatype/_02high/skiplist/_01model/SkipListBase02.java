@@ -226,15 +226,16 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
         }
         ArrayIndex<K, V> y = this.headerIndex, yh = y;
         for (int i = startIndex; i >= 0; i--) { // y轴遍历
-            while (y.array[i].next != null) { // x轴遍历
-                if (y.array[i].next.node.score >= newIndex.node.score) {
-                    yh.array[i].next = newIndex;
-                    newIndex.array[i].next = y.array[i].next;
+            ArrayIndex<K, V> next = y.array[i].next;
+            while (next != null) {
+                if (next.node.score < newIndex.node.score) { // x轴遍历
+                    newIndex.array[i].next = next;
+                    y.array[i].next = newIndex;
                     break;
                 }
                 // 向右跳
                 yh = y;
-                y = y.array[i].next;
+                y = next;
             }
         }
     }
