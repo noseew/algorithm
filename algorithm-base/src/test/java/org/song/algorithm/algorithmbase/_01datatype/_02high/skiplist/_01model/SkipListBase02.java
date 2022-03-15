@@ -252,6 +252,7 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
      * @return
      */
     protected ArrayIndex<K, V> removeIndex(K k, double score) {
+        boolean removed = false;
         ArrayIndex<K, V> x = this.headerIndex, xh = x;
         for (int i = x.array.length - 1; i >= 0; i--) { // y轴遍历
             while (x != null && x.node.score <= score
@@ -263,10 +264,12 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
             // 删除索引
             if (x != null && x.node.score == score && Objects.equals(x.node.k, k)) {
                 xh.array[i].next = x.array[i].next;
+                removed = true;
             }
             // 退一步
             x = xh;
         }
+        if (removed) indexCount--;
         return xh;
     }
 
@@ -285,6 +288,8 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
                 xh = x;
                 x = x.array[i].next;
             }
+            // 退一步
+            x = xh;
         }
 
         Node<K, V> prev = xh.node;
@@ -340,26 +345,6 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
     }
 
     /**
-     * 随机获取层数, 从1开始, 最低0层, 表示不构建索引, 最高层数 == headerIndex 的层数
-     * 有0.5的概率不会生成索引
-     * 从低位开始, 连续1的个数就是索引的层数
-     *
-     * @return
-     */
-    protected int buildLevel() {
-        // 随机层高
-        int nextInt = r.nextInt(Integer.MAX_VALUE);
-        int level = 0;
-        // 最高层数 == headerIndex 的层数
-        for (int i = 0; i < headerIndex.array.length && i <= maxLevel; i++) {
-            if ((nextInt & 0B1) != 0B1) break;
-            nextInt = nextInt >>> 1;
-            level++;
-        }
-        return level;
-    }
-
-    /**
      * 构建索引, 并返回索引头
      *
      * @param level   需要生成多少层索引
@@ -379,7 +364,7 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
         newNode.ic = level;
         head.array = array;
         head.node = newNode;
-        indexCount = level;
+        indexCount++;
         return head;
     }
 
@@ -400,7 +385,7 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("size=").append(hashMap.size())
+        sb.append("size=").append(this.size())
                 .append(", indexCount=").append(indexCount)
                 .append("\r\n");
 

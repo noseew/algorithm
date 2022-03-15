@@ -279,6 +279,7 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
      * @return
      */
     protected LinkIndex<K, V> removeIndex(K k, double score) {
+        boolean removed = false;
         LinkIndex<K, V> y = headerIndex, yh = null;
         while (y != null) { // y轴遍历
             LinkIndex<K, V> x = y.next, xh = y;
@@ -286,6 +287,7 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
                 if (x.node.score == score && Objects.equals(k, x.node.k)) {
                     // 找到了, 删除索引
                     xh.next = x.next;
+                    removed = true;
                     break;
                 } else if (x.node.score < score) {
                     xh = x;
@@ -299,6 +301,7 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
             // 向下
             y = xh.down;
         }
+        if (removed) indexCount--;
         return yh;
     }
 
@@ -422,7 +425,7 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("size=").append(hashMap.size())
+        sb.append("size=").append(this.size())
                 .append(", indexCount=").append(indexCount)
                 .append("\r\n");
         LinkIndex<K, V> hi = headerIndex;

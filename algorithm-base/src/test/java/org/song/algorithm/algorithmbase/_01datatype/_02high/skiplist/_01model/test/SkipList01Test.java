@@ -20,7 +20,7 @@ public class SkipList01Test {
         SkipListBase01<Integer, Integer> skip1 = new SkipListBase01<>();
         for (int i = 0; i < maxSize; i++) {
             int val = r.nextInt(maxVal);
-            int key = r.nextInt(maxVal);
+            int key = r.nextInt(maxVal / 10);
             int score = r.nextInt(maxVal / 5);
             skip1.put(key, val, score);
             System.out.println(skip1.toString());
