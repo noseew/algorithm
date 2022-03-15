@@ -234,6 +234,7 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
                 xh = x;
                 x = x.array[i].next;
             }
+            // 添加新索引
             newIndex.array[i].next = x;
             xh.array[i].next = newIndex;
         }
@@ -247,8 +248,20 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
      * @return
      */
     protected ArrayIndex<K, V> removeIndex(K k, double score) {
-        ArrayIndex<K, V> yh = null;
-        return yh;
+        ArrayIndex<K, V> x = this.headerIndex, xh = x;
+        for (int i = x.array.length - 1; i >= 0; i--) { // y轴遍历
+            while (x != null && x.node.score <= score
+            && !Objects.equals(x.node.k, k)) {  // x轴遍历
+                // 向右跳
+                xh = x;
+                x = x.array[i].next;
+            }
+            // 删除索引
+            if (x != null) {
+                xh.array[i].next = x.array[i].next;
+            }
+        }
+        return xh;
     }
 
     /**
