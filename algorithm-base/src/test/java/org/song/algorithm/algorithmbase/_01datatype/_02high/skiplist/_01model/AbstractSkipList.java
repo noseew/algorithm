@@ -47,6 +47,26 @@ public abstract class AbstractSkipList<K extends Comparable<K>, V> {
 
     public abstract int size();
 
+    /**
+     * 随机获取层数, 从1开始, 最低0层, 表示不构建索引, 最高层数 == headerIndex 的层数
+     * 有0.5的概率不会生成索引
+     * 从低位开始, 连续1的个数就是索引的层数
+     *
+     * @return
+     */
+    protected int buildLevel(int maxLevel) {
+        // 随机层高
+        int nextInt = r.nextInt(Integer.MAX_VALUE);
+        int level = 0;
+        // 最高层数 == headerIndex 的层数
+        for (int i = 1; i <= maxLevel && i <= this.maxLevel; i++) {
+            if ((nextInt & 0B1) != 0B1) break;
+            nextInt = nextInt >>> 1;
+            level++;
+        }
+        return level;
+    }
+
     @Data
     @AllArgsConstructor
     @NoArgsConstructor

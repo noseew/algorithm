@@ -173,7 +173,7 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
         prev.next = newNode;
 
         // 新建索引
-        LinkIndex<K, V> newIndex = buildIndex(buildLevel(), newNode);
+        LinkIndex<K, V> newIndex = buildIndex(buildLevel(headerIndex.level), newNode);
         if (newIndex == null) {
             return;
         }
@@ -378,26 +378,6 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
             minNode = minNode.next;
         }
         return nodes;
-    }
-
-    /**
-     * 随机获取层数, 从1开始, 最低0层, 表示不构建索引, 最高层数 == headerIndex 的层数
-     * 有0.5的概率不会生成索引
-     * 从低位开始, 连续1的个数就是索引的层数
-     * 
-     * @return
-     */
-    protected int buildLevel() {
-        // 随机层高
-        int nextInt = r.nextInt(Integer.MAX_VALUE);
-        int level = 0;
-        // 最高层数 == headerIndex 的层数
-        for (int i = 0; i < headerIndex.level && i <= maxLevel; i++) {
-            if ((nextInt & 0B1) != 0B1) break;
-            nextInt = nextInt >>> 1;
-            level++;
-        }
-        return level;
     }
 
     /**

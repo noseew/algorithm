@@ -150,7 +150,7 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
         prev.next = newNode;
 
         // 新建索引
-        ArrayIndex<K, V> newIndex = buildIndex(buildLevel(), newNode);
+        ArrayIndex<K, V> newIndex = buildIndex(buildLevel(headerIndex.array.length), newNode);
         if (newIndex == null) {
             return;
         }
@@ -241,7 +241,7 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
     }
 
     /**
-     * 删除索引, 同时返回该索引的前一个第1层的索引
+     * 删除索引, 同时返回该索引的前一个索引
      *
      * @param k     索引所关联的node.k
      * @param score 索引所关联的分数
