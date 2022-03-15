@@ -162,8 +162,8 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
             // 第一层已经建立关联, 所以从第2层开始(head多1层, 所以-3)
             startIndex = headerIndex.array.length - 3;
         } else {
-            // 从新索引头开始
-            startIndex = newIndex.array.length - 1;
+            // 从head下一层开始跳
+            startIndex = headerIndex.array.length - 2;
         }
 
         // 串索引
@@ -234,9 +234,13 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
                 xh = x;
                 x = x.array[i].next;
             }
-            // 添加新索引
-            newIndex.array[i].next = x;
-            xh.array[i].next = newIndex;
+            if (i < newIndex.array.length) {
+                // 添加新索引
+                newIndex.array[i].next = x;
+                xh.array[i].next = newIndex;
+            }
+            // 退一步
+            x = xh;
         }
     }
 
@@ -251,15 +255,17 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
         ArrayIndex<K, V> x = this.headerIndex, xh = x;
         for (int i = x.array.length - 1; i >= 0; i--) { // y轴遍历
             while (x != null && x.node.score <= score
-            && !Objects.equals(x.node.k, k)) {  // x轴遍历
+                    && !Objects.equals(x.node.k, k)) {  // x轴遍历
                 // 向右跳
                 xh = x;
                 x = x.array[i].next;
             }
             // 删除索引
-            if (x != null) {
+            if (x != null && x.node.score == score && Objects.equals(x.node.k, k)) {
                 xh.array[i].next = x.array[i].next;
             }
+            // 退一步
+            x = xh;
         }
         return xh;
     }
