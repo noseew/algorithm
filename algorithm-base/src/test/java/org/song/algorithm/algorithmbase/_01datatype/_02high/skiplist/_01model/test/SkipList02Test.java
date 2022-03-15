@@ -26,24 +26,24 @@ public class SkipList02Test {
             skip1.put(key, val, score);
             System.out.println(skip1.toString());
 
-            if (i >= maxSize - 5) {
-                Integer v2 = skip1.remove(key);
-                System.out.println(v2);
-            }
-            System.out.println(skip1.toString());
+//            if (i >= maxSize - 5) {
+//                Integer v2 = skip1.remove(key);
+//                System.out.println(v2);
+//            }
+//            System.out.println(skip1.toString());
             
 
         }
-        System.out.println(skip1.toString());
-
-        ArrayBase01<Integer> values = skip1.getByScore(-1, -1);
-        System.out.println(values);
-
-        values = skip1.getByScore(-1, 50);
-        System.out.println(values);
-
-        values = skip1.getByScore(50, -1);
-        System.out.println(values);
+//        System.out.println(skip1.toString());
+//
+//        ArrayBase01<Integer> values = skip1.getByScore(-1, -1);
+//        System.out.println(values);
+//
+//        values = skip1.getByScore(-1, 50);
+//        System.out.println(values);
+//
+//        values = skip1.getByScore(50, -1);
+//        System.out.println(values);
 
     }
     

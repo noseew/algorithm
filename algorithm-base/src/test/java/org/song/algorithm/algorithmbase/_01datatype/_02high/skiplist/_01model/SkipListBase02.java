@@ -162,7 +162,8 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
             // 第一层已经建立关联, 所以从第2层开始(head多1层, 所以-3)
             startIndex = headerIndex.array.length - 3;
         } else {
-            startIndex = headerIndex.array.length - 2;
+            // 从新索引头开始
+            startIndex = newIndex.array.length - 1;
         }
 
         // 串索引
@@ -216,7 +217,7 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
     }
 
     /**
-     * 向索引中添加新索引 TODO
+     * 向索引中添加新索引
      *
      * @param newIndex
      */
@@ -224,19 +225,17 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
         if (startIndex < 0) {
             return;
         }
-        ArrayIndex<K, V> y = this.headerIndex, yh = y;
+        double score = newIndex.node.score;
+        
+        ArrayIndex<K, V> x = this.headerIndex, xh = x;
         for (int i = startIndex; i >= 0; i--) { // y轴遍历
-            ArrayIndex<K, V> next = y.array[i].next;
-            while (next != null) {
-                if (next.node.score < newIndex.node.score) { // x轴遍历
-                    newIndex.array[i].next = next;
-                    y.array[i].next = newIndex;
-                    break;
-                }
+            while (x != null && x.node.score < score) {  // x轴遍历
                 // 向右跳
-                yh = y;
-                y = next;
+                xh = x;
+                x = x.array[i].next;
             }
+            newIndex.array[i].next = x;
+            xh.array[i].next = newIndex;
         }
     }
 
@@ -260,16 +259,16 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
      * @return
      */
     protected Node<K, V> getPrevNodeByScore(double score) {
-        ArrayIndex<K, V> y = this.headerIndex, yh = y;
-        for (int i = y.array.length - 1; i >= 0; i--) { // y轴遍历
-            while (y.array[i].next != null
-                    && y.array[i].next.node.score < score) { // x轴遍历
-                yh = y;
-                y = y.array[i].next;
+        ArrayIndex<K, V> x = this.headerIndex, xh = x;
+        for (int i = x.array.length - 1; i >= 0; i--) { // y轴遍历
+            while (x != null && x.node.score < score) {  // x轴遍历
+                // 向右跳
+                xh = x;
+                x = x.array[i].next;
             }
         }
 
-        Node<K, V> prev = yh.node;
+        Node<K, V> prev = xh.node;
         while (prev != null) {
             Node<K, V> next = prev.next;
             if (next == null || next.score >= score) break;
