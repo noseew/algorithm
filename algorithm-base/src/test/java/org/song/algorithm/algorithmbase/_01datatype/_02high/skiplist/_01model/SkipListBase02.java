@@ -43,10 +43,10 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
             return null;
         } else {
             // 存在则更新
-//            remove(exitNode);
-//            hashMap.put(k, newNode);
-//            // 加入跳表
-//            put(newNode);
+            remove(exitNode);
+            hashMap.put(k, newNode);
+            // 加入跳表
+            put(newNode);
             return exitNode.v;
         }
     }
@@ -192,7 +192,6 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
      */
     protected void remove(Node<K, V> removedNode) {
         // 删除索引
-        System.out.println("del k=" + removedNode.k + ", score=" + removedNode.score);
         ArrayIndex<K, V> yh = removeIndex(removedNode.k, removedNode.score);
         // 找到 prev
         Node<K, V> prev = getPrevNodeByNode(yh.node, removedNode.k);
@@ -244,6 +243,10 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
                 }
                 break;
             }
+            if (next == null && x.node.score < score && i < newIndex.array.length) {
+                // 添加新索引
+                x.array[i].next = newIndex;
+            }
         }
     }
 
@@ -265,7 +268,7 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
                     // 定位到了 删除索引
                     x.array[i].next = next.array[i].next;
                     removed = true;
-                } else if (next.node.score < score) {
+                } else if (next.node.score <= score) {
                     // 向右跳
                     x = next;
                     next = next.array[i].next;
