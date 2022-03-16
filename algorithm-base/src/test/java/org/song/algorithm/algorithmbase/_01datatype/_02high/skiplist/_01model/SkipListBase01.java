@@ -317,22 +317,21 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
 
         Node<K, V> prev = null;
         // 跳索引
-        LinkIndex<K, V> x = headerIndex, xh, next;
+        LinkIndex<K, V> x = headerIndex, next;
         while (x != null) { // y轴遍历
-            xh = x;
             next = x.next;
             while (next != null) { // x轴遍历
                 if (next.node.score >= score) {
                     // 找到了
                     break;
                 }
-                xh = next;
+                x = next;
                 // 向右
                 next = next.next;
             }
-            prev = xh.node;
+            prev = x.node;
             // 向下
-            x = xh.down;
+            x = x.down;
         }
         while (prev != null) {
             Node<K, V> nextNode = prev.next;
