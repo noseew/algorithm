@@ -246,26 +246,26 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
      * @param newIndex  新索引, 串好了层数, 同时必须包含node,
      */
     protected void addIndex(LinkIndex<K, V> indexHead, LinkIndex<K, V> newIndex) {
-        while (indexHead != null) { // y轴遍历
-            LinkIndex<K, V> x = indexHead.next, xh = indexHead;
-            while (x != null) { // x轴遍历
-                if (x.node.score >= newIndex.node.score) {
+        LinkIndex<K, V> x = indexHead, next;
+        while (x != null) { // y轴遍历
+            next = x.next;
+            while (next != null) { // x轴遍历
+                if (next.node.score >= newIndex.node.score) {
                     // 跳过了, 串索引, 新索引在中间
-                    newIndex.next = x;
-                    xh.next = newIndex;
+                    newIndex.next = next;
+                    x.next = newIndex;
                     break;
                 }
-                xh = x;
+                x = next;
                 // 向右
-                x = x.next;
+                next = next.next;
             }
-            if (x == null) {
+            if (next == null) {
                 // 跳过了, 串索引, 新索引在右边
-                xh.next = newIndex;
+                x.next = newIndex;
             }
-
             // 向下
-            indexHead = xh.down;
+            x = x.down;
             // 新索引同时向下
             newIndex = newIndex.down;
         }
