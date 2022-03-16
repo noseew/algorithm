@@ -43,10 +43,10 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
             return null;
         } else {
             // 存在则更新
-            remove(exitNode);
-            hashMap.put(k, newNode);
-            // 加入跳表
-            put(newNode);
+//            remove(exitNode);
+//            hashMap.put(k, newNode);
+//            // 加入跳表
+//            put(newNode);
             return exitNode.v;
         }
     }
@@ -228,24 +228,22 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
         }
         double score = newIndex.node.score;
 
-        ArrayIndex<K, V> x = this.headerIndex, xh = x;
+        ArrayIndex<K, V> x = this.headerIndex, next;
         for (int i = startIndex; i >= 0; i--) { // y轴遍历
-            while (x != null) {  // x轴遍历
-                if (x.node.score < score) {
+            next = x.array[i].next;
+            while (next != null) {  // x轴遍历
+                if (next.node.score < score) {
                     // 向右跳
-                    xh = x;
-                    x = x.array[i].next;
+                    x = next;
+                    next = next.array[i].next;
                     continue;
+                } else if (i < newIndex.array.length) {
+                    // 添加新索引
+                    newIndex.array[i].next = next;
+                    x.array[i].next = newIndex;
                 }
                 break;
             }
-            if (i < newIndex.array.length) {
-                // 添加新索引
-                newIndex.array[i].next = x;
-                xh.array[i].next = newIndex;
-            }
-            // 退一步
-            x = xh;
         }
     }
 
@@ -267,7 +265,6 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
                     // 定位到了 删除索引
                     x.array[i].next = next.array[i].next;
                     removed = true;
-                    break;
                 } else if (next.node.score < score) {
                     // 向右跳
                     x = next;
@@ -291,22 +288,26 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
      * @return
      */
     protected Node<K, V> getPrevNodeByScore(double score) {
-        ArrayIndex<K, V> x = this.headerIndex, xh = x;
+        Node<K, V> prev = null;
+        ArrayIndex<K, V> x = this.headerIndex, next;
         for (int i = x.array.length - 1; i >= 0; i--) { // y轴遍历
-            while (x != null && x.node.score < score) {  // x轴遍历
-                // 向右跳
-                xh = x;
-                x = x.array[i].next;
+            next = x.array[i].next;
+            while (next != null) {  // x轴遍历
+                if (next.node.score < score) {
+                    // 向右跳
+                    next = next.array[i].next;
+                    continue;
+                }
+                break;
             }
             // 退一步
-            x = xh;
+            prev = x.node;
         }
 
-        Node<K, V> prev = xh.node;
         while (prev != null) {
-            Node<K, V> next = prev.next;
-            if (next == null || next.score >= score) break;
-            prev = next;
+            Node<K, V> nextNode = prev.next;
+            if (nextNode == null || nextNode.score >= score) break;
+            prev = nextNode;
         }
         return prev;
     }

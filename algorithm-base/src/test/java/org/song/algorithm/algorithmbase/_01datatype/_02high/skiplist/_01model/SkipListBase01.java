@@ -289,7 +289,6 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
                     // 找到了, 删除索引
                     x.next = next.next;
                     removed = true;
-                    break;
                 } else if (next.node.score < score) {
                     x = next;
                     // 向右
