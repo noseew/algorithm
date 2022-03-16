@@ -280,30 +280,30 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
      */
     protected LinkIndex<K, V> removeIndex(K k, double score) {
         boolean removed = false;
-        LinkIndex<K, V> x = headerIndex, h = x;
+        LinkIndex<K, V> prev = null;
+        LinkIndex<K, V> x = headerIndex, next;
         while (x != null) { // y轴遍历
-            LinkIndex<K, V> next = x.next, xh = x;
+            next = x.next;
             while (next != null) { // x轴遍历
                 if (next.node.score == score && Objects.equals(k, next.node.k)) {
                     // 找到了, 删除索引
-                    xh.next = next.next;
+                    x.next = next.next;
                     removed = true;
                     break;
                 } else if (next.node.score < score) {
-                    xh = next;
+                    x = next;
                     // 向右
                     next = next.next;
                     continue;
                 }
                 break;
             }
-            xh = x;
-            h = xh;
+            prev = x;
             // 向下
-            x = xh.down;
+            x = x.down;
         }
         if (removed) indexCount--;
-        return h;
+        return prev;
     }
 
     /**
