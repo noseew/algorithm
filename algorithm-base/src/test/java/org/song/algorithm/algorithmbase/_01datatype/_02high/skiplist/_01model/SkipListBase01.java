@@ -317,9 +317,10 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
 
         Node<K, V> prev = null;
         // 跳索引
-        LinkIndex<K, V> x = headerIndex;
+        LinkIndex<K, V> x = headerIndex, xh, next;
         while (x != null) { // y轴遍历
-            LinkIndex<K, V> next = x.next, xh = x;
+            xh = x;
+            next = x.next;
             while (next != null) { // x轴遍历
                 if (next.node.score >= score) {
                     // 找到了
@@ -334,9 +335,9 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
             x = xh.down;
         }
         while (prev != null) {
-            Node<K, V> next = prev.next;
-            if (next == null || next.score >= score) break;
-            prev = next;
+            Node<K, V> nextNode = prev.next;
+            if (nextNode == null || nextNode.score >= score) break;
+            prev = nextNode;
         }
         return prev;
     }
