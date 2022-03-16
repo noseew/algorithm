@@ -230,10 +230,14 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
 
         ArrayIndex<K, V> x = this.headerIndex, xh = x;
         for (int i = startIndex; i >= 0; i--) { // y轴遍历
-            while (x != null && x.node.score < score) {  // x轴遍历
-                // 向右跳
-                xh = x;
-                x = x.array[i].next;
+            while (x != null) {  // x轴遍历
+                if (x.node.score < score) {
+                    // 向右跳
+                    xh = x;
+                    x = x.array[i].next;
+                    continue;
+                }
+                break;
             }
             if (i < newIndex.array.length) {
                 // 添加新索引
@@ -256,16 +260,20 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
         boolean removed = false;
         ArrayIndex<K, V> x = this.headerIndex, xh = x;
         for (int i = x.array.length - 1; i >= 0; i--) { // y轴遍历
-            while (x != null && x.node.score <= score
-                    && !Objects.equals(x.node.k, k)) {  // x轴遍历
-                // 向右跳
-                xh = x;
-                x = x.array[i].next;
-            }
-            // 删除索引
-            if (x != null && x.node.score == score && Objects.equals(x.node.k, k)) {
-                xh.array[i].next = x.array[i].next;
-                removed = true;
+            while (x != null) {  // x轴遍历
+                if (x.node.score == score && Objects.equals(x.node.k, k)) {
+                    // 定位到了 删除索引
+                    xh.array[i].next = x.array[i].next;
+                    removed = true;
+                    break;
+                } else if (x.node.score < score) {
+                    // 向右跳
+                    xh = x;
+                    x = x.array[i].next;
+                    continue;
+                }
+                // 跳过了 终止
+                break;
             }
             // 退一步
             x = xh;

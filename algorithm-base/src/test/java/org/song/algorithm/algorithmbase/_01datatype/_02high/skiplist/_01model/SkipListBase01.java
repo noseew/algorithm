@@ -280,29 +280,29 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
      */
     protected LinkIndex<K, V> removeIndex(K k, double score) {
         boolean removed = false;
-        LinkIndex<K, V> y = headerIndex, yh = null;
-        while (y != null) { // y轴遍历
-            LinkIndex<K, V> x = y.next, xh = y;
-            while (x != null) { // x轴遍历
-                if (x.node.score == score && Objects.equals(k, x.node.k)) {
+        LinkIndex<K, V> x = headerIndex, xh = x;
+        while (x != null) { // y轴遍历
+            LinkIndex<K, V> next = x.next;
+            while (next != null) { // x轴遍历
+                if (next.node.score == score && Objects.equals(k, next.node.k)) {
                     // 找到了, 删除索引
-                    xh.next = x.next;
+                    xh.next = next.next;
                     removed = true;
                     break;
-                } else if (x.node.score < score) {
-                    xh = x;
+                } else if (next.node.score < score) {
+                    xh = next;
                     // 向右
-                    x = x.next;
+                    next = next.next;
                     continue;
                 }
                 break;
             }
-            yh = y;
+            xh = x;
             // 向下
-            y = xh.down;
+            x = xh.down;
         }
         if (removed) indexCount--;
-        return yh;
+        return xh;
     }
 
     /**
@@ -316,21 +316,21 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
 
         Node<K, V> prev = null;
         // 跳索引
-        LinkIndex<K, V> y = headerIndex;
-        while (y != null) { // y轴遍历
-            LinkIndex<K, V> x = y.next, xh = y;
-            while (x != null) { // x轴遍历
-                if (x.node.score >= score) {
+        LinkIndex<K, V> x = headerIndex, xh = x;
+        while (x != null) { // y轴遍历
+            LinkIndex<K, V> next = x.next;
+            while (next != null) { // x轴遍历
+                if (next.node.score >= score) {
                     // 找到了
                     break;
                 }
-                xh = x;
+                xh = next;
                 // 向右
-                x = x.next;
+                next = next.next;
             }
             prev = xh.node;
             // 向下
-            y = xh.down;
+            x = xh.down;
         }
         while (prev != null) {
             Node<K, V> next = prev.next;
@@ -489,20 +489,20 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
         }
         
         // 跳索引, 跳到下一个索引的索引头
-        LinkIndex<K, V> y = headerIndex;
-        while (y != null) { // y轴遍历
-            LinkIndex<K, V> x = y.next;
-            while (x != null) { // x轴遍历
-                if (x.node == nextIndexNode) {
-                    return x; // 找到了
-                } else if (x.node.score > nextIndexNode.score) {
+        LinkIndex<K, V> x = headerIndex;
+        while (x != null) { // y轴遍历
+            LinkIndex<K, V> next = x.next;
+            while (next != null) { // x轴遍历
+                if (next.node == nextIndexNode) {
+                    return next; // 找到了
+                } else if (next.node.score > nextIndexNode.score) {
                     break; // 超过了
                 }
                 // 向右
-                x = x.next;
+                next = next.next;
             }
             // 向下
-            y = y.down;
+            x = x.down;
         }
         return null;
     }
