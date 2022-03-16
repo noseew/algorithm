@@ -258,28 +258,29 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
      */
     protected ArrayIndex<K, V> removeIndex(K k, double score) {
         boolean removed = false;
-        ArrayIndex<K, V> x = this.headerIndex, xh = x;
+        ArrayIndex<K, V> prev = null;
+        ArrayIndex<K, V> x = this.headerIndex, next;
         for (int i = x.array.length - 1; i >= 0; i--) { // y轴遍历
-            while (x != null) {  // x轴遍历
-                if (x.node.score == score && Objects.equals(x.node.k, k)) {
+            next = x.array[i].next;
+            while (next != null) {  // x轴遍历
+                if (next.node.score == score && Objects.equals(next.node.k, k)) {
                     // 定位到了 删除索引
-                    xh.array[i].next = x.array[i].next;
+                    x.array[i].next = next.array[i].next;
                     removed = true;
                     break;
-                } else if (x.node.score < score) {
+                } else if (next.node.score < score) {
                     // 向右跳
-                    xh = x;
-                    x = x.array[i].next;
+                    x = next;
+                    next = next.array[i].next;
                     continue;
                 }
                 // 跳过了 终止
                 break;
             }
-            // 退一步
-            x = xh;
+            prev = x;
         }
         if (removed) indexCount--;
-        return xh;
+        return prev;
     }
 
     /**
