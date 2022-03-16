@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.ArrayBase01;
 import org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model.HashMap_base_04;
 
+import java.util.Objects;
 import java.util.Random;
 
 public abstract class AbstractSkipList<K extends Comparable<K>, V> {
@@ -65,6 +66,22 @@ public abstract class AbstractSkipList<K extends Comparable<K>, V> {
             level++;
         }
         return level;
+    }
+
+    /**
+     * 根据k, 在head中找到k其前1个node
+     *
+     * @param head
+     * @return
+     */
+    protected Node<K, V> getPrevNodeByNode(Node<K, V> head, K k) {
+        Node<K, V> prev = head, next = null;
+        while (prev != null) {
+            next = prev.next;
+            if (next != null && Objects.equals(next.k, k)) break;
+            prev = next;
+        }
+        return prev;
     }
 
     @Data

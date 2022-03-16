@@ -192,6 +192,7 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
      */
     protected void remove(Node<K, V> removedNode) {
         // 删除索引
+        System.out.println("del k=" + removedNode.k + ", score=" + removedNode.score);
         ArrayIndex<K, V> yh = removeIndex(removedNode.k, removedNode.score);
         // 找到 prev
         Node<K, V> prev = getPrevNodeByNode(yh.node, removedNode.k);
@@ -226,7 +227,7 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
             return;
         }
         double score = newIndex.node.score;
-        
+
         ArrayIndex<K, V> x = this.headerIndex, xh = x;
         for (int i = startIndex; i >= 0; i--) { // y轴遍历
             while (x != null && x.node.score < score) {  // x轴遍历
@@ -296,22 +297,6 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
         while (prev != null) {
             Node<K, V> next = prev.next;
             if (next == null || next.score >= score) break;
-            prev = next;
-        }
-        return prev;
-    }
-
-    /**
-     * 根据k, 在head中找到k其前1个node
-     *
-     * @param head
-     * @return
-     */
-    protected Node<K, V> getPrevNodeByNode(Node<K, V> head, K k) {
-        Node<K, V> prev = head, next = null;
-        while (prev != null) {
-            next = prev.next;
-            if (next != null && Objects.equals(next.k, k)) break;
             prev = next;
         }
         return prev;

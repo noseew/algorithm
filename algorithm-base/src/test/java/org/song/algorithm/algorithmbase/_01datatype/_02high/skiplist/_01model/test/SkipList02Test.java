@@ -24,7 +24,7 @@ public class SkipList02Test {
             int key = r.nextInt(maxVal / 20);
             int score = r.nextInt(maxVal / 50);
             skip1.put(key, val, score);
-//            System.out.println(skip1.toString());
+            System.out.println(skip1.toString());
 
 //            if (i >= maxSize - 5) {
 //                Integer v2 = skip1.remove(key);
