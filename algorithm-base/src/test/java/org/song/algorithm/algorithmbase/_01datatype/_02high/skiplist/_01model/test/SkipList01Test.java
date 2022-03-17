@@ -98,9 +98,11 @@ public class SkipList01Test {
                 ArrayBase01<SkipListBase01.Node<Integer, Integer>> nodes = skip1.getNodesByScore(score, score + 1);
                 boolean noHas = true;
                 for (int k = 0; k < nodes.length(); k++) {
-                    noHas = noHas && !nodes.get(k).getK().equals(key);
+                    noHas = noHas && !Objects.equals(nodes.get(k).getV(), val);
                 }
                 if (!noHas) {
+                    skip1.remove(key);
+                    skip1.getNodesByScore(score, score + 1);
                     assert noHas;
                 }
             }

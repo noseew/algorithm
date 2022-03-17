@@ -145,6 +145,11 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
         return null;
     }
 
+    @Override
+    public int getRank(K k) {
+        return 0;
+    }
+
     /**
      * 根据分数范围获取, 分数左开右闭, -1表示全部
      *

@@ -3,7 +3,6 @@ package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model.t
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.ArrayBase01;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model.AbstractSkipList;
-import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model.SkipListBase01;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model.SkipListBase02;
 
 import java.util.Objects;
@@ -53,7 +52,7 @@ public class SkipList02Test {
 
         for (int i = 0; i < 10; i++) {
 
-            SkipListBase01<Integer, Integer> skip1 = new SkipListBase01<>();
+            SkipListBase02<Integer, Integer> skip1 = new SkipListBase02<>();
             for (int j = 0; j < maxSize; j++) {
                 int key = r.nextInt(maxVal);
                 int val = r.nextInt(maxVal);
@@ -69,7 +68,7 @@ public class SkipList02Test {
 
             System.out.println("put get OK");
 
-            ArrayBase01<SkipListBase01.Node<Integer, Integer>> byScore = skip1.getNodesByScore(-1, -1);
+            ArrayBase01<SkipListBase02.Node<Integer, Integer>> byScore = skip1.getNodesByScore(-1, -1);
             for (int k = 0; k < byScore.length() - 1; k++) {
                 boolean b = byScore.get(k).getScore() <= byScore.get(k + 1).getScore();
                 if (!b) {
@@ -96,12 +95,14 @@ public class SkipList02Test {
                 skip1.put(key, val, score);
                 skip1.remove(key);
 
-                ArrayBase01<SkipListBase01.Node<Integer, Integer>> nodes = skip1.getNodesByScore(score, score + 1);
+                ArrayBase01<SkipListBase02.Node<Integer, Integer>> nodes = skip1.getNodesByScore(score, score + 1);
                 boolean noHas = true;
                 for (int k = 0; k < nodes.length(); k++) {
-                    noHas = noHas && !nodes.get(k).getK().equals(key);
+                    noHas = noHas && !Objects.equals(nodes.get(k).getV(), val);
                 }
                 if (!noHas) {
+                    skip1.remove(key);
+                    skip1.getNodesByScore(score, score + 1);
                     assert noHas;
                 }
             }
