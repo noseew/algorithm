@@ -40,6 +40,10 @@ public abstract class AbstractSkipList<K extends Comparable<K>, V> {
 
     public abstract V getMaxVal();
 
+    public abstract double getMinScore();
+
+    public abstract double getMaxScore();
+
     public abstract ArrayBase01<V> getByScore(double min, double max);
 
     public abstract ArrayBase01<V> removeByScore(double min, double max);

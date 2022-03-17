@@ -33,7 +33,7 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
      * 最底层索引层从开始
      * 索引层的node结点中 分值为-1, 用于标记他是空结点或者头结点
      */
-    protected LinkIndex<K, V> headerIndex, maxIndex;
+    protected LinkIndex<K, V> headerIndex;
 
     /**
      * 用于 debug 调试
@@ -109,6 +109,24 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
         return null;
     }
 
+    @Override
+    public double getMinScore() {
+        Node<K, V> next = headerIndex.node.next;
+        if (next != null) {
+            return next.score;
+        }
+        return headerIndex.node.score;
+    }
+
+    @Override
+    public double getMaxScore() {
+        Node<K, V> maxNode = getMaxNode();
+        if (maxNode != null) {
+            return maxNode.score;
+        }
+        return -1;
+    }
+
     /**
      * 根据分数范围获取, 分数左开右闭, -1表示全部
      *
@@ -173,6 +191,7 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
             // 向下
             x = x.down;
         }
+
         while (maxNode != null) {
             Node<K, V> nextNode = maxNode.next;
             if (nextNode == null) break;
@@ -197,7 +216,6 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
         // 索引升层
         if (newIndex.level >= headerIndex.level) {
             upHead(newIndex);
-
             // 从下1层开始, 因为上一层索引已经关联, 由于headerIndex比其他都高1层, 所以这里是下2层
             y = headerIndex.down.down;
             // 新的 需要生层的索引, 最高层因为是新的, 这里已经关联, 所以需要从下面层开始
@@ -240,7 +258,7 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
     /**
      * 根据分数范围删除node, 同时返回这些node
      * 这里是循环调用删除单个node的方法, 所以效率平均O(nlogn), 需要优化 TODO
-     * 
+     *
      * @param min
      * @param max
      * @return
@@ -306,10 +324,11 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
                     removed = true;
                 } else if (next.node.score < score) {
                     x = next;
-                    // 向右
+                    // 向右跳
                     next = next.next;
                     continue;
                 }
+                // 跳过了 终止
                 break;
             }
             prev = x;
@@ -340,13 +359,14 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
                     break;
                 }
                 x = next;
-                // 向右
+                // 向右跳
                 next = next.next;
             }
             prev = x.node;
             // 向下
             x = x.down;
         }
+
         while (prev != null) {
             Node<K, V> nextNode = prev.next;
             if (nextNode == null || nextNode.score >= score) break;
@@ -357,7 +377,7 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
 
     /**
      * 根据分数范围, 返回nodes, 这里用public是为了测试, 不应该返回出去node的
-     * 
+     *
      * @param min
      * @param max
      * @return
@@ -448,7 +468,7 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
         }
         return sb.toString();
     }
-    
+
     private String wrap(Object o) {
         String s = String.valueOf(o == null ? "" : o);
         StringBuilder sb = new StringBuilder();
@@ -546,4 +566,5 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
             return index;
         }
     }
+
 }

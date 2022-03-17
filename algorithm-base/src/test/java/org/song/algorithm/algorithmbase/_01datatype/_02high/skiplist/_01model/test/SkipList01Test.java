@@ -107,29 +107,27 @@ public class SkipList01Test {
             System.out.println("remove OK");
 
             skip1.clean();
-            double maxScore = 0;
-            double minScore = maxVal;
             for (int j = 0; j < maxSize; j++) {
                 int key = r.nextInt(maxVal);
                 int val = r.nextInt(maxVal);
                 int score = r.nextInt(maxVal / 5);
-                maxScore = Math.max(maxScore, score);
-                minScore = Math.min(minScore, score);
                 
                 skip1.put(key, val, score);
 
+                double maxScore = skip1.getMaxScore();
                 ArrayBase01<Integer> maxList = skip1.getByScore(maxScore, maxScore + 1);
                 boolean hasMax = false;
-//                Integer maxVal = skip1.getMaxVal();
-//                for (int k = 0; k < maxList.length(); k++) {
-//                    hasMax = hasMax || Objects.equals(maxList.get(k), maxVal);
-//                }
-//                if (!hasMax) {
-//                    skip1.getMaxVal();
-//                    assert hasMax;
-//                }
+                Integer maxVal = skip1.getMaxVal();
+                for (int k = 0; k < maxList.length(); k++) {
+                    hasMax = hasMax || Objects.equals(maxList.get(k), maxVal);
+                }
+                if (!hasMax) {
+                    skip1.getMaxVal();
+                    assert hasMax;
+                }
 
-                ArrayBase01<Integer> minList = skip1.getByScore(-1, minScore + 1);
+                double minScore = skip1.getMinScore();
+                ArrayBase01<Integer> minList = skip1.getByScore(minScore, minScore + 2);
                 boolean hasMin = false;
                 Integer minVal = skip1.getMinVal();
                 for (int k = 0; k < minList.length(); k++) {
@@ -137,14 +135,12 @@ public class SkipList01Test {
                 }
                 if (!hasMin) {
                     skip1.getMinVal();
+                    skip1.getByScore(-1, minScore + 2);
                     assert hasMin;
                 }
             }
             System.out.println("getMinVal getMaxVal OK");
 
-
-            skip1.removeByScore(minScore, maxScore);
-            System.out.println("removeByScore OK");
         }
 
 
