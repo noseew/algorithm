@@ -158,12 +158,27 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
     }
 
     protected Node<K, V> getMaxNode() {
-//        ArrayBase01<Node<K, V>> nodes = getNodesByScore(maxScore, -1);
-//        if (nodes.length() == 0) {
-//            return null;
-//        }
-//        return nodes.get(nodes.length() - 1);
-        return null;
+
+        Node<K, V> maxNode = null;
+        // 跳索引
+        LinkIndex<K, V> x = headerIndex, next;
+        while (x != null) { // y轴遍历
+            next = x.next;
+            while (next != null) { // x轴遍历
+                x = next;
+                // 向右
+                next = next.next;
+            }
+            maxNode = x.node;
+            // 向下
+            x = x.down;
+        }
+        while (maxNode != null) {
+            Node<K, V> nextNode = maxNode.next;
+            if (nextNode == null) break;
+            maxNode = nextNode;
+        }
+        return maxNode;
     }
 
     protected void put(Node<K, V> newNode) {

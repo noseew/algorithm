@@ -131,16 +131,28 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
     /************************************* 内部通用方法 *************************************/
 
     protected Node<K, V> getMinNode() {
-        return null;
+        return headerIndex.node.next;
     }
 
     protected Node<K, V> getMaxNode() {
-//        ArrayBase01<Node<K, V>> nodes = getNodesByScore(maxScore, -1);
-//        if (nodes.length() == 0) {
-//            return null;
-//        }
-//        return nodes.get(nodes.length() - 1);
-        return null;
+        Node<K, V> maxNode = null;
+        ArrayIndex<K, V> x = this.headerIndex, next;
+        for (int i = x.array.length - 1; i >= 0; i--) { // y轴遍历
+            next = x.array[i].next;
+            while (next != null) {  // x轴遍历
+                // 向右跳
+                next = next.array[i].next;
+            }
+            // 退一步
+            maxNode = x.node;
+        }
+
+        while (maxNode != null) {
+            Node<K, V> nextNode = maxNode.next;
+            if (nextNode == null) break;
+            maxNode = nextNode;
+        }
+        return maxNode;
     }
 
     protected void put(Node<K, V> newNode) {
