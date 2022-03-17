@@ -232,12 +232,10 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
      * @param removedNode
      */
     protected void remove(Node<K, V> removedNode) {
-        // 删除索引
-        LinkIndex<K, V> yh = removeIndex(removedNode.k, removedNode.score);
-        // 找到 prev
-        Node<K, V> prev = getPrevNodeByNode(yh.node, removedNode.k);
-        // 从链表中删除
-        if (prev != null) prev.next = prev.next.next;
+        // 删除索引(如果该节点有索引同时删除节点)
+        removeIndexAndNode(removedNode.k, removedNode.score);
+        // 删除节点
+        removeNode(removedNode.k, removedNode.score);
     }
 
     /**
@@ -296,9 +294,9 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
      * @param score 索引所关联的分数
      * @return
      */
-    protected LinkIndex<K, V> removeIndex(K k, double score) {
-        boolean removed = false;
-        LinkIndex<K, V> prev = null;
+    protected void removeIndexAndNode(K k, double score) {
+
+        Node<K, V> prev = null;
         LinkIndex<K, V> x = headerIndex, next;
         while (x != null) { // y轴遍历
             next = x.next;
@@ -306,7 +304,9 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
                 if (next.node.score == score && Objects.equals(k, next.node.k)) {
                     // 找到了, 删除索引
                     x.next = next.next;
-                    removed = true;
+
+                    // 待删除节点的prev
+                    prev = x.node;
                 } else if (next.node.score < score) {
                     x = next;
                     // 向右跳
@@ -316,12 +316,54 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
                 // 跳过了 终止
                 break;
             }
-            prev = x;
             // 向下
             x = x.down;
         }
-        if (removed) indexCount--;
-        return prev;
+        // 删除链表节点
+        if (prev != null) {
+            if (prev.next != null) {
+                prev.next = prev.next.next;
+            } else {
+                prev.next = null;
+            }
+            indexCount--;
+        }
+    }
+    
+    protected void removeNode(K k, double score) {
+
+        LinkIndex<K, V> x = headerIndex, next;
+        while (x != null) { // y轴遍历
+            next = x.next;
+            while (next != null) { // x轴遍历
+                if (next.node.score < score) {
+                    x = next;
+                    // 向右跳
+                    next = next.next;
+                    continue;
+                }
+                // 跳过了 终止
+                break;
+            }
+            // 向下
+            if (x.down != null) {
+                x = x.down;
+            } else {
+                break;
+            }
+        }
+        // 找到 prev
+        Node<K, V> prev = x.node, nextNode = null;
+        while (prev != null) {
+            nextNode = prev.next;
+            if (nextNode != null && Objects.equals(nextNode.k, k)) {
+                // 从链表中删除
+                indexCount--;
+                prev.next = prev.next.next;
+                break;
+            }
+            prev = nextNode;
+        }
     }
 
     /**
