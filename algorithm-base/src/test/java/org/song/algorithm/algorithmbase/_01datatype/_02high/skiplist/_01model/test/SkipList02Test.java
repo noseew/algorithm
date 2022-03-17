@@ -2,6 +2,7 @@ package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model.t
 
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.ArrayBase01;
+import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model.AbstractSkipList;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model.SkipListBase01;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model.SkipListBase02;
 
@@ -27,7 +28,7 @@ public class SkipList02Test {
             System.out.println(skip1.toString());
 
             if (i >= maxSize - 5) {
-                Integer v2 = skip1.remove(key);
+                AbstractSkipList.Node<Integer, Integer> v2 = skip1.remove(key);
                 System.out.println(v2);
             }
             System.out.println(skip1.toString());
@@ -36,7 +37,7 @@ public class SkipList02Test {
         }
         System.out.println(skip1.toString());
 
-        ArrayBase01<Integer> values = skip1.getByScore(-1, -1);
+        ArrayBase01<AbstractSkipList.Node<Integer, Integer>> values = skip1.getByScore(-1, -1);
         System.out.println(values);
 
         values = skip1.getByScore(-1, 50);
@@ -59,7 +60,7 @@ public class SkipList02Test {
                 int score = r.nextInt(maxVal / 5);
                 skip1.put(key, val, score);
 
-                boolean equals = Integer.valueOf(val).equals(skip1.get(key));
+                boolean equals = Integer.valueOf(val).equals(skip1.get(key).getV());
                 if (!equals) {
                     skip1.get(key);
                     assert equals;
@@ -116,26 +117,26 @@ public class SkipList02Test {
                 skip1.put(key, val, score);
 
                 double maxScore = skip1.getMaxScore();
-                ArrayBase01<Integer> maxList = skip1.getByScore(maxScore, maxScore + 1);
+                ArrayBase01<AbstractSkipList.Node<Integer, Integer>> maxList = skip1.getByScore(maxScore, maxScore + 1);
                 boolean hasMax = false;
-                Integer maxVal = skip1.getMaxVal();
+                AbstractSkipList.Node<Integer, Integer> maxVal = skip1.getMaxNode();
                 for (int k = 0; k < maxList.length(); k++) {
-                    hasMax = hasMax || Objects.equals(maxList.get(k), maxVal);
+                    hasMax = hasMax || Objects.equals(maxList.get(k).getV(), maxVal.getV());
                 }
                 if (!hasMax) {
-                    skip1.getMaxVal();
+                    skip1.getMaxNode();
                     assert hasMax;
                 }
 
                 double minScore = skip1.getMinScore();
-                ArrayBase01<Integer> minList = skip1.getByScore(minScore, minScore + 2);
+                ArrayBase01<AbstractSkipList.Node<Integer, Integer>> minList = skip1.getByScore(minScore, minScore + 2);
                 boolean hasMin = false;
-                Integer minVal = skip1.getMinVal();
+                AbstractSkipList.Node<Integer, Integer> minVal = skip1.getMinNode();
                 for (int k = 0; k < minList.length(); k++) {
-                    hasMin = hasMin || Objects.equals(minList.get(k), minVal);
+                    hasMin = hasMin || Objects.equals(minList.get(k).getV(), minVal.getV());
                 }
                 if (!hasMin) {
-                    skip1.getMinVal();
+                    skip1.getMinNode();
                     skip1.getByScore(-1, minScore + 2);
                     assert hasMin;
                 }

@@ -30,23 +30,25 @@ public abstract class AbstractSkipList<K extends Comparable<K>, V> {
 
     protected final Random r = new Random();
 
-    public abstract V put(K k, V v, double score);
+    public abstract Node<K, V> put(K k, V v, double score);
 
-    public abstract V get(K k);
+    public abstract Node<K, V> get(K k);
 
-    public abstract V remove(K k);
+    public abstract Node<K, V> remove(K k);
 
-    public abstract V getMinVal();
+    public abstract Node<K, V> getMinNode();
 
-    public abstract V getMaxVal();
+    public abstract Node<K, V> getMaxNode();
 
     public abstract double getMinScore();
 
     public abstract double getMaxScore();
 
-    public abstract ArrayBase01<V> getByScore(double min, double max);
+    public abstract ArrayBase01<Node<K, V>> getByRank(int rank);
 
-    public abstract ArrayBase01<V> removeByScore(double min, double max);
+    public abstract ArrayBase01<Node<K, V>> getByScore(double min, double max);
+
+    public abstract ArrayBase01<Node<K, V>> removeByScore(double min, double max);
 
     public abstract void clean();
 

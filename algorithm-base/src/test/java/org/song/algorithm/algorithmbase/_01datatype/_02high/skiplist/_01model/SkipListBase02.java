@@ -31,7 +31,7 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
     }
 
     @Override
-    public V put(K k, V v, double score) {
+    public Node<K, V> put(K k, V v, double score) {
         checkMinScorePut(score);
         Node<K, V> newNode = new Node<>(k, v, score, null, 0);
         Node<K, V> exitNode = hashMap.get(k);
@@ -47,21 +47,21 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
             hashMap.put(k, newNode);
             // 加入跳表
             put(newNode);
-            return exitNode.v;
+            return exitNode;
         }
     }
 
     @Override
-    public V get(K k) {
+    public Node<K, V> get(K k) {
         Node<K, V> node = hashMap.get(k);
         if (node == null) {
             return null;
         }
-        return node.v;
+        return node;
     }
 
     @Override
-    public V remove(K k) {
+    public Node<K, V> remove(K k) {
         // 从map中删除
         Node<K, V> removedNode = hashMap.remove(k);
         if (removedNode == null) {
@@ -69,25 +69,34 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
         }
         remove(removedNode);
 
-        return removedNode.v;
+        return removedNode;
     }
 
     @Override
-    public V getMinVal() {
-        Node<K, V> minNode = getMinNode();
-        if (minNode != null) {
-            return minNode.v;
-        }
-        return null;
+    public Node<K, V> getMinNode() {
+        return headerIndex.node.next;
     }
 
     @Override
-    public V getMaxVal() {
-        Node<K, V> maxNode = getMaxNode();
-        if (maxNode != null) {
-            return maxNode.v;
+    public Node<K, V> getMaxNode() {
+        Node<K, V> maxNode = null;
+        // 跳索引
+        ArrayIndex<K, V> x = headerIndex, next;
+        for (int i = x.array.length - 1; i >= 0; i--) { // y轴遍历
+            next = x.array[i].next;
+            while (next != null) { // x轴遍历
+                // 向右跳
+                next = next.array[i].next;
+            }
+            maxNode = x.node;
         }
-        return null;
+
+        while (maxNode != null) {
+            Node<K, V> nextNode = maxNode.next;
+            if (nextNode == null) break;
+            maxNode = nextNode;
+        }
+        return maxNode;
     }
 
     @Override
@@ -108,6 +117,11 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
         return -1;
     }
 
+    @Override
+    public ArrayBase01<Node<K, V>> getByRank(int rank) {
+        return null;
+    }
+
     /**
      * 根据分数范围获取, 分数左开右闭, -1表示全部
      *
@@ -116,24 +130,14 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
      * @return
      */
     @Override
-    public ArrayBase01<V> getByScore(double min, double max) {
+    public ArrayBase01<Node<K, V>> getByScore(double min, double max) {
         checkMinScoreQuery(min);
-        ArrayBase01<V> vals = new ArrayBase01<>();
-        ArrayBase01<Node<K, V>> nodes = getNodesByScore(min, max);
-        for (int i = 0; i < nodes.length(); i++) {
-            vals.add(nodes.get(i).getV());
-        }
-        return vals;
+        return getNodesByScore(min, max);
     }
 
     @Override
-    public ArrayBase01<V> removeByScore(double min, double max) {
-        ArrayBase01<V> vals = new ArrayBase01<>();
-        ArrayBase01<Node<K, V>> nodes = removeNode(min, max);
-        for (int i = 0; i < nodes.length(); i++) {
-            vals.add(nodes.get(i).v);
-        }
-        return vals;
+    public ArrayBase01<Node<K, V>> removeByScore(double min, double max) {
+        return removeNode(min, max);
     }
 
     @Override
@@ -151,32 +155,6 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
     }
 
     /************************************* 内部通用方法 *************************************/
-
-    protected Node<K, V> getMinNode() {
-        return headerIndex.node.next;
-    }
-
-    protected Node<K, V> getMaxNode() {
-        
-        Node<K, V> maxNode = null;
-        // 跳索引
-        ArrayIndex<K, V> x = headerIndex, next;
-        for (int i = x.array.length - 1; i >= 0; i--) { // y轴遍历
-            next = x.array[i].next;
-            while (next != null) { // x轴遍历
-                // 向右跳
-                next = next.array[i].next;
-            }
-            maxNode = x.node;
-        }
-
-        while (maxNode != null) {
-            Node<K, V> nextNode = maxNode.next;
-            if (nextNode == null) break;
-            maxNode = nextNode;
-        }
-        return maxNode;
-    }
 
     protected void put(Node<K, V> newNode) {
         Node<K, V> prev = getPrevNodeByScore(newNode.score);
