@@ -72,11 +72,7 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
 
     @Override
     public Node<K, V> get(K k) {
-        Node<K, V> node = hashMap.get(k);
-        if (node == null) {
-            return null;
-        }
-        return node;
+        return hashMap.get(k);
     }
 
     @Override
