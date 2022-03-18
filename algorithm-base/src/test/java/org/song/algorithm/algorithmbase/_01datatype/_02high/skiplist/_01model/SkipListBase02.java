@@ -10,12 +10,12 @@ import java.util.Objects;
 /**
  * 跳表
  * <p>
- * 实现的特点
  * 1. 索引层采用数组+链表
+ * 把链表节点和索引节点的对象类型重新定义了, 更加偏向于"官方", 同时redis也是类似的定义方式
  */
 public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList<K, V> {
 
-    protected ArrayIndex<K, V> headerIndex;
+    protected LinkedNode<K, V> headerIndex;
     /**
      * 用于 debug 调试
      * 有索引的node数量
@@ -24,7 +24,7 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
 
     public SkipListBase02() {
         // 临时头node节点
-        Node<K, V> node = new Node<>();
+        LinkedNode<K, V> node = new LinkedNode<>();
         node.score = minScore; // 头结点分值最小, 其他分值必须 >= 0
         // 临时头索引节点, 初始1层
         headerIndex = buildIndex(1, node);
@@ -33,8 +33,11 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
     @Override
     public Node<K, V> put(K k, V v, double score) {
         checkMinScorePut(score);
-        Node<K, V> newNode = new Node<>(k, v, score, null, 0);
-        Node<K, V> exitNode = hashMap.get(k);
+        LinkedNode<K, V> newNode = new LinkedNode<>();
+        newNode.k = k;
+        newNode.v = v;
+        newNode.score = score;
+        LinkedNode<K, V> exitNode = (LinkedNode<K, V>) hashMap.get(k);
         if (exitNode == null) {
             // 不存在
             hashMap.put(k, newNode);
@@ -70,21 +73,21 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
 
     @Override
     public Node<K, V> getMinNode() {
-        return headerIndex.node.next;
+        return headerIndex.next;
     }
 
     @Override
     public Node<K, V> getMaxNode() {
         Node<K, V> maxNode = null;
         // 跳索引
-        ArrayIndex<K, V> x = headerIndex, next;
+        LinkedNode<K, V> x = headerIndex, next;
         for (int i = x.levels.length - 1; i >= 0; i--) { // y轴遍历
-            next = x.levels[i].next;
+            next = (LinkedNode<K, V>) x.levels[i].next;
             while (next != null) { // x轴遍历
                 // 向右跳
-                next = next.levels[i].next;
+                next = (LinkedNode<K, V>) next.levels[i].next;
             }
-            maxNode = x.node;
+            maxNode = x;
         }
 
         while (maxNode != null) {
@@ -97,11 +100,11 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
 
     @Override
     public double getMinScore() {
-        Node<K, V> next = headerIndex.node.next;
+        Node<K, V> next = headerIndex.next;
         if (next != null) {
             return next.score;
         }
-        return headerIndex.node.score;
+        return headerIndex.score;
     }
 
     @Override
@@ -145,7 +148,7 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
     public void clean() {
         hashMap.clean();
         indexCount = 0;
-        Node<K, V> node = new Node<>();
+        LinkedNode<K, V> node = new LinkedNode<>();
         node.score = minScore;
         headerIndex = buildIndex(1, node);
     }
@@ -157,14 +160,14 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
 
     /************************************* 内部通用方法 *************************************/
 
-    protected void put(Node<K, V> newNode) {
+    protected void put(LinkedNode<K, V> newNode) {
         Node<K, V> prev = getPrevNodeByScore(newNode.score);
         // 串链表
         newNode.next = prev.next;
         prev.next = newNode;
 
         // 新建索引
-        ArrayIndex<K, V> newIndex = buildIndex(buildLevel(headerIndex.levels.length), newNode);
+        LinkedNode<K, V> newIndex = buildIndex(buildLevel(headerIndex.levels.length), newNode);
         if (newIndex == null) {
             return;
         }
@@ -184,10 +187,10 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
         addIndex(startIndex, newIndex);
     }
 
-    protected void upHead(ArrayIndex<K, V> newIndex) {
-        Index<K, V>[] array = headerIndex.levels;
-        Index<K, V>[] newArray = new Index[array.length + 1];
-        System.arraycopy(array, 0, newArray, 0, array.length);
+    protected void upHead(LinkedNode<K, V> newIndex) {
+        Index<K, V>[] levels = headerIndex.levels;
+        Index<K, V>[] newArray = new Index[levels.length + 1];
+        System.arraycopy(levels, 0, newArray, 0, levels.length);
         headerIndex.levels = newArray;
 
         Index<K, V> index = new Index<>();
@@ -233,20 +236,20 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
      *
      * @param newIndex
      */
-    protected void addIndex(int startIndex, ArrayIndex<K, V> newIndex) {
+    protected void addIndex(int startIndex, LinkedNode<K, V> newIndex) {
         if (startIndex < 0) {
             return;
         }
-        double score = newIndex.node.score;
+        double score = newIndex.score;
 
-        ArrayIndex<K, V> x = this.headerIndex, next;
+        LinkedNode<K, V> x = this.headerIndex, next;
         for (int i = startIndex; i >= 0; i--) { // y轴遍历
-            next = x.levels[i].next;
+            next = (LinkedNode<K, V>) x.levels[i].next;
             while (next != null) {  // x轴遍历
-                if (next.node.score < score) {
+                if (next.score < score) {
                     // 向右跳
                     x = next;
-                    next = next.levels[i].next;
+                    next = (LinkedNode<K, V>) next.levels[i].next;
                     continue;
                 } else if (i < newIndex.levels.length) {
                     // 添加新索引
@@ -255,7 +258,7 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
                 }
                 break;
             }
-            if (next == null && x.node.score < score && i < newIndex.levels.length) {
+            if (next == null && x.score < score && i < newIndex.levels.length) {
                 // 添加新索引
                 x.levels[i].next = newIndex;
             }
@@ -270,22 +273,22 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
      * @return
      */
     protected void removeIndexAndNode(K k, double score) {
-        
+
         Node<K, V> prev = null;
-        ArrayIndex<K, V> x = this.headerIndex, next;
+        LinkedNode<K, V> x = this.headerIndex, next;
         for (int i = x.levels.length - 1; i >= 0; i--) { // y轴遍历
-            next = x.levels[i].next;
+            next = (LinkedNode<K, V>) x.levels[i].next;
             while (next != null) {  // x轴遍历
-                if (next.node.score == score && Objects.equals(next.node.k, k)) {
+                if (next.score == score && Objects.equals(next.k, k)) {
                     // 找到了, 删除索引
                     x.levels[i].next = next.levels[i].next;
 
                     // 待删除节点的prev
-                    prev = x.node;
-                } else if (next.node.score <= score) {
+                    prev = x;
+                } else if (next.score <= score) {
                     x = next;
                     // 向右跳
-                    next = next.levels[i].next;
+                    next = (LinkedNode<K, V>) next.levels[i].next;
                     continue;
                 }
                 // 跳过了 终止
@@ -302,17 +305,17 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
             indexCount--;
         }
     }
-    
+
     protected void removeNode(K k, double score) {
-        
-        ArrayIndex<K, V> x = this.headerIndex, next;
+
+        LinkedNode<K, V> x = this.headerIndex, next;
         for (int i = x.levels.length - 1; i >= 0; i--) { // y轴遍历
-            next = x.levels[i].next;
+            next = (LinkedNode<K, V>) x.levels[i].next;
             while (next != null) {  // x轴遍历
-                if (next.node.score < score) {
+                if (next.score < score) {
                     x = next;
                     // 向右跳
-                    next = next.levels[i].next;
+                    next = (LinkedNode<K, V>) next.levels[i].next;
                     continue;
                 }
                 // 跳过了 终止
@@ -320,7 +323,7 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
             }
         }
         // 找到 prev
-        Node<K, V> prev = x.node, nextNode = null;
+        Node<K, V> prev = x, nextNode = null;
         while (prev != null) {
             nextNode = prev.next;
             if (nextNode != null && Objects.equals(nextNode.k, k)) {
@@ -343,18 +346,18 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
     protected Node<K, V> getPrevNodeByScore(double score) {
 
         Node<K, V> prev = null;
-        ArrayIndex<K, V> x = headerIndex, next;
+        LinkedNode<K, V> x = headerIndex, next;
         for (int i = x.levels.length - 1; i >= 0; i--) { // y轴遍历
-            next = x.levels[i].next;
+            next = (LinkedNode<K, V>) x.levels[i].next;
             while (next != null) {  // x轴遍历
-                if (next.node.score >= score) {
+                if (next.score >= score) {
                     // 找到了
                     break;
                 }
                 // 向右跳
-                next = next.levels[i].next;
+                next = (LinkedNode<K, V>) next.levels[i].next;
             }
-            prev = x.node;
+            prev = x;
         }
 
         while (prev != null) {
@@ -399,21 +402,19 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
      * @param newNode 索引关联的node
      * @return
      */
-    protected ArrayIndex<K, V> buildIndex(int level, Node<K, V> newNode) {
+    protected LinkedNode<K, V> buildIndex(int level, LinkedNode<K, V> newNode) {
         if (level == 0) {
             return null;
         }
         // 构建索引
-        ArrayIndex<K, V> head = new ArrayIndex<>();
-        Index<K, V>[] array = new Index[level];
-        for (int i = 0; i < array.length; i++) {
-            array[i] = new Index<>();
+        Index<K, V>[] levels = new Index[level];
+        for (int i = 0; i < levels.length; i++) {
+            levels[i] = new Index<>();
         }
         newNode.ic = level;
-        head.levels = array;
-        head.node = newNode;
+        newNode.levels = levels;
         indexCount++;
-        return head;
+        return newNode;
     }
 
     private void checkMinScorePut(double min) {
@@ -437,8 +438,8 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
                 .append(", indexCount=").append(indexCount)
                 .append("\r\n");
 
-        ArrayIndex<K, V> hi = headerIndex;
-        Node<K, V> hn = hi.node;
+        LinkedNode<K, V> hi = headerIndex;
+        Node<K, V> hn = hi;
 
         int count = 0;
         while (hn != null) {
@@ -447,7 +448,7 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
                     .append(" ic=").append(hn.ic)
                     .append("\t")
                     .append(hn.score).append("{").append(wrap(hn.k)).append(":").append(wrap(hn.v)).append("} ");
-            if (hi != null && hi.node == hn) {
+            if (hi != null && hi == hn) {
                 // 索引遍历
                 reversed(hi, sb);
                 // 下一个索引头
@@ -469,7 +470,7 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
         return sb.append(s).toString();
     }
 
-    private void reversed(ArrayIndex<K, V> index, StringBuilder sb) {
+    private void reversed(LinkedNode<K, V> index, StringBuilder sb) {
         if (index == null) {
             return;
         }
@@ -487,11 +488,11 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
      * @param hi
      * @return
      */
-    private ArrayIndex<K, V> nextIndexHead(ArrayIndex<K, V> hi) {
+    private LinkedNode<K, V> nextIndexHead(LinkedNode<K, V> hi) {
         if (hi == null) {
             return null;
         }
-        return hi.levels[0].next;
+        return (LinkedNode<K, V>) hi.levels[0].next;
     }
 
     /**
@@ -506,26 +507,16 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    protected static class ArrayIndex<K extends Comparable<K>, V> {
-        /**
-         * 存储下一个索引地址的数组
-         */
-        Index<K, V>[] levels;
-        Node<K, V> node;
+    protected static class Index<K extends Comparable<K>, V> {
+        Node<K, V> next; // 指向下一个索引的地址
+        int rank; // 当前索引的排名, 从1开始
     }
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    protected static class Index<K extends Comparable<K>, V> {
-        /**
-         * 指向下一个索引的地址
-         */
-        ArrayIndex<K, V> next;
-        /**
-         * 当前索引的排名, 从1开始
-         */
-        int rank;
+    public static class LinkedNode<K extends Comparable<K>, V> extends Node<K, V> {
+        Index<K, V>[] levels;
     }
 
 }
