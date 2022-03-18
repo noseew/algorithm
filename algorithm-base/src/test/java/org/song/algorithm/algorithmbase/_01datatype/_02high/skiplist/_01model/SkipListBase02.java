@@ -296,12 +296,8 @@ public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList
             }
         }
         // 删除链表节点
-        if (prev != null) {
-            if (prev.next != null) {
-                prev.next = prev.next.next;
-            } else {
-                prev.next = null;
-            }
+        if (prev != null && prev.next != null) {
+            prev.next = prev.next.next;
             indexCount--;
         }
     }
