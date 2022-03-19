@@ -214,7 +214,7 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
         // 串索引
         addIndex(y, n);
     }
-    
+
     protected void upHead(LinkIndex<K, V> newIndex) {
         // 生层同时串最上层索引
         headerIndex = LinkIndex.instance(headerIndex, headerIndex.node, headerIndex.level + 1);
@@ -321,7 +321,7 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
             indexCount--;
         }
     }
-    
+
     protected void removeNode(K k, double score) {
 
         LinkIndex<K, V> x = headerIndex, next;
@@ -459,7 +459,7 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
     }
 
     /************************************* 打印方法 *************************************/
-    
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -468,7 +468,7 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
                 .append("\r\n");
         LinkIndex<K, V> hi = headerIndex;
         Node<K, V> hn = headerIndex.node;
-        
+
         int count = 0;
         while (hn != null) {
             // 链表遍历
@@ -541,7 +541,7 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
         if (nextIndexNode == null) {
             return null;
         }
-        
+
         // 跳索引, 跳到下一个索引的索引头
         LinkIndex<K, V> x = headerIndex;
         while (x != null) { // y轴遍历
@@ -583,6 +583,11 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
             index.node = node;
             index.level = level;
             return index;
+        }
+
+        @Override
+        public String toString() {
+            return "node=" + node + ", level=" + level;
         }
     }
 
