@@ -4,8 +4,6 @@ import lombok.Data;
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.ArrayBase01;
 import org.song.algorithm.algorithmbase._01datatype._01base._02queue_stack._01model.queue.Queue_Link_01;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -198,25 +196,15 @@ public class SkipListBase03<K extends Comparable<K>, V> extends AbstractSkipList
             LinkIndex<K, V> right = left.next;
             if (first) {
                 first = false;
-                rank = getRank(left, right);
+                rank = getRankByLinkedNode(left, right);
             } else {
                 if (leftLast != null && !sameIndex(left, leftLast)) {
-                    LinkIndex<K, V> down = left.down;
-                    rank = left.rank + leftLast.rank;
-                    while (!Objects.equals(leftLast.node.k, down.next.node.k)) {
-                        rank += down.rank;
-                        down = down.next;
-                    }
+                    rank = getRankByLeftIndex(left.down, right);
                 }
                 if (right == null) {
                     rank = 0;
                 } else if (rightLast != null && !sameIndex(right, rightLast)) {
-                    rank = leftLast.rank;
-                    LinkIndex<K, V> next = rightLast.next;
-                    while (!Objects.equals(right.node.k, next.node.k)) {
-                        rank += next.rank;
-                        next = next.next;
-                    }
+                    rank = getRankByLeftIndex(left.down, right);
                 }
             }
             
@@ -233,15 +221,27 @@ public class SkipListBase03<K extends Comparable<K>, V> extends AbstractSkipList
         }
         return Objects.equals(left.node.k, right.node.k);
     }
-
-    protected int getRank(LinkIndex<K, V> left, LinkIndex<K, V> right) {
+    
+    protected int getRankByLeftIndex(LinkIndex<K, V> left, LinkIndex<K, V> right) {
+        int rank = 0;
+        while (!sameIndex(left, right)) {
+            if (left == null) {
+                return 0;
+            }
+            rank += left.rank;
+            left = left.next;
+        }
+        return rank;
+    }
+    
+    protected int getRankByLinkedNode(LinkIndex<K, V> left, LinkIndex<K, V> right) {
         if (left == null || right == null) {
             return 0;
         }
-        return getRank(left.node, right.node);
+        return getRankByLinkedNode(left.node, right.node);
     }
 
-    protected int getRank(Node<K, V> left, Node<K, V> right) {
+    protected int getRankByLinkedNode(Node<K, V> left, Node<K, V> right) {
         int rank = 0;
         while (left != null && right != null && !Objects.equals(left.k, right.k)) {
             rank++;
