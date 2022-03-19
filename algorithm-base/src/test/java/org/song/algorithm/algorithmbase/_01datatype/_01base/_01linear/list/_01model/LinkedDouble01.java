@@ -36,6 +36,11 @@ public class LinkedDouble01<T> extends AbsLine<T> {
     }
 
     public T rpop() {
+        if (size == 1) {
+            T value = head.value;
+            clean();
+            return value;
+        }
         if (tail != null) {
             T value = tail.value;
             tail.prev.next = null;
@@ -49,6 +54,11 @@ public class LinkedDouble01<T> extends AbsLine<T> {
     }
 
     public T lpop() {
+        if (size == 1) {
+            T value = head.value;
+            clean();
+            return value;
+        }
         if (head != null) {
             T value = head.value;
             ((DuplexNode<T>) head.next).prev = null;
