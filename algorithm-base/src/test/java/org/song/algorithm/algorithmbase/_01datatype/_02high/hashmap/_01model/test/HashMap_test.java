@@ -10,8 +10,8 @@ import java.util.Random;
 
 public class HashMap_test {
 
-    private int maxVal = 50_0000;
-    private int maxSize = 500;
+    private int maxVal = 50000;
+    private int maxSize = 5000;
 
     private Random r = new Random();
 
@@ -36,8 +36,8 @@ public class HashMap_test {
 //            HashMap_base_01<Integer, Integer> map1 = new HashMap_base_01<>();
 //            HashMap_base_02<Integer, Integer> map1 = new HashMap_base_02<>();
 //            HashMap_base_03<Integer, Integer> map1 = new HashMap_base_03<>();
-//            HashMap_base_04<Integer, Integer> map1 = new HashMap_base_04<>();
-            HashMap_openAddressing_01<Integer, Integer> map1 = new HashMap_openAddressing_01<>();
+            HashMap_base_04<Integer, Integer> map1 = new HashMap_base_04<>();
+//            HashMap_openAddressing_01<Integer, Integer> map1 = new HashMap_openAddressing_01<>();
 //            Dict_base_01<Integer, Integer> map1 = new Dict_base_01<>();
             for (int i = 0; i < maxSize; i++) {
                 int k = r.nextInt(maxVal);

@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.AbsBSTTree;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02BST;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.TreeNode;
+import org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model.HashMap_base_04;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -59,6 +60,11 @@ public class BTreeUtils {
             return true;
         }
         return false;
+    }
+    
+    public static <V extends Comparable<V>> String simplePrint(TreeNode<V> root) {
+        InorderPrinter printer = new InorderPrinter(root);
+        return printer.printString();
     }
 
     // 来自网络

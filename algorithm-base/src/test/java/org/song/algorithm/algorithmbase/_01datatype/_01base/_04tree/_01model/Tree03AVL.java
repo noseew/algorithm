@@ -38,15 +38,13 @@ public class Tree03AVL<V extends Comparable<V>> extends Tree02BST<V> {
     @Override
     public boolean add(V v) {
         int size = this.size;
-//        root = insert_recursive(root, v);
-        root = insert_traverse(root, v);
+        root = insert_recursive(root, v);
         return size > this.size;
     }
 
     @Override
     public V remove(V v) {
-//        root = remove_recursive(root, v);
-        root = remove_traverse(root, v);
+        root = remove_recursive(root, v);
         return null;
     }
 

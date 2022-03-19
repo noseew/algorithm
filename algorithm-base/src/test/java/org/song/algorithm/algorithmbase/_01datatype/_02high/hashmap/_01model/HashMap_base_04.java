@@ -1,6 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model;
 
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03AVL;
+import org.song.algorithm.algorithmbase.utils.Strings;
 
 import java.util.Comparator;
 
@@ -308,7 +309,7 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
                 if (data instanceof TreeNode) {
                     sb.append(count++).append("-").append(i).append(": ");
                     // 树的遍历
-                    printFromNode((TreeNode) data, sb, 0);
+                    printFromNode((TreeNode) data, sb);
                 } else {
                     // 遍历链表
                     Entry<K, V> pre = data, next;
@@ -328,21 +329,9 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
         return sb.toString();
     }
 
-    private static String printFromNode(TreeNode node, StringBuilder tty, int indentDepth) {
-        for (int i = 0; i < indentDepth; i++) {
-            tty.append(" ");
-        }
-
-        tty.append("-");
-        if (node == null) {
-            tty.append("\r\n");
-            return "";
-        }
-
-        tty.append(node.k).append("=>").append(node.val).append("\r\n");
-        printFromNode(node.left, tty.append("\tL"), indentDepth + 1);
-        printFromNode(node.right, tty.append("\tR"), indentDepth + 1);
-        return tty.toString();
+    private static void printFromNode(TreeNode node, StringBuilder tty) {
+        tty.append("\r\n");
+        tty.append(new InorderPrinter(node.root).printString());
     }
 
     /**
@@ -364,6 +353,10 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
 
         TreeNode(K k, V v) {
             super(k, v, null);
+        }
+
+        public String toBaseString() {
+            return String.valueOf(val);
         }
 
         boolean add(TreeNode<K, V> node) {
@@ -522,5 +515,72 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
             return newParent;
         }
 
+    }
+
+    static class InorderPrinter {
+        private TreeNode tree;
+        private static String rightAppend;
+        private static String leftAppend;
+        private static String blankAppend;
+        private static String lineAppend;
+
+        static {
+            int length = 2;
+            rightAppend = "┌" + Strings.repeat("─", length);
+            leftAppend = "└" + Strings.repeat("─", length);
+            blankAppend = Strings.blank(length + 1);
+            lineAppend = "│" + Strings.blank(length);
+        }
+
+        InorderPrinter(TreeNode tree) {
+            this.tree = tree;
+        }
+
+        String printString() {
+            StringBuilder string = new StringBuilder(
+                    printString(tree, "", "", ""));
+            string.deleteCharAt(string.length() - 1);
+            return string.toString();
+        }
+
+        /**
+         * 生成node节点的字符串
+         *
+         * @param nodePrefix  node那一行的前缀字符串
+         * @param leftPrefix  node整棵左子树的前缀字符串
+         * @param rightPrefix node整棵右子树的前缀字符串
+         * @return
+         */
+        String printString(
+                TreeNode node,
+                String nodePrefix,
+                String leftPrefix,
+                String rightPrefix) {
+            TreeNode left = node.left;
+            TreeNode right = node.right;
+            String string = node.toBaseString();
+            int length = string.length();
+            if (length % 2 == 0) {
+                length--;
+            }
+            length >>= 1;
+            String nodeString = "";
+            if (right != null) {
+                rightPrefix += Strings.blank(length);
+                nodeString += printString(right,
+                        rightPrefix + rightAppend,
+                        rightPrefix + lineAppend,
+                        rightPrefix + blankAppend);
+            }
+            nodeString += nodePrefix + string + "\n";
+            if (left != null) {
+                leftPrefix += Strings.blank(length);
+                nodeString += printString(left,
+                        leftPrefix + leftAppend,
+                        leftPrefix + blankAppend,
+                        leftPrefix + lineAppend);
+            }
+            return nodeString;
+        }
     }
 }

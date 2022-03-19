@@ -23,6 +23,10 @@ public class AVL_test {
             tree.add(random.nextInt(100));
         }
         System.out.println(tree.toString());
+        System.out.println("********************");
+        System.out.println(BTreeUtils.print(tree.root, false));
+        System.out.println("********************");
+        System.out.println(BTreeUtils.simplePrint(tree.root));
     }
 
     @Test

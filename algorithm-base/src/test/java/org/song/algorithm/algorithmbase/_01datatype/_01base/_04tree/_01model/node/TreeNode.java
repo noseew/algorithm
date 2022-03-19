@@ -53,6 +53,10 @@ public class TreeNode<V> {
     public String toString() {
         return BTreeUtils.printJDK9(this);
     }
+    
+    public String toBaseString() {
+        return String.valueOf(val);
+    }
 
     @Override
     public boolean equals(Object o) {
