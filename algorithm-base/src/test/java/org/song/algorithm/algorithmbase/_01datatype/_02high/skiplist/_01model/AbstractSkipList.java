@@ -91,7 +91,7 @@ public abstract class AbstractSkipList<K extends Comparable<K>, V> {
 
         @Override
         public String toString() {
-            return k + "=" + v + "(" + score + ")";
+            return "(key=" + k +",val="+ v + ",score=" + score + ")";
         }
     }
 }
