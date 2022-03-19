@@ -285,7 +285,7 @@ public class SkipListBase03<K extends Comparable<K>, V> extends AbstractSkipList
                 first = false;
                 rank = getRankByLinkedNode(left, right);
             } else {
-                if (leftLast != null && !sameIndex(left, leftLast)) {
+                if (!sameIndex(left, leftLast)) {
                     // 如果是左边index, 则取左边的down index rank的和
                     rank = getRankByIndex(left.down, right);
                 }
