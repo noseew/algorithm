@@ -12,6 +12,8 @@ import java.util.Objects;
  * <p>
  * 1. 索引层采用数组+链表
  * 把链表节点和索引节点的对象类型重新定义了, 更加偏向于"官方", 同时redis也是类似的定义方式
+ * 
+ * redis中单项链表的指针是指向上一个的, 这样和索引一起就形成了类似于双向链表的功能, 这里暂时还是同向单项链表
  */
 public class SkipListBase02<K extends Comparable<K>, V> extends AbstractSkipList<K, V> {
 
