@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase._01datatype._01base._04tree;
+package org.song.algorithm.algorithmbase._01datatype._01base._04tree.printer;
 
 import lombok.experimental.UtilityClass;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.AbsBSTTree;
