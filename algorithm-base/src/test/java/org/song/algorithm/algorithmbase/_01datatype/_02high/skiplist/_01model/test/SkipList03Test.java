@@ -11,7 +11,7 @@ import java.util.Random;
 public class SkipList03Test {
 
     private int maxVal = 1000;
-    private int maxSize = 50;
+    private int maxSize = 100;
 
     private Random r = new Random();
 
@@ -21,8 +21,8 @@ public class SkipList03Test {
         SkipListBase03<Integer, Integer> skip1 = new SkipListBase03<>();
         for (int i = 0; i < maxSize; i++) {
             int val = r.nextInt(maxVal);
-            int key = r.nextInt(maxVal / 5);
-            int score = r.nextInt(maxVal / 20);
+            int key = r.nextInt(maxVal);
+            int score = r.nextInt(maxVal);
             skip1.put(key, val, score);
             System.out.println(skip1.toString());
 

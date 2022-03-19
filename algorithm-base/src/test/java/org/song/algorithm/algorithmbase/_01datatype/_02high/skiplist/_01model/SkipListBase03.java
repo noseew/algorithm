@@ -249,6 +249,13 @@ public class SkipListBase03<K extends Comparable<K>, V> extends AbstractSkipList
 
         return queue;
     }
+
+    /**
+     * 将新增的索引放入待更新rank队列
+     * 
+     * @param newIndex
+     * @return
+     */
     protected Queue_Link_01<LinkIndex<K, V>> newIndexes(LinkIndex<K, V> newIndex) {
 
         Queue_Link_01<LinkIndex<K, V>> queue = new Queue_Link_01<>();
