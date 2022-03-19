@@ -52,7 +52,7 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
     @Override
     public Node<K, V> put(K k, V v, double score) {
         checkMinScorePut(score);
-        Node<K, V> newNode = new Node<>(k, v, score, null, 0);
+        Node<K, V> newNode = Node.<K, V>builder().k(k).v(v).score(score).build();
         Node<K, V> exitNode = hashMap.get(k);
         if (exitNode == null) {
             // 不存在

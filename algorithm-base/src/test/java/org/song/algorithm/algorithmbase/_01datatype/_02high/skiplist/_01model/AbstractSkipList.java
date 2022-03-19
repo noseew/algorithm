@@ -1,6 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.ArrayBase01;
@@ -79,12 +80,14 @@ public abstract class AbstractSkipList<K extends Comparable<K>, V> {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @Builder
     public static class Node<K, V> {
         K k;
         V v;
         double score;
         Node<K, V> next;
         int ic; // 用于debug调试, 拥有索引层数
+        int no; // 用于debug调试, 新增编号
 
         @Override
         public String toString() {

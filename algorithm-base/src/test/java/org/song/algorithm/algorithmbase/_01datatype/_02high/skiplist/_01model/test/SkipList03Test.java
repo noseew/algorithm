@@ -21,8 +21,8 @@ public class SkipList03Test {
         SkipListBase03<Integer, Integer> skip1 = new SkipListBase03<>();
         for (int i = 0; i < maxSize; i++) {
             int val = r.nextInt(maxVal);
-            int key = r.nextInt(maxVal / 10);
-            int score = r.nextInt(maxVal / 5);
+            int key = r.nextInt(maxVal / 5);
+            int score = r.nextInt(maxVal / 20);
             skip1.put(key, val, score);
             System.out.println(skip1.toString());
 
@@ -144,28 +144,34 @@ public class SkipList03Test {
             }
             System.out.println("getMinVal getMaxVal OK");
 
-
-            // TODO 未完成
-            for (int j = 0; j < maxSize; j++) {
-                int key = r.nextInt(maxVal);
-                int val = r.nextInt(maxVal);
-                int score = r.nextInt(maxVal / 5);
-                skip1.put(key, val, score);
-
-                int keyRank = skip1.getKeyRank(key);
-                AbstractSkipList.Node<Integer, Integer> byRank = skip1.getByRank(keyRank);
-                if (byRank == null) {
-                    skip1.getByRank(keyRank);
-                    assert false;
-                }
-                assert Objects.equals(key, byRank.getK());
-
-            }
-            System.out.println("getMinVal Rank OK");
-            
-
         }
 
 
+    }
+
+    @Test
+    public void testAuto01_rank() {
+        SkipListBase03<Integer, Integer> skip1 = new SkipListBase03<>();
+
+        for (int j = 0; j < maxSize; j++) {
+            int key = r.nextInt(maxVal);
+            int val = r.nextInt(maxVal);
+            int score = r.nextInt(maxVal / 5);
+            skip1.put(key, val, score);
+
+            int rank = skip1.getKeyRank(key);
+            AbstractSkipList.Node<Integer, Integer> node = skip1.getByRank(rank);
+            if (node == null) {
+                skip1.getByRank(rank);
+                assert false;
+            }
+            boolean equals = Objects.equals(key, node.getK());
+            if (!equals) {
+                skip1.getByRank(rank);
+                assert equals;
+            }
+
+        }
+        System.out.println("Rank OK");
     }
 }

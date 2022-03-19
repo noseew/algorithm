@@ -15,6 +15,7 @@ public class SkipListBase03<K extends Comparable<K>, V> extends AbstractSkipList
     protected LinkIndex<K, V> headerIndex;
 
     protected int indexCount = 0;
+    protected int NO = 0;
 
     public SkipListBase03() {
         // 临时头node节点
@@ -27,7 +28,7 @@ public class SkipListBase03<K extends Comparable<K>, V> extends AbstractSkipList
     @Override
     public Node<K, V> put(K k, V v, double score) {
         checkMinScorePut(score);
-        Node<K, V> newNode = new Node<>(k, v, score, null, 0);
+        Node<K, V> newNode = Node.<K, V>builder().k(k).v(v).score(score).no(NO++).build();
         Node<K, V> exitNode = hashMap.get(k);
         if (exitNode == null) {
             // 不存在
@@ -114,29 +115,36 @@ public class SkipListBase03<K extends Comparable<K>, V> extends AbstractSkipList
     @Override
     public Node<K, V> getByRank(int rank) {
 
-        Node<K, V> node = null;
         int r = 0;
-        LinkIndex<K, V> x = headerIndex, next;
-        while (x != null) { // y轴遍历
+        boolean match = false;
+        LinkIndex<K, V> x = headerIndex, next, prevX = x;
+        while (x != null && !match) { // y轴遍历
+            prevX = x;
             next = x.next;
             while (next != null) { // x轴遍历
-                if (next.rank + r == rank) {
+                if (r + x.rank == rank) {
                     // 找到了
-                    x = next;
-                    node = x.node;
+                    prevX = x;
+                    match = true;
                     break;
                 }
-                if (next.rank + r > rank) {
+                if (r + x.rank > rank) {
                     // 跳过了
                     break;
                 }
                 r += x.rank;
                 x = next;
+                prevX = x;
                 // 向右
                 next = next.next;
             }
             // 向下
             x = x.down;
+        }
+        Node<K, V> node = prevX.node;
+        while (node != null && r < rank) {
+            r++;
+            node = node.next;
         }
         return node;
     }
@@ -239,6 +247,15 @@ public class SkipListBase03<K extends Comparable<K>, V> extends AbstractSkipList
             x = x.down;
         }
 
+        return queue;
+    }
+    protected Queue_Link_01<LinkIndex<K, V>> newIndexes(LinkIndex<K, V> newIndex) {
+
+        Queue_Link_01<LinkIndex<K, V>> queue = new Queue_Link_01<>();
+        while (newIndex != null) { // y轴遍历
+            queue.lpush(newIndex);
+            newIndex = newIndex.down; // 向下
+        }
         return queue;
     }
 
@@ -377,7 +394,7 @@ public class SkipListBase03<K extends Comparable<K>, V> extends AbstractSkipList
         addIndex(y, n);
 
         // 重新计算排名, 要修改两类索引的排名, 1. 新建的索引, 2.新索引的prev索引
-        recalculateRank(prevIndexes(newIndex));
+        recalculateRank(newIndexes(newIndex));
         recalculateRank(prevIndexes(prevIndex));
     }
 
@@ -629,6 +646,7 @@ public class SkipListBase03<K extends Comparable<K>, V> extends AbstractSkipList
         while (hn != null) {
             // 链表遍历
             sb.append(count++).append(". ")
+                    .append(" no=").append(hn.no)
                     .append(" ic=").append(hn.ic)
                     .append("\t")
                     .append(hn.score).append("{").append(wrap(hn.k)).append(":").append(wrap(hn.v)).append("} ");
