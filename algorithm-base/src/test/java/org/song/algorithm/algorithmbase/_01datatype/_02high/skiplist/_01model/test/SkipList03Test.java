@@ -144,6 +144,26 @@ public class SkipList03Test {
             }
             System.out.println("getMinVal getMaxVal OK");
 
+
+            // TODO 未完成
+            for (int j = 0; j < maxSize; j++) {
+                int key = r.nextInt(maxVal);
+                int val = r.nextInt(maxVal);
+                int score = r.nextInt(maxVal / 5);
+                skip1.put(key, val, score);
+
+                int keyRank = skip1.getKeyRank(key);
+                AbstractSkipList.Node<Integer, Integer> byRank = skip1.getByRank(keyRank);
+                if (byRank == null) {
+                    skip1.getByRank(keyRank);
+                    assert false;
+                }
+                assert Objects.equals(key, byRank.getK());
+
+            }
+            System.out.println("getMinVal Rank OK");
+            
+
         }
 
 

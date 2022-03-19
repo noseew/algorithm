@@ -137,7 +137,7 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
     }
 
     @Override
-    public ArrayBase01<Node<K, V>> getByRank(int rank) {
+    public Node<K, V> getByRank(int rank) {
         return null;
     }
 

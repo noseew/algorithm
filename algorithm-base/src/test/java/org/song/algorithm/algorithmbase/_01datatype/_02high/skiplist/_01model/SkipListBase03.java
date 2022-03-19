@@ -112,13 +112,69 @@ public class SkipListBase03<K extends Comparable<K>, V> extends AbstractSkipList
     }
 
     @Override
-    public ArrayBase01<Node<K, V>> getByRank(int rank) {
-        return null;
+    public Node<K, V> getByRank(int rank) {
+
+        Node<K, V> node = null;
+        int r = 0;
+        LinkIndex<K, V> x = headerIndex, next;
+        while (x != null) { // y轴遍历
+            next = x.next;
+            while (next != null) { // x轴遍历
+                if (next.rank + r == rank) {
+                    // 找到了
+                    x = next;
+                    node = x.node;
+                    break;
+                }
+                if (next.rank + r > rank) {
+                    // 跳过了
+                    break;
+                }
+                r += x.rank;
+                x = next;
+                // 向右
+                next = next.next;
+            }
+            // 向下
+            x = x.down;
+        }
+        return node;
     }
 
     @Override
     public int getKeyRank(K k) {
-        return 0;
+        Node<K, V> node = hashMap.get(k);
+        if (node == null) {
+            return -1;
+        }
+        int rank = 0;
+        Node<K, V> prevNode = null;
+        LinkIndex<K, V> x = headerIndex, next;
+        while (x != null) { // y轴遍历
+            prevNode = x.node;
+            next = x.next;
+            while (next != null) { // x轴遍历
+                if (next.node.score < node.score) {
+                    rank += x.rank;
+                    x = next;
+                    prevNode = x.node;
+                    // 向右跳
+                    next = next.next;
+                    continue;
+                }
+                // 跳过了 终止
+                break;
+            }
+            // 向下
+            x = x.down;
+        }
+
+        while (prevNode != null && !Objects.equals(prevNode.k, node.k)) {
+            rank++;
+            prevNode = prevNode.next;
+        }
+        
+        return rank;
     }
 
     @Override
