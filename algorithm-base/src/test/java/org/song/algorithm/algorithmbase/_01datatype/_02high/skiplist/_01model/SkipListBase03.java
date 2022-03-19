@@ -117,7 +117,7 @@ public class SkipListBase03<K extends Comparable<K>, V> extends AbstractSkipList
     }
 
     @Override
-    public int getRank(K k) {
+    public int getKeyRank(K k) {
         return 0;
     }
 
@@ -149,6 +149,12 @@ public class SkipListBase03<K extends Comparable<K>, V> extends AbstractSkipList
 
     /************************************* 排名相关方法 *************************************/
 
+    /**
+     * 获取该索引之前所有的关联索引(包含该索引), 待更新他们的rank
+     *
+     * @param prevIndex
+     * @return
+     */
     protected Queue_Link_01<LinkIndex<K, V>> prevIndexes(LinkIndex<K, V> prevIndex) {
 
         Queue_Link_01<LinkIndex<K, V>> queue = new Queue_Link_01<>();
@@ -195,16 +201,20 @@ public class SkipListBase03<K extends Comparable<K>, V> extends AbstractSkipList
             LinkIndex<K, V> left = prevIndexes.lpop();
             LinkIndex<K, V> right = left.next;
             if (first) {
+                // 最底层直接遍历链表获取rank
                 first = false;
                 rank = getRankByLinkedNode(left, right);
             } else {
                 if (leftLast != null && !sameIndex(left, leftLast)) {
-                    rank = getRankByLeftIndex(left.down, right);
+                    // 如果是左边index, 则取左边的down index rank的和
+                    rank = getRankByIndex(left.down, right);
                 }
                 if (right == null) {
+                    // 如果索引没有下一个, rank=0
                     rank = 0;
                 } else if (rightLast != null && !sameIndex(right, rightLast)) {
-                    rank = getRankByLeftIndex(left.down, right);
+                    // 如果是右边index, 则取右边的down index rank的和
+                    rank = getRankByIndex(left.down, right);
                 }
             }
             
@@ -215,14 +225,29 @@ public class SkipListBase03<K extends Comparable<K>, V> extends AbstractSkipList
         }
     }
 
+    /**
+     * 索引节点是否是同一个
+     * 
+     * @param left
+     * @param right
+     * @return
+     */
     protected boolean sameIndex(LinkIndex<K, V> left, LinkIndex<K, V> right) {
         if (left == null || right == null) {
             return false;
         }
         return Objects.equals(left.node.k, right.node.k);
     }
-    
-    protected int getRankByLeftIndex(LinkIndex<K, V> left, LinkIndex<K, V> right) {
+
+    /**
+     * 获取两个索引之间的rank, 直接通过线性跳跃的方式累加
+     * 如果next为null, 则rank=0
+     *
+     * @param left
+     * @param right
+     * @return
+     */
+    protected int getRankByIndex(LinkIndex<K, V> left, LinkIndex<K, V> right) {
         int rank = 0;
         while (!sameIndex(left, right)) {
             if (left == null) {
@@ -233,14 +258,21 @@ public class SkipListBase03<K extends Comparable<K>, V> extends AbstractSkipList
         }
         return rank;
     }
-    
+
+    /**
+     * 最底层直接遍历链表获取rank
+     *
+     * @param left
+     * @param right
+     * @return
+     */
     protected int getRankByLinkedNode(LinkIndex<K, V> left, LinkIndex<K, V> right) {
         if (left == null || right == null) {
             return 0;
         }
         return getRankByLinkedNode(left.node, right.node);
     }
-
+    
     protected int getRankByLinkedNode(Node<K, V> left, Node<K, V> right) {
         int rank = 0;
         while (left != null && right != null && !Objects.equals(left.k, right.k)) {
@@ -288,7 +320,7 @@ public class SkipListBase03<K extends Comparable<K>, V> extends AbstractSkipList
         // 串索引
         addIndex(y, n);
 
-        // 重新计算排名, 要修改两类索引的排名
+        // 重新计算排名, 要修改两类索引的排名, 1. 新建的索引, 2.新索引的prev索引
         recalculateRank(prevIndexes(newIndex));
         recalculateRank(prevIndexes(prevIndex));
     }

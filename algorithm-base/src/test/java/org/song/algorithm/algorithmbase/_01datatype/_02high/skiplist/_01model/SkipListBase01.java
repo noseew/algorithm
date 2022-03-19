@@ -142,7 +142,7 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
     }
 
     @Override
-    public int getRank(K k) {
+    public int getKeyRank(K k) {
         return 0;
     }
 
