@@ -35,7 +35,7 @@ public class Sort_07_Heap {
         public void sort(Comparable[] cs) {
             // 将数组原地建堆(如果需要升序, 则需要大堆)
             Heap_base_03 heapLittle = new Heap_base_03(false, cs);
-            heapLittle.build3();
+            heapLittle.heapify3();
             
             // 依次取出, 并原地排序, 取出大堆头数据放入队尾, 完成后正好是升序
             for (int i = 0; i < cs.length; i++) {
