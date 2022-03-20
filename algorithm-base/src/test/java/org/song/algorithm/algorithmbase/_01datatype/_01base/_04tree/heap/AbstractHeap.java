@@ -14,7 +14,7 @@ public abstract class AbstractHeap<T> {
 
 
     /**
-     * 子节点上升
+     * 子节点上升 上滤
      * 新元素存储到数组下一位, 新元素在叶子节点判断一次上升, 直到合适的位置
      */
     protected void shiftUp(int child) {
@@ -38,7 +38,7 @@ public abstract class AbstractHeap<T> {
     }
 
     /**
-     * 父节点下降
+     * 父节点下降 下滤
      * 现将尾结点元素移动到根节点上, 然后对根节点进行下降调整
      */
     protected void shiftDown(int parent) {
