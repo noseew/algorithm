@@ -47,6 +47,7 @@ public class Heap_test01 {
         Heap_base_01<Integer> heap = new Heap_base_01<>();
         for (int i = 0; i < size; i++) {
             heap.push(random.nextInt(maxValue));
+            assert heap.size == i + 1;
         }
         System.out.println("push");
         int last = -1;
@@ -54,6 +55,7 @@ public class Heap_test01 {
             Integer pop = heap.pop();
             assert pop >= last;
             last = pop;
+            assert heap.size == size - i - 1;
         }
         System.out.println("OK");
     }
