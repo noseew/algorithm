@@ -72,6 +72,16 @@ public class Heap_base_01<T> extends AbstractHeap<T> {
         return v;
     }
 
+    @Override
+    public T replace(T v) {
+        checkSize();
+        // 方式1. 先pop然后push, 方式2. 直接将新元素放入堆顶然后下滤, 效率更高
+        T val = datas[0];
+        datas[0] = v;
+        shiftDown(0);
+        return val;
+    }
+
     /**
      * 父节点下降 下滤
      * 现将尾结点元素移动到根节点上, 然后对根节点进行下降调整

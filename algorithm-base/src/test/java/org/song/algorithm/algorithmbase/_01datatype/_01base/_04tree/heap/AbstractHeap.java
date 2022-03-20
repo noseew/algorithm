@@ -11,6 +11,8 @@ public abstract class AbstractHeap<T> {
     public abstract void push(T v);
 
     public abstract T pop();
+    
+    public abstract T replace(T v);
 
 
     /**
@@ -61,6 +63,12 @@ public abstract class AbstractHeap<T> {
             } else {
                 break;
             }
+        }
+    }
+
+    protected void checkSize() {
+        if (size == 0) {
+            throw new RuntimeException("堆为空");
         }
     }
 
