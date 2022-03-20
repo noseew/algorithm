@@ -48,16 +48,16 @@ public abstract class AbstractHeap<T> {
          父节点在(left, right)中选择一个最小(小堆)的子节点, 作为对比分支
          父节点只要比最小子节点大, 则最小子节点一定应当是父节点, 因为: 最小子节点 < 兄弟节点 & 最小子节点 < 父节点
          */
-        int parenIndex = parent;
+        int parentIndex = parent;
         int leftIndex;
-        while ((leftIndex = ((parenIndex << 1) + 1)) < size) {
+        while ((leftIndex = ((parentIndex << 1) + 1)) < size) {
             int rightIndex = leftIndex + 1;
             // 找出较 小/大 的子节点
             int child = match(leftIndex, rightIndex);
             // 父子对比并交换
-            if (less(parenIndex, child)) {
-                exchange(parenIndex, child);
-                parenIndex = child;
+            if (less(parentIndex, child)) {
+                exchange(parentIndex, child);
+                parentIndex = child;
             } else {
                 break;
             }
@@ -88,6 +88,20 @@ public abstract class AbstractHeap<T> {
         if (parentIndex == childIndex) return false;
 
         T parent = (T) datas[parentIndex];
+        T child = (T) datas[childIndex];
+        if (child == null) return false;
+
+        if (!little) {
+            // 大堆
+            return ((Comparable)parent).compareTo(child) < 0;
+        } else {
+            // 小堆
+            return ((Comparable)parent).compareTo(child) > 0;
+        }
+    }
+
+    protected boolean less(T parent, int childIndex) {
+
         T child = (T) datas[childIndex];
         if (child == null) return false;
 

@@ -46,27 +46,31 @@ public class Heap_base_02<T> extends Heap_base_01<T> {
         datas[childIndex] = v;
     }
 
+    /**
+     * 优化下滤, 思路桶优化上滤
+     * 
+     * @param parent
+     */
     protected void shiftDown(int parent) {
-        /*
-         父节点依次下降
-         父节点下降路线和对比有关(和 子节点依次上升 不同)
-         父节点在(left, right)中选择一个最小(小堆)的子节点, 作为对比分支
-         父节点只要比最小子节点大, 则最小子节点一定应当是父节点, 因为: 最小子节点 < 兄弟节点 & 最小子节点 < 父节点
-         */
-        int parenIndex = parent;
+
+        // 先将父元素取出
+        T v = datas[parent];
+        
+        int parentIndex = parent;
         int leftIndex;
-        while ((leftIndex = ((parenIndex << 1) + 1)) < size) {
+        while ((leftIndex = ((parentIndex << 1) + 1)) < size) {
             int rightIndex = leftIndex + 1;
-            // 找出较 小/大 的子节点
             int child = match(leftIndex, rightIndex);
-            // 父子对比并交换
-            if (less(parenIndex, child)) {
-                exchange(parenIndex, child);
-                parenIndex = child;
+            if (less(v, child)) {
+                // 直接将子元素放入父元素位置, 父元素取出, 然后等待合适时机再放入
+                datas[parentIndex] = datas[child];
+                parentIndex = child;
             } else {
                 break;
             }
         }
+        // 子元素最终放入的位置
+        datas[parentIndex] = v;
     }
 
 }

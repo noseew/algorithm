@@ -64,10 +64,10 @@ public class Heap_base_01<T> extends AbstractHeap<T> {
         if (size == 0) {
             return null;
         }
-        T v = datas[0];
-        datas[0] = datas[size - 1];
+        T v = datas[0]; // 取出堆顶
+        datas[0] = datas[size - 1]; // 将尾元素放入堆顶
         datas[size - 1] = null;
-        shiftDown(0);
+        shiftDown(0); // 下滤, 调整堆顶
         size--;
         return v;
     }
