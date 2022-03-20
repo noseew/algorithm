@@ -72,4 +72,60 @@ public class BaseHashAlg {
         }
         return hash;
     }
+    
+    /*
+    hash 函数的计算方法
+    java 中hash值是一个32位的数
+     */
+    @Test
+    public void test02() {
+        // int
+        int n = 0;
+        System.out.println(Integer.toBinaryString(n)); // 1. 直接取对应数的二进制即可
+        System.out.println(n); // 2. 重写的hash函数直接返回该值本身, 同时也是 Integer 实现方式
+        
+        // float
+        float f = 0.0F;
+        System.out.println(Float.floatToIntBits(f)); // 1. 直接取对应数的二进制即可, 通过native方法获取原始值, 然后经过一些列范围运算得到
+        
+        // long
+        long l = 1L;
+        System.out.println(l & (-1)); // 1. 直接取低位32位
+        System.out.println(l & (-1L << 32)); // 2. 直接取高位32位
+        System.out.println(l ^ (l >>> 32)); // 3. 高低32位异或, 同时也是 Long 的hash函数实现方式
+        
+        // double
+        double d = 0.0D;
+        System.out.println(Double.doubleToLongBits(d)); // 1. 先转成long, 然后用long的方式
+        
+        // char
+        char c = 'a';
+        System.out.println(c); // 1. char 本身就是int
+        
+        // String
+        String s = "";
+        System.out.println(s.hashCode());
+        /*
+        String 是由 char 组成的, 每个char对应一个int c, 总共有m个c, 同时对应一个常数n(随便什么数都行, jdk中, n=31)
+        假设 m = 4;
+            h = c1*n^3 + c2*n^2 + c3*n + c4; // n^x 会多次计算
+            等价于
+            h = ((c1*n + c2) * n + c3) * n + c4; // 效率更高
+        为什么n采用31
+            1. 他是奇素数, 31*i = (i << 5) - i, 当JVM遇到此类的乘法运算会自动优化成位运算, 提高效率
+            因此上述计算方法等价于, 替换成i
+            
+         */
+
+        int h = 0;
+        if (h == 0 && s.length() > 0) {
+            char val[] = s.toCharArray();
+            for (int i = 0; i < s.length(); i++) {
+                h = 31 * h + val[i]; // h 每次循环都利用前一次的计算结果
+//                h = ((h + val[i]) << 5) - (h + val[i]); // 使用31等价的结果, 效率更高
+            }
+            h = h;
+        }
+        System.out.println(h);
+    }
 }
