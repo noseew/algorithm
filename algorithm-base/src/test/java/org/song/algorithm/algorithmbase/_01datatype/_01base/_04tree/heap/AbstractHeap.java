@@ -128,6 +128,15 @@ public abstract class AbstractHeap<T> {
         }
     }
 
+    /**
+     * 返回子节点中符合条件的那个子节点索引
+     * 如果是大堆, 则返回更大的那个节点
+     * 如果是小堆, 则返回更小的那个节点
+     * 
+     * @param left
+     * @param right
+     * @return
+     */
     protected int match(int left, int right) {
         if (left == right || right >= size) {
             return left;
