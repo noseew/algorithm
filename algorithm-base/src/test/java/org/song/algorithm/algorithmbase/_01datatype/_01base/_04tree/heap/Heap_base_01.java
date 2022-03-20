@@ -72,6 +72,30 @@ public class Heap_base_01<T> extends AbstractHeap<T> {
         return v;
     }
 
+    /**
+     * 父节点下降 下滤
+     * 现将尾结点元素移动到根节点上, 然后对根节点进行下降调整
+     */
+    protected void shiftDown(int parent) {
+        // parent 如果是叶子结点, 则不用下滤
+        int harf = size >>> 1; // 再次之后的节点都是叶子结点
+        
+        int parentIndex = parent;
+        int leftIndex;
+        while (parent < harf && (leftIndex = ((parentIndex << 1) + 1)) < size ) {
+            int rightIndex = leftIndex + 1;
+            // 找出较 小/大 的子节点
+            int child = match(leftIndex, rightIndex);
+            // 父子对比并交换
+            if (less(parentIndex, child)) {
+                exchange(parentIndex, child);
+                parentIndex = child;
+            } else {
+                break;
+            }
+        }
+    }
+
 
     /**
      * 确保容量
