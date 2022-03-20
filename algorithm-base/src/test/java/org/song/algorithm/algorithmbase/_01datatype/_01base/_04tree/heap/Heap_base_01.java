@@ -82,6 +82,12 @@ public class Heap_base_01<T> extends AbstractHeap<T> {
         return val;
     }
 
+    @Override
+    public T getTop() {
+        checkSize();
+        return datas[0];
+    }
+
     /**
      * 父节点下降 下滤
      * 现将尾结点元素移动到根节点上, 然后对根节点进行下降调整

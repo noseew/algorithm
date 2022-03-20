@@ -14,6 +14,8 @@ public abstract class AbstractHeap<T> {
     
     public abstract T replace(T v);
 
+    public abstract T getTop();
+
 
     /**
      * 子节点上升 上滤
