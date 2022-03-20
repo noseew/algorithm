@@ -50,13 +50,22 @@ public class Heap_test01 {
             assert heap.size == i + 1;
         }
         System.out.println("push");
-        int last = -1;
+        isLittleHeap(heap);
+        System.out.println("OK");
+    }
+
+    @Test
+    public void test_04_auto() {
+        int size = 1_0000;
+        int maxValue = 100_0000;
+        Random random = new Random();
+        Heap_base_02<Integer> heap = new Heap_base_02<>();
         for (int i = 0; i < size; i++) {
-            Integer pop = heap.pop();
-            assert pop >= last;
-            last = pop;
-            assert heap.size == size - i - 1;
+            heap.push(random.nextInt(maxValue));
+            assert heap.size == i + 1;
         }
+        System.out.println("push");
+        isLittleHeap(heap);
         System.out.println("OK");
     }
     

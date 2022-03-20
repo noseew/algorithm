@@ -4,9 +4,8 @@ import org.junit.Test;
 import org.song.algorithm.algorithmbase._02alg._01sort.AbstractSort;
 
 import java.util.Arrays;
-import java.util.Random;
 
-public class Heap_test02 {
+public class Heap_test03 {
 
     @Test
     public void test_start_01() {
@@ -14,7 +13,7 @@ public class Heap_test02 {
         for (int i = 0; i < size; i++) {
             Comparable[] build = AbstractSort.build(size);
             System.out.println(Arrays.toString(build));
-            Heap_base_02<Comparable> heap = new Heap_base_02<>(build);
+            Heap_base_03<Comparable> heap = new Heap_base_03<>(build);
             System.out.println(heap.toPretty());
             heap.start();
             System.out.println(Arrays.toString(build));
@@ -24,7 +23,7 @@ public class Heap_test02 {
 
     }
 
-    public static void isLittleHeap(Heap_base_02<Comparable> heap) {
+    public static void isLittleHeap(Heap_base_03<Comparable> heap) {
         int size = heap.size;
         int last = -1;
         for (int i = 0; i < size; i++) {

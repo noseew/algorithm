@@ -24,13 +24,13 @@ public abstract class AbstractHeap<T> {
          只需要和父节点对比, 只要比父节点小(小堆), 则肯定比兄弟节点小(小堆)
          */
         int childIndex = child;
-        int parenIndex;
-        while ((parenIndex = (childIndex - 1) >> 1) >= 0) {
+        int parentIndex;
+        while ((parentIndex = (childIndex - 1) >> 1) >= 0) {
             // 父子对比并交换
-            if (isExchange(parenIndex, childIndex)) {
-                exchange(parenIndex, childIndex);
+            if (less(parentIndex, childIndex)) {
+                exchange(parentIndex, childIndex);
                 // 索引上移
-                childIndex = parenIndex;
+                childIndex = parentIndex;
             } else {
                 break;
             }
@@ -55,7 +55,7 @@ public abstract class AbstractHeap<T> {
             // 找出较 小/大 的子节点
             int child = match(leftIndex, rightIndex);
             // 父子对比并交换
-            if (isExchange(parenIndex, child)) {
+            if (less(parenIndex, child)) {
                 exchange(parenIndex, child);
                 parenIndex = child;
             } else {
@@ -84,16 +84,26 @@ public abstract class AbstractHeap<T> {
      * @param childIndex
      * @return
      */
-    private boolean isExchange(int parentIndex, int childIndex) {
-        if (parentIndex == childIndex) {
-            return false;
-        }
+    protected boolean less(int parentIndex, int childIndex) {
+        if (parentIndex == childIndex) return false;
 
         T parent = (T) datas[parentIndex];
         T child = (T) datas[childIndex];
-        if (child == null) {
-            return false;
+        if (child == null) return false;
+
+        if (!little) {
+            // 大堆
+            return ((Comparable)parent).compareTo(child) < 0;
+        } else {
+            // 小堆
+            return ((Comparable)parent).compareTo(child) > 0;
         }
+    }
+    
+    protected boolean less(int parentIndex, T child) {
+        if (child == null) return false;
+
+        T parent = (T) datas[parentIndex];
 
         if (!little) {
             // 大堆
