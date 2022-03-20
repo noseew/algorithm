@@ -32,12 +32,11 @@ public class Heap_base_01<T> extends AbstractHeap<T> {
     private static int initCapacity = 7;
 
     public Heap_base_01() {
-        this.little = true;
-        datas = (T[]) new Object[initCapacity];
+        this(true);
     }
 
-    public Heap_base_01(int property) {
-        this.little = true;
+    public Heap_base_01(boolean little) {
+        this.little = little;
         datas = (T[]) new Object[initCapacity];
     }
 

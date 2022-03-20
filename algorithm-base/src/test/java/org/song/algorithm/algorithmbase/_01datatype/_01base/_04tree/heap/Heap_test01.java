@@ -38,4 +38,23 @@ public class Heap_test01 {
             System.out.println(heap.pop());
         }
     }
+
+    @Test
+    public void test_03_auto() {
+        int size = 1_0000;
+        int maxValue = 100_0000;
+        Random random = new Random();
+        Heap_base_01<Integer> heap = new Heap_base_01<>();
+        for (int i = 0; i < size; i++) {
+            heap.push(random.nextInt(maxValue));
+        }
+        System.out.println("push");
+        int last = -1;
+        for (int i = 0; i < size; i++) {
+            Integer pop = heap.pop();
+            assert pop >= last;
+            last = pop;
+        }
+        System.out.println("OK");
+    }
 }

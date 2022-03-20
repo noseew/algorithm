@@ -1,5 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree.heap;
 
+import java.util.Arrays;
+
 public abstract class AbstractHeap<T> {
 
     protected T[] datas;
@@ -124,6 +126,10 @@ public abstract class AbstractHeap<T> {
             return ((Comparable)childLeft).compareTo(childRight) > 0 ? right : left;
         }
     }
+    
+    public String toString() {
+        return Arrays.toString(datas);
+    }
 
     public String toPretty() {
         // 层数, 从1开始
@@ -146,7 +152,7 @@ public abstract class AbstractHeap<T> {
         for (int i = 0; i < levelCount.length; i++) {
             boolean inter = false;
             for (int j = 0; j < levelCount[i]; j++) {
-                sb.append(datas[count++]);
+                sb.append(datas[count++]).append(",");
                 if (count >= size) {
                     inter = true;
                     break;
