@@ -3,7 +3,7 @@ package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model.t
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.ArrayBase01;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model.AbstractSkipList;
-import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model.SkipListBase01;
+import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model.SkipListBase01Linked;
 
 import java.util.Objects;
 import java.util.Random;
@@ -18,7 +18,7 @@ public class SkipList01Test {
     @Test
     public void test01() {
 
-        SkipListBase01<Integer, Integer> skip1 = new SkipListBase01<>();
+        SkipListBase01Linked<Integer, Integer> skip1 = new SkipListBase01Linked<>();
         for (int i = 0; i < maxSize; i++) {
             int val = r.nextInt(maxVal);
             int key = r.nextInt(maxVal / 10);
@@ -52,7 +52,7 @@ public class SkipList01Test {
 
         for (int i = 0; i < 10; i++) {
 
-            SkipListBase01<Integer, Integer> skip1 = new SkipListBase01<>();
+            SkipListBase01Linked<Integer, Integer> skip1 = new SkipListBase01Linked<>();
             for (int j = 0; j < maxSize; j++) {
                 int key = r.nextInt(maxVal);
                 int val = r.nextInt(maxVal);
@@ -68,7 +68,7 @@ public class SkipList01Test {
 
             System.out.println("put get OK");
 
-            ArrayBase01<SkipListBase01.Node<Integer, Integer>> byScore = skip1.getNodesByScore(-1, -1);
+            ArrayBase01<SkipListBase01Linked.Node<Integer, Integer>> byScore = skip1.getNodesByScore(-1, -1);
             for (int k = 0; k < byScore.length() - 1; k++) {
                 boolean b = byScore.get(k).getScore() <= byScore.get(k + 1).getScore();
                 if (!b) {
@@ -95,7 +95,7 @@ public class SkipList01Test {
                 skip1.put(key, val, score);
                 skip1.remove(key);
 
-                ArrayBase01<SkipListBase01.Node<Integer, Integer>> nodes = skip1.getNodesByScore(score, score + 1);
+                ArrayBase01<SkipListBase01Linked.Node<Integer, Integer>> nodes = skip1.getNodesByScore(score, score + 1);
                 boolean noHas = true;
                 for (int k = 0; k < nodes.length(); k++) {
                     noHas = noHas && !Objects.equals(nodes.get(k).getV(), val);

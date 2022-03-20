@@ -10,14 +10,14 @@ import java.util.Objects;
  * 跳表
  * SkipListBase01 增加rank
  */
-public class SkipListBase03<K extends Comparable<K>, V> extends AbstractSkipList<K, V> {
+public class SkipListBase02LinkedRank<K extends Comparable<K>, V> extends AbstractSkipList<K, V> {
 
     protected LinkIndex<K, V> headerIndex;
 
     protected int indexCount = 0;
     protected int NO = 0;
 
-    public SkipListBase03() {
+    public SkipListBase02LinkedRank() {
         // 临时头node节点
         Node<K, V> node = new Node<>();
         node.score = minScore; // 头结点分值最小, 其他分值必须 >= 0

@@ -3,7 +3,7 @@ package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model.t
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.ArrayBase01;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model.AbstractSkipList;
-import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model.SkipListBase03;
+import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model.SkipListBase03Array;
 
 import java.util.Objects;
 import java.util.Random;
@@ -11,18 +11,18 @@ import java.util.Random;
 public class SkipList03Test {
 
     private int maxVal = 1000;
-    private int maxSize = 100;
+    private int maxSize = 50;
 
     private Random r = new Random();
-
+    
     @Test
     public void test01() {
 
-        SkipListBase03<Integer, Integer> skip1 = new SkipListBase03<>();
+        SkipListBase03Array<Integer, Integer> skip1 = new SkipListBase03Array<>();
         for (int i = 0; i < maxSize; i++) {
             int val = r.nextInt(maxVal);
-            int key = r.nextInt(maxVal);
-            int score = r.nextInt(maxVal);
+            int key = r.nextInt(maxVal / 10);
+            int score = r.nextInt(maxVal / 5);
             skip1.put(key, val, score);
             System.out.println(skip1.toString());
 
@@ -31,7 +31,7 @@ public class SkipList03Test {
                 System.out.println(v2);
             }
             System.out.println(skip1.toString());
-
+            
 
         }
         System.out.println(skip1.toString());
@@ -46,13 +46,13 @@ public class SkipList03Test {
         System.out.println(values);
 
     }
-
+    
     @Test
     public void testAuto01() {
 
         for (int i = 0; i < 10; i++) {
 
-            SkipListBase03<Integer, Integer> skip1 = new SkipListBase03<>();
+            SkipListBase03Array<Integer, Integer> skip1 = new SkipListBase03Array<>();
             for (int j = 0; j < maxSize; j++) {
                 int key = r.nextInt(maxVal);
                 int val = r.nextInt(maxVal);
@@ -68,7 +68,7 @@ public class SkipList03Test {
 
             System.out.println("put get OK");
 
-            ArrayBase01<SkipListBase03.Node<Integer, Integer>> byScore = skip1.getNodesByScore(-1, -1);
+            ArrayBase01<SkipListBase03Array.Node<Integer, Integer>> byScore = skip1.getNodesByScore(-1, -1);
             for (int k = 0; k < byScore.length() - 1; k++) {
                 boolean b = byScore.get(k).getScore() <= byScore.get(k + 1).getScore();
                 if (!b) {
@@ -95,7 +95,7 @@ public class SkipList03Test {
                 skip1.put(key, val, score);
                 skip1.remove(key);
 
-                ArrayBase01<SkipListBase03.Node<Integer, Integer>> nodes = skip1.getNodesByScore(score, score + 1);
+                ArrayBase01<SkipListBase03Array.Node<Integer, Integer>> nodes = skip1.getNodesByScore(score, score + 1);
                 boolean noHas = true;
                 for (int k = 0; k < nodes.length(); k++) {
                     noHas = noHas && !Objects.equals(nodes.get(k).getV(), val);
@@ -114,7 +114,7 @@ public class SkipList03Test {
                 int key = r.nextInt(maxVal);
                 int val = r.nextInt(maxVal);
                 int score = r.nextInt(maxVal / 5);
-
+                
                 skip1.put(key, val, score);
 
                 double maxScore = skip1.getMaxScore();
@@ -147,31 +147,5 @@ public class SkipList03Test {
         }
 
 
-    }
-
-    @Test
-    public void testAuto01_rank() {
-        SkipListBase03<Integer, Integer> skip1 = new SkipListBase03<>();
-
-        for (int j = 0; j < maxSize; j++) {
-            int key = r.nextInt(maxVal);
-            int val = r.nextInt(maxVal);
-            int score = r.nextInt(maxVal / 5);
-            skip1.put(key, val, score);
-
-            int rank = skip1.getKeyRank(key);
-            AbstractSkipList.Node<Integer, Integer> node = skip1.getByRank(rank);
-            if (node == null) {
-                skip1.getByRank(rank);
-                assert false;
-            }
-            boolean equals = Objects.equals(key, node.getK());
-            if (!equals) {
-                skip1.getByRank(rank);
-                assert equals;
-            }
-
-        }
-        System.out.println("Rank OK");
     }
 }

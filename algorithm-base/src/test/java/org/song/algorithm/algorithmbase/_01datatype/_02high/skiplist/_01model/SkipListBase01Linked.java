@@ -27,7 +27,7 @@ import java.util.Objects;
  * 1. 索引层采用二维链表 参考JDK实现
  *
  */
-public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList<K, V> {
+public class SkipListBase01Linked<K extends Comparable<K>, V> extends AbstractSkipList<K, V> {
     /**
      * 跳表的所有的遍历都是从 headerIndex 开始
      * 最高层的索引永远在 headerIndex 中, 并且永远比其他最高索引高1层
@@ -42,7 +42,7 @@ public class SkipListBase01<K extends Comparable<K>, V> extends AbstractSkipList
      */
     protected int indexCount = 0;
     
-    public SkipListBase01() {
+    public SkipListBase01Linked() {
         // 临时头node节点
         Node<K, V> node = new Node<>();
         node.score = minScore; // 头结点分值最小, 其他分值必须 >= 0
