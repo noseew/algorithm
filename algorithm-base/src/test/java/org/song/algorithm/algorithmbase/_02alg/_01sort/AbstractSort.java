@@ -11,7 +11,7 @@ public abstract class AbstractSort {
     private static Random random = new Random();
 
     public static boolean less(Comparable c1, Comparable c2) {
-        return c1.compareTo(c2) < 0;
+        return c1 != null && c2 != null ? c1.compareTo(c2) < 0 : false;
     }
 
     public boolean greater(Comparable c1, Comparable c2) {

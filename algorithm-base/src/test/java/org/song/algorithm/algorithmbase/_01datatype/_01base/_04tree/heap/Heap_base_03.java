@@ -23,7 +23,7 @@ public class Heap_base_03<T> extends AbstractHeap<T> {
         }
     }
 
-    protected void push(T v) {
+    public void push(T v) {
         // 新元素存储到数组下一位,
         datas[size++] = v;
         if (size == 1) {
@@ -33,7 +33,7 @@ public class Heap_base_03<T> extends AbstractHeap<T> {
         shiftUp(size - 1);
     }
 
-    protected T pop() {
+    public T pop() {
         if (size == 0) {
             return null;
         }

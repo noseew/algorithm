@@ -1,6 +1,7 @@
 package org.song.algorithm.algorithmbase._02alg._01sort.alg;
 
 import org.junit.Test;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree.heap.Heap_base_03;
 import org.song.algorithm.algorithmbase._02alg._01sort.AbstractSort;
 
 /**
@@ -32,71 +33,15 @@ public class Sort_07_Heap {
     public static class HeapSort extends AbstractSort {
         @Override
         public void sort(Comparable[] cs) {
-            // 将数组建堆(小堆)
-            HeapLittle heapLittle = new HeapLittle(cs.length);
+            // 将数组原地建堆(如果需要升序, 则需要大堆)
+            Heap_base_03 heapLittle = new Heap_base_03(false, cs);
+            heapLittle.start();
+            
+            // 依次取出, 并原地排序, 取出大堆头数据放入队尾, 完成后正好是升序
             for (int i = 0; i < cs.length; i++) {
-                heapLittle.push(cs[i]);
-            }
-            // 依次取出, 并原地排序
-            for (int i = 0; i < cs.length; i++) {
-//                cs[cs.length - i - 1] = heapLittle.pop();
-                cs[i] = heapLittle.pop();
+                cs[cs.length - i - 1] = (Comparable) heapLittle.pop();
             }
         }
 
-        static class HeapLittle {
-
-            Comparable[] datas;
-            int size;
-
-            public HeapLittle(int capacity) {
-                this.datas = new Comparable[capacity];
-            }
-
-            public Comparable pop() {
-                Comparable cs = datas[0];
-                datas[0] = datas[size - 1];
-                datas[size - 1] = 0;
-                size--;
-                shiftDown();
-                return cs;
-            }
-
-            public void push(Comparable val) {
-                datas[size++] = val;
-                if (size == 1) {
-                    return;
-                }
-                shiftUp(size - 1);
-            }
-
-            private void shiftUp(int i) {
-                int child = i;
-                int parent;
-                while ((parent = (child - 1) >> 1) >= 0) {
-                    if (less(datas[child], datas[parent])) {
-                        exchange(datas, parent, child);
-                        child = parent;
-                    } else {
-                        break;
-                    }
-                }
-            }
-
-            private void shiftDown() {
-                int parent = 0;
-                int left;
-                while ((left = ((parent << 1) + 1)) < size) {
-                    int child = lessEq(datas[left], datas[left + 1]) || left + 1 >= size ? left : left + 1;
-                    if (less(datas[child], datas[parent]) && child < size) {
-                        exchange(datas, parent, child);
-                        parent = child;
-                    } else {
-                        break;
-                    }
-                }
-            }
-
-        }
     }
 }

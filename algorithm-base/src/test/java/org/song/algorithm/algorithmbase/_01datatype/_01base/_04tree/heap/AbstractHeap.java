@@ -8,9 +8,9 @@ public abstract class AbstractHeap<T> {
     protected int size;
     protected boolean little;
 
-    protected abstract void push(T v);
+    public abstract void push(T v);
 
-    protected abstract T pop();
+    public abstract T pop();
 
 
     /**
