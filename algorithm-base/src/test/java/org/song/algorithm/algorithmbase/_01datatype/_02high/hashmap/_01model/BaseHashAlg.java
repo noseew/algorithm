@@ -118,13 +118,10 @@ public class BaseHashAlg {
          */
 
         int h = 0;
-        if (h == 0 && s.length() > 0) {
-            char val[] = s.toCharArray();
-            for (int i = 0; i < s.length(); i++) {
-                h = 31 * h + val[i]; // h 每次循环都利用前一次的计算结果
+        char val[] = s.toCharArray();
+        for (int i = 0; i < s.length(); i++) {
+            h = 31 * h + val[i]; // h 每次循环都利用前一次的计算结果
 //                h = ((h + val[i]) << 5) - (h + val[i]); // 使用31等价的结果, 效率更高
-            }
-            h = h;
         }
         System.out.println(h);
     }
