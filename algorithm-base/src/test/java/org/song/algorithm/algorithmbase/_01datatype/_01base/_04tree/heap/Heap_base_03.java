@@ -2,8 +2,12 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree.heap;
 
 /**
  * heap 原地建堆
+ * 3种方式 原地建堆
+ * 1. 将数组数据逐个放入堆中
+ * 2. 自上而下上滤
+ * 3. 自下而上下滤
  */
-public class Heap_base_03<T> extends AbstractHeap<T> {
+public class Heap_base_03<T> extends Heap_base_02<T> {
 
     public Heap_base_03(T[] datas) {
         this(true, datas);
@@ -15,34 +19,30 @@ public class Heap_base_03<T> extends AbstractHeap<T> {
     }
 
     /**
-     * 原地建堆, 将数组数据逐个放入堆中
+     * 原地建堆, 1. 将数组数据逐个放入堆中
      */
-    public void start() {
+    public void build1() {
         for (T data : datas) {
             push(data);
         }
     }
 
-    public void push(T v) {
-        // 新元素存储到数组下一位,
-        datas[size++] = v;
-        if (size == 1) {
-            // 只有一个元素
-            return;
+    /**
+     * 原地建堆, 2. 自上而下上滤
+     */
+    public void build2() {
+        for (int i = 0; i < datas.length; i++) {
+            shiftUp(i);
         }
-        shiftUp(size - 1);
     }
 
-    public T pop() {
-        if (size == 0) {
-            return null;
+    /**
+     * 原地建堆, 3. 自下而上下滤
+     */
+    public void build3() {
+        for (int i = datas.length - 1; i >= 0; i--) {
+            shiftDown(i);
         }
-        T v = datas[0];
-        datas[0] = datas[size - 1];
-        datas[size - 1] = null;
-        shiftDown(0);
-        size--;
-        return v;
     }
 
 }
