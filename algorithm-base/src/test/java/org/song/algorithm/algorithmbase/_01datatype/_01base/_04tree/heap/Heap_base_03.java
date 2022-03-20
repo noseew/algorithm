@@ -40,7 +40,8 @@ public class Heap_base_03<T> extends Heap_base_02<T> {
      * 原地建堆, 3. 自下而上下滤
      */
     public void build3() {
-        for (int i = datas.length - 1; i >= 0; i--) {
+        int length = datas.length; // 忽略叶子结点
+        for (int i = (length >> 1) - 1; i >= 0; i--) {
             shiftDown(i);
         }
     }
