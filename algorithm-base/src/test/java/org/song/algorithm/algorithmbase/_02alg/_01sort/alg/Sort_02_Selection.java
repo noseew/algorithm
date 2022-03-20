@@ -3,6 +3,22 @@ package org.song.algorithm.algorithmbase._02alg._01sort.alg;
 import org.junit.Test;
 import org.song.algorithm.algorithmbase._02alg._01sort.AbstractSort;
 
+/**
+ *
+ * 选择排序
+ * 复杂度:
+ * 最好 O(n)
+ * 最差 O(n^2)
+ * 平均 O(n^2)
+ *
+ * 原地排序: 不依赖外部空间, 直接在原数组上进行排序, 选择排序属于原地排序
+ * 
+ * 和冒牌排序相比: 
+ * 减少了循环比较的次数, 平均复杂度小于冒牌排序, 但是依然在O(n^2)
+ * 
+ * 选择排序每一轮外层循环都是在找最大/小值, 然后进行排序, 类似的思路可以使用 堆排序实现
+ * 
+ */
 public class Sort_02_Selection {
 
     @Test
