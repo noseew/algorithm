@@ -8,7 +8,7 @@ import org.song.algorithm.algorithmbase._02alg._02search.AbstractSearch;
 /*
 二分查找
 1. 二分查找要求数据是有序
-2. 且线性定位是O(1)的, 比如数组. 如果数据不是数组的, 则建议使用树形查找
+2. 且线性定位是O(1)的, 比如数组. 如果数据不是数组的, 则建议使用树形查找或者使用跳表搜索, 详细查看二叉树/跳表
 
 平均效率 O(logn)
  */
