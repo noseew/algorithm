@@ -59,4 +59,15 @@ public class Heap_test01 {
         }
         System.out.println("OK");
     }
+    
+    public static void isLittleHeap(Heap_base_01<Integer> heap) {
+        int size = heap.size;
+        int last = -1;
+        for (int i = 0; i < size; i++) {
+            Integer pop = heap.pop();
+            assert pop >= last;
+            last = pop;
+            assert heap.size == size - i - 1;
+        }
+    }
 }

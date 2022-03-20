@@ -105,7 +105,7 @@ public abstract class AbstractHeap<T> {
     }
 
     protected int match(int left, int right) {
-        if (left == right) {
+        if (left == right || right >= size) {
             return left;
         }
 
