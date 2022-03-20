@@ -5,7 +5,7 @@ import org.song.algorithm.algorithmbase._01datatype._01base._04tree.heap.Heap_ba
 
 import java.util.Random;
 
-public class Heap_test {
+public class Heap_test01 {
 
     @Test
     public void test_start_01() {
@@ -16,6 +16,7 @@ public class Heap_test {
         heap.push(5);
         heap.push(0);
         heap.push(3);
+        System.out.println(heap.toPretty());
         System.out.println(heap.pop());
         System.out.println(heap.pop());
         System.out.println(heap.pop());
