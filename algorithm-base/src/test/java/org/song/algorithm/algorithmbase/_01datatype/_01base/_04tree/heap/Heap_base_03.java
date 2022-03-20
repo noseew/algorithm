@@ -12,13 +12,14 @@ public class Heap_base_03<T> extends AbstractHeap<T> {
     public Heap_base_03(boolean little, T[] datas) {
         this.little = little;
         this.datas = datas;
-        this.size = datas.length;
     }
 
+    /**
+     * 原地建堆, 将数组数据逐个放入堆中
+     */
     public void start() {
-        for (int i = 0; i < datas.length; i++) {
-            T v = pop();
-            push(v);
+        for (T data : datas) {
+            push(data);
         }
     }
 
