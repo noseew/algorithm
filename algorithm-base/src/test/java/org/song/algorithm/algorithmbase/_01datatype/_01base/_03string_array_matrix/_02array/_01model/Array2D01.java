@@ -14,6 +14,7 @@ public class Array2D01 {
     某个元素 a_ij
      */
     protected int[][] data;
+    protected int m, n;
 
     // 排列存储方式, true: 行, false: 列
     protected boolean arrangementRow = true;
@@ -31,6 +32,9 @@ public class Array2D01 {
      * @param n
      */
     public void buildASC(int m, int n) {
+        this.m = m;
+        this.n = n;
+        
         int a = 0;
         data = new int[m][n];
 
