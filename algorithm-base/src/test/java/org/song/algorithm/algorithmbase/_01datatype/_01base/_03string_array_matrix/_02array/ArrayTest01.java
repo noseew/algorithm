@@ -3,7 +3,7 @@ package org.song.algorithm.algorithmbase._01datatype._01base._03string_array_mat
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._03string_array_matrix._02array._01model.Array2D01;
 
-public class ArrayTest {
+public class ArrayTest01 {
     
     @Test
     public void test01() {

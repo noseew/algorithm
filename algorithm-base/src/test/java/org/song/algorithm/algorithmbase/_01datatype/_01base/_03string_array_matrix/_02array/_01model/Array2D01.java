@@ -3,6 +3,9 @@ package org.song.algorithm.algorithmbase._01datatype._01base._03string_array_mat
 import java.util.Arrays;
 import java.util.Random;
 
+/**
+ * 二维数组
+ */
 public class Array2D01 {
     /*
     二维数组
@@ -21,6 +24,12 @@ public class Array2D01 {
         this.arrangementRow = arrangementRow;
     }
 
+    /**
+     * 构建升序二维数组
+     * 
+     * @param m
+     * @param n
+     */
     public void buildASC(int m, int n) {
         int a = 0;
         data = new int[m][n];
