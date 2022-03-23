@@ -84,6 +84,7 @@ public class Tree02BST02<V extends Comparable<V>> extends Tree02BST01<V> {
             } else {
                 x.parent.right = null;
             }
+            x.parent = null;
             size--;
             return;
         }
@@ -94,6 +95,7 @@ public class Tree02BST02<V extends Comparable<V>> extends Tree02BST01<V> {
             if (x.parent == null) {
                 size--;
                 root = replacement;
+                replacement.parent = null;
                 return;
             }
             if (x.parent.left == x) {
