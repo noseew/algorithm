@@ -12,14 +12,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 一棵二叉查找树(BST)是一棵二叉树, 
 其中每个结点都含有一个Comparable的键(以及相关联的值)且每个结点的键都大于其左子树中的任意结点的键而小于右子树的任意结点的键
 没有平衡功能
+
+node 节点没有使用parent指针
  */
-public class Tree02BST<V extends Comparable<V>> extends AbsBSTTree<V> {
+public class Tree02BST01<V extends Comparable<V>> extends AbsBSTTree<V> {
 
     public int size;
 
     public TreeNode<V> root;
 
-    public Tree02BST(Comparator<V> comparator) {
+    public Tree02BST01(Comparator<V> comparator) {
         super(comparator);
     }
 
@@ -310,7 +312,6 @@ public class Tree02BST<V extends Comparable<V>> extends AbsBSTTree<V> {
         }
 
         TreeNode<V> x = newNode(v);
-        x.parent = xp;
         if (less(v, xp.val)) {
             xp.left = x;
         } else if (greater(v, xp.val)) {
@@ -356,8 +357,8 @@ public class Tree02BST<V extends Comparable<V>> extends AbsBSTTree<V> {
         } while (x != null);
         
         if (x == null) return parent; // 无需删除, 原样返回
-            
-        // 待删除x是叶子结点
+        
+        // 度为0的节点, 待删除x是叶子结点, 直接将叶子节点删除即可
         if (x.right == null && x.left == null) {
             if (xp == null) {
                 // 待删除节点是根节点, 直接返回新的根节点
@@ -374,19 +375,24 @@ public class Tree02BST<V extends Comparable<V>> extends AbsBSTTree<V> {
             return root;
         }
 
-        // 待删除x是非叶子结点, 要找到其前驱或后继节点代替它
-        if (x.right != null) {
+        if (x.right == null || x.left == null) {
+            // 度为1的节点
+            TreeNode<V> replacement = x.right != null ? x.right : x.left;
+            if (xp == null) {
+                size--;
+                return replacement;
+            }
+            if (xp.left == x) {
+                xp.left = replacement; // 删除的是左子节点
+            } else {
+                xp.right = replacement; // 删除的是右子节点
+            }
+        } else {
+            // 度为2的节点, 要找到其前驱或后继节点代替它
             TreeNode<V> minNode = getMinNode(x.right);
-            // 非叶子节点替换
             x.val = minNode.val;
             // 叶子节点删除
             x.right = removeMinReturnNewParent(x.right);
-        } else if (x.left != null) {
-            TreeNode<V> maxNode = getMaxNode(x.left);
-            // 非叶子节点替换
-            x.val = maxNode.val;
-            // 叶子节点删除
-            x.left = removeMaxReturnNewParent(x.left);
         }
         size--;
         return root;

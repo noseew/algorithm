@@ -1,8 +1,8 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._02alg;
 
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02BST01;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree.printer.BTreeUtils;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02BST;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03AVL;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.TreeNode;
 
@@ -22,7 +22,7 @@ public class TreeAlg {
     }
 
     private TreeNode<Integer> initBSTTreeNode(int count) {
-        Tree02BST<Integer> tree = new Tree02BST<>(Comparator.comparing(Integer::doubleValue));
+        Tree02BST01<Integer> tree = new Tree02BST01<>(Comparator.comparing(Integer::doubleValue));
         for (int i = 0; i < count; i++) {
             tree.add(i);
         }

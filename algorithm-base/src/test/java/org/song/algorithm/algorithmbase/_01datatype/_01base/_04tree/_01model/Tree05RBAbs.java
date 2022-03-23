@@ -11,7 +11,7 @@ import java.util.Comparator;
 可以通过理解234树来理解红黑树的旋转和变色
 
  */
-public abstract class Tree05RBAbs<V extends Comparable<V>> extends Tree02BST<V> {
+public abstract class Tree05RBAbs<V extends Comparable<V>> extends Tree02BST01<V> {
 
     public static final boolean RED = true;
     public static final boolean BLACK = false;
@@ -70,6 +70,20 @@ public abstract class Tree05RBAbs<V extends Comparable<V>> extends Tree02BST<V> 
      * @return
      */
     protected TreeNode<V> balanceDeletion(TreeNode<V> x) {
+        
+        /*
+        二叉树中删除节点最终都是导致删除叶子结点, 因为会使用叶子结点补充被删除的节点
+        
+        不需要旋转处理
+            1. 删除红色子节点: 不需要任何处理
+            2. 删除拥有红色子节点的黑色节点: 红色前驱/后继节点直接替代并变色
+                如何判断是这种情况?
+                    用以取代的子节点是红色节点(因为删除黑色节点后需要用子节点(红)来补充其位置)
+        需要旋转处理的情况
+            1. 删除没有红色子节点的黑色节点
+                如何判断是这种情况?
+                    用以取代的子节点是null/黑色(红黑树中, 建议一切处理都是用红黑来处理, 而不是二叉树思路来处理)
+         */
         /*
         条件: 新 != 根 && 新 == 黑
         

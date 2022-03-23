@@ -196,6 +196,10 @@ public class Tree05RBJDKTreemap<V extends Comparable<V>> extends Tree05RBAbs<V> 
         return p;
     }
 
+    /*
+    p = 替代被删除节点的节点
+    replacement = 替代者节点的原子节点
+     */
     private void deleteEntry(TreeNode<V> p) {
         modCount++;
         size--;

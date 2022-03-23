@@ -1,9 +1,9 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.test;
 
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02BST01;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree.printer.BTreeUtils;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.AbsBSTTree;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02BST;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03AVL;
 
 import java.util.*;
@@ -94,7 +94,7 @@ public class AVL_test {
     public void test_diff_BST_add() {
         // avl 和 bst 是否是同一棵树
         Tree03AVL<Integer> avl = new Tree03AVL<>(Comparator.comparing(Integer::doubleValue));
-        Tree02BST<Integer> bst = new Tree02BST<>(Comparator.comparing(Integer::doubleValue));
+        Tree02BST01<Integer> bst = new Tree02BST01<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
         for (int i = 0; i < valueSize; i++) {
             int v = random.nextInt(maxValue);
@@ -120,10 +120,10 @@ public class AVL_test {
 
         AtomicBoolean balance = new AtomicBoolean(true);
 
-        Tree02BST.traverse(avl.root, AbsBSTTree.Order.MidOrder, 
+        Tree02BST01.traverse(avl.root, AbsBSTTree.Order.MidOrder, 
                 e -> {
-                    boolean goon = Math.abs(Math.abs(Tree02BST.getHeight_recursive(e.left))
-                            - Math.abs(Tree02BST.getHeight_recursive(e.right))) <= 1;
+                    boolean goon = Math.abs(Math.abs(Tree02BST01.getHeight_recursive(e.left))
+                            - Math.abs(Tree02BST01.getHeight_recursive(e.right))) <= 1;
                     if (!goon) {
                         // 不平衡
                         balance.set(false);

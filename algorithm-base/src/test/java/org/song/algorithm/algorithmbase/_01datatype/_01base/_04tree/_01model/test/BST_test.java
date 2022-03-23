@@ -1,9 +1,9 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.test;
 
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02BST01;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree.printer.BTreeUtils;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.AbsBSTTree;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02BST;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -15,7 +15,7 @@ public class BST_test {
 
     @Test
     public void test_start_add() {
-        Tree02BST<Integer> tree = new Tree02BST<>(Comparator.comparing(Integer::doubleValue));
+        Tree02BST01<Integer> tree = new Tree02BST01<>(Comparator.comparing(Integer::doubleValue));
 
         Random random = new Random();
         for (int i = 0; i < valueSize; i++) {
@@ -31,7 +31,7 @@ public class BST_test {
 
     @Test
     public void test_start_add2() {
-        Tree02BST<Integer> tree = new Tree02BST<>(Comparator.comparing(Integer::doubleValue));
+        Tree02BST01<Integer> tree = new Tree02BST01<>(Comparator.comparing(Integer::doubleValue));
 
         List<Integer> sort = new ArrayList<>(valueSize);
 
@@ -57,7 +57,7 @@ public class BST_test {
 
     @Test
     public void test_start_remove() {
-        Tree02BST<Integer> tree = new Tree02BST<>(Comparator.comparing(Integer::doubleValue));
+        Tree02BST01<Integer> tree = new Tree02BST01<>(Comparator.comparing(Integer::doubleValue));
         tree.add(55);
         tree.add(38);
         tree.add(76);
@@ -101,7 +101,7 @@ public class BST_test {
     @Test
     public void test_start_traverse() {
 
-        Tree02BST<Integer> tree = new Tree02BST<>(Comparator.comparing(Integer::doubleValue));
+        Tree02BST01<Integer> tree = new Tree02BST01<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
         for (int i = 0; i < valueSize; i++) {
             int v = random.nextInt(maxValue);
@@ -136,7 +136,7 @@ public class BST_test {
 
         Set<Integer> set = new HashSet<>(valueSize);
 
-        Tree02BST<Integer> tree = new Tree02BST<>(Comparator.comparing(Integer::doubleValue));
+        Tree02BST01<Integer> tree = new Tree02BST01<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
         for (int i = 0; i < valueSize; i++) {
             int v = random.nextInt(maxValue);
@@ -167,7 +167,7 @@ public class BST_test {
 
         List<Integer> list = new ArrayList<>(valueSize);
 
-        Tree02BST<Integer> tree = new Tree02BST<>(Comparator.comparing(Integer::doubleValue));
+        Tree02BST01<Integer> tree = new Tree02BST01<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
         for (int i = 0; i < valueSize; i++) {
             int v = random.nextInt(maxValue);
@@ -196,7 +196,7 @@ public class BST_test {
 
         List<Integer> list = new ArrayList<>(valueSize);
 
-        Tree02BST<Integer> tree = new Tree02BST<>(Comparator.comparing(Integer::doubleValue));
+        Tree02BST01<Integer> tree = new Tree02BST01<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
         for (int i = 0; i < valueSize; i++) {
             int v = random.nextInt(maxValue);
@@ -225,7 +225,7 @@ public class BST_test {
 
         int expectV = maxValue;
 
-        Tree02BST<Integer> tree = new Tree02BST<>(Comparator.comparing(Integer::doubleValue));
+        Tree02BST01<Integer> tree = new Tree02BST01<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
         for (int i = 0; i < valueSize; i++) {
             int v = random.nextInt(maxValue);
@@ -247,7 +247,7 @@ public class BST_test {
 
         List<Integer> sort = new ArrayList<>(valueSize);
 
-        Tree02BST<Integer> tree = new Tree02BST<>(Comparator.comparing(Integer::doubleValue));
+        Tree02BST01<Integer> tree = new Tree02BST01<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
         for (int i = 0; i < valueSize; i++) {
             int v = random.nextInt(maxValue);
@@ -278,7 +278,7 @@ public class BST_test {
 
         int expectV = -1;
 
-        Tree02BST<Integer> tree = new Tree02BST<>(Comparator.comparing(Integer::doubleValue));
+        Tree02BST01<Integer> tree = new Tree02BST01<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
         for (int i = 0; i < valueSize; i++) {
             int v = random.nextInt(maxValue);
@@ -300,7 +300,7 @@ public class BST_test {
 
         List<Integer> sort = new ArrayList<>(valueSize);
 
-        Tree02BST<Integer> tree = new Tree02BST<>(Comparator.comparing(Integer::doubleValue));
+        Tree02BST01<Integer> tree = new Tree02BST01<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
         for (int i = 0; i < valueSize; i++) {
             int v = random.nextInt(maxValue);
@@ -331,7 +331,7 @@ public class BST_test {
 
         List<Integer> list = new ArrayList<>(valueSize);
 
-        Tree02BST<Integer> tree = new Tree02BST<>(Comparator.comparing(Integer::doubleValue));
+        Tree02BST01<Integer> tree = new Tree02BST01<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
         for (int i = 0; i < valueSize; i++) {
             int v = random.nextInt(maxValue);
@@ -357,7 +357,7 @@ public class BST_test {
 
         List<Integer> list = new ArrayList<>(valueSize);
 
-        Tree02BST<Integer> tree = new Tree02BST<>(Comparator.comparing(Integer::doubleValue));
+        Tree02BST01<Integer> tree = new Tree02BST01<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
         for (int i = 0; i < valueSize; i++) {
             int v = random.nextInt(maxValue);
