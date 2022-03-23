@@ -194,7 +194,7 @@ public class Tree02BST01<V extends Comparable<V>> extends AbsBSTTree<V> {
 
     @Override
     public String toString() {
-        return BTreeUtils.printJDK9(root);
+        return BTreeUtils.simplePrint(root);
     }
 
     /***************************************** 通用方法 可重写 *****************************************************/
@@ -316,8 +316,6 @@ public class Tree02BST01<V extends Comparable<V>> extends AbsBSTTree<V> {
             xp.left = x;
         } else if (greater(v, xp.val)) {
             xp.right = x;
-        } else {
-            // 等值不处理
         }
         return x;
     }
@@ -621,14 +619,14 @@ public class Tree02BST01<V extends Comparable<V>> extends AbsBSTTree<V> {
         return (e == null) ? null : e.val;
     }
 
-    protected boolean isLeft(TreeNode<V> p, TreeNode<V> x) {
+    public static boolean isLeft(TreeNode p, TreeNode x) {
         if (p != null && x != null) {
             return p.left.val == x.val;
         }
         return false;
     }
 
-    protected boolean isRight(TreeNode<V> p, TreeNode<V> x) {
+    public static boolean isRight(TreeNode p, TreeNode x) {
         if (p != null && x != null) {
             return p.right.val == x.val;
         }

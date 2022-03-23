@@ -67,7 +67,7 @@ public class Tree05RBJDKHashmap<V extends Comparable<V>> extends Tree05RBAbs<V> 
         return null;
     }
 
-    private void remove(TreeNode<V> p) {
+    protected void remove(TreeNode<V> p) {
         if (p == null) {
             return;
         }

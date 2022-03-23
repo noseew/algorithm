@@ -11,7 +11,7 @@ import java.util.Comparator;
 可以通过理解234树来理解红黑树的旋转和变色
 
  */
-public abstract class Tree05RBAbs<V extends Comparable<V>> extends Tree02BST01<V> {
+public abstract class Tree05RBAbs<V extends Comparable<V>> extends Tree02BST02<V> {
 
     public static final boolean RED = true;
     public static final boolean BLACK = false;
