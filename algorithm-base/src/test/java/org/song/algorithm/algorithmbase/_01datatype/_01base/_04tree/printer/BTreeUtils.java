@@ -61,7 +61,7 @@ public class BTreeUtils {
         return false;
     }
     
-    public static <V extends Comparable<V>> String simplePrint(TreeNode<V> root) {
+    public static String simplePrint(TreeNode root) {
         InorderPrinter printer = new InorderPrinter(root);
         return printer.printString();
     }

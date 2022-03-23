@@ -17,7 +17,8 @@ public class Tree02BST02<V extends Comparable<V>> extends Tree02BST01<V> {
 
     @Override
     public V remove(V v) {
-        remove_traverse(root, v);
+        TreeNode<V> node = search_traverse(root, v);
+        remove(node);
         return null;
     }
 
