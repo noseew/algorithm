@@ -79,7 +79,7 @@ public class Tree02BST02<V extends Comparable<V>> extends Tree02BST01<V> {
                 return;
             }
             // 但删除节点不是根节点, 返回原来根节点
-            if (x.parent.left == x) {
+            if (isLeft(x.parent, x)) {
                 x.parent.left = null;
             } else {
                 x.parent.right = null;
@@ -109,8 +109,8 @@ public class Tree02BST02<V extends Comparable<V>> extends Tree02BST01<V> {
             TreeNode<V> successor = getMinNode(x.right);
             x.val = successor.val; // 采用值替换的方式删除
             // 删除 successor
+            successor.parent.left = successor.right;
             if (successor.right != null) {
-                successor.parent.left = successor.right;
                 successor.right.parent = successor.parent;
             }
         }
