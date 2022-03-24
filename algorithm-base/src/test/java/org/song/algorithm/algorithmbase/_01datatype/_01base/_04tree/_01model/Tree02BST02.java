@@ -109,7 +109,11 @@ public class Tree02BST02<V extends Comparable<V>> extends Tree02BST01<V> {
             TreeNode<V> successor = getMinNode(x.right);
             x.val = successor.val; // 采用值替换的方式删除
             // 删除 successor
-            successor.parent.left = successor.right;
+            if (x.right == successor) {
+                x.right = successor.right;
+            } else {
+                successor.parent.left = successor.right;
+            }
             if (successor.right != null) {
                 successor.right.parent = successor.parent;
             }
