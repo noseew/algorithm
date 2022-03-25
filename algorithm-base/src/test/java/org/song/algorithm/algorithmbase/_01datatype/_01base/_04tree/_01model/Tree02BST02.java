@@ -8,6 +8,7 @@ import java.util.Comparator;
 一棵二叉查找树(BST)是一棵二叉树, 
 
 node 节点使用parent指针
+同时增加了 remove(Node) 方法
  */
 public class Tree02BST02<V extends Comparable<V>> extends Tree02BST01<V> {
 

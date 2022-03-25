@@ -10,7 +10,7 @@ import java.util.*;
 public class RB_test {
 
     private final int maxValue = 50;
-    private final int valueSize = 15;
+    private final int valueSize = 150;
 
     @Test
     public void test_start1() {

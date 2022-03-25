@@ -177,8 +177,10 @@ public class Tree05RBJDKTreemap<V extends Comparable<V>> extends Tree05RBAbs<V> 
 
     // Red-black mechanics
 
-    private static final boolean RED = false;
-    private static final boolean BLACK = true;
+//    private static final boolean RED = false;
+//    private static final boolean BLACK = true;
+    private static final boolean RED = true;
+    private static final boolean BLACK = false;
 
     final TreeNode<V> getFirstEntry() {
         TreeNode<V> p = root;

@@ -72,15 +72,22 @@ public class Tree05RBJDKHashmap<V extends Comparable<V>> extends Tree05RBAbs<V> 
             return;
         }
         size--;
+        
+        // p=待删除节点
         TreeNode<V> pLeft = p.left, pRight = p.right, replacement;
+        
+        // p是度为2的节点
         if (pLeft != null && pRight != null) {
             TreeNode<V> s = pRight, sLeft;
+            
+            // 找到直接后继节点替换p
             while ((sLeft = s.left) != null) { // find successor
                 s = sLeft;
             }
             boolean red = s.red;
             s.red = p.red;
             p.red = red; // swap colors
+            
             TreeNode<V> sRight = s.right;
             TreeNode<V> pParent = p.parent;
             if (s == pRight) { // p was s's direct parent

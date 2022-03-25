@@ -90,14 +90,16 @@ public class Tree05RBJDKHotspot<V extends Comparable<V>> extends Tree05RBAbs<V> 
         // another node from the tree, copying its contents into z.
 
         // y is the node to be unlinked from the tree
-        TreeNode<V> y;
+        TreeNode<V> y; // y是替代者父节点, 不是最终替代者
         if ((z.left == null) || (z.right == null)) {
+            // 度为0或者1
             y = z;
         } else {
+            // 度为2
             y = treeSuccessor(z);
         }
         // y is guaranteed to be non-null at this point
-        TreeNode<V> x;
+        TreeNode<V> x; // 最终替代者
         if (y.left != null) {
             x = y.left;
         } else {
@@ -107,9 +109,11 @@ public class Tree05RBJDKHotspot<V extends Comparable<V>> extends Tree05RBAbs<V> 
         // x may be null at this point
         TreeNode<V> xParent;
         if (x != null) {
+            // 度为1
             x.parent = y.parent;
             xParent = x.parent;
         } else {
+            // 度为0
             xParent = y.parent;
         }
         if (y.parent == null) {

@@ -10,6 +10,8 @@ import java.util.Comparator;
 
 模板实现, 尤其是旋转和平衡
 
+主要参考了, TreeMap中的红黑树实现
+
  */
 public class Tree05RB01<V extends Comparable<V>> extends Tree05RBAbs<V> {
 
@@ -47,6 +49,7 @@ public class Tree05RB01<V extends Comparable<V>> extends Tree05RBAbs<V> {
 
     /**
      * 删除提供的节点
+     * 节点删除逻辑的演化参见 => Tree02BST02 => Tree02BST03
      *
      * @param x
      */

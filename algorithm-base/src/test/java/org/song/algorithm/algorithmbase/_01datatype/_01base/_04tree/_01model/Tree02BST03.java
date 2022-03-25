@@ -13,9 +13,6 @@ public class Tree02BST03<V extends Comparable<V>> extends Tree02BST02<V> {
         super(comparator);
     }
 
-    /***************************************** 通用方法 可重写 *****************************************************/
-
-
     /**
      * Tree02BST02 中的remove方法已经非常精简, 这里重写将其更加贴近红黑树中删除, 
      *
