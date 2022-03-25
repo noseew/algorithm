@@ -96,12 +96,13 @@ public class Tree02BST02<V extends Comparable<V>> extends Tree02BST01<V> {
         TreeNode<V> replacement = x.right != null ? x.right : x.left;
 
         // 删除 度为1和0的节点
-        if (replacement != null) {
+        if (replacement != null) { // 度为1
             replacement.parent = x.parent;
         }
         
+        // 度为1和0 共用
         if (x.parent == null) {
-            root = replacement;
+            root = replacement; // 删除根节点, 则替换root
         } else if (isLeft(x.parent, x)) {
             x.parent.left = replacement; // 删除的是左子节点
         } else {
