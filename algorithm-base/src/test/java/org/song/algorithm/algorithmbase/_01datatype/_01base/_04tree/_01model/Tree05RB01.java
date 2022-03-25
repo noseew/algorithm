@@ -31,7 +31,8 @@ public class Tree05RB01<V extends Comparable<V>> extends Tree05RBAbs<V> {
 
     @Override
     public V remove(V v) {
-        root = remove_traverse(root, v);
+        TreeNode<V> node = search_traverse(root, v);
+        remove(node);
         setBlack(root); // 根总为黑
         return null;
     }
@@ -44,44 +45,56 @@ public class Tree05RB01<V extends Comparable<V>> extends Tree05RBAbs<V> {
         return node;
     }
 
-    @Override
-    protected TreeNode<V> remove_traverse(TreeNode<V> parent, V v) {
-        if (parent == null) {
-            return null;
-        }
-        // 待删除的节点x
-        TreeNode<V> x = parent;
-        do {
-            if (eq(v, x.val)) break;
-            x = less(v, x.val) ? x.left : x.right;
-        } while (x != null);
-        if (x == null) return parent; // 无需删除, 原样返回
+    /**
+     * 删除提供的节点
+     *
+     * @param x
+     */
+    protected void remove(TreeNode<V> x) {
+        // 待删除节点
+        if (x == null) return;
 
-        TreeNode<V> replacement = null;
-        // 待删除x是非叶子结点, 要找到其前驱或后继节点代替它
-        if (x.right != null) {
-            TreeNode<V> minNode = getMinNode(x.right);
-            replacement = minNode;
-            x.val = minNode.val;
-            x.right = removeMinReturnNewParent(x.right);
-            x.red = minNode.red;
-        } else if (x.left != null) {
-            TreeNode<V> maxNode = getMaxNode(x.left);
-            replacement = maxNode;
-            x.val = maxNode.val;
-            x.left = removeMaxReturnNewParent(x.left);
-            x.red = maxNode.red;
+        // 删除 度为2的节点
+        if (x.right != null && x.left != null) {
+            TreeNode<V> successor = getMinNode(x.right);
+            x.val = successor.val;
+            x = successor;
         }
-        if (replacement == null) {
-            if (!x.red) balanceDeletion(replacement);
-        } else if (replacement.left != null || replacement.right != null) {
-            replacement = replacement.left != null ? replacement.left : replacement.right;
-            if (!replacement.red) balanceDeletion(replacement);
+        TreeNode<V> replacement = x.right != null ? x.right : x.left;
+
+        if (replacement != null) {
+            // 度为1
+            if (x.parent == null) {
+                root = replacement;
+            }else if (isLeft(x.parent, x)) {
+                x.parent.left = replacement;
+            } else {
+                x.parent.right = replacement;
+            }
+            replacement.parent = x.parent;
+
+            if (!x.red) {
+                balanceDeletion(replacement);
+            }
+            
+        } else if (x.parent == null) {
+            root = null; // 删除根节点, 则替换root
+        } else {
+            
+            if (!x.red) {
+                balanceDeletion(x);
+            }
+            
+            // 度为0
+            if (isLeft(x.parent, x)) {
+                x.parent.left = null;
+            } else {
+                x.parent.right = null;
+            }
         }
         size--;
-        return root;
     }
-
+    
     @Override
     protected TreeNode<V> balanceInsertion(TreeNode<V> x) {
         while (x != null && x != root && isRed(parent(x))) {
@@ -179,6 +192,7 @@ public class Tree05RB01<V extends Comparable<V>> extends Tree05RBAbs<V> {
                 }
             }
         }
+        x.red = BLACK;
         return x;
     }
 

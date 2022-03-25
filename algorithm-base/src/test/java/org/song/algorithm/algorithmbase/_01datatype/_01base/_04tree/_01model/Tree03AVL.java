@@ -18,7 +18,7 @@ import java.util.Comparator;
  *
  * @param <V>
  */
-public class Tree03AVL<V extends Comparable<V>> extends Tree02BST02<V> {
+public class Tree03AVL<V extends Comparable<V>> extends Tree02BST03<V> {
 
     /**
      * 旋转次数

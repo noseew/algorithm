@@ -3,6 +3,7 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.te
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02BST01;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02BST02;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02BST03;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree.printer.BTreeUtils;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.AbsBSTTree;
 
@@ -59,7 +60,8 @@ public class BST_test {
     @Test
     public void test_start_remove() {
 //        Tree02BST01<Integer> tree = new Tree02BST01<>(Comparator.comparing(Integer::doubleValue));
-        Tree02BST02<Integer> tree = new Tree02BST02<>(Comparator.comparing(Integer::doubleValue));
+//        Tree02BST02<Integer> tree = new Tree02BST02<>(Comparator.comparing(Integer::doubleValue));
+        Tree02BST03<Integer> tree = new Tree02BST03<>(Comparator.comparing(Integer::doubleValue));
         tree.add(55);
         tree.add(38);
         tree.add(76);

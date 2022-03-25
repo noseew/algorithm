@@ -204,6 +204,7 @@ public class Tree05RBJDKTreemap<V extends Comparable<V>> extends Tree05RBAbs<V> 
         modCount++;
         size--;
 
+        // 删除节点p, 度为2, 找到直接后继节点替代它
         // If strictly internal, copy successor's element to p and then make p
         // point to successor.
         if (p.left != null && p.right != null) {
@@ -212,10 +213,11 @@ public class Tree05RBJDKTreemap<V extends Comparable<V>> extends Tree05RBAbs<V> 
             p = s;
         } // p has 2 children
 
+        // 此时待删除节点p=替代后的节点, 删除替代后的节点p, 需要用其子节点来再次替代它, 也就是真正的替代者是 replacement
         // Start fixup at replacement node, if it exists.
         TreeNode<V> replacement = (p.left != null ? p.left : p.right);
 
-        if (replacement != null) {
+        if (replacement != null) { // 新的待删除节点 度为1
             // Link replacement to parent
             replacement.parent = p.parent;
             if (p.parent == null)
@@ -233,7 +235,9 @@ public class Tree05RBJDKTreemap<V extends Comparable<V>> extends Tree05RBAbs<V> 
                 balanceDeletion(replacement);
         } else if (p.parent == null) { // return if we are the only node.
             root = null;
-        } else { //  No children. Use self as phantom replacement and unlink.
+        } else {
+            // 新的待删除节点 度为0
+            //  No children. Use self as phantom replacement and unlink.
             if (p.red == BLACK)
                 balanceDeletion(p);
 
