@@ -620,14 +620,14 @@ public class Tree02BST01<V extends Comparable<V>> extends AbsBSTTree<V> {
     }
 
     public static boolean isLeft(TreeNode p, TreeNode x) {
-        if (p != null && x != null) {
+        if (p != null && x != null && p.left != null) {
             return p.left.val == x.val;
         }
         return false;
     }
 
     public static boolean isRight(TreeNode p, TreeNode x) {
-        if (p != null && x != null) {
+        if (p != null && x != null && p.right != null) {
             return p.right.val == x.val;
         }
         return false;
