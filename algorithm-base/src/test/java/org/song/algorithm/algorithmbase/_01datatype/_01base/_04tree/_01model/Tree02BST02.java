@@ -66,57 +66,46 @@ public class Tree02BST02<V extends Comparable<V>> extends Tree02BST01<V> {
      */
     protected void remove(TreeNode<V> x) {
         // 待删除节点
-        if (x == null) {
-            return;
-        }
+        if (x == null) return;
+        
+        /*
+        删除的节点永远是叶子结点: 如何理解这句话呢?
+        1. 如果删除的节点x度为2, 则取其直接 前驱/后继 节点来替代它, 也就等价于删除其直接 前驱/后继 节点, 
+            此时x=其直接 前驱/后继 节点, 此时新的x是度为1或者度为0的节点, 
+        2. 如果x节点的度为1, 则删除x需要将其子节点直接替代x即可, 等价于删除其x的子节点
+        3. 如果x节点的度为0, 则x直接删除即可, x子节点的替代者为空
+        
+        这中间"替代者"指的是最终的那个替代者, 要么是某个叶子结点, 要么是空节点
+         */
 
-        // 度为0的节点, 待删除x是叶子结点, 直接将叶子节点删除即可
-        if (x.right == null && x.left == null) {
-            if (x.parent == null) {
-                // 待删除节点是根节点, 直接返回新的根节点
-                size--;
-                root = null;
-                return;
-            }
-            // 但删除节点不是根节点, 返回原来根节点
-            if (isLeft(x.parent, x)) {
-                x.parent.left = null;
-            } else {
-                x.parent.right = null;
-            }
-            x.parent = null;
-            size--;
-            return;
-        }
-
-        if (x.right == null || x.left == null) {
-            // 度为1的节点
-            TreeNode<V> replacement = x.right != null ? x.right : x.left;
-            if (x.parent == null) {
-                size--;
-                root = replacement;
-                replacement.parent = null;
-                return;
-            }
-            if (x.parent.left == x) {
-                x.parent.left = replacement; // 删除的是左子节点
-            } else {
-                x.parent.right = replacement; // 删除的是右子节点
-            }
-            replacement.parent = x.parent;
-        } else {
+        // 删除 度为2的节点
+        if (x.right != null && x.left != null) {
             // 度为2的节点, 要找到其后继节点代替它
             TreeNode<V> successor = getMinNode(x.right);
             x.val = successor.val; // 采用值替换的方式删除
-            // 删除 successor
-            if (x.right == successor) {
-                x.right = successor.right;
-            } else {
-                successor.parent.left = successor.right;
-            }
-            if (successor.right != null) {
-                successor.right.parent = successor.parent;
-            }
+            // 接下来需要删除的就是 successor
+            x = successor;
+        }
+        /*
+        replacement: 替代节点, 注意这里的替代并不是 替代原始被删除节点x, 
+        上面删除度为2节点的时候, 已经使用 successor 替代了x, 
+        所以这里删除的新的x节点 的替代者是x的子节点, 也是叶子节点
+        
+        替代者节点就是最终的替代者, 而不是最初的替代者
+         */
+        TreeNode<V> replacement = x.right != null ? x.right : x.left;
+
+        // 删除 度为1和0的节点
+        if (replacement != null) {
+            replacement.parent = x.parent;
+        }
+        
+        if (x.parent == null) {
+            root = replacement;
+        } else if (isLeft(x.parent, x)) {
+            x.parent.left = replacement; // 删除的是左子节点
+        } else {
+            x.parent.right = replacement; // 删除的是右子节点
         }
         size--;
     }
