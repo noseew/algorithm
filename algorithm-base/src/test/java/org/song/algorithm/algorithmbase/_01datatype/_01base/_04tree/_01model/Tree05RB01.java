@@ -139,17 +139,6 @@ public class Tree05RB01<V extends Comparable<V>> extends Tree05RBAbs<V> {
     @Override
     protected TreeNode<V> balanceDeletion(TreeNode<V> x) {
         while (x != root && isBlack(x)) {
-//        while (true) {
-//            if (x == null || x == root) {
-//                return root;
-//            } else if (parent(x) == null) {
-//                setBlack(x);
-//                return x;
-//            } else if (isRed(x)) {
-//                setBlack(x);
-//                return root;
-//            }
-            
             if (x == left(parent(x))) {
                 if (isRed(right(parent(x)))) {
                     setBlack(right(parent(x)));

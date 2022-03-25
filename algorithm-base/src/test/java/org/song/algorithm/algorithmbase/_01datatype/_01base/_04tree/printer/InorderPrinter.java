@@ -77,7 +77,7 @@ import org.song.algorithm.algorithmbase.utils.Strings;
                      rightPrefix + lineAppend,
                      rightPrefix + blankAppend);
          }
-         nodeString += nodePrefix + string + "\n";
+         nodeString += nodePrefix + BTreeUtils.fill(node, string) + "\n";
          if (left != null) {
              leftPrefix += Strings.blank(length);
              nodeString += printString(left,

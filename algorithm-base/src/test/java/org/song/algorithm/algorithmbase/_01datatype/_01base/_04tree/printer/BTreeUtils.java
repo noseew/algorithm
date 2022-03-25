@@ -217,7 +217,7 @@ public class BTreeUtils {
         }
     }
 
-    private static String fill(TreeNode node, Object v) {
+    public static String fill(TreeNode node, Object v) {
         return isRed(node) ? "\033[31;4m" + v + "\033[0m" : String.valueOf(v);
     }
 

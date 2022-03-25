@@ -73,8 +73,13 @@ public class RB_test {
         BTreeUtils.print(tree.root, true);
     }
 
+    /**
+     * 自动测试
+     * 新增通过
+     * 删除未通过 TODO
+     */
     @Test
-    public void test_vs2() {
+    public void test_autoTest_vs2() {
 
         Set<Integer> set = new HashSet<>(valueSize);
 
