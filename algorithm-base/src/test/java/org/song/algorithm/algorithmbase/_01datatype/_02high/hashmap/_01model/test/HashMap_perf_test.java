@@ -400,40 +400,45 @@ public class HashMap_perf_test {
     }
 
     /**
-     *
+     * 自己实现的红黑树HashMap VS JDK HashMap
+     * 不严谨测试: 自己实现的似乎更快, 差距 < 1%
      */
     @Test
-    public void test_02_perf() {
+    public void test_perf_HashMap_vs_05() {
         int num = 10_0000;
         StopWatch stopWatch = new StopWatch();
 
         StopWatchUtils.warnup(() -> {
-            HashMap_base_05<String, String> map = new HashMap_base_05<>();
+            HashMap<String, String> map = new HashMap<>();
             for (int i = 0; i < num; i++) {
                 map.put(UUID.randomUUID().toString(), "");
             }
-            HashMap<String, String> map2 = new HashMap<>();
-            for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
-            }
-        });
-
-
-        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "HashMap_base_05", () -> {
             HashMap_base_05<String, String> map2 = new HashMap_base_05<>();
             for (int i = 0; i < num; i++) {
                 map2.put(UUID.randomUUID().toString(), "");
             }
         });
-        Runnable r2 = () -> StopWatchUtils.run(stopWatch, "HashMap", () -> {
+
+        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "HashMap", () -> {
             HashMap<String, String> map2 = new HashMap<>();
             for (int i = 0; i < num; i++) {
                 map2.put(UUID.randomUUID().toString(), "");
             }
         });
-        for (int i = 0; i < 10; i++) {
-            r1.run();
-            r2.run();
+        Runnable r2 = () -> StopWatchUtils.run(stopWatch, "HashMap_base_05", () -> {
+            HashMap_base_05<String, String> map2 = new HashMap_base_05<>();
+            for (int i = 0; i < num; i++) {
+                map2.put(UUID.randomUUID().toString(), "");
+            }
+        });
+        for (int i = 0; i < 20; i++) {
+            if (i % 2 == 0) {
+                r2.run();
+                r1.run();
+            } else {
+                r1.run();
+                r2.run();
+            }
         }
 
         System.out.println(stopWatch.prettyPrint());
