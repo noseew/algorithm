@@ -10,8 +10,8 @@ import java.util.*;
 
 public class RB_test {
 
-    private final int maxValue = 50;
-    private final int valueSize = 50;
+    private final int maxValue = 1000;
+    private final int valueSize = 500;
 
     @Test
     public void test_start1() {
@@ -77,15 +77,15 @@ public class RB_test {
     /**
      * 自动测试
      * 新增通过
-     * 删除未通过 TODO
+     * 删除通过
      */
     @Test
     public void test_autoTest_vs2() {
 
         Set<Integer> set = new HashSet<>(valueSize);
 
-//        Tree05RBJDKTreemap<Integer> map1 = new Tree05RBJDKTreemap<>(Comparator.comparing(Integer::doubleValue));
-        Tree05RBJDKHashmap<Integer> map1 = new Tree05RBJDKHashmap<>(Comparator.comparing(Integer::doubleValue));
+        Tree05RBJDKTreemap<Integer> map1 = new Tree05RBJDKTreemap<>(Comparator.comparing(Integer::doubleValue));
+//        Tree05RBJDKHashmap<Integer> map1 = new Tree05RBJDKHashmap<>(Comparator.comparing(Integer::doubleValue));
         Tree05RB01<Integer> rb = new Tree05RB01<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
         for (int i = 0; i < valueSize; i++) {
