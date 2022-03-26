@@ -82,7 +82,7 @@ public class TreeTraverse {
         postOrderTraversalWithStack2(root);
         System.out.println();
         // 层序遍历
-//        levelOrder(root);
+        levelOrder(root);
     }
 
     /****************************二叉树的遍历*****************************/
