@@ -7,9 +7,12 @@ public abstract class Printer {
      * 二叉树的基本信息
      */
     protected TreeNode tree;
+    
+    protected boolean printColor;
 
-    public Printer(TreeNode tree) {
+    public Printer(TreeNode tree, boolean printColor) {
         this.tree = tree;
+        this.printColor = printColor;
     }
 
     /**

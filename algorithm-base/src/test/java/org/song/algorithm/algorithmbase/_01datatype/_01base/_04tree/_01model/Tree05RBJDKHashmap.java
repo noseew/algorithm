@@ -1,6 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
 
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.TreeNode;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree.printer.BTreeUtils;
 
 import java.util.Comparator;
 
@@ -55,12 +56,6 @@ public class Tree05RBJDKHashmap<V extends Comparable<V>> extends Tree05RBAbs<V> 
         }
     }
 
-    /**
-     * TODO 未完成
-     * 
-     * @param v
-     * @return
-     */
     @Override
     public V remove(V v) {
         remove(get(v, root));
@@ -359,6 +354,10 @@ public class Tree05RBJDKHashmap<V extends Comparable<V>> extends Tree05RBAbs<V> 
             p.parent = l;
         }
         return root;
+    }
+
+    public String toString(boolean printColor) {
+        return BTreeUtils.simplePrint(root, printColor);
     }
 
 }

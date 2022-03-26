@@ -36,8 +36,9 @@ import org.song.algorithm.algorithmbase.utils.Strings;
          lineAppend = "│" + Strings.blank(length);
      }
 
-     public InorderPrinter(TreeNode tree) {
-         super(tree);
+     public InorderPrinter(TreeNode tree, boolean printColor) {
+         super(tree, printColor);
+         
      }
 
      @Override
@@ -77,7 +78,11 @@ import org.song.algorithm.algorithmbase.utils.Strings;
                      rightPrefix + lineAppend,
                      rightPrefix + blankAppend);
          }
-         nodeString += nodePrefix + BTreeUtils.fill(node, string) + "\n";
+         if (printColor) {
+             nodeString += nodePrefix + BTreeUtils.fill(node, string) + "\n";
+         } else {
+             nodeString += nodePrefix + string + "\n";
+         }
          if (left != null) {
              leftPrefix += Strings.blank(length);
              nodeString += printString(left,

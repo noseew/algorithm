@@ -26,7 +26,7 @@ public class AVL_test {
         System.out.println("********************");
         System.out.println(BTreeUtils.print(tree.root, false));
         System.out.println("********************");
-        System.out.println(BTreeUtils.simplePrint(tree.root));
+        System.out.println(BTreeUtils.simplePrint(tree.root, false));
     }
 
     @Test

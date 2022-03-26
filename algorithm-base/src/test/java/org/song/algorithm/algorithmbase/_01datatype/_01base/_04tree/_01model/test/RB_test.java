@@ -103,8 +103,8 @@ public class RB_test {
             Integer next = iterator.next();
             iterator.remove();
 
-            String treeMapLast = map1.toString();
-            String rbLast = rb.toString();
+            String treeMapLast = map1.toString(true);
+            String rbLast = rb.toString(true);
 
             map1.remove(next);
             rb.remove(next);

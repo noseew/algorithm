@@ -61,8 +61,8 @@ public class BTreeUtils {
         return false;
     }
     
-    public static String simplePrint(TreeNode root) {
-        InorderPrinter printer = new InorderPrinter(root);
+    public static String simplePrint(TreeNode root, boolean printColor) {
+        InorderPrinter printer = new InorderPrinter(root, printColor);
         return printer.printString();
     }
 

@@ -27,8 +27,8 @@ public class LevelOrderPrinter extends Printer {
     private int minX;
     private int maxWidth;
 
-    public LevelOrderPrinter(TreeNode tree) {
-        super(tree);
+    public LevelOrderPrinter(TreeNode tree, boolean printColor) {
+        super(tree, printColor);
         root = new Node(tree, tree);
         maxWidth = root.width;
     }

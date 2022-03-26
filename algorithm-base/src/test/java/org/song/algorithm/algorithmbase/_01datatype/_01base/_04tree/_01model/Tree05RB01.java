@@ -1,6 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model;
 
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.TreeNode;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree.printer.BTreeUtils;
 
 import java.util.Comparator;
 
@@ -34,9 +35,10 @@ public class Tree05RB01<V extends Comparable<V>> extends Tree05RBAbs<V> {
     @Override
     public V remove(V v) {
         TreeNode<V> node = search_traverse(root, v);
+        V val = node.val;
         remove(node);
         setBlack(root); // 根总为黑
-        return null;
+        return val;
     }
 
     @Override
@@ -152,7 +154,7 @@ public class Tree05RB01<V extends Comparable<V>> extends Tree05RBAbs<V> {
                     if (isBlack(right(right(parent(x))))) {
                         setBlack(left(right(parent(x))));
                         setRed(right(parent(x)));
-                        rightRotate(parent(x));
+                        rightRotate(right(parent(x)));
                         x = parent(x);
                     }
                     setColor(right(parent(x)), color(parent(x)));
@@ -236,5 +238,9 @@ public class Tree05RB01<V extends Comparable<V>> extends Tree05RBAbs<V> {
         pRight.left = p;
         p.parent = pRight;
         return pRight;
+    }
+
+    public String toString(boolean printColor) {
+        return BTreeUtils.simplePrint(root, printColor);
     }
 }

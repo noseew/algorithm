@@ -51,7 +51,7 @@ public class TreeNode<V> {
 
     @Override
     public String toString() {
-        return BTreeUtils.simplePrint(this);
+        return BTreeUtils.simplePrint(this, false);
     }
     
     public String toBaseString() {

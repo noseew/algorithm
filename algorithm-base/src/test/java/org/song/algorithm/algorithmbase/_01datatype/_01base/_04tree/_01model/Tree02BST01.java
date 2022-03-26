@@ -194,7 +194,7 @@ public class Tree02BST01<V extends Comparable<V>> extends AbsBSTTree<V> {
 
     @Override
     public String toString() {
-        return BTreeUtils.simplePrint(root);
+        return BTreeUtils.simplePrint(root, false);
     }
 
     /***************************************** 通用方法 可重写 *****************************************************/
