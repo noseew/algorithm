@@ -181,4 +181,48 @@ public class Tree02BST02<V extends Comparable<V>> extends Tree02BST01<V> {
         }
         return newParent;
     }
+
+    /**
+     * 找到后继节点
+     * 通用的寻找后继节点方法, 这里会考虑到right节点为空的情况
+     * 
+     * @param node
+     * @return
+     */
+    protected TreeNode<V> successor(TreeNode<V> node) {
+        if (node == null) return null;
+        if (node.right != null) {
+            // 通过右子节点找
+            return getMinNode(node.right);
+        }
+        // 没有右子节点, 找到其右父节点
+        TreeNode<V> p = node.parent;
+        TreeNode<V> ch = node;
+        // 循环向上, 直到跳出右子链
+        while (p != null && ch == p.right) {
+            ch = p;
+            p = p.parent;
+        }
+        return p;
+    }
+
+    /**
+     * 找到前驱节点
+     * 
+     * @param node
+     * @return
+     */
+    protected TreeNode<V> precursor(TreeNode<V> node) {
+        if (node == null) return null;
+        if (node.left != null) {
+            return getMaxNode(node.left);
+        }
+        TreeNode<V> p = node.parent;
+        TreeNode<V> ch = node;
+        while (p != null && ch == p.left) {
+            ch = p;
+            p = p.parent;
+        }
+        return p;
+    }
 }

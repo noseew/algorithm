@@ -24,7 +24,7 @@ public class Tree02BST03<V extends Comparable<V>> extends Tree02BST02<V> {
 
         // 删除 度为2的节点
         if (x.right != null && x.left != null) {
-            TreeNode<V> successor = getMinNode(x.right);
+            TreeNode<V> successor = successor(x);
             x.val = successor.val;
             x = successor;
         }

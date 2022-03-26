@@ -253,10 +253,11 @@ public class Tree05RBJDKTreemap<V extends Comparable<V>> extends Tree05RBAbs<V> 
         }
     }
 
-    static <V> TreeNode<V> successor(TreeNode<V> t) {
+    protected TreeNode<V> successor(TreeNode<V> t) {
         if (t == null)
             return null;
         else if (t.right != null) {
+            // 向左取最小
             TreeNode<V> p = t.right;
             while (p.left != null)
                 p = p.left;
@@ -264,7 +265,9 @@ public class Tree05RBJDKTreemap<V extends Comparable<V>> extends Tree05RBAbs<V> 
         } else {
             TreeNode<V> p = t.parent;
             TreeNode<V> ch = t;
+            // 没有右子节点, 找到其右父节点
             while (p != null && ch == p.right) {
+                // 循环向上, 直到跳出右子链
                 ch = p;
                 p = p.parent;
             }

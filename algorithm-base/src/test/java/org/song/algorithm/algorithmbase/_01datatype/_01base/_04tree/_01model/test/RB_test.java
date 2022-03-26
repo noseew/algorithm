@@ -1,6 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.test;
 
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05RBJDKHashmap;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree.printer.BTreeUtils;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05RB01;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05RBJDKTreemap;
@@ -10,7 +11,7 @@ import java.util.*;
 public class RB_test {
 
     private final int maxValue = 50;
-    private final int valueSize = 150;
+    private final int valueSize = 50;
 
     @Test
     public void test_start1() {
@@ -83,29 +84,42 @@ public class RB_test {
 
         Set<Integer> set = new HashSet<>(valueSize);
 
-        Tree05RBJDKTreemap<Integer> treemap = new Tree05RBJDKTreemap<>(Comparator.comparing(Integer::doubleValue));
+//        Tree05RBJDKTreemap<Integer> map1 = new Tree05RBJDKTreemap<>(Comparator.comparing(Integer::doubleValue));
+        Tree05RBJDKHashmap<Integer> map1 = new Tree05RBJDKHashmap<>(Comparator.comparing(Integer::doubleValue));
         Tree05RB01<Integer> rb = new Tree05RB01<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
         for (int i = 0; i < valueSize; i++) {
             int v = random.nextInt(maxValue);
-            treemap.add(v);
+            map1.add(v);
             if (rb.add(v)) {
                 set.add(v);
             }
         }
-        System.out.println("(treemap, rb)");
-        assert BTreeUtils.eq(treemap, rb);
+        System.out.println("(map1, rb)");
+        assert BTreeUtils.eq(map1, rb);
 
         Iterator<Integer> iterator = set.iterator();
         while (iterator.hasNext()) {
             Integer next = iterator.next();
             iterator.remove();
 
-            treemap.remove(next);
+            String treeMapLast = map1.toString();
+            String rbLast = rb.toString();
+
+            map1.remove(next);
             rb.remove(next);
-            if (!BTreeUtils.eq(rb, treemap)) {
-                System.out.println(BTreeUtils.print(treemap.root, false));
-                System.out.println(BTreeUtils.print(rb.root, false));
+            if (!BTreeUtils.eq(rb, map1)) {
+//                System.out.println(BTreeUtils.print(map1.root, false));
+//                System.out.println(BTreeUtils.print(rb.root, false));
+                System.out.println("删除之前");
+                System.out.println(treeMapLast);
+                System.out.println(rbLast);
+                
+                System.out.println("删除之后");
+                System.out.println(next);
+                
+                System.out.println(map1);
+                System.out.println(rb);
                 System.out.println(Arrays.toString(set.toArray()));
                 assert false;
             }

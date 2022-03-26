@@ -288,6 +288,10 @@ public abstract class Tree05RBAbs<V extends Comparable<V>> extends Tree02BST03<V
         return p == null || !p.red;
     }
 
+    final protected boolean color(TreeNode<V> p) {
+        return p != null ? p.red : BLACK;
+    }
+
     final protected void setBlack(TreeNode<V> p) {
         setColor(p, BLACK);
     }

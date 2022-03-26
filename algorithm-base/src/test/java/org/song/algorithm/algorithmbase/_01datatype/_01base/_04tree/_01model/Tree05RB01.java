@@ -59,7 +59,7 @@ public class Tree05RB01<V extends Comparable<V>> extends Tree05RBAbs<V> {
 
         // 删除 度为2的节点
         if (x.right != null && x.left != null) {
-            TreeNode<V> successor = getMinNode(x.right);
+            TreeNode<V> successor = successor(x);
             x.val = successor.val;
             x = successor;
         }
@@ -155,7 +155,7 @@ public class Tree05RB01<V extends Comparable<V>> extends Tree05RBAbs<V> {
                         rightRotate(parent(x));
                         x = parent(x);
                     }
-                    setColor(right(parent(x)), parent(x).red);
+                    setColor(right(parent(x)), color(parent(x)));
                     setBlack(parent(x));
                     setBlack(right(right(parent(x))));
                     leftRotate(parent(x));
@@ -176,7 +176,7 @@ public class Tree05RB01<V extends Comparable<V>> extends Tree05RBAbs<V> {
                         setRed(left(parent(x)));
                         leftRotate(left(parent(x)));
                     }
-                    setColor(left(parent(x)), parent(x).red);
+                    setColor(left(parent(x)), color(parent(x)));
                     setBlack(parent(x));
                     setBlack(left(left(parent(x))));
                     rightRotate(parent(x));
