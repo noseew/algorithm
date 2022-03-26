@@ -1,28 +1,31 @@
 package org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model;
 
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03AVL;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05RB01;
 import org.song.algorithm.algorithmbase.utils.Strings;
 
 import java.util.Comparator;
 
 /**
  * 实现简单功能的 HashMap, 模仿JDK中的HashMap
- * 增加树化, 这里采用AVL树
+ * 增加树化, 这里采用红黑树
  *
  * @param <K>
  * @param <V>
  */
-public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03<K, V> {
+public class HashMap_base_05<K extends Comparable<K>, V> extends HashMap_base_04<K, V> {
 
     protected int treeCapacity = 8; // 变成树的阈值
     protected int linkedCapacity = 6; // 变成链表的阈值
-    protected boolean dilatation = false;// 是否正在扩容
+    protected boolean dilatation = false; // 是否正在扩容
 
-    public HashMap_base_04() {
+    public static final boolean RED = true;
+    public static final boolean BLACK = false;
+
+    public HashMap_base_05() {
         super();
     }
 
-    public HashMap_base_04(int capacity) {
+    public HashMap_base_05(int capacity) {
         super(capacity);
     }
 
@@ -60,7 +63,7 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
      * 单独提供一个方法是因为
      * 1. 新增的时候使用
      * 2. 扩容的时候使用
-     * 
+     *
      * @param entry
      * @param datas
      * @return
@@ -113,7 +116,7 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
         size++; // 容量增加
         ensureCapacity();
         return added ? null : v;
-        
+
     }
 
     @Override
@@ -158,7 +161,7 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
         }
         return null;
     }
-    
+
     @Override
     public void clean() {
         super.clean();
@@ -331,11 +334,11 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
 
     private static void printFromNode(TreeNode node, StringBuilder tty) {
         tty.append("\r\n");
-        tty.append(new InorderPrinter(node.root).printString());
+        tty.append(new InorderPrinter(node.root, true).printString());
     }
 
     /**
-     * AVL树, 具体参见 {@link Tree03AVL}
+     * 红黑树, 具体参见 {@link Tree05RB01}
      * 由于HashMap中每个链表头都是一个树的root,
      * 所以 树的操作方法都在树节点中
      *
@@ -345,8 +348,8 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
 
         TreeNode<K, V> left;
         TreeNode<K, V> right;
-        int height;
-
+        TreeNode<K, V> parent;
+        boolean red;
         int size;
         TreeNode<K, V> root;
         Comparator<K> comparator = Comparator.comparing(e -> e);
@@ -368,8 +371,10 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
             if (root == null) {
                 root = this;
             }
-            root = insert_recursive(root, k, v);
+            TreeNode<K, V> node = this.insert_traverse(root, k, v);
             root.root = root;
+            balanceInsertion(node);
+            setBlack(root); // 根总为黑
             return size > this.size;
         }
 
@@ -380,7 +385,7 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
 
         boolean remove(K k) {
             TreeNode<K, V> node = this.search_traverse(root, k, null);
-            root = remove_recursive(root, k, null);
+            remove(node);
             if (root != null) {
                 root.root = root;
             }
@@ -389,46 +394,105 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
 
         TreeNode<K, V> newNode(K k, V v) {
             TreeNode<K, V> node = new TreeNode<>(k, v);
-            node.height = 1;
+            node.red = RED;
             size++;
             return node;
         }
 
-        TreeNode<K, V> insert_recursive(TreeNode<K, V> parent, K k, V v) {
+        protected TreeNode<K, V> insert_traverse(TreeNode<K, V> parent, K k, V v) {
             if (parent == null) {
                 return newNode(k, v);
             }
 
-            if (less(k, parent.k)) {
-                parent.left = insert_recursive(parent.left, k, v);
-            } else if (greater(k, parent.k)) {
-                parent.right = insert_recursive(parent.right, k, v);
-            } else {
-                parent.val = v; // 重复元素不处理 直接替换值
+            TreeNode<K, V> xp = getParentNode(parent, v);
+            if (xp == null) {
                 return parent;
             }
-            parent = balanceInsertion(parent);
-            return parent;
+
+            if ((xp.left != null && eq(xp.left.k, k))
+                    || (xp.right != null && eq(xp.right.k, k))) {
+                return parent;
+            }
+
+            TreeNode<K, V> x = newNode(k, v);
+            x.parent = xp; // 记录parent指针
+            if (less(k, xp.k)) {
+                xp.left = x;
+            } else if (greater(k, xp.k)) {
+                xp.right = x;
+            }
+            return x;
         }
 
-        TreeNode<K, V> remove_recursive(TreeNode<K, V> parent, K k, V v) {
-            if (null == parent) {
-                return parent;
+        protected TreeNode<K, V> getParentNode(TreeNode<K, V> tree, V v) {
+            TreeNode<K, V> p = tree, pp = null;
+            while (p != null) {
+                if (eq(k, p.k)) {
+                    return pp;
+                }
+                pp = p;
+                p = less(k, p.k) ? p.left : p.right;
             }
-            // 复用 BST 的删除
-            if (less(k, parent.k)) {
-                parent.left = remove_recursive(parent.left, k, v);
-            } else if (greater(k, parent.k)) {
-                parent.right = remove_recursive(parent.right, k, v);
-            } else if (parent.right != null && parent.left != null) {
-                parent.val = getMinNode(parent.right).val;
-                parent.right = remove_recursive(parent.right, parent.k, parent.val);
+            return pp;
+        }
+
+        protected void remove(TreeNode<K, V> x) {
+            // 待删除节点
+            if (x == null) return;
+
+            // 删除 度为2的节点
+            if (x.right != null && x.left != null) {
+                TreeNode<K, V> successor = successor(x);
+                x.val = successor.val;
+                x = successor;
+            }
+            TreeNode<K, V> replacement = x.right != null ? x.right : x.left;
+
+            if (replacement != null) {
+                // 度为1
+                if (x.parent == null) {
+                    root = replacement;
+                } else if (isLeft(x.parent, x)) {
+                    x.parent.left = replacement;
+                } else {
+                    x.parent.right = replacement;
+                }
+                replacement.parent = x.parent;
+
+                if (!x.red) {
+                    balanceDeletion(replacement);
+                }
+
+            } else if (x.parent == null) {
+                root = null; // 删除根节点, 则替换root
             } else {
-                parent = (parent.left != null) ? parent.left : parent.right;
+
+                if (!x.red) {
+                    balanceDeletion(x);
+                }
+
+                // 度为0
+                if (isLeft(x.parent, x)) {
+                    x.parent.left = null;
+                } else {
+                    x.parent.right = null;
+                }
             }
-            // 需要调整
-            parent = balanceInsertion(parent);
-            return parent;
+            size--;
+        }
+
+        protected TreeNode<K, V> successor(TreeNode<K, V> node) {
+            if (node == null) return null;
+            if (node.right != null) {
+                return getMinNode(node.right);
+            }
+            TreeNode<K, V> p = node.parent;
+            TreeNode<K, V> ch = node;
+            while (p != null && ch == p.right) {
+                ch = p;
+                p = p.parent;
+            }
+            return p;
         }
 
         TreeNode<K, V> search_traverse(TreeNode<K, V> parent, K k, V v) {
@@ -460,65 +524,193 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
             return comparator.compare(v1, v2) == 0;
         }
 
-        TreeNode<K, V> balance(TreeNode<K, V> x) {
-            if (x == null) {
-                return x;
-            }
-
-            // 左高右低
-            if (getHeight(x.left) - getHeight(x.right) > 1) {
-                if (getHeight(x.left.left) >= getHeight(x.left.right)) {
-                    x = rightRotate(x);
+        protected TreeNode<K, V> balanceDeletion(TreeNode<K, V> x) {
+            while (x != root && isBlack(x)) {
+                if (x == left(parent(x))) {
+                    if (isRed(right(parent(x)))) {
+                        setBlack(right(parent(x)));
+                        setRed(parent(x));
+                        leftRotate(parent(x));
+                    }
+                    if (isBlack(left(right(parent(x)))) && isBlack(right(right(parent(x))))) {
+                        setRed(right(parent(x)));
+                        x = parent(x);
+                    } else {
+                        if (isBlack(right(right(parent(x))))) {
+                            setBlack(left(right(parent(x))));
+                            setRed(right(parent(x)));
+                            rightRotate(right(parent(x)));
+                            x = parent(x);
+                        }
+                        setColor(right(parent(x)), color(parent(x)));
+                        setBlack(parent(x));
+                        setBlack(right(right(parent(x))));
+                        leftRotate(parent(x));
+                        x = root;
+                    }
                 } else {
-                    x.left = leftRotate(x.left);
-                    x = rightRotate(x);
-                }
-            } else if (getHeight(x.right) - getHeight(x.left) > 1) {
-                if (getHeight(x.right.right) >= getHeight(x.right.left)) {
-                    x = leftRotate(x);
-                } else {
-                    x.right = rightRotate(x.right);
-                    x = leftRotate(x);
+                    if (isRed(left(parent(x)))) {
+                        setBlack(left(parent(x)));
+                        setRed(parent(x));
+                        rightRotate(parent(x));
+                    }
+                    if (isBlack(right(left(parent(x)))) && isBlack(left(left(parent(x))))) {
+                        setRed(left(parent(x)));
+                        x = parent(x);
+                    } else {
+                        if (isBlack(left(left(parent(x))))) {
+                            setBlack(right(left(parent(x))));
+                            setRed(left(parent(x)));
+                            leftRotate(left(parent(x)));
+                        }
+                        setColor(left(parent(x)), color(parent(x)));
+                        setBlack(parent(x));
+                        setBlack(left(left(parent(x))));
+                        rightRotate(parent(x));
+                        x = root;
+                    }
                 }
             }
-            x.height = Math.max(getHeight(x.left), getHeight(x.right)) + 1;
+            x.red = BLACK;
             return x;
-
-        }
-
-        static int getHeight(TreeNode node) {
-            if (node == null) {
-                return 0;
-            }
-            return node.height;
         }
 
         TreeNode<K, V> balanceInsertion(TreeNode<K, V> x) {
-            return balance(x);
+            while (x != null && x != root && isRed(parent(x))) {
+                if (parent(x) == left(parent(parent(x)))) {
+                    if (isRed(right(parent(parent(x))))) {
+                        setBlack(parent(x));
+                        setRed(parent(parent(x)));
+                        setBlack(right(parent(parent(x))));
+                        x = parent(parent(x));
+                    } else {
+                        if (x == right(parent(x))) {
+                            x = parent(x);
+                            leftRotate(x);
+                        }
+                        setBlack(parent(x));
+                        setRed(parent(parent(x)));
+                        rightRotate(parent(parent(x)));
+                    }
+                } else {
+                    if (isRed(left(parent(parent(x))))) {
+                        setBlack(parent(x));
+                        setRed(parent(parent(x)));
+                        setBlack(left(parent(parent(x))));
+                        x = parent(parent(x));
+                    } else {
+                        if (x == left(parent(x))) {
+                            x = parent(x);
+                            rightRotate(x);
+                        }
+                        setBlack(parent(x));
+                        setRed(parent(parent(x)));
+                        leftRotate(parent(parent(x)));
+                    }
+                }
+            }
+            return x;
         }
 
         TreeNode<K, V> rightRotate(TreeNode<K, V> p) {
-            TreeNode<K, V> newParent = p.left;
-            p.left = newParent.right;
-            newParent.right = p;
-            p.height = Math.max(getHeight(p.left), getHeight(p.right)) + 1;
-            newParent.height = Math.max(getHeight(newParent.left), getHeight(newParent)) + 1;
-            return newParent;
+            if (p == null) {
+                return p;
+            }
+            TreeNode<K, V> pLeft = p.left;
+            p.left = pLeft.right;
+            if (pLeft.right != null) {
+                pLeft.right.parent = p;
+            }
+            pLeft.parent = p.parent;
+            if (p.parent == null) {
+                root = pLeft;
+            } else {
+                if (p == p.parent.left) {
+                    p.parent.left = pLeft;
+                } else {
+                    p.parent.right = pLeft;
+                }
+            }
+            pLeft.right = p;
+            p.parent = pLeft;
+            return p;
         }
 
         TreeNode<K, V> leftRotate(TreeNode<K, V> p) {
-            TreeNode<K, V> newParent = p.right;
-            p.right = newParent.left;
-            newParent.left = p;
-            p.height = Math.max(getHeight(p.left), getHeight(p.right)) + 1;
-            newParent.height = Math.max(getHeight(newParent.left), getHeight(newParent)) + 1;
-            return newParent;
+            if (p == null) {
+                return p;
+            }
+            TreeNode<K, V> pRight = p.right;
+            p.right = pRight.left;
+            if (pRight.left != null) {
+                pRight.left.parent = p;
+            }
+            pRight.parent = p.parent;
+            if (p.parent == null) {
+                root = pRight;
+            } else {
+                if (p == p.parent.left) {
+                    p.parent.left = pRight;
+                } else {
+                    p.parent.right = pRight;
+                }
+            }
+            pRight.left = p;
+            p.parent = pRight;
+            return pRight;
         }
 
+
+        /***************************************** 工具 *****************************************************/
+
+
+        public static boolean isLeft(TreeNode p, TreeNode x) {
+            if (p != null && x != null && p.left != null) {
+                return p.left.val == x.val;
+            }
+            return false;
+        }
+
+        final protected boolean isRed(TreeNode<K, V> p) {
+            return p != null && p.red;
+        }
+
+        final protected void setRed(TreeNode<K, V> p) {
+            setColor(p, RED);
+        }
+
+        final protected boolean isBlack(TreeNode<K, V> p) {
+            return p == null || !p.red;
+        }
+
+        final protected boolean color(TreeNode<K, V> p) {
+            return p != null ? p.red : BLACK;
+        }
+
+        final protected void setBlack(TreeNode<K, V> p) {
+            setColor(p, BLACK);
+        }
+
+        final protected void setColor(TreeNode<K, V> p, boolean color) {
+            if (p != null) p.red = color;
+        }
+
+        final protected TreeNode<K, V> parent(TreeNode<K, V> p) {
+            return (p == null ? null : p.parent);
+        }
+
+        final protected TreeNode<K, V> left(TreeNode<K, V> p) {
+            return (p == null) ? null : p.left;
+        }
+
+        final protected TreeNode<K, V> right(TreeNode<K, V> p) {
+            return (p == null) ? null : p.right;
+        }
     }
 
     static class InorderPrinter {
         private TreeNode tree;
+        private boolean printColor;
         private static String rightAppend;
         private static String leftAppend;
         private static String blankAppend;
@@ -532,8 +724,9 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
             lineAppend = "│" + Strings.blank(length);
         }
 
-        InorderPrinter(TreeNode tree) {
+        InorderPrinter(TreeNode tree, boolean printColor) {
             this.tree = tree;
+            this.printColor = printColor;
         }
 
         String printString() {
@@ -572,7 +765,11 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
                         rightPrefix + lineAppend,
                         rightPrefix + blankAppend);
             }
-            nodeString += nodePrefix + string + "\n";
+            if (printColor) {
+                nodeString += nodePrefix + fill(node, string) + "\n";
+            } else {
+                nodeString += nodePrefix + string + "\n";
+            }
             if (left != null) {
                 leftPrefix += Strings.blank(length);
                 nodeString += printString(left,
@@ -581,6 +778,14 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
                         leftPrefix + lineAppend);
             }
             return nodeString;
+        }
+
+        static String fill(TreeNode node, Object v) {
+            return isRed(node) ? "\033[31;4m" + v + "\033[0m" : String.valueOf(v);
+        }
+
+        static boolean isRed(TreeNode node) {
+            return node != null && node.red;
         }
     }
 }

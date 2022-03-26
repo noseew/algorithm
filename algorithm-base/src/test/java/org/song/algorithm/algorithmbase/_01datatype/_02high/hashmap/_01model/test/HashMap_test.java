@@ -36,7 +36,8 @@ public class HashMap_test {
 //            HashMap_base_01<Integer, Integer> map1 = new HashMap_base_01<>();
 //            HashMap_base_02<Integer, Integer> map1 = new HashMap_base_02<>();
 //            HashMap_base_03<Integer, Integer> map1 = new HashMap_base_03<>();
-            HashMap_base_04<Integer, Integer> map1 = new HashMap_base_04<>();
+//            HashMap_base_04<Integer, Integer> map1 = new HashMap_base_04<>();
+            HashMap_base_05<Integer, Integer> map1 = new HashMap_base_05<>();
 //            HashMap_openAddressing_01<Integer, Integer> map1 = new HashMap_openAddressing_01<>();
 //            Dict_base_01<Integer, Integer> map1 = new Dict_base_01<>();
             for (int i = 0; i < maxSize; i++) {
@@ -85,9 +86,8 @@ public class HashMap_test {
         HashMap_base_02<Integer, Integer> map2 = new HashMap_base_02<>();
         HashMap_base_03<Integer, Integer> map3 = new HashMap_base_03<>();
         HashMap_base_04<Integer, Integer> map4 = new HashMap_base_04<>();
-        Dict_base_01<Integer, Integer> map5 = new Dict_base_01<>();
-        HashMap_openAddressing_01<Integer, Integer> map6 = new HashMap_openAddressing_01<>();
-        HashMap_openAddressing_02<Integer, Integer> map7 = new HashMap_openAddressing_02<>();
+        HashMap_base_05<Integer, Integer> map5 = new HashMap_base_05<>();
+        Dict_base_01<Integer, Integer> dictMap1 = new Dict_base_01<>();
 
         for (int i = 0; i < maxSize; i++) {
             int k = r.nextInt(maxVal);
@@ -99,56 +99,180 @@ public class HashMap_test {
             map3.put(k, v);
             map4.put(k, v);
             map5.put(k, v);
-            map6.put(k, v);
-            map7.put(k, v);
+            dictMap1.put(k, v);
+
+
+            Integer v0 = map0.get(k);
+            Integer v1 = map1.get(k);
+            Integer v2 = map2.get(k);
+            Integer v3 = map3.get(k);
+            Integer v4 = map4.get(k);
+            Integer v5 = map5.get(k);
+            Integer dictV1 = dictMap1.get(k);
+            boolean eq = eq(v0, v1);
+            if (!eq) {
+                map1.get(k);
+                map1.put(k, v);
+                map1.get(k);
+                assert eq;
+            }
+            eq = eq(v0, v2);
+            if (!eq) {
+                map2.get(k);
+                map2.put(k, v);
+                map2.get(k);
+                assert eq;
+            }
+            eq = eq(v0, v3);
+            if (!eq) {
+                map3.get(k);
+                map3.put(k, v);
+                map3.get(k);
+                assert eq;
+            }
+            eq = eq(v0, v4);
+            if (!eq) {
+                map4.get(k);
+                map4.put(k, v);
+                map4.get(k);
+                assert eq;
+            }
+            eq = eq(v0, v5);
+            if (!eq) {
+                map5.get(k);
+                map5.put(k, v);
+                map5.get(k);
+                assert eq;
+            }
+            eq = eq(v0, dictV1);
+            if (!eq) {
+                dictMap1.get(k);
+                dictMap1.put(k, v);
+                dictMap1.get(k);
+                assert eq;
+            }
+            
         }
 
         for (int i = 0; i < maxSize; i++) {
-            Integer v0 = map0.get(i);
-            Integer v1 = map1.get(i);
-            Integer v2 = map2.get(i);
-            Integer v3 = map3.get(i);
-            Integer v4 = map4.get(i);
-            Integer v5 = map5.get(i);
-            Integer v6 = map6.get(i);
-            Integer v7 = map7.get(i);
-            assert eq(v0, v1);
-            assert eq(v0, v2);
-            assert eq(v0, v3);
-            assert eq(v0, v4);
-            assert eq(v0, v5);
-            assert eq(v0, v6);
-            assert eq(v0, v7);
+            int k = r.nextInt(maxVal / 2);
+            map0.remove(k);
+            map1.remove(k);
+            map2.remove(k);
+            map3.remove(k);
+            map4.remove(k);
+            map5.remove(k);
+            dictMap1.remove(k);
+
+            Integer v0 = map0.get(k);
+            Integer v1 = map1.get(k);
+            Integer v2 = map2.get(k);
+            Integer v3 = map3.get(k);
+            Integer v4 = map4.get(k);
+            Integer v5 = map5.get(k);
+            Integer dictV1 = dictMap1.get(k);
+            boolean eq = eq(v0, v1);
+            if (!eq) {
+                map1.get(k);
+                map1.remove(k);
+                map1.get(k);
+                assert eq;
+            }
+            eq = eq(v0, v2);
+            if (!eq) {
+                map2.get(k);
+                map2.remove(k);
+                map2.get(k);
+                assert eq;
+            }
+            eq = eq(v0, v3);
+            if (!eq) {
+                map3.get(k);
+                map3.remove(k);
+                map3.get(k);
+                assert eq;
+            }
+            eq = eq(v0, v4);
+            if (!eq) {
+                map4.get(k);
+                map4.remove(k);
+                map4.get(k);
+                assert eq;
+            }
+            eq = eq(v0, v5);
+            if (!eq) {
+                map5.get(k);
+                map5.remove(k);
+                map5.get(k);
+                assert eq;
+            }
+            eq = eq(v0, dictV1);
+            if (!eq) {
+                dictMap1.get(k);
+                dictMap1.remove(k);
+                dictMap1.get(k);
+                assert eq;
+            }
+        }
+    }
+
+    @Test
+    public void test_auto02() {
+        HashMap<Integer, Integer> map0 = new HashMap<>();
+        HashMap_openAddressing_01<Integer, Integer> openMap1 = new HashMap_openAddressing_01<>();
+        HashMap_openAddressing_02<Integer, Integer> openMap2 = new HashMap_openAddressing_02<>();
+
+        for (int i = 0; i < maxSize; i++) {
+            int k = r.nextInt(maxVal);
+            int v = r.nextInt(maxVal);
+
+            map0.put(k, v);
+            openMap1.put(k, v);
+            openMap2.put(k, v);
+            
+            Integer v0 = map0.get(k);
+            Integer openV1 = openMap1.get(k);
+            Integer openV2 = openMap2.get(k);
+            boolean eq = eq(v0, openV1);
+            if (!eq) {
+                openMap1.get(k);
+                openMap1.put(k, v);
+                openMap1.get(k);
+                assert eq;
+            }
+            eq = eq(v0, openV2);
+            if (!eq) {
+                openMap2.get(k);
+                openMap2.put(k, v);
+                openMap2.get(k);
+                assert eq;
+            }
         }
 
         for (int i = 0; i < maxSize; i++) {
-            int v = r.nextInt(maxVal / 2);
-            map0.remove(v);
-            map1.remove(v);
-            map2.remove(v);
-            map3.remove(v);
-            map4.remove(v);
-            map5.remove(v);
-            map6.remove(v);
-            map7.remove(v);
-        }
+            int k = r.nextInt(maxVal / 2);
+            map0.remove(k);
+            openMap1.remove(k);
+            openMap2.remove(k);
 
-        for (int i = 0; i < maxSize; i++) {
-            Integer v0 = map0.get(i);
-            Integer v1 = map1.get(i);
-            Integer v2 = map2.get(i);
-            Integer v3 = map3.get(i);
-            Integer v4 = map4.get(i);
-            Integer v5 = map5.get(i);
-            Integer v6 = map6.get(i);
-            Integer v7 = map7.get(i);
-            assert eq(v0, v1);
-            assert eq(v0, v2);
-            assert eq(v0, v3);
-            assert eq(v0, v4);
-            assert eq(v0, v5);
-            assert eq(v0, v6);
-            assert eq(v0, v7);
+
+            Integer v0 = map0.get(k);
+            Integer openV1 = openMap1.get(k);
+            Integer openV2 = openMap2.get(k);
+            boolean eq = eq(v0, openV1);
+            if (!eq) {
+                openMap1.get(k);
+                openMap1.remove(k);
+                openMap1.get(k);
+                assert eq;
+            }
+            eq = eq(v0, openV2);
+            if (!eq) {
+                openMap2.get(k);
+                openMap2.remove(k);
+                openMap2.get(k);
+                assert eq;
+            }
         }
     }
 
