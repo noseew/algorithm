@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.ArrayBase01;
-import org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model.HashMap_base_04;
+import org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model.HashMap_base_05;
 
 import java.util.Random;
 
@@ -14,7 +14,7 @@ public abstract class AbstractSkipList<K extends Comparable<K>, V> {
     /**
      * map为了O(1)的方式定位到结点, 同时做到结点去重
      */
-    protected HashMap_base_04<K, SkipListBase01Linked.Node<K, V>> hashMap = new HashMap_base_04<>(8);
+    protected HashMap_base_05<K, SkipListBase01Linked.Node<K, V>> hashMap = new HashMap_base_05<>(8);
 
     /**
      * 索引层从1开始

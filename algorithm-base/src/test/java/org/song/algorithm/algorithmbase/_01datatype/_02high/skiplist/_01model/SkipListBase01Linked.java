@@ -291,7 +291,7 @@ public class SkipListBase01Linked<K extends Comparable<K>, V> extends AbstractSk
      * @param score 索引所关联的分数
      * @return
      */
-    protected void removeIndexAndNode(K k, double score) {
+    protected LinkIndex<K, V> removeIndexAndNode(K k, double score) {
 
         Node<K, V> prev = null;
         LinkIndex<K, V> x = headerIndex, next;
@@ -321,9 +321,10 @@ public class SkipListBase01Linked<K extends Comparable<K>, V> extends AbstractSk
             prev.next = prev.next.next;
             indexCount--;
         }
+        return null;
     }
 
-    protected void removeNode(K k, double score) {
+    protected Node<K, V> removeNode(K k, double score) {
 
         LinkIndex<K, V> x = headerIndex, next;
         while (x != null) { // y轴遍历
@@ -353,10 +354,11 @@ public class SkipListBase01Linked<K extends Comparable<K>, V> extends AbstractSk
                 // 从链表中删除
                 indexCount--;
                 prev.next = prev.next.next;
-                break;
+                return prev;
             }
             prev = nextNode;
         }
+        return null;
     }
 
     /**
@@ -447,16 +449,12 @@ public class SkipListBase01Linked<K extends Comparable<K>, V> extends AbstractSk
         return head;
     }
 
-    private void checkMinScorePut(double min) {
-        if (min < 0) {
-            throw new RuntimeException("min 不能小于 0");
-        }
+    protected void checkMinScorePut(double min) {
+        if (min < 0) throw new RuntimeException("min 不能小于 0");
     }
 
-    private void checkMinScoreQuery(double min) {
-        if (min < -1) {
-            throw new RuntimeException("min 不能小于 -1");
-        }
+    protected void checkMinScoreQuery(double min) {
+        if (min < -1) throw new RuntimeException("min 不能小于 -1");
     }
 
     /************************************* 打印方法 *************************************/
