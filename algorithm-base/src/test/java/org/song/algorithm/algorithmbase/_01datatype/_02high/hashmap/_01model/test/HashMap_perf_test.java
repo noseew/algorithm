@@ -13,12 +13,12 @@ public class HashMap_perf_test {
 
 
     /**
-     * 一次性hash VS 渐进式hash 不严谨测试  put
-     * 渐进式rehash效率高约 5%
+     * 一次性hash VS 渐进式hash
+     * 渐进式rehash效率高约 4%
      */
     @Test
     public void test_perf_put_01() {
-        int num = 50_0000;
+        int num = 10_0000;
         StopWatch stopWatch = new StopWatch();
 
         StopWatchUtils.warnup(() -> {
@@ -32,95 +32,39 @@ public class HashMap_perf_test {
             }
         });
 
-
-        StopWatchUtils.run(stopWatch, "Dict_base_01", () -> {
-            Dict_base_01<String, String> map = new Dict_base_01<>();
-            for (int i = 0; i < num; i++) {
-                map.put(UUID.randomUUID().toString(), "");
-            }
-        });
-
-        StopWatchUtils.run(stopWatch, "HashMap_base_03", () -> {
+        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "HashMap_base_03", () -> {
             HashMap_base_03<String, String> map2 = new HashMap_base_03<>();
             for (int i = 0; i < num; i++) {
                 map2.put(UUID.randomUUID().toString(), "");
             }
         });
-
-        StopWatchUtils.run(stopWatch, "HashMap_base_03", () -> {
-            HashMap_base_03<String, String> map2 = new HashMap_base_03<>();
-            for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
-            }
-        });
-
-        StopWatchUtils.run(stopWatch, "Dict_base_01", () -> {
-            Dict_base_01<String, String> map = new Dict_base_01<>();
-            for (int i = 0; i < num; i++) {
-                map.put(UUID.randomUUID().toString(), "");
-            }
-        });
-
-        System.out.println(stopWatch.prettyPrint());
-        System.out.println(StopWatchUtils.calculate(stopWatch));
-    }
-
-    @Test
-    public void test_perf_putGet_01() {
-        int num = 50_0000;
-        StopWatch stopWatch = new StopWatch();
-
-        StopWatchUtils.warnup(() -> {
-            HashMap_base_03<String, String> map = new HashMap_base_03<>();
-            for (int i = 0; i < num; i++) {
-                map.put(UUID.randomUUID().toString(), "");
-            }
+        Runnable r2 = () -> StopWatchUtils.run(stopWatch, "Dict_base_01", () -> {
             Dict_base_01<String, String> map2 = new Dict_base_01<>();
             for (int i = 0; i < num; i++) {
                 map2.put(UUID.randomUUID().toString(), "");
             }
         });
-
-
-        StopWatchUtils.run(stopWatch, "Dict_base_01", () -> {
-            Dict_base_01<String, String> map = new Dict_base_01<>();
-            for (int i = 0; i < num; i++) {
-                map.put(UUID.randomUUID().toString(), "");
+        for (int i = 0; i < 20; i++) {
+            if (i % 2 == 0) {
+                r2.run();
+                r1.run();
+            } else {
+                r1.run();
+                r2.run();
             }
-        });
-
-        StopWatchUtils.run(stopWatch, "HashMap_base_03", () -> {
-            HashMap_base_03<String, String> map2 = new HashMap_base_03<>();
-            for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
-            }
-        });
-
-        StopWatchUtils.run(stopWatch, "HashMap_base_03", () -> {
-            HashMap_base_03<String, String> map2 = new HashMap_base_03<>();
-            for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
-            }
-        });
-
-        StopWatchUtils.run(stopWatch, "Dict_base_01", () -> {
-            Dict_base_01<String, String> map = new Dict_base_01<>();
-            for (int i = 0; i < num; i++) {
-                map.put(UUID.randomUUID().toString(), "");
-            }
-        });
+        }
 
         System.out.println(stopWatch.prettyPrint());
         System.out.println(StopWatchUtils.calculate(stopWatch));
     }
 
     /**
-     * 链地址法 VS 二次探测法 不严谨测试  put
-     * 二次探测法效率高约 2%
+     * 链地址法 VS 二次探测法
+     * 二次探测法效率高约 4%
      */
     @Test
     public void test_perf_link_vs_open() {
-        int num = 5_0000;
+        int num = 10_0000;
         StopWatch stopWatch = new StopWatch();
 
         StopWatchUtils.warnup(() -> {
@@ -135,34 +79,27 @@ public class HashMap_perf_test {
         });
 
 
-
-        StopWatchUtils.run(stopWatch, "HashMap_openAddressing_02", () -> {
-            HashMap_openAddressing_02<String, String> map = new HashMap_openAddressing_02<>();
-            for (int i = 0; i < num; i++) {
-                map.put(UUID.randomUUID().toString(), "");
-            }
-        });
-
-        StopWatchUtils.run(stopWatch, "HashMap_base_03", () -> {
+        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "HashMap_base_03", () -> {
             HashMap_base_03<String, String> map2 = new HashMap_base_03<>();
             for (int i = 0; i < num; i++) {
                 map2.put(UUID.randomUUID().toString(), "");
             }
         });
-
-        StopWatchUtils.run(stopWatch, "HashMap_base_03", () -> {
-            HashMap_base_03<String, String> map2 = new HashMap_base_03<>();
+        Runnable r2 = () -> StopWatchUtils.run(stopWatch, "HashMap_openAddressing_02", () -> {
+            HashMap_openAddressing_02<String, String> map2 = new HashMap_openAddressing_02<>();
             for (int i = 0; i < num; i++) {
                 map2.put(UUID.randomUUID().toString(), "");
             }
         });
-
-        StopWatchUtils.run(stopWatch, "HashMap_openAddressing_02", () -> {
-            HashMap_openAddressing_02<String, String> map = new HashMap_openAddressing_02<>();
-            for (int i = 0; i < num; i++) {
-                map.put(UUID.randomUUID().toString(), "");
+        for (int i = 0; i < 20; i++) {
+            if (i % 2 == 0) {
+                r2.run();
+                r1.run();
+            } else {
+                r1.run();
+                r2.run();
             }
-        });
+        }
 
         System.out.println(stopWatch.prettyPrint());
         System.out.println(StopWatchUtils.calculate(stopWatch));
