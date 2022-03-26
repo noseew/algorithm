@@ -73,6 +73,8 @@ public class TreeTraverse {
         // 二叉树前序遍历   根-> 左-> 右
         preOrderTraversalWithStack2(root);
         System.out.println();
+        preOrderTraversalWithStack3(root);
+        System.out.println();
         // 二叉树中序遍历   左-> 根-> 右
         inOrderTraversalWithStack2(root);
         System.out.println();
@@ -164,6 +166,21 @@ public class TreeTraverse {
                 node = stack.pop(); // 左子节点遍历完, 开始反向遍历右子节点
             } else {
                 break; // 都遍历完, 结束遍历
+            }
+        }
+    }
+
+    private static void preOrderTraversalWithStack3(TreeNode node) {
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(node);
+        while (!stack.isEmpty()) {
+            TreeNode pop = stack.pop();
+            System.out.print(pop.val + " ");
+            if (pop.right != null) {
+                stack.push(pop.right);
+            }
+            if (pop.left != null) {
+                stack.push(pop.left);
             }
         }
     }
