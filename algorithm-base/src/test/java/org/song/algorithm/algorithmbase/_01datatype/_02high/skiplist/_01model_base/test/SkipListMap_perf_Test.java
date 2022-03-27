@@ -141,7 +141,7 @@ public class SkipListMap_perf_Test {
             }
         });
 
-        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListMap", () -> {
+        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListMapArray", () -> {
             SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>();
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);

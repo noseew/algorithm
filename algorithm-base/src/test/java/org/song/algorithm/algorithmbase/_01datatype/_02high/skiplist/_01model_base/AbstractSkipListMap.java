@@ -48,14 +48,13 @@ public abstract class AbstractSkipListMap<K extends Comparable<K>, V> {
      */
     protected int buildLevel(int maxLevel) {
         // 随机层高
-        int nextInt = r.nextInt(Integer.MAX_VALUE);
-        int level = 0;
+        int nextInt = r.nextInt();
+        int max = Math.min(maxLevel, this.maxLevel);
         // 最高层数 == headerIndex 的层数
-        for (int i = 1; i <= maxLevel && i <= this.maxLevel; i++) {
-            if ((nextInt & 0B1) != 0B1) break;
+        for (int i = 0; i <= max; i++) {
+            if ((nextInt & 0B1) != 0B1) return i;
             nextInt = nextInt >>> 1;
-            level++;
         }
-        return level;
+        return 0;
     }
 }
