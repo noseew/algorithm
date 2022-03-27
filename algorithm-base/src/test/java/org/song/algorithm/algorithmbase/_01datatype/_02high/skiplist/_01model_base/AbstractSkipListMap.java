@@ -26,12 +26,17 @@ public abstract class AbstractSkipListMap<K extends Comparable<K>, V> {
     public abstract int size();
 
     protected boolean less(K k1, K k2) {
-        // k==null, 说明是头结点
-        return k1 == null || k1.compareTo(k2) < 0;
+        // k==null, 说明是头结点, 头结点永远最小
+        if (k1 == null) return true;
+        if (k2 == null) return false;
+        return k1.compareTo(k2) < 0;
     }
 
     protected boolean gather(K k1, K k2) {
-        return k1 != null && k1.compareTo(k2) > 0;
+        // k==null, 说明是头结点, 头结点永远最小
+        if (k1 == null) return false;
+        if (k2 == null) return true;
+        return k1.compareTo(k2) > 0;
     }
 
     /**
