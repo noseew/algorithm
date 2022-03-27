@@ -11,8 +11,7 @@ import java.util.Random;
 public abstract class AbstractSkipListMap<K extends Comparable<K>, V> {
 
     protected final int maxLevel = 32;
-
-    protected double minKey = -1; // 最小分值, 只能出现在 headerIndex 中, 用户数据最小分值从0开始
+    protected int size;
 
     protected final Random r = new Random();
 
@@ -21,14 +20,6 @@ public abstract class AbstractSkipListMap<K extends Comparable<K>, V> {
     public abstract V get(K k);
 
     public abstract V remove(K k);
-
-    public abstract V getMin();
-
-    public abstract V getMax();
-
-    public abstract ArrayBase01<V> getByRange(K min, K max);
-
-    public abstract ArrayBase01<Node<K, V>> removeByRange(K min, K max);
 
     public abstract void clean();
 
@@ -61,29 +52,5 @@ public abstract class AbstractSkipListMap<K extends Comparable<K>, V> {
             level++;
         }
         return level;
-    }
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Builder
-    public static class Index<K, V> {
-        Node<K, V> next;
-    }
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Builder
-    public static class Node<K, V> {
-        K k;
-        V v;
-        Index<K, V>[] levels;
-        int ic; // 用于debug调试, 拥有索引层数
-
-        @Override
-        public String toString() {
-            return "(key=" + k + ",val=" + v + ")";
-        }
     }
 }

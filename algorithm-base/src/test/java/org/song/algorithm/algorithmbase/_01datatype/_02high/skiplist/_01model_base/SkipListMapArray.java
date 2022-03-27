@@ -1,12 +1,22 @@
 package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.ArrayBase01;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_redis.AbstractSkipList;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_redis.SkipListArray01;
 
 import java.util.Objects;
 
-public class SkipListMap<K extends Comparable<K>, V> extends AbstractSkipListMap<K, V> {
+/**
+ * 使用跳表实现 map, 区别于 JDK 跳表, 这里的索引采用数组实现
+ * 
+ * @param <K>
+ * @param <V>
+ */
+public class SkipListMapArray<K extends Comparable<K>, V> extends AbstractSkipListMap<K, V> {
     /**
      * 头临时节点
      * k=null
@@ -14,7 +24,7 @@ public class SkipListMap<K extends Comparable<K>, V> extends AbstractSkipListMap
     protected Node<K, V> header;
     protected int currentLevel = 1;
 
-    public SkipListMap() {
+    public SkipListMapArray() {
         Node<K, V> newNode = Node.<K, V>builder().build();
         buildIndex(maxLevel, newNode);
         header = newNode;
@@ -40,33 +50,17 @@ public class SkipListMap<K extends Comparable<K>, V> extends AbstractSkipListMap
     }
 
     @Override
-    public V getMin() {
-        return null;
-    }
-
-    @Override
-    public V getMax() {
-        return null;
-    }
-
-    @Override
-    public ArrayBase01<V> getByRange(K min, K max) {
-        return null;
-    }
-
-    @Override
-    public ArrayBase01<Node<K, V>> removeByRange(K min, K max) {
-        return null;
-    }
-
-    @Override
     public void clean() {
-
+        currentLevel = 1;
+        for (Index<K, V> level : header.levels) {
+            level.next = null;
+        }
+        size = 0;
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     protected void buildIndex(int level, Node<K, V> newNode) {
@@ -135,6 +129,7 @@ public class SkipListMap<K extends Comparable<K>, V> extends AbstractSkipListMap
             Node<K, V> nextNode = prev.levels[0].next;
             if (nextNode == null || gather(nextNode.k, k)) {
                 Node<K, V> newNode = Node.<K, V>builder().k(k).v(v).build();
+                size++;
                 // 新增节点
                 int level = buildLevel(currentLevel + 1);
                 level = Math.max(1, level);
@@ -226,6 +221,7 @@ public class SkipListMap<K extends Comparable<K>, V> extends AbstractSkipListMap
         while (prev != null) {
             Node<K, V> nextNode = prev.levels[0].next;
             if (nextNode != null && Objects.equals(nextNode.k, k)) {
+                size--;
                 oldV = nextNode.v;
                 prev.levels[0].next = nextNode.levels[0].next;
                 return oldV;
@@ -302,5 +298,31 @@ public class SkipListMap<K extends Comparable<K>, V> extends AbstractSkipListMap
             return null;
         }
         return hi.levels[1].next;
+    }
+
+
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class Index<K, V> {
+        Node<K, V> next;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class Node<K, V> {
+        K k;
+        V v;
+        Index<K, V>[] levels;
+        int ic; // 用于debug调试, 拥有索引层数
+
+        @Override
+        public String toString() {
+            return "(key=" + k + ",val=" + v + ")";
+        }
     }
 }

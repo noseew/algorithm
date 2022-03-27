@@ -2,17 +2,15 @@ package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_b
 
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05RB01;
-import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMap;
-import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_redis.SkipListArray01;
+import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapArray;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_redis.SkipListLinked01;
-import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_redis.SkipListLinked02;
 import org.song.algorithm.algorithmbase.utils.StopWatchUtils;
 import org.springframework.util.StopWatch;
 
 import java.util.Comparator;
 import java.util.Random;
 
-public class SkipListMap_perf_Test {
+public class SkipListMap_Array_perf_Test {
 
     private Random r = new Random();
 
@@ -32,7 +30,7 @@ public class SkipListMap_perf_Test {
                 int key = r.nextInt(maxVal);
                 skip1.put(key, 0, key);
             }
-            SkipListMap<Integer, Integer> skip2 = new SkipListMap<>();
+            SkipListMapArray<Integer, Integer> skip2 = new SkipListMapArray<>();
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip2.put(key, 0);
@@ -47,7 +45,7 @@ public class SkipListMap_perf_Test {
             }
         });
         Runnable r2 = () -> StopWatchUtils.run(stopWatch, "SkipListMap", () -> {
-            SkipListMap<Integer, Integer> skip2 = new SkipListMap<>();
+            SkipListMapArray<Integer, Integer> skip2 = new SkipListMapArray<>();
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip2.put(key, 0);
@@ -78,7 +76,7 @@ public class SkipListMap_perf_Test {
         StopWatch stopWatch = new StopWatch();
 
         StopWatchUtils.warnup(() -> {
-            SkipListMap<Integer, Integer> skip1 = new SkipListMap<>();
+            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>();
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip1.put(key, 0);
@@ -91,7 +89,7 @@ public class SkipListMap_perf_Test {
         });
 
         Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListMap", () -> {
-            SkipListMap<Integer, Integer> skip1 = new SkipListMap<>();
+            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>();
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip1.put(key, 0);
