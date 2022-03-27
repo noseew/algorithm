@@ -284,7 +284,7 @@ public class SkipListMap<K extends Comparable<K>, V> extends AbstractSkipListMap
             return;
         }
         sb.append("<-[");
-        for (int i = 1; i <= index.levels.length && i <= currentLevel; i++) {
+        for (int i = 2; i <= index.levels.length && i <= currentLevel; i++) {
             sb.append(i);
             if (i < index.levels.length) sb.append(", ");
         }

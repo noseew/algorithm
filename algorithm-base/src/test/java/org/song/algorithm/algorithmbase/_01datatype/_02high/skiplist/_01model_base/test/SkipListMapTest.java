@@ -20,13 +20,11 @@ public class SkipListMapTest {
             int val = r.nextInt(maxVal);
             int key = r.nextInt(maxVal / 10);
             skip1.put(key, val);
-            System.out.println(skip1.toString());
 
             if (i >= maxSize - 5) {
                 Integer v2 = skip1.remove(key);
                 System.out.println(v2);
             }
-            System.out.println(skip1.toString());
 
 
         }
