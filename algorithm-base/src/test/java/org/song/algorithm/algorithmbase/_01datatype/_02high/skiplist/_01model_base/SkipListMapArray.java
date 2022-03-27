@@ -4,9 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.ArrayBase01;
-import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_redis.AbstractSkipList;
-import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_redis.SkipListArray01;
 
 import java.util.Objects;
 
@@ -75,7 +72,6 @@ public class SkipListMapArray<K extends Comparable<K>, V> extends AbstractSkipLi
 
     protected Node<K, V> getNode(K k) {
         Node<K, V> x = this.header, next;
-        Node<K, V> prev = x;
         for (int i = currentLevel - 1; i >= 0; i--) { // y轴遍历
             next = x.levels[i].next;
             while (next != null) {  // x轴遍历
@@ -86,13 +82,13 @@ public class SkipListMapArray<K extends Comparable<K>, V> extends AbstractSkipLi
                     x = next;
                     // 向右跳
                     next = next.levels[i].next;
-                    prev = x;
                     continue;
                 }
                 // 跳过了 终止
                 break;
             }
         }
+        Node<K, V> prev = x;
         // 跳链表
         while (prev != null) {
             if (Objects.equals(prev.k, k)) return prev;
@@ -103,27 +99,26 @@ public class SkipListMapArray<K extends Comparable<K>, V> extends AbstractSkipLi
 
     protected V putOrUpdate(K k, V v) {
         Node<K, V> x = this.header, next;
-        Node<K, V> prev = x;
         V oldV = null;
         for (int i = currentLevel - 1; i >= 0; i--) { // y轴遍历
             next = x.levels[i].next;
             while (next != null) {  // x轴遍历
-                if (Objects.equals(next.k, k)) {
+                if (less(next.k, k)) {
+                    x = next;
+                    // 向右跳
+                    next = next.levels[i].next;
+                    continue;
+                } else if (Objects.equals(next.k, k)) {
                     // 相等则更新
                     oldV = next.v;
                     next.v = v;
                     return oldV;
-                } else if (less(next.k, k)) {
-                    x = next;
-                    // 向右跳
-                    next = next.levels[i].next;
-                    prev = x;
-                    continue;
                 }
                 // 跳过了 终止
                 break;
             }
         }
+        Node<K, V> prev = x;
         // 跳链表
         while (prev != null) {
             Node<K, V> nextNode = prev.levels[0].next;
@@ -193,7 +188,6 @@ public class SkipListMapArray<K extends Comparable<K>, V> extends AbstractSkipLi
 
     protected V doRemove(K k) {
         Node<K, V> x = this.header, next;
-        Node<K, V> prev = x;
         V oldV = null;
         for (int i = currentLevel - 1; i >= 0; i--) { // y轴遍历
             next = x.levels[i].next;
@@ -207,7 +201,6 @@ public class SkipListMapArray<K extends Comparable<K>, V> extends AbstractSkipLi
                     x = next;
                     // 向右跳
                     next = next.levels[i].next;
-                    prev = x;
                     continue;
                 }
                 // 跳过了 终止
@@ -217,6 +210,7 @@ public class SkipListMapArray<K extends Comparable<K>, V> extends AbstractSkipLi
         if (oldV != null) {
             return oldV;
         }
+        Node<K, V> prev = x;
         // 跳链表
         while (prev != null) {
             Node<K, V> nextNode = prev.levels[0].next;

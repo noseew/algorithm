@@ -77,7 +77,6 @@ public class SkipListMapLinked<K extends Comparable<K>, V> extends AbstractSkipL
 
     protected Node<K, V> getNode(K k) {
         Index<K, V> x = header, next;
-        Node<K, V> prev = x.node;
         while (x != null) { // y轴遍历
             next = x.right;
             while (next != null) { // x轴遍历
@@ -87,7 +86,6 @@ public class SkipListMapLinked<K extends Comparable<K>, V> extends AbstractSkipL
                     x = next;
                     // 向右跳
                     next = next.right;
-                    prev = x.node;
                     continue;
                 }
                 // 跳过了 终止
@@ -100,6 +98,7 @@ public class SkipListMapLinked<K extends Comparable<K>, V> extends AbstractSkipL
                 break;
             }
         }
+        Node<K, V> prev = x.node;
         while (prev != null) {
             Node<K, V> nextNode = prev.next;
             if (nextNode != null && Objects.equals(nextNode.k, k)) {
@@ -112,7 +111,6 @@ public class SkipListMapLinked<K extends Comparable<K>, V> extends AbstractSkipL
 
     protected V putOrUpdate(K k, V v) {
         Index<K, V> x = this.header, next;
-        Node<K, V> prev = x.node;
         V oldV = null;
         while (x != null) { // y轴遍历
             next = x.right;
@@ -125,7 +123,6 @@ public class SkipListMapLinked<K extends Comparable<K>, V> extends AbstractSkipL
                     x = next;
                     // 向右跳
                     next = next.right;
-                    prev = x.node;
                     continue;
                 }
                 // 跳过了 终止
@@ -138,6 +135,7 @@ public class SkipListMapLinked<K extends Comparable<K>, V> extends AbstractSkipL
                 break;
             }
         }
+        Node<K, V> prev = x.node;
         // 跳链表
         while (prev != null) {
             Node<K, V> nextNode = prev.next;
@@ -211,19 +209,16 @@ public class SkipListMapLinked<K extends Comparable<K>, V> extends AbstractSkipL
 
     protected V doRemove(K k) {
         Index<K, V> x = this.header, next;
-        Node<K, V> prev = x.node;
         V oldV = null;
         while (x != null) { // y轴遍历
             next = x.right;
             while (next != null) { // x轴遍历
                 if (Objects.equals(next.node.k, k)) {
                     x.right = next.right;
-                    prev = x.node;
                 } else if (less(next.node.k, k)) {
                     x = next;
                     // 向右跳
                     next = next.right;
-                    prev = x.node;
                     continue;
                 }
                 // 跳过了 终止
@@ -236,7 +231,8 @@ public class SkipListMapLinked<K extends Comparable<K>, V> extends AbstractSkipL
                 break;
             }
         }
-        
+
+        Node<K, V> prev = x.node;
         // 跳链表
         while (prev != null) {
             Node<K, V> nextNode = prev.next;
