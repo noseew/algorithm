@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model;
+package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_redis;
 
 import java.util.Objects;
 
@@ -10,7 +10,7 @@ import java.util.Objects;
  * 2. 更新时, 直接更新map中的值, 不需要重新put
  * 
  */
-public class SkipListBase01Linked02<K extends Comparable<K>, V> extends SkipListBase01Linked<K, V> {
+public class SkipListLinked02<K extends Comparable<K>, V> extends SkipListLinked01<K, V> {
 
     @Override
     public Node<K, V> put(K k, V v, double score) {

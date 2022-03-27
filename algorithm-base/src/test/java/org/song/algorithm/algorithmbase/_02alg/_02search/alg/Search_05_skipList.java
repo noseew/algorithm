@@ -1,8 +1,8 @@
 package org.song.algorithm.algorithmbase._02alg._02search.alg;
 
 import org.junit.Test;
-import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model.AbstractSkipList;
-import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model.SkipListBase02LinkedRank;
+import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_redis.AbstractSkipList;
+import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_redis.SkipListLinked03Rank;
 import org.song.algorithm.algorithmbase._02alg._01sort.AbstractSort;
 import org.song.algorithm.algorithmbase._02alg._02search.AbstractSearch;
 
@@ -25,10 +25,10 @@ public class Search_05_skipList {
 
     public static class SkipListSearch extends AbstractSearch {
 
-        private SkipListBase02LinkedRank<Integer, Integer> skipList;
+        private SkipListLinked03Rank<Integer, Integer> skipList;
 
         public SkipListSearch() {
-            skipList = new SkipListBase02LinkedRank<>();
+            skipList = new SkipListLinked03Rank<>();
             Comparable[] build = AbstractSort.build(0, 10, 10);
             for (int i = 0; i < build.length; i++) {
                 skipList.put((Integer) build[i], (Integer) build[i], (Integer) build[i]);

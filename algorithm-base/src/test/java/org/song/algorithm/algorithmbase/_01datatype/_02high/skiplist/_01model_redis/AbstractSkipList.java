@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model;
+package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_redis;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,12 +9,18 @@ import org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model.Has
 
 import java.util.Random;
 
+/**
+ * 参考redis中的 zset 实现, 增加分数和排名功能
+ * 
+ * @param <K>
+ * @param <V>
+ */
 public abstract class AbstractSkipList<K extends Comparable<K>, V> {
 
     /**
      * map为了O(1)的方式定位到结点, 同时做到结点去重
      */
-    protected HashMap_base_05<K, SkipListBase01Linked.Node<K, V>> hashMap = new HashMap_base_05<>(8);
+    protected HashMap_base_05<K, SkipListLinked01.Node<K, V>> hashMap = new HashMap_base_05<>(8);
 
     /**
      * 索引层从1开始

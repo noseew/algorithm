@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model;
+package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_redis;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +15,7 @@ import java.util.Objects;
  * 
  * redis中单项链表的指针是指向上一个的, 这样和索引一起就形成了类似于双向链表的功能, 这里暂时还是同向单项链表
  */
-public class SkipListBase03Array<K extends Comparable<K>, V> extends AbstractSkipList<K, V> {
+public class SkipListArray01<K extends Comparable<K>, V> extends AbstractSkipList<K, V> {
 
     protected LinkedNode<K, V> headerIndex;
     /**
@@ -24,7 +24,7 @@ public class SkipListBase03Array<K extends Comparable<K>, V> extends AbstractSki
      */
     protected int indexCount = 0;
 
-    public SkipListBase03Array() {
+    public SkipListArray01() {
         // 临时头node节点
         LinkedNode<K, V> node = new LinkedNode<>();
         node.score = minScore; // 头结点分值最小, 其他分值必须 >= 0

@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model;
+package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_redis;
 
 import lombok.Data;
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.ArrayBase01;
@@ -10,14 +10,14 @@ import java.util.Objects;
  * 跳表
  * SkipListBase01 增加rank
  */
-public class SkipListBase02LinkedRank<K extends Comparable<K>, V> extends AbstractSkipList<K, V> {
+public class SkipListLinked03Rank<K extends Comparable<K>, V> extends AbstractSkipList<K, V> {
 
     protected LinkIndex<K, V> headerIndex;
 
     protected int indexCount = 0;
     protected int NO = 0;
 
-    public SkipListBase02LinkedRank() {
+    public SkipListLinked03Rank() {
         // 临时头node节点
         Node<K, V> node = new Node<>();
         node.score = minScore; // 头结点分值最小, 其他分值必须 >= 0

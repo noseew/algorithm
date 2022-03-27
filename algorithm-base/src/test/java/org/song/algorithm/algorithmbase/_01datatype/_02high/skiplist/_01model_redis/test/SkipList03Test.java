@@ -1,9 +1,9 @@
-package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model.test;
+package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_redis.test;
 
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.ArrayBase01;
-import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model.AbstractSkipList;
-import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model.SkipListBase03Array;
+import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_redis.AbstractSkipList;
+import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_redis.SkipListArray01;
 
 import java.util.Objects;
 import java.util.Random;
@@ -18,7 +18,7 @@ public class SkipList03Test {
     @Test
     public void test01() {
 
-        SkipListBase03Array<Integer, Integer> skip1 = new SkipListBase03Array<>();
+        SkipListArray01<Integer, Integer> skip1 = new SkipListArray01<>();
         for (int i = 0; i < maxSize; i++) {
             int val = r.nextInt(maxVal);
             int key = r.nextInt(maxVal / 10);
@@ -52,7 +52,7 @@ public class SkipList03Test {
 
         for (int i = 0; i < 10; i++) {
 
-            SkipListBase03Array<Integer, Integer> skip1 = new SkipListBase03Array<>();
+            SkipListArray01<Integer, Integer> skip1 = new SkipListArray01<>();
             for (int j = 0; j < maxSize; j++) {
                 int key = r.nextInt(maxVal);
                 int val = r.nextInt(maxVal);
@@ -68,7 +68,7 @@ public class SkipList03Test {
 
             System.out.println("put get OK");
 
-            ArrayBase01<SkipListBase03Array.Node<Integer, Integer>> byScore = skip1.getNodesByScore(-1, -1);
+            ArrayBase01<SkipListArray01.Node<Integer, Integer>> byScore = skip1.getNodesByScore(-1, -1);
             for (int k = 0; k < byScore.length() - 1; k++) {
                 boolean b = byScore.get(k).getScore() <= byScore.get(k + 1).getScore();
                 if (!b) {
@@ -95,7 +95,7 @@ public class SkipList03Test {
                 skip1.put(key, val, score);
                 skip1.remove(key);
 
-                ArrayBase01<SkipListBase03Array.Node<Integer, Integer>> nodes = skip1.getNodesByScore(score, score + 1);
+                ArrayBase01<SkipListArray01.Node<Integer, Integer>> nodes = skip1.getNodesByScore(score, score + 1);
                 boolean noHas = true;
                 for (int k = 0; k < nodes.length(); k++) {
                     noHas = noHas && !Objects.equals(nodes.get(k).getV(), val);
