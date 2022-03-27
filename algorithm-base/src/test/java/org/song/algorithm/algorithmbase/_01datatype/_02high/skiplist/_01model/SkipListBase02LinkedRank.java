@@ -95,24 +95,6 @@ public class SkipListBase02LinkedRank<K extends Comparable<K>, V> extends Abstra
     }
 
     @Override
-    public double getMinScore() {
-        Node<K, V> next = headerIndex.node.next;
-        if (next != null) {
-            return next.score;
-        }
-        return headerIndex.node.score;
-    }
-
-    @Override
-    public double getMaxScore() {
-        Node<K, V> maxNode = getMaxNode();
-        if (maxNode != null) {
-            return maxNode.score;
-        }
-        return -1;
-    }
-
-    @Override
     public Node<K, V> getByRank(int rank) {
 
         int r = 0;

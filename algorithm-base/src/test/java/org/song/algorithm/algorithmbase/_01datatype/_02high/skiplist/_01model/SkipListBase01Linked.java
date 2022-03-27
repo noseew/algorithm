@@ -120,24 +120,6 @@ public class SkipListBase01Linked<K extends Comparable<K>, V> extends AbstractSk
     }
 
     @Override
-    public double getMinScore() {
-        Node<K, V> next = headerIndex.node.next;
-        if (next != null) {
-            return next.score;
-        }
-        return headerIndex.node.score;
-    }
-
-    @Override
-    public double getMaxScore() {
-        Node<K, V> maxNode = getMaxNode();
-        if (maxNode != null) {
-            return maxNode.score;
-        }
-        return -1;
-    }
-
-    @Override
     public Node<K, V> getByRank(int rank) {
         return null;
     }

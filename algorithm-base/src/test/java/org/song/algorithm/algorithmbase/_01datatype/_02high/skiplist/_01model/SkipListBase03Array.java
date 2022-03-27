@@ -101,24 +101,6 @@ public class SkipListBase03Array<K extends Comparable<K>, V> extends AbstractSki
     }
 
     @Override
-    public double getMinScore() {
-        Node<K, V> next = headerIndex.next;
-        if (next != null) {
-            return next.score;
-        }
-        return headerIndex.score;
-    }
-
-    @Override
-    public double getMaxScore() {
-        Node<K, V> maxNode = getMaxNode();
-        if (maxNode != null) {
-            return maxNode.score;
-        }
-        return -1;
-    }
-
-    @Override
     public Node<K, V> getByRank(int rank) {
         return null;
     }

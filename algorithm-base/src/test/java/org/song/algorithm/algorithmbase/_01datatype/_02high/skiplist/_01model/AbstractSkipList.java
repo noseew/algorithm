@@ -40,10 +40,6 @@ public abstract class AbstractSkipList<K extends Comparable<K>, V> {
 
     public abstract Node<K, V> getMaxNode();
 
-    public abstract double getMinScore();
-
-    public abstract double getMaxScore();
-
     public abstract Node<K, V> getByRank(int rank);
 
     public abstract int getKeyRank(K k);

@@ -117,28 +117,24 @@ public class SkipList01Test {
                 
                 skip1.put(key, val, score);
 
-                double maxScore = skip1.getMaxScore();
-                ArrayBase01<AbstractSkipList.Node<Integer, Integer>> maxList = skip1.getByScore(maxScore, maxScore + 1);
+                AbstractSkipList.Node<Integer, Integer> maxNode = skip1.getMaxNode();
+                ArrayBase01<AbstractSkipList.Node<Integer, Integer>> maxList = skip1.getByScore(maxNode.getScore(), maxNode.getScore() + 1);
                 boolean hasMax = false;
-                AbstractSkipList.Node<Integer, Integer> maxVal = skip1.getMaxNode();
                 for (int k = 0; k < maxList.length(); k++) {
-                    hasMax = hasMax || Objects.equals(maxList.get(k).getV(), maxVal.getV());
-                }
+                    hasMax = hasMax || Objects.equals(maxList.get(k).getV(), maxNode.getV());
+                }                                                                                                                                                                                 
                 if (!hasMax) {
-                    skip1.getMaxNode();
                     assert hasMax;
                 }
 
-                double minScore = skip1.getMinScore();
-                ArrayBase01<AbstractSkipList.Node<Integer, Integer>> minList = skip1.getByScore(minScore, minScore + 2);
+                AbstractSkipList.Node<Integer, Integer> minNode = skip1.getMinNode();
+                ArrayBase01<AbstractSkipList.Node<Integer, Integer>> minList = skip1.getByScore(minNode.getScore(), minNode.getScore() + 2);
                 boolean hasMin = false;
-                AbstractSkipList.Node<Integer, Integer> minVal = skip1.getMinNode();
                 for (int k = 0; k < minList.length(); k++) {
-                    hasMin = hasMin || Objects.equals(minList.get(k).getV(), minVal.getV());
+                    hasMin = hasMin || Objects.equals(minList.get(k).getV(), minNode.getV());
                 }
                 if (!hasMin) {
-                    skip1.getMinNode();
-                    skip1.getByScore(-1, minScore + 2);
+                    skip1.getByScore(-1, minNode.getScore() + 2);
                     assert hasMin;
                 }
             }
