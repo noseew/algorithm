@@ -75,14 +75,14 @@ public class SkipListMapArray<K extends Comparable<K>, V> extends AbstractSkipLi
         for (int i = currentLevel - 1; i >= 0; i--) { // y轴遍历
             next = x.levels[i].next;
             while (next != null) {  // x轴遍历
-                if (Objects.equals(next.k, k)) {
-                    // 相等则返回
-                    return next;
-                } else if (less(next.k, k)) {
+                if (less(next.k, k)) {
                     x = next;
                     // 向右跳
                     next = next.levels[i].next;
                     continue;
+                }else if (Objects.equals(next.k, k)) {
+                    // 相等则返回
+                    return next;
                 }
                 // 跳过了 终止
                 break;

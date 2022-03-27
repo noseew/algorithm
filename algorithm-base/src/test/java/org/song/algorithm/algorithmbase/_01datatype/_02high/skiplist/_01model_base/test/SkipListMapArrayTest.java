@@ -7,8 +7,8 @@ import java.util.Random;
 
 public class SkipListMapArrayTest {
 
-    private int maxVal = 1000;
-    private int maxSize = 50;
+    private int maxVal = 10000;
+    private int maxSize = 500;
 
     private Random r = new Random();
 

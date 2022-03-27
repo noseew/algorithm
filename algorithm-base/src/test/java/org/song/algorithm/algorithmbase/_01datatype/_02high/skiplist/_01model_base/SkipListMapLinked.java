@@ -154,18 +154,16 @@ public class SkipListMapLinked<K extends Comparable<K>, V> extends AbstractSkipL
                     return null;
                 }
 
-                Index<K, V> y, n;
+                Index<K, V> y = header, n = newIndex;
                 if (newIndex.level > header.level) {
                     // 需要升索引
                     upHead(newIndex);
                     y = header.down;
                     n = newIndex.down;
                 } else {
-                    y = header;
                     for (int l = y.level; l > newIndex.level; l--) {
                         y = y.down;
                     }
-                    n = newIndex;
                 }
                 // 串索引
                 addIndex(y, n);
