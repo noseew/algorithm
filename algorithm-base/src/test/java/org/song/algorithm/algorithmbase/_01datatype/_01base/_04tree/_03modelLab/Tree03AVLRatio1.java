@@ -1,11 +1,11 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._03modelLab;
 
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03AVL;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03AVL01;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.TreeNode;
 
 import java.util.Comparator;
 
-public class Tree03AVLRatio1<V extends Comparable<V>> extends Tree03AVL<V> {
+public class Tree03AVLRatio1<V extends Comparable<V>> extends Tree03AVL01<V> {
     /**
      * AVL 平衡因子, 也就是左右子树高度差的绝对值, 默认是1, 当大于这个值时, 树需要调整, 否则不需要调整
      * -    是否可以通过调整平衡因子从而达到类似于红黑树的效果呢? 比如降低调整的频率

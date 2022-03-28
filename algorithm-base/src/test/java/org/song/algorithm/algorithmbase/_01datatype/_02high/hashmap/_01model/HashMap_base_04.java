@@ -1,6 +1,6 @@
 package org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model;
 
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03AVL;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03AVL01;
 import org.song.algorithm.algorithmbase.utils.Strings;
 
 import java.util.Comparator;
@@ -335,7 +335,7 @@ public class HashMap_base_04<K extends Comparable<K>, V> extends HashMap_base_03
     }
 
     /**
-     * AVL树, 具体参见 {@link Tree03AVL}
+     * AVL树, 具体参见 {@link Tree03AVL01}
      * 由于HashMap中每个链表头都是一个树的root,
      * 所以 树的操作方法都在树节点中
      *

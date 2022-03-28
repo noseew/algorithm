@@ -1,7 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._02alg;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03AVL;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03AVL01;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.TreeNode;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree.printer.BTreeUtils;
 
@@ -13,7 +13,7 @@ import java.util.Stack;
 public class TreeTraverse {
 
     private TreeNode<Integer> initAVLTreeNode(int count) {
-        Tree03AVL<Integer> tree = new Tree03AVL<>(Comparator.comparing(Integer::doubleValue));
+        Tree03AVL01<Integer> tree = new Tree03AVL01<>(Comparator.comparing(Integer::doubleValue));
         for (int i = 0; i < count; i++) {
             tree.add(i);
         }

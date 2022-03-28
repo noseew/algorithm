@@ -1,7 +1,7 @@
 package org.song.algorithm.algorithmbase._02alg._02search.alg;
 
 import org.junit.Test;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03AVL;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03AVL01;
 import org.song.algorithm.algorithmbase._02alg._01sort.AbstractSort;
 import org.song.algorithm.algorithmbase._02alg._02search.AbstractSearch;
 
@@ -28,10 +28,10 @@ public class Search_03_Tree {
 
     public static class TreeSearch extends AbstractSearch {
 
-        private Tree03AVL<Integer> tree;
+        private Tree03AVL01<Integer> tree;
 
         public TreeSearch() {
-            tree = new Tree03AVL<>(Comparator.comparing(Integer::doubleValue));
+            tree = new Tree03AVL01<>(Comparator.comparing(Integer::doubleValue));
             Comparable[] build = AbstractSort.build(0, 10, 10);
             for (int i = 0; i < build.length; i++) {
                 tree.add((Integer) build[i]);

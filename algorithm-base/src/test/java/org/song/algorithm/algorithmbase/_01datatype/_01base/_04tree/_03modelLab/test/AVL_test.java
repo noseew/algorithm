@@ -1,7 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._03modelLab.test;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03AVL;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03AVL01;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._03modelLab.Tree03AVLRatio1;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._03modelLab.Tree03AVLRatio2;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._03modelLab.Tree03AVLRatioTimes;
@@ -16,7 +16,7 @@ public class AVL_test {
      */
     @Test
     public void test_02_start() {
-        Tree03AVL<Integer> tree1 = new Tree03AVL<>(Comparator.comparing(Integer::doubleValue));
+        Tree03AVL01<Integer> tree1 = new Tree03AVL01<>(Comparator.comparing(Integer::doubleValue));
         Tree03AVLRatio1<Integer> tree2 = new Tree03AVLRatio1<>(Comparator.comparing(Integer::doubleValue));
         Tree03AVLRatio2<Integer> tree3 = new Tree03AVLRatio2<>(Comparator.comparing(Integer::doubleValue));
 

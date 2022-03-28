@@ -2,7 +2,7 @@ package org.song.algorithm.algorithmbase._01datatype._01base._04tree._02alg;
 
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02BST01;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03AVL;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03AVL01;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.node.TreeNode;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree.printer.BTreeUtils;
 
@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class TreeAlg {
 
     private TreeNode<Integer> initAVLTreeNode(int count) {
-        Tree03AVL<Integer> tree = new Tree03AVL<>(Comparator.comparing(Integer::doubleValue));
+        Tree03AVL01<Integer> tree = new Tree03AVL01<>(Comparator.comparing(Integer::doubleValue));
         for (int i = 0; i < count; i++) {
             tree.add(i);
         }
@@ -27,8 +27,8 @@ public class TreeAlg {
         return tree.root;
     }
 
-    private Tree03AVL<Integer> initAVLTree(int count) {
-        Tree03AVL<Integer> tree = new Tree03AVL<>(Comparator.comparing(Integer::doubleValue));
+    private Tree03AVL01<Integer> initAVLTree(int count) {
+        Tree03AVL01<Integer> tree = new Tree03AVL01<>(Comparator.comparing(Integer::doubleValue));
         for (int i = 0; i < count; i++) {
             tree.add(i);
         }
@@ -61,7 +61,7 @@ public class TreeAlg {
      */
     @Test
     public void test_04_restore() {
-        Tree03AVL<Integer> avlTree = initAVLTree(20);
+        Tree03AVL01<Integer> avlTree = initAVLTree(20);
         BTreeUtils.print(avlTree.root, true);
 
     }

@@ -18,14 +18,14 @@ import java.util.Comparator;
  *
  * @param <V>
  */
-public class Tree03AVL<V extends Comparable<V>> extends Tree02BST03<V> {
+public class Tree03AVL01<V extends Comparable<V>> extends Tree02BST03<V> {
 
     /**
      * 旋转次数
      */
     public int rotateTimes;
 
-    public Tree03AVL(Comparator<V> comparator) {
+    public Tree03AVL01(Comparator<V> comparator) {
         super(comparator);
     }
 

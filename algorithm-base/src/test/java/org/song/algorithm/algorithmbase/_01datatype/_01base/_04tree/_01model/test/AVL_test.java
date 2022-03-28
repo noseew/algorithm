@@ -1,10 +1,11 @@
 package org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.test;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02BST01;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree.printer.BTreeUtils;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.AbsBSTTree;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03AVL;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree02BST01;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03AVL01;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03AVL02;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree.printer.BTreeUtils;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -15,8 +16,9 @@ public class AVL_test {
     private final int valueSize = 20;
 
     @Test
-    public void test_01_start() {
-        Tree03AVL<Integer> tree = new Tree03AVL<>(Comparator.comparing(Integer::doubleValue));
+    public void test_Tree03AVL01_start() {
+        Tree03AVL01<Integer> tree = new Tree03AVL01<>(Comparator.comparing(Integer::doubleValue));
+//        Tree03AVL02<Integer> tree = new Tree03AVL02<>(Comparator.comparing(Integer::doubleValue));
 
         Random random = new Random();
         for (int i = 0; i < 30; i++) {
@@ -31,7 +33,7 @@ public class AVL_test {
 
     @Test
     public void test_remove() {
-        Tree03AVL<Integer> tree = new Tree03AVL<>(Comparator.comparing(Integer::doubleValue));
+        Tree03AVL01<Integer> tree = new Tree03AVL01<>(Comparator.comparing(Integer::doubleValue));
 
         for (int i = 0; i < 20; i++) {
             tree.add(i);
@@ -45,7 +47,8 @@ public class AVL_test {
     
     @Test
     public void test_remove2() {
-        Tree03AVL<Integer> tree = new Tree03AVL<>(Comparator.comparing(Integer::doubleValue));
+//        Tree03AVL01<Integer> tree = new Tree03AVL01<>(Comparator.comparing(Integer::doubleValue));
+        Tree03AVL02<Integer> tree = new Tree03AVL02<>(Comparator.comparing(Integer::doubleValue));
         tree.add(55);
         tree.add(38);
         tree.add(76);
@@ -93,25 +96,34 @@ public class AVL_test {
     @Test
     public void test_diff_BST_add() {
         // avl 和 bst 是否是同一棵树
-        Tree03AVL<Integer> avl = new Tree03AVL<>(Comparator.comparing(Integer::doubleValue));
-        Tree02BST01<Integer> bst = new Tree02BST01<>(Comparator.comparing(Integer::doubleValue));
+        Tree03AVL01<Integer> avl = new Tree03AVL01<>(Comparator.comparing(Integer::doubleValue));
+//        Tree02BST01<Integer> bst = new Tree02BST01<>(Comparator.comparing(Integer::doubleValue));
+        Tree03AVL02<Integer> avl2 = new Tree03AVL02<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
         for (int i = 0; i < valueSize; i++) {
             int v = random.nextInt(maxValue);
             avl.add(v);
-            bst.add(v);
+//            bst.add(v);
+            avl2.add(v);
         }
 
-        if (!BTreeUtils.eq(avl, bst)) {
+//        if (!BTreeUtils.eq(avl, bst)) {
+//            System.out.println(BTreeUtils.print(avl.root, false));
+//            System.out.println(BTreeUtils.print(bst.root, false));
+//            assert false;
+//        }
+
+        if (!BTreeUtils.eq(avl, avl2)) {
             System.out.println(BTreeUtils.print(avl.root, false));
-            System.out.println(BTreeUtils.print(bst.root, false));
+            System.out.println(BTreeUtils.print(avl2.root, false));
             assert false;
         }
     }
 
     @Test
     public void test_isBalance() {
-        Tree03AVL<Integer> avl = new Tree03AVL<>(Comparator.comparing(Integer::doubleValue));
+//        Tree03AVL01<Integer> avl = new Tree03AVL01<>(Comparator.comparing(Integer::doubleValue));
+        Tree03AVL02<Integer> avl = new Tree03AVL02<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
         for (int i = 0; i < valueSize; i++) {
             int v = random.nextInt(maxValue);
@@ -148,7 +160,7 @@ public class AVL_test {
 
         Set<Integer> set = new HashSet<>(valueSize);
 
-        Tree03AVL<Integer> tree = new Tree03AVL<>(Comparator.comparing(Integer::doubleValue));
+        Tree03AVL01<Integer> tree = new Tree03AVL01<>(Comparator.comparing(Integer::doubleValue));
         Random random = new Random();
         for (int i = 0; i < valueSize; i++) {
             int v = random.nextInt(maxValue);
