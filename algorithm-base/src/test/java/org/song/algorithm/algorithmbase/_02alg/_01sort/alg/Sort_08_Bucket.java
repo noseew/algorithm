@@ -54,7 +54,7 @@ public class Sort_08_Bucket {
 
             // 分桶排序
             int index = 0;
-            AbstractSort sort = new Sort_03_Insert.InsertSort();
+            AbstractSort sort = new Sort_03_Insert.InsertSort1();
             for (ArrayBase01<Comparable> bucket : buckets) {
                 if (bucket.isEmpty()) {
                     continue;
