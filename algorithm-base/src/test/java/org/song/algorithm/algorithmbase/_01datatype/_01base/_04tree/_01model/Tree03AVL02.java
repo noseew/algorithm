@@ -8,7 +8,8 @@ import java.util.Comparator;
  * 平衡二叉树
  * 
  * 采用循环的方式实现 新增/删除 调整
- * TODO 未完成, 未通过完整测试
+ * node 节点有parent指针, 
+ * 旋转的时候不需要将新的父节点返回
  */
 public class Tree03AVL02<V extends Comparable<V>> extends Tree03AVL01<V> {
 
@@ -77,26 +78,6 @@ public class Tree03AVL02<V extends Comparable<V>> extends Tree03AVL01<V> {
         return balanceInsertion(xp);
     }
 
-
-
-    /**
-     * 新增修正
-     *
-     * @param x
-     * @return 返回新的 parent 节点
-     */
-    protected TreeNode<V> balanceInsertion(TreeNode<V> x) {
-        while (x != null) {
-            x = balance(x);
-            if (x.parent == null) {
-                root = x;
-                return x;
-            }
-            x = x.parent;
-        }
-        return x;
-    }
-
     /**
      * 采用循环遍历方式, 查找节点
      *
@@ -139,6 +120,51 @@ public class Tree03AVL02<V extends Comparable<V>> extends Tree03AVL01<V> {
         }
         size--;
         balanceInsertion(x);
+    }
+
+    protected TreeNode<V> balanceInsertion(TreeNode<V> x) {
+        if (x == null) {
+            return x;
+        }
+        while (x != null) {
+            balance(x);
+            x = x.parent;
+        }
+        return x;
+    }
+
+    protected TreeNode<V> balance(TreeNode<V> x) {
+        if (x == null) {
+            return x;
+        }
+
+        // 左高右低
+        if (getHeight(x.left) - getHeight(x.right) > 1) {
+            if (getHeight(x.left.left) >= getHeight(x.left.right)) {
+                // LL型 / 右旋转
+                rightRotate(x);
+            } else {
+                // LR型 < 先左旋转再右旋转
+                leftRotate(x.left);
+                rightRotate(x);
+            }
+        }
+        // 右高左低
+        else if (getHeight(x.right) - getHeight(x.left) > 1) {
+            if (getHeight(x.right.right) >= getHeight(x.right.left)) {
+                // RR型 \ 左旋转
+                leftRotate(x);
+            } else {
+                // RL型 > 先右旋转再左旋转
+                rightRotate(x.right);
+                leftRotate(x);
+            }
+        }
+
+        // 更新高度
+        x.height = Math.max(getHeight(x.left), getHeight(x.right)) + 1;
+        return x;
+
     }
 
 
