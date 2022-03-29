@@ -105,6 +105,23 @@ public class AVL_test {
             avl.add(v);
 //            bst.add(v);
             avl2.add(v);
+
+            boolean eq = eq(avl.get(v), avl2.get(v));
+            if (!eq) {
+                avl2.get(v);
+                avl2.add(v);
+                avl2.get(v);
+                assert eq;
+            }
+            eq = avl.size() == avl2.size();
+            if (!eq) {
+                avl2.get(v);
+                avl2.add(v);
+                avl2.get(v);
+                assert eq;
+            }
+            
+
         }
 
 //        if (!BTreeUtils.eq(avl, bst)) {
@@ -182,4 +199,13 @@ public class AVL_test {
             }
         }
     }
+
+
+    public boolean eq(Object v1, Object v2) {
+        if (v1 == null || v2 == null) {
+            return true;
+        }
+        return Objects.equals(v1, v2);
+    }
+
 }

@@ -26,7 +26,7 @@ public class Tree03AVL02<V extends Comparable<V>> extends Tree03AVL01<V> {
     @Override
     public boolean add(V v) {
         int size = this.size;
-        root = insert_traverse(root, v);
+        insert_traverse(root, v);
         return size > this.size;
     }
 
@@ -48,7 +48,9 @@ public class Tree03AVL02<V extends Comparable<V>> extends Tree03AVL01<V> {
      */
     protected TreeNode<V> insert_traverse(TreeNode<V> parent, V v) {
         if (parent == null) {
-            return newNode(v);
+            TreeNode<V> node = newNode(v);
+            root = node;
+            return node;
         }
 
         // 获取v的父节点, 如果v存在就是v的父节点, 如果v不存在就是v应该插入的父节点
@@ -72,7 +74,7 @@ public class Tree03AVL02<V extends Comparable<V>> extends Tree03AVL01<V> {
             xp.right = x;
         }
 
-        return balanceInsertion(x);
+        return balanceInsertion(xp);
     }
 
 
@@ -87,6 +89,7 @@ public class Tree03AVL02<V extends Comparable<V>> extends Tree03AVL01<V> {
         while (x != null) {
             x = balance(x);
             if (x.parent == null) {
+                root = x;
                 return x;
             }
             x = x.parent;
@@ -135,11 +138,7 @@ public class Tree03AVL02<V extends Comparable<V>> extends Tree03AVL01<V> {
             x.parent.right = replacement; // 删除的是右子节点
         }
         size--;
-        if (replacement != null) {
-            balanceInsertion(replacement);
-        } else {
-            balanceInsertion(x);
-        }
+        balanceInsertion(x);
     }
 
 
