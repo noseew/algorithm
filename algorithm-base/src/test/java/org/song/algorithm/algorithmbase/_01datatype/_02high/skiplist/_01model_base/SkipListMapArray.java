@@ -98,7 +98,6 @@ public class SkipListMapArray<K extends Comparable<K>, V> extends AbstractSkipLi
 
     protected V putOrUpdate(K k, V v) {
         Node<K, V> x = this.header, next;
-        V oldV = null;
         for (int i = currentLevel - 1; i >= 0; i--) { // y轴遍历
             next = x.levels[i].next;
             while (next != null) {  // x轴遍历
@@ -107,49 +106,39 @@ public class SkipListMapArray<K extends Comparable<K>, V> extends AbstractSkipLi
                     next = next.levels[i].next;
                     continue;
                 } else if (Objects.equals(next.k, k)) { // 相等则更新
-                    oldV = next.v;
+                    V oldV = next.v;
                     next.v = v;
                     return oldV;
                 }
                 break; // 跳过了 终止
             }
         }
-        Node<K, V> prev = x;
-        // 跳链表
-        while (prev != null) {
-            Node<K, V> nextNode = prev.levels[0].next;
-            if (nextNode == null || gather(nextNode.k, k)) {
-                Node<K, V> newNode = Node.<K, V>builder().k(k).v(v).build();
-                size++;
-                // 新增节点
-                int level = buildLevel(currentLevel + 1);
-                level = Math.max(1, level);
-                buildIndex(level, newNode);
-                // 串链表
-                prev.levels[0].next = newNode;
-                newNode.levels[0].next = nextNode;
+        
+        if (x == null) return null;
 
-                if (level == 1) {
-                    // 无需串索引
-                    return null;
-                }
+        Node<K, V> nextNode = x.levels[0].next;
+        if (nextNode == null || gather(nextNode.k, k)) {
+            // 新增节点
+            Node<K, V> newNode = Node.<K, V>builder().k(k).v(v).build();
+            size++;
+            int level = buildLevel(currentLevel + 1);
+            level = Math.max(1, level);
+            buildIndex(level, newNode);
+            // 串链表
+            x.levels[0].next = newNode;
+            newNode.levels[0].next = nextNode;
 
-                int startIndex = newNode.levels.length - 1;
-                if (newNode.levels.length > currentLevel) {
-                    // 需要升索引
-                    upHead(newNode);
-                    startIndex = newNode.levels.length - 2;
-                }
-                // 串索引
-                addIndex(startIndex, newNode);
-                break;
-            } else if (Objects.equals(nextNode.k, k)) {
-                // 相等则更新
-                oldV = nextNode.v;
-                nextNode.v = v;
-                return oldV;
+            // 无需串索引
+            if (level == 1) return null;
+
+            int startIndex = newNode.levels.length - 1;
+            if (newNode.levels.length > currentLevel) {
+                // 需要升索引
+                upHead(newNode);
+                startIndex = newNode.levels.length - 2;
             }
-            prev = nextNode;
+            // 串索引
+            addIndex(startIndex, newNode);
         }
         return null;
     }
@@ -195,8 +184,7 @@ public class SkipListMapArray<K extends Comparable<K>, V> extends AbstractSkipLi
                     next = next.levels[i].next;
                     continue;
                 }
-                // 跳过了 终止
-                break;
+                break; // 跳过了 终止
             }
         }
         return oldV;
