@@ -14,6 +14,7 @@ public class SkipList_perf_Test {
 
     /**
      * 链表 数组 相差太大, 代码有问题
+     * 数组有问题
      */
     @Test
     public void test_perf_skip3_vs_skip1() {
@@ -22,7 +23,7 @@ public class SkipList_perf_Test {
         StopWatch stopWatch = new StopWatch();
 
         StopWatchUtils.warnup(() -> {
-            SkipListLinked01<Integer, Integer> skip1 = new SkipListLinked01<>();
+            SkipListLinked02<Integer, Integer> skip1 = new SkipListLinked02<>();
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip1.put(key, 0, key);
@@ -34,14 +35,14 @@ public class SkipList_perf_Test {
             }
         });
 
-        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListBase01Linked", () -> {
-            SkipListLinked01<Integer, Integer> skip1 = new SkipListLinked01<>();
+        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListLinked02", () -> {
+            SkipListLinked02<Integer, Integer> skip1 = new SkipListLinked02<>();
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip1.put(key, 0, key);
             }
         });
-        Runnable r2 = () -> StopWatchUtils.run(stopWatch, "SkipListBase03Array", () -> {
+        Runnable r2 = () -> StopWatchUtils.run(stopWatch, "SkipListArray01", () -> {
             SkipListArray01<Integer, Integer> skip2 = new SkipListArray01<>();
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);

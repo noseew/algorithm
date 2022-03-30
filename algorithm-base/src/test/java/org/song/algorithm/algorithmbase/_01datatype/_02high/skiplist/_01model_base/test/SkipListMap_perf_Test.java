@@ -124,8 +124,8 @@ public class SkipListMap_perf_Test {
      */
     @Test
     public void test_perf_rbtree_vs_skip1() {
-        int maxVal = 100_0000;
-        int num = 1_0000;
+        int maxVal = 1000_0000;
+        int num = 10_0000;
         StopWatch stopWatch = new StopWatch();
 
         StopWatchUtils.warnup(() -> {
@@ -153,6 +153,58 @@ public class SkipListMap_perf_Test {
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 rbTree1.add(key);
+            }
+        });
+        for (int i = 0; i < 50; i++) {
+            if (i % 2 == 0) {
+                r2.run();
+                r1.run();
+            } else {
+                r1.run();
+                r2.run();
+            }
+        }
+
+        System.out.println(stopWatch.prettyPrint());
+        System.out.println(StopWatchUtils.calculate(stopWatch));
+
+    }
+
+    /**
+     * 1/4 概率索引 VS 1/2 概率索引
+     * 1/4 概率索引 性能高出 很多
+     */
+    @Test
+    public void test_perf_index2_vs_index4() {
+        int maxVal = 100_0000;
+        int num = 5_0000;
+        StopWatch stopWatch = new StopWatch();
+
+        StopWatchUtils.warnup(() -> {
+            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>(2);
+            for (int i = 0; i < num; i++) {
+                int key = r.nextInt(maxVal);
+                skip1.put(key, 0);
+            }
+            SkipListMapArray<Integer, Integer> skip2 = new SkipListMapArray<>(4);
+            for (int i = 0; i < num; i++) {
+                int key = r.nextInt(maxVal);
+                skip2.put(key, 0);
+            }
+        });
+
+        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListMapArray index2", () -> {
+            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>(2);
+            for (int i = 0; i < num; i++) {
+                int key = r.nextInt(maxVal);
+                skip1.put(key, 0);
+            }
+        });
+        Runnable r2 = () -> StopWatchUtils.run(stopWatch, "SkipListMapArray index4", () -> {
+            SkipListMapArray<Integer, Integer> skip2 = new SkipListMapArray<>(4);
+            for (int i = 0; i < num; i++) {
+                int key = r.nextInt(maxVal);
+                skip2.put(key, 0);
             }
         });
         for (int i = 0; i < 50; i++) {

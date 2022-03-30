@@ -354,7 +354,7 @@ public class SkipListLinked03Rank<K extends Comparable<K>, V> extends AbstractSk
         prev.next = newNode;
 
         // 新建索引
-        LinkIndex<K, V> newIndex = buildIndex(buildLevel(headerIndex.level), newNode);
+        LinkIndex<K, V> newIndex = buildIndex(buildLevel2(headerIndex.level), newNode);
         if (newIndex == null) {
             // 重新计算排名
             recalculateRank(prevIndexes(prevIndex));

@@ -9,7 +9,7 @@ import java.util.Objects;
 
 /**
  * 使用跳表实现 map, 区别于 JDK 跳表, 这里的索引采用数组实现
- * 
+ *
  * @param <K>
  * @param <V>
  */
@@ -20,6 +20,13 @@ public class SkipListMapArray<K extends Comparable<K>, V> extends AbstractSkipLi
      */
     protected Node<K, V> header;
     protected int currentLevel = 1;
+
+    public SkipListMapArray(int indexStrategy) {
+        Node<K, V> newNode = Node.<K, V>builder().build();
+        buildIndex(maxLevel, newNode);
+        header = newNode;
+        this.indexStrategy = indexStrategy;
+    }
 
     public SkipListMapArray() {
         Node<K, V> newNode = Node.<K, V>builder().build();
@@ -74,25 +81,17 @@ public class SkipListMapArray<K extends Comparable<K>, V> extends AbstractSkipLi
         Node<K, V> x = this.header, next;
         for (int i = currentLevel - 1; i >= 0; i--) { // y轴遍历
             next = x.levels[i].next;
-            while (next != null) {  // x轴遍历
-                if (less(next.k, k)) {
+            while (next != null) { // x轴遍历
+                if (less(next.k, k)) { // 向右跳
                     x = next;
-                    // 向右跳
                     next = next.levels[i].next;
                     continue;
-                }else if (Objects.equals(next.k, k)) {
-                    // 相等则返回
+                } else if (Objects.equals(next.k, k)) { // 相等则返回
                     return next;
                 }
                 // 跳过了 终止
                 break;
             }
-        }
-        Node<K, V> prev = x;
-        // 跳链表
-        while (prev != null) {
-            if (Objects.equals(prev.k, k)) return prev;
-            prev = prev.levels[0].next;
         }
         return null;
     }
@@ -103,19 +102,16 @@ public class SkipListMapArray<K extends Comparable<K>, V> extends AbstractSkipLi
         for (int i = currentLevel - 1; i >= 0; i--) { // y轴遍历
             next = x.levels[i].next;
             while (next != null) {  // x轴遍历
-                if (less(next.k, k)) {
+                if (less(next.k, k)) { // 向右跳
                     x = next;
-                    // 向右跳
                     next = next.levels[i].next;
                     continue;
-                } else if (Objects.equals(next.k, k)) {
-                    // 相等则更新
+                } else if (Objects.equals(next.k, k)) { // 相等则更新
                     oldV = next.v;
                     next.v = v;
                     return oldV;
                 }
-                // 跳过了 终止
-                break;
+                break; // 跳过了 终止
             }
         }
         Node<K, V> prev = x;
@@ -159,10 +155,6 @@ public class SkipListMapArray<K extends Comparable<K>, V> extends AbstractSkipLi
     }
 
     protected void addIndex(int startIndex, Node<K, V> newNode) {
-        if (startIndex <= 0) {
-            return;
-        }
-
         Node<K, V> x = this.header, next;
         for (int i = startIndex; i > 0; i--) { // y轴遍历
             next = x.levels[i].next;
@@ -207,22 +199,7 @@ public class SkipListMapArray<K extends Comparable<K>, V> extends AbstractSkipLi
                 break;
             }
         }
-        if (oldV != null) {
-            return oldV;
-        }
-        Node<K, V> prev = x;
-        // 跳链表
-        while (prev != null) {
-            Node<K, V> nextNode = prev.levels[0].next;
-            if (nextNode != null && Objects.equals(nextNode.k, k)) {
-                size--;
-                oldV = nextNode.v;
-                prev.levels[0].next = nextNode.levels[0].next;
-                return oldV;
-            }
-            prev = nextNode;
-        }
-        return null;
+        return oldV;
     }
 
     protected void upHead(Node<K, V> newNode) {
@@ -293,7 +270,6 @@ public class SkipListMapArray<K extends Comparable<K>, V> extends AbstractSkipLi
         }
         return hi.levels[1].next;
     }
-
 
 
     @Data

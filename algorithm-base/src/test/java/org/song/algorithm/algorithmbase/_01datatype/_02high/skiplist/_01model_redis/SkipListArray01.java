@@ -151,7 +151,7 @@ public class SkipListArray01<K extends Comparable<K>, V> extends AbstractSkipLis
         prev.next = newNode;
 
         // 新建索引
-        LinkedNode<K, V> newIndex = buildIndex(buildLevel(headerIndex.levels.length), newNode);
+        LinkedNode<K, V> newIndex = buildIndex(buildLevel2(headerIndex.levels.length), newNode);
         if (newIndex == null) {
             return;
         }

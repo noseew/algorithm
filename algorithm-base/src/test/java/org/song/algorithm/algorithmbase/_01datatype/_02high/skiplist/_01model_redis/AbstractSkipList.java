@@ -63,11 +63,13 @@ public abstract class AbstractSkipList<K extends Comparable<K>, V> {
      * 有0.5的概率不会生成索引
      * 从低位开始, 连续1的个数就是索引的层数
      *
+     * 1/2 概率
+     *
      * @return
      */
     protected int buildLevel(int maxLevel) {
         // 随机层高
-        int nextInt = r.nextInt(Integer.MAX_VALUE);
+        int nextInt = r.nextInt();
         int level = 0;
         // 最高层数 == headerIndex 的层数
         for (int i = 1; i <= maxLevel && i <= this.maxLevel; i++) {
@@ -76,6 +78,24 @@ public abstract class AbstractSkipList<K extends Comparable<K>, V> {
             level++;
         }
         return level;
+    }
+
+    /**
+     * 1/4 概率
+     *
+     * @param maxLevel
+     * @return
+     */
+    protected int buildLevel2(int maxLevel) {
+        // 随机层高
+        long nextLong = r.nextLong();
+        int max = Math.min(maxLevel, this.maxLevel);
+        // 最高层数 == headerIndex 的层数
+        for (int i = 0; i <= max; i++) {
+            if ((nextLong & 0B11) != 0B11) return i;
+            nextLong = nextLong >>> 2;
+        }
+        return 0;
     }
 
     @Data

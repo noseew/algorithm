@@ -13,6 +13,14 @@ public abstract class AbstractSkipListMap<K extends Comparable<K>, V> {
     protected final int maxLevel = 32;
     protected int size;
 
+    /**
+     * 索引策略
+     * 2: 1/2
+     * 4: 1/4
+     * 其他: 1/2
+     */
+    protected int indexStrategy = 1;
+
     protected final Random r = new Random();
 
     public abstract V put(K k, V v);
@@ -44,9 +52,11 @@ public abstract class AbstractSkipListMap<K extends Comparable<K>, V> {
      * 有0.5的概率不会生成索引
      * 从低位开始, 连续1的个数就是索引的层数
      *
+     * 1/2 概率
+     *
      * @return
      */
-    protected int buildLevel(int maxLevel) {
+    protected int buildLevel2(int maxLevel) {
         // 随机层高
         int nextInt = r.nextInt();
         int max = Math.min(maxLevel, this.maxLevel);
@@ -54,6 +64,31 @@ public abstract class AbstractSkipListMap<K extends Comparable<K>, V> {
         for (int i = 0; i <= max; i++) {
             if ((nextInt & 0B1) != 0B1) return i;
             nextInt = nextInt >>> 1;
+        }
+        return 0;
+    }
+    protected int buildLevel(int maxLevel) {
+        // 随机层高
+        if (indexStrategy == 4) {
+            return buildLevel4(maxLevel);
+        }
+        return buildLevel2(maxLevel);
+    }
+
+    /**
+     * 1/4 概率
+     *
+     * @param maxLevel
+     * @return
+     */
+    protected int buildLevel4(int maxLevel) {
+        // 随机层高
+        long nextLong = r.nextLong();
+        int max = Math.min(maxLevel, this.maxLevel);
+        // 最高层数 == headerIndex 的层数
+        for (int i = 0; i <= max; i++) {
+            if ((nextLong & 0B11) != 0B11) return i;
+            nextLong = nextLong >>> 2;
         }
         return 0;
     }
