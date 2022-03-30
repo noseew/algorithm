@@ -10,6 +10,7 @@ import org.springframework.util.StopWatch;
 
 import java.util.Comparator;
 import java.util.Random;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 public class SkipListMap_perf_Test {
 
@@ -153,6 +154,58 @@ public class SkipListMap_perf_Test {
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 rbTree1.add(key);
+            }
+        });
+        for (int i = 0; i < 50; i++) {
+            if (i % 2 == 0) {
+                r2.run();
+                r1.run();
+            } else {
+                r1.run();
+                r2.run();
+            }
+        }
+
+        System.out.println(stopWatch.prettyPrint());
+        System.out.println(StopWatchUtils.calculate(stopWatch));
+
+    }
+
+    /**
+     * SkipListMapArray VS ConcurrentSkipListMap
+     * ConcurrentSkipListMap 效率高约2倍
+     */
+    @Test
+    public void test_perf_JDK_vs_skip1() {
+        int maxVal = 1000_0000;
+        int num = 10_0000;
+        StopWatch stopWatch = new StopWatch();
+
+        StopWatchUtils.warnup(() -> {
+            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>(4);
+            for (int i = 0; i < num; i++) {
+                int key = r.nextInt(maxVal);
+                skip1.put(key, 0);
+            }
+            ConcurrentSkipListMap<Integer, Integer> skip2 = new ConcurrentSkipListMap<>(Comparator.comparing(Integer::doubleValue));
+            for (int i = 0; i < num; i++) {
+                int key = r.nextInt(maxVal);
+                skip2.put(key, 0);
+            }
+        });
+
+        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListMapArray", () -> {
+            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>(4);
+            for (int i = 0; i < num; i++) {
+                int key = r.nextInt(maxVal);
+                skip1.put(key, 0);
+            }
+        });
+        Runnable r2 = () -> StopWatchUtils.run(stopWatch, "ConcurrentSkipListMap", () -> {
+            ConcurrentSkipListMap<Integer, Integer> skip1 = new ConcurrentSkipListMap<>(Comparator.comparing(Integer::doubleValue));
+            for (int i = 0; i < num; i++) {
+                int key = r.nextInt(maxVal);
+                skip1.put(key, 0);
             }
         });
         for (int i = 0; i < 50; i++) {
