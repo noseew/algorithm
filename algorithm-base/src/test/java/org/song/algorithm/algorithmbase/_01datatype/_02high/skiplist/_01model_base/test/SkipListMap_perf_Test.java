@@ -126,14 +126,19 @@ public class SkipListMap_perf_Test {
     @Test
     public void test_perf_rbtree_vs_skip1() {
         int maxVal = 1000_0000;
-        int num = 10_0000;
+        int num = 1_0000;
         StopWatch stopWatch = new StopWatch();
 
         StopWatchUtils.warnup(() -> {
-            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>();
+            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>(4);
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip1.put(key, 0);
+            }
+            SkipListMapArray<Integer, Integer> skip2 = new SkipListMapArray<>(2);
+            for (int i = 0; i < num; i++) {
+                int key = r.nextInt(maxVal);
+                skip2.put(key, 0);
             }
             Tree05RB01<Integer> rbTree1 = new Tree05RB01<>(Comparator.comparing(Integer::doubleValue));
             for (int i = 0; i < num; i++) {
@@ -142,8 +147,15 @@ public class SkipListMap_perf_Test {
             }
         });
 
-        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListMapArray", () -> {
-            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>();
+        Runnable r0 = () -> StopWatchUtils.run(stopWatch, "SkipListMapArray 2", () -> {
+            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>(2);
+            for (int i = 0; i < num; i++) {
+                int key = r.nextInt(maxVal);
+                skip1.put(key, 0);
+            }
+        });
+        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListMapArray 4", () -> {
+            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>(4);
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip1.put(key, 0);
@@ -160,7 +172,9 @@ public class SkipListMap_perf_Test {
             if (i % 2 == 0) {
                 r2.run();
                 r1.run();
+                r0.run();
             } else {
+                r0.run();
                 r1.run();
                 r2.run();
             }
@@ -225,7 +239,7 @@ public class SkipListMap_perf_Test {
 
     /**
      * 1/4 概率索引 VS 1/2 概率索引
-     * 1/4 概率索引 性能高出 很多
+     * 1/4 概率索引 性能高出 3-4倍
      */
     @Test
     public void test_perf_index2_vs_index4() {

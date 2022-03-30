@@ -33,6 +33,12 @@ public abstract class AbstractSkipListMap<K extends Comparable<K>, V> {
 
     public abstract int size();
 
+    protected int compare(K k1, K k2) {
+        if (k1 == null) return -1;
+        if (k2 == null) return 1;
+        return k1.compareTo(k2);
+    }
+
     protected boolean less(K k1, K k2) {
         // k==null, 说明是头结点, 头结点永远最小
         if (k1 == null) return true;
@@ -76,19 +82,23 @@ public abstract class AbstractSkipListMap<K extends Comparable<K>, V> {
     }
 
     /**
-     * 1/4 概率
+     * 1/4 概率有索引, 之后每层1/2的概率
      *
      * @param maxLevel
      * @return
      */
     protected int buildLevel4(int maxLevel) {
         // 随机层高
-        long nextLong = r.nextLong();
+        int nextInt = r.nextInt();
+        if ((0x8000_0001 & nextInt) != 0x8000_0001) {
+            // 1/4 概率有索引
+            return 0;
+        }
         int max = Math.min(maxLevel, this.maxLevel);
         // 最高层数 == headerIndex 的层数
         for (int i = 0; i <= max; i++) {
-            if ((nextLong & 0B11) != 0B11) return i;
-            nextLong = nextLong >>> 2;
+            if ((nextInt & 0B1) != 0B1) return i;
+            nextInt = nextInt >>> 1;
         }
         return 0;
     }

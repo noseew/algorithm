@@ -82,11 +82,12 @@ public class SkipListMapArray<K extends Comparable<K>, V> extends AbstractSkipLi
         for (int i = currentLevel - 1; i >= 0; i--) { // y轴遍历
             next = x.levels[i].next;
             while (next != null) { // x轴遍历
-                if (less(next.k, k)) { // 向右跳
+                int cpr = compare(next.k, k);
+                if (cpr < 0) { // 向右跳
                     x = next;
                     next = next.levels[i].next;
                     continue;
-                } else if (Objects.equals(next.k, k)) { // 相等则返回
+                } else if (cpr == 0) { // 相等则返回
                     return next;
                 }
                 // 跳过了 终止
@@ -101,11 +102,12 @@ public class SkipListMapArray<K extends Comparable<K>, V> extends AbstractSkipLi
         for (int i = currentLevel - 1; i >= 0; i--) { // y轴遍历
             next = x.levels[i].next;
             while (next != null) {  // x轴遍历
-                if (less(next.k, k)) { // 向右跳
+                int cpr = compare(next.k, k);
+                if (cpr < 0) { // 向右跳
                     x = next;
                     next = next.levels[i].next;
                     continue;
-                } else if (Objects.equals(next.k, k)) { // 相等则更新
+                } else if (cpr == 0) { // 相等则更新
                     V oldV = next.v;
                     next.v = v;
                     return oldV;
@@ -148,7 +150,8 @@ public class SkipListMapArray<K extends Comparable<K>, V> extends AbstractSkipLi
         for (int i = startIndex; i > 0; i--) { // y轴遍历
             next = x.levels[i].next;
             while (next != null) {  // x轴遍历
-                if (less(next.k, newNode.k)) {
+                int cpr = compare(next.k, newNode.k);
+                if (cpr < 0) {
                     // 向右跳
                     x = next;
                     next = next.levels[i].next;
@@ -173,12 +176,13 @@ public class SkipListMapArray<K extends Comparable<K>, V> extends AbstractSkipLi
         for (int i = currentLevel - 1; i >= 0; i--) { // y轴遍历
             next = x.levels[i].next;
             while (next != null) {  // x轴遍历
-                if (Objects.equals(next.k, k)) {
+                int cpr = compare(next.k, k);
+                if (cpr == 0) {
                     // 相等则更新
                     if (oldV == null) oldV = next.v;
                     // 删索引
                     x.levels[i].next = next.levels[i].next;
-                } else if (less(next.k, k)) {
+                } else if (cpr < 0) {
                     x = next;
                     // 向右跳
                     next = next.levels[i].next;
