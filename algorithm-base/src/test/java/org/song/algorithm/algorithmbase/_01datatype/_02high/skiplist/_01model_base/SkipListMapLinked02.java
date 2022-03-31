@@ -79,7 +79,7 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
         }
     }
 
-    private V doPut(K key, V value, boolean onlyIfAbsent) {
+    private V doPut(K key, V value) {
         if (key == null) {
             throw new NullPointerException();
         }
@@ -89,29 +89,16 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
              n = b.next; // 元素需要插入在 [b, n] 之间
                 ; ) {
             if (n != null) {
-                Object v;
                 int c;
                 // f 后继节点
                 Node<K, V> f = n.next;
-                if (n != b.next) {               // inconsistent read
-                    break;
-                }
-                if ((v = n.value) == null) {   // n is deleted
-                    // 发现 n 已经被删除, 执行删除清理逻辑, n.value == null 表示节点的删除状态, 链表的高效并发采用的就是 CAS+节点状态 实现的
-                    n.helpDelete(b, f);
-                    break;
-                }
                 if ((c = cpr(cmp, key, n.key)) > 0) {
                     b = n;
                     n = f;
                     continue;
                 }
                 if (c == 0) {
-                    if (onlyIfAbsent) {
-                        n.value = value;
-                        return (V) v;
-                    }
-                    break; // restart if lost race to replace value 如果race失败, 重新启动以替换value
+                    return (V) n.value;
                 }
             }
 
@@ -123,7 +110,7 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
 
         // 开始为节点添加索引层, rnd 范围int全值(正负)
         int rnd = ThreadLocalRandom.current().nextInt();
-        if ((rnd & 0x80000001) == 0) { // test highest and lowest bits 测试最高和最低位
+        if ((rnd & 0x80000001) == 0) {
             int level = 1, max;
             while (((rnd >>>= 1) & 1) != 0) {
                 ++level;
@@ -136,20 +123,17 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
                     idx = new Index<K, V>(z, idx, null);
                 }
             } else {
-                level = max + 1; // hold in array and later pick the one to use 在数组中保存, 然后选择要使用的一个
+                level = max + 1;
                 Index<K, V>[] idxs = (Index<K, V>[]) new Index<?, ?>[level + 1];
                 for (int i = 1; i <= level; ++i) {
                     // 循环创建索引层级, 将其串成链表
                     idxs[i] = idx = new Index<K, V>(z, idx, null);
                 }
-                for (; ; ) {
-                    // 左上角节点
-                    h = head;
-                    // 跳跃表原最大高度
-                    int oldLevel = h.level;
-                    if (level <= oldLevel) { // lost race to add level
-                        break;
-                    }
+                // 左上角节点
+                h = head;
+                // 跳跃表原最大高度
+                int oldLevel = h.level;
+                if (level > oldLevel) {
                     HeadIndex<K, V> newh = h;
                     Node<K, V> oldbase = h.node;
                     for (int j = oldLevel + 1; j <= level; ++j) {
@@ -158,10 +142,9 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
                     this.head = newh;
                     h = newh;
                     idx = idxs[level = oldLevel];
-                    break;
                 }
             }
-            for (int insertionLevel = level; ; ) {
+            int insertionLevel = level;
                 // j 当前正在遍历的索引链表的层级
                 int j = h.level;
                 for (Index<K, V> q = h, r = q.right, t = idx; ; ) {
@@ -197,7 +180,6 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
                     }
                     r = q.right;
                 }
-            }
         }
         return null;
     }
@@ -207,18 +189,12 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
             throw new NullPointerException();
         Comparator<? super K> cmp = comparator;
         for (Node<K, V> b = findPredecessor(key, cmp), n = b.next; ; ) {
-            Object v;
-            int c;
-            Node<K, V> f = n.next;
-            if (n != b.next)                    // inconsistent read
-                break;
-            if ((v = n.value) == null) {        // n is deleted
-                n.helpDelete(b, f);
-                break;
+            if (n == null) {
+                return null;
             }
-            if (b.value == null || v == n)      // b is deleted
-                break;
-            c = cpr(cmp, key, n.key);
+            Object v = n.value;
+            int c = cpr(cmp, key, n.key);
+            Node<K, V> f = n.next;
             if (c > 0) {
                 b = n;
                 n = f;
@@ -229,10 +205,8 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
             b.next = f;
             findPredecessor(key, cmp);      // clean index
             if (head.right == null) tryReduceLevel();
-
             return (V) v;
         }
-        return null;
     }
 
     private void tryReduceLevel() {
@@ -314,7 +288,7 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
         if (value == null) {
             throw new NullPointerException();
         }
-        return doPut(key, value, false);
+        return doPut(key, value);
     }
 
     @Override
@@ -446,4 +420,91 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
             this.level = level;
         }
     }
+
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("size=").append(this.size())
+                .append("\r\n");
+
+        Index<K, V> hi = head;
+        Node<K, V> hn = hi.node;
+
+        int count = 0;
+        while (hn != null) {
+            // 链表遍历
+            sb.append(count++).append(". ")
+                    .append("\t")
+                    .append("{").append(wrap(hn.key)).append(":").append(wrap(hn.value)).append("} ");
+            if (hi != null && hi.node == hn) {
+                // 索引遍历
+                reversed(hi, sb);
+                // 下一个索引头
+                hi = nextIndexHead(hn);
+            }
+            sb.append("\r\n");
+            hn = hn.next;
+        }
+        return sb.toString();
+    }
+
+    private String wrap(Object o) {
+        String s = String.valueOf(o == null ? "" : o);
+        StringBuilder sb = new StringBuilder();
+        int max = 4;
+        for (int i = 0; i < max - s.length(); i++) {
+            sb.append(" ");
+        }
+        return sb.append(s).toString();
+    }
+
+    private void reversed(Index<K, V> index, StringBuilder sb) {
+        if (index == null) {
+            return;
+        }
+        reversed(index.down, sb);
+        sb.append("<-[").append("]");
+    }
+
+    /**
+     * 获取下一个索引的头索引节点
+     *
+     * @param node
+     * @return
+     */
+    private Index<K, V> nextIndexHead(Node<K, V> node) {
+        if (node == null || node.next == null) {
+            return null;
+        }
+        HeadIndex<K, V> oneLevel = head;
+        while (oneLevel != null && oneLevel.level > 1) oneLevel = (HeadIndex<K, V>) oneLevel.down;
+        Node<K, V> nextIndexNode = null;
+        Index<K, V> oneLevelIndex = oneLevel;
+        while (oneLevelIndex != null) {
+            if (gather(oneLevelIndex.node.key, node.key)) {
+                nextIndexNode = oneLevelIndex.node;
+                break;
+            }
+            oneLevelIndex = oneLevelIndex.right;
+        }
+        if (nextIndexNode == null) {
+            return null;
+        }
+        Index<K, V> x = head;
+        while (x != null) { // y轴遍历
+            Index<K, V> next = x.right;
+            while (next != null) { // x轴遍历
+                if (next.node == nextIndexNode) {
+                    return next; // 找到了
+                } else if (gather(next.node.key, nextIndexNode.key)) {
+                    break; // 超过了
+                }
+                next = next.right;
+            }
+            x = x.down;
+        }
+        return null;
+    }
+
 }
