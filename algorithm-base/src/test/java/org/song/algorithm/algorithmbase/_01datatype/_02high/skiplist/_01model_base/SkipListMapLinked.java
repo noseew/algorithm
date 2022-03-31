@@ -22,12 +22,6 @@ public class SkipListMapLinked<K extends Comparable<K>, V> extends AbstractSkipL
      */
     protected Index<K, V> header;
 
-    public SkipListMapLinked(int indexStrategy) {
-        Node<K, V> newNode = Node.<K, V>builder().build();
-        header = buildIndex(1, newNode);
-        this.indexStrategy = indexStrategy;
-    }
-
     public SkipListMapLinked() {
         Node<K, V> newNode = Node.<K, V>builder().build();
         header = buildIndex(1, newNode);

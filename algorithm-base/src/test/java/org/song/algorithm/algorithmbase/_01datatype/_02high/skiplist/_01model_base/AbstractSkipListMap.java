@@ -1,25 +1,11 @@
 package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.ArrayBase01;
-
 import java.util.Random;
 
 public abstract class AbstractSkipListMap<K extends Comparable<K>, V> {
 
     protected final int maxLevel = 32;
     protected int size;
-
-    /**
-     * 索引策略
-     * 2: 1/2
-     * 4: 1/4
-     * 其他: 1/2
-     */
-    protected int indexStrategy = 1;
 
     protected final Random r = new Random();
 
@@ -62,38 +48,9 @@ public abstract class AbstractSkipListMap<K extends Comparable<K>, V> {
      *
      * @return
      */
-    protected int buildLevel2(int maxLevel) {
-        // 随机层高
-        int nextInt = r.nextInt();
-        int max = Math.min(maxLevel, this.maxLevel);
-        // 最高层数 == headerIndex 的层数
-        for (int i = 0; i <= max; i++) {
-            if ((nextInt & 0B1) != 0B1) return i;
-            nextInt = nextInt >>> 1;
-        }
-        return 0;
-    }
     protected int buildLevel(int maxLevel) {
         // 随机层高
-        if (indexStrategy == 4) {
-            return buildLevel4(maxLevel);
-        }
-        return buildLevel2(maxLevel);
-    }
-
-    /**
-     * 1/4 概率有索引, 之后每层1/2的概率
-     *
-     * @param maxLevel
-     * @return
-     */
-    protected int buildLevel4(int maxLevel) {
-        // 随机层高
         int nextInt = r.nextInt();
-        if ((0x8000_0001 & nextInt) != 0x8000_0001) {
-            // 1/4 概率有索引
-            return 0;
-        }
         int max = Math.min(maxLevel, this.maxLevel);
         // 最高层数 == headerIndex 的层数
         for (int i = 0; i <= max; i++) {

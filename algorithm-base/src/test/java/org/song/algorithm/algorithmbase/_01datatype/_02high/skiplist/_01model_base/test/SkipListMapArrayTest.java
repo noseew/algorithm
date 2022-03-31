@@ -15,7 +15,7 @@ public class SkipListMapArrayTest {
     @Test
     public void test01() {
 
-        SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>(4);
+        SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>();
         for (int i = 0; i < maxSize; i++) {
             int val = r.nextInt(maxVal);
             int key = r.nextInt(maxVal / 10);

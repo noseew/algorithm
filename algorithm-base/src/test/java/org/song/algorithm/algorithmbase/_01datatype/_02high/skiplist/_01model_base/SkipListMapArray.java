@@ -21,13 +21,6 @@ public class SkipListMapArray<K extends Comparable<K>, V> extends AbstractSkipLi
     protected Node<K, V> header;
     protected int currentLevel = 1;
 
-    public SkipListMapArray(int indexStrategy) {
-        Node<K, V> newNode = Node.<K, V>builder().build();
-        buildIndex(maxLevel, newNode);
-        header = newNode;
-        this.indexStrategy = indexStrategy;
-    }
-
     public SkipListMapArray() {
         Node<K, V> newNode = Node.<K, V>builder().build();
         buildIndex(maxLevel, newNode);
@@ -197,6 +190,23 @@ public class SkipListMapArray<K extends Comparable<K>, V> extends AbstractSkipLi
     protected void upHead(Node<K, V> newNode) {
         header.levels[newNode.levels.length - 1].next = newNode;
         currentLevel++;
+    }
+
+
+    protected int buildLevel(int maxLevel) {
+        // 随机层高
+        int nextInt = r.nextInt();
+        if ((0x8000_0001 & nextInt) != 0x8000_0001) {
+            // 1/4 概率有索引
+            return 0;
+        }
+        int max = Math.min(maxLevel, this.maxLevel);
+        // 最高层数 == headerIndex 的层数
+        for (int i = 0; i <= max; i++) {
+            if ((nextInt & 0B1) != 0B1) return i;
+            nextInt = nextInt >>> 1;
+        }
+        return 0;
     }
 
 

@@ -134,12 +134,12 @@ public class SkipListMap_perf_Test {
         StopWatch stopWatch = new StopWatch();
 
         StopWatchUtils.warnup(() -> {
-            SkipListMapArray<Integer, Integer> skip2 = new SkipListMapArray<>(2);
+            SkipListMapArray<Integer, Integer> skip2 = new SkipListMapArray<>();
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip2.put(key, 0);
             }
-            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>(4);
+            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>();
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip1.put(key, 0);
@@ -164,7 +164,7 @@ public class SkipListMap_perf_Test {
             }
         });
         Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListMapArray index4", () -> {
-            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>(4);
+            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>();
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip1.put(key, 0);
@@ -178,7 +178,7 @@ public class SkipListMap_perf_Test {
             }
         });
         Runnable r3 = () -> StopWatchUtils.run(stopWatch, "SkipListMapArray index2", () -> {
-            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>(2);
+            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>();
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip1.put(key, 0);
