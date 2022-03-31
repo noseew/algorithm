@@ -121,25 +121,34 @@ public class SkipListMap_perf_Test {
     }
 
     /**
-     * 跳表map VS 红黑树 相差太大, 红黑树高3倍 代码有问题?
+     *
+     * Tree05RB01	            1304	7.07%
+     * ConcurrentSkipListMap	1523	8.26%
+     * SkipListMapArray index4	3621	19.63%
+     * SkipListMapArray index2	11890	64.46%
      */
     @Test
-    public void test_perf_rbtree_vs_skip1() {
+    public void test_perf_vs_all() {
         int maxVal = 1000_0000;
-        int num = 1_0000;
+        int num = 3_0000;
         StopWatch stopWatch = new StopWatch();
 
         StopWatchUtils.warnup(() -> {
-            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>(4);
-            for (int i = 0; i < num; i++) {
-                int key = r.nextInt(maxVal);
-                skip1.put(key, 0);
-            }
             SkipListMapArray<Integer, Integer> skip2 = new SkipListMapArray<>(2);
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip2.put(key, 0);
             }
+            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>(4);
+            for (int i = 0; i < num; i++) {
+                int key = r.nextInt(maxVal);
+                skip1.put(key, 0);
+            }
+            ConcurrentSkipListMap<Integer, Integer> jdk = new ConcurrentSkipListMap<>(Comparator.comparing(Integer::doubleValue));
+            for (int i = 0; i < num; i++) {
+                int key = r.nextInt(maxVal);
+                jdk.put(key, 0);
+            }
             Tree05RB01<Integer> rbTree1 = new Tree05RB01<>(Comparator.comparing(Integer::doubleValue));
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
@@ -147,68 +156,14 @@ public class SkipListMap_perf_Test {
             }
         });
 
-        Runnable r0 = () -> StopWatchUtils.run(stopWatch, "SkipListMapArray 2", () -> {
-            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>(2);
-            for (int i = 0; i < num; i++) {
-                int key = r.nextInt(maxVal);
-                skip1.put(key, 0);
-            }
-        });
-        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListMapArray 4", () -> {
-            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>(4);
-            for (int i = 0; i < num; i++) {
-                int key = r.nextInt(maxVal);
-                skip1.put(key, 0);
-            }
-        });
-        Runnable r2 = () -> StopWatchUtils.run(stopWatch, "Tree05RB01", () -> {
+        Runnable r0 = () -> StopWatchUtils.run(stopWatch, "Tree05RB01", () -> {
             Tree05RB01<Integer> rbTree1 = new Tree05RB01<>(Comparator.comparing(Integer::doubleValue));
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 rbTree1.add(key);
             }
         });
-        for (int i = 0; i < 50; i++) {
-            if (i % 2 == 0) {
-                r2.run();
-                r1.run();
-                r0.run();
-            } else {
-                r0.run();
-                r1.run();
-                r2.run();
-            }
-        }
-
-        System.out.println(stopWatch.prettyPrint());
-        System.out.println(StopWatchUtils.calculate(stopWatch));
-
-    }
-
-    /**
-     * SkipListMapArray VS ConcurrentSkipListMap
-     * ConcurrentSkipListMap 效率高约2倍
-     */
-    @Test
-    public void test_perf_JDK_vs_skip1() {
-        int maxVal = 1000_0000;
-        int num = 10_0000;
-        StopWatch stopWatch = new StopWatch();
-
-        StopWatchUtils.warnup(() -> {
-            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>(4);
-            for (int i = 0; i < num; i++) {
-                int key = r.nextInt(maxVal);
-                skip1.put(key, 0);
-            }
-            ConcurrentSkipListMap<Integer, Integer> skip2 = new ConcurrentSkipListMap<>(Comparator.comparing(Integer::doubleValue));
-            for (int i = 0; i < num; i++) {
-                int key = r.nextInt(maxVal);
-                skip2.put(key, 0);
-            }
-        });
-
-        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListMapArray", () -> {
+        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListMapArray index4", () -> {
             SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>(4);
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
@@ -222,65 +177,24 @@ public class SkipListMap_perf_Test {
                 skip1.put(key, 0);
             }
         });
-        for (int i = 0; i < 50; i++) {
-            if (i % 2 == 0) {
-                r2.run();
-                r1.run();
-            } else {
-                r1.run();
-                r2.run();
-            }
-        }
-
-        System.out.println(stopWatch.prettyPrint());
-        System.out.println(StopWatchUtils.calculate(stopWatch));
-
-    }
-
-    /**
-     * 1/4 概率索引 VS 1/2 概率索引
-     * 1/4 概率索引 性能高出 3-4倍
-     */
-    @Test
-    public void test_perf_index2_vs_index4() {
-        int maxVal = 100_0000;
-        int num = 5_0000;
-        StopWatch stopWatch = new StopWatch();
-
-        StopWatchUtils.warnup(() -> {
-            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>(2);
-            for (int i = 0; i < num; i++) {
-                int key = r.nextInt(maxVal);
-                skip1.put(key, 0);
-            }
-            SkipListMapArray<Integer, Integer> skip2 = new SkipListMapArray<>(4);
-            for (int i = 0; i < num; i++) {
-                int key = r.nextInt(maxVal);
-                skip2.put(key, 0);
-            }
-        });
-
-        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListMapArray index2", () -> {
+        Runnable r3 = () -> StopWatchUtils.run(stopWatch, "SkipListMapArray index2", () -> {
             SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>(2);
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip1.put(key, 0);
             }
         });
-        Runnable r2 = () -> StopWatchUtils.run(stopWatch, "SkipListMapArray index4", () -> {
-            SkipListMapArray<Integer, Integer> skip2 = new SkipListMapArray<>(4);
-            for (int i = 0; i < num; i++) {
-                int key = r.nextInt(maxVal);
-                skip2.put(key, 0);
-            }
-        });
         for (int i = 0; i < 50; i++) {
             if (i % 2 == 0) {
-                r2.run();
+                r0.run();
                 r1.run();
+                r2.run();
+                r3.run();
             } else {
-                r1.run();
+                r3.run();
                 r2.run();
+                r1.run();
+                r0.run();
             }
         }
 
