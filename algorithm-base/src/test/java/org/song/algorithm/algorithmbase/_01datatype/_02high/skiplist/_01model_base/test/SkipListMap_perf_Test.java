@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05RB01;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapArray;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinked;
+import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinked02;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_redis.SkipListLinked01;
 import org.song.algorithm.algorithmbase.utils.StopWatchUtils;
 import org.springframework.util.StopWatch;
@@ -130,15 +131,10 @@ public class SkipListMap_perf_Test {
     @Test
     public void test_perf_vs_all() {
         int maxVal = 1000_0000;
-        int num = 3_0000;
+        int num = 1_0000;
         StopWatch stopWatch = new StopWatch();
 
         StopWatchUtils.warnup(() -> {
-            SkipListMapArray<Integer, Integer> skip2 = new SkipListMapArray<>();
-            for (int i = 0; i < num; i++) {
-                int key = r.nextInt(maxVal);
-                skip2.put(key, 0);
-            }
             SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>();
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
@@ -148,6 +144,11 @@ public class SkipListMap_perf_Test {
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 jdk.put(key, 0);
+            }
+            SkipListMapLinked02<Integer, Integer> jdk2 = new SkipListMapLinked02<>(Comparator.comparing(Integer::doubleValue));
+            for (int i = 0; i < num; i++) {
+                int key = r.nextInt(maxVal);
+                jdk2.put(key, 0);
             }
             Tree05RB01<Integer> rbTree1 = new Tree05RB01<>(Comparator.comparing(Integer::doubleValue));
             for (int i = 0; i < num; i++) {
@@ -163,7 +164,7 @@ public class SkipListMap_perf_Test {
                 rbTree1.add(key);
             }
         });
-        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListMapArray index4", () -> {
+        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListMapArray", () -> {
             SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>();
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
@@ -177,11 +178,11 @@ public class SkipListMap_perf_Test {
                 skip1.put(key, 0);
             }
         });
-        Runnable r3 = () -> StopWatchUtils.run(stopWatch, "SkipListMapArray index2", () -> {
-            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>();
+        Runnable r4 = () -> StopWatchUtils.run(stopWatch, "SkipListMapLinked02", () -> {
+            SkipListMapLinked02<Integer, Integer> jdk2 = new SkipListMapLinked02<>(Comparator.comparing(Integer::doubleValue));
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
-                skip1.put(key, 0);
+                jdk2.put(key, 0);
             }
         });
         for (int i = 0; i < 50; i++) {
@@ -189,9 +190,9 @@ public class SkipListMap_perf_Test {
                 r0.run();
                 r1.run();
                 r2.run();
-                r3.run();
+                r4.run();
             } else {
-                r3.run();
+                r4.run();
                 r2.run();
                 r1.run();
                 r0.run();
