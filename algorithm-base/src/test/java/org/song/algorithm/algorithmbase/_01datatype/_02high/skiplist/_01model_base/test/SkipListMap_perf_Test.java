@@ -2,6 +2,7 @@ package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_b
 
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05RB01;
+import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.ConcurrentSkipListMap02;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapArray;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinked;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinked02;
@@ -131,7 +132,7 @@ public class SkipListMap_perf_Test {
     @Test
     public void test_perf_vs_all() {
         int maxVal = 1000_0000;
-        int num = 1_0000;
+        int num = 5_0000;
         StopWatch stopWatch = new StopWatch();
 
         StopWatchUtils.warnup(() -> {
@@ -145,7 +146,7 @@ public class SkipListMap_perf_Test {
                 int key = r.nextInt(maxVal);
                 jdk.put(key, 0);
             }
-            SkipListMapLinked02<Integer, Integer> jdk2 = new SkipListMapLinked02<>(Comparator.comparing(Integer::doubleValue));
+            ConcurrentSkipListMap02<Integer, Integer> jdk2 = new ConcurrentSkipListMap02<>(Comparator.comparing(Integer::doubleValue));
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 jdk2.put(key, 0);
@@ -178,8 +179,8 @@ public class SkipListMap_perf_Test {
                 skip1.put(key, 0);
             }
         });
-        Runnable r4 = () -> StopWatchUtils.run(stopWatch, "SkipListMapLinked02", () -> {
-            SkipListMapLinked02<Integer, Integer> jdk2 = new SkipListMapLinked02<>(Comparator.comparing(Integer::doubleValue));
+        Runnable r4 = () -> StopWatchUtils.run(stopWatch, "ConcurrentSkipListMap02", () -> {
+            ConcurrentSkipListMap02<Integer, Integer> jdk2 = new ConcurrentSkipListMap02<>(Comparator.comparing(Integer::doubleValue));
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 jdk2.put(key, 0);
