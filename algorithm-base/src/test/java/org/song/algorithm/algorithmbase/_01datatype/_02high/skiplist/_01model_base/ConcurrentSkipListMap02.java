@@ -21,7 +21,8 @@ public class ConcurrentSkipListMap02<K, V> {
     }
 
     private boolean casHead(HeadIndex<K, V> cmp, HeadIndex<K, V> val) {
-        return UNSAFE.compareAndSwapObject(this, headOffset, cmp, val);
+        this.head = val;
+        return true;
     }
 
     static final class Node<K, V> {
@@ -42,11 +43,13 @@ public class ConcurrentSkipListMap02<K, V> {
         }
 
         boolean casValue(Object cmp, Object val) {
-            return UNSAFE.compareAndSwapObject(this, valueOffset, cmp, val);
+            this.value = val;
+            return true;
         }
 
         boolean casNext(Node<K, V> cmp, Node<K, V> val) {
-            return UNSAFE.compareAndSwapObject(this, nextOffset, cmp, val);
+            this.next = val;
+            return true;
         }
 
         boolean appendMarker(Node<K, V> f) {
@@ -60,27 +63,6 @@ public class ConcurrentSkipListMap02<K, V> {
                 } else {
                     b.casNext(this, f.next);
                 }
-            }
-        }
-
-        private static final sun.misc.Unsafe UNSAFE;
-        private static final long valueOffset;
-        private static final long nextOffset;
-
-        static {
-            try {
-                Field f = Unsafe.class.getDeclaredField("theUnsafe");
-                f.setAccessible(true);
-                UNSAFE = (Unsafe) f.get(null);
-                
-//                UNSAFE = sun.misc.Unsafe.getUnsafe();
-                Class<?> k = Node.class;
-                valueOffset = UNSAFE.objectFieldOffset
-                        (k.getDeclaredField("value"));
-                nextOffset = UNSAFE.objectFieldOffset
-                        (k.getDeclaredField("next"));
-            } catch (Exception e) {
-                throw new Error(e);
             }
         }
     }
@@ -97,7 +79,8 @@ public class ConcurrentSkipListMap02<K, V> {
         }
 
         final boolean casRight(Index<K, V> cmp, Index<K, V> val) {
-            return UNSAFE.compareAndSwapObject(this, rightOffset, cmp, val);
+            this.right = val;
+            return true;
         }
 
         final boolean link(Index<K, V> succ, Index<K, V> newSucc) {
@@ -108,25 +91,6 @@ public class ConcurrentSkipListMap02<K, V> {
 
         final boolean unlink(Index<K, V> succ) {
             return node.value != null && casRight(succ, succ.right);
-        }
-
-        // Unsafe mechanics
-        private static final sun.misc.Unsafe UNSAFE;
-        private static final long rightOffset;
-
-        static {
-            try {
-                Field f = Unsafe.class.getDeclaredField("theUnsafe");
-                f.setAccessible(true);
-                UNSAFE = (Unsafe) f.get(null);
-                
-//                UNSAFE = sun.misc.Unsafe.getUnsafe();
-                Class<?> k = Index.class;
-                rightOffset = UNSAFE.objectFieldOffset
-                        (k.getDeclaredField("right"));
-            } catch (Exception e) {
-                throw new Error(e);
-            }
         }
     }
 
@@ -469,27 +433,4 @@ public class ConcurrentSkipListMap02<K, V> {
         return comparator;
     }
 
-    // Unsafe mechanics
-    private static final sun.misc.Unsafe UNSAFE;
-    private static final long headOffset;
-    private static final long SECONDARY;
-
-    static {
-        try {
-            Field f = Unsafe.class.getDeclaredField("theUnsafe");
-            f.setAccessible(true);
-            UNSAFE = (Unsafe) f.get(null);
-            
-//            UNSAFE = sun.misc.Unsafe.getUnsafe();
-            Class<?> k = ConcurrentSkipListMap02.class;
-            headOffset = UNSAFE.objectFieldOffset
-                    (k.getDeclaredField("head"));
-            Class<?> tk = Thread.class;
-            SECONDARY = UNSAFE.objectFieldOffset
-                    (tk.getDeclaredField("threadLocalRandomSecondarySeed"));
-
-        } catch (Exception e) {
-            throw new Error(e);
-        }
-    }
 }
