@@ -52,6 +52,8 @@ public class SkipListMapLinked02Test {
                 if (!equals) {
                     System.out.println(skip1);
                     skip1.get(key);
+                    skip1.put(key, val);
+                    skip1.get(key);
                     assert equals;
                 }
 

@@ -16,16 +16,16 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
 
     private static final Object BASE_HEADER = new Object();
 
-    private transient volatile HeadIndex<K, V> head;
+    private transient volatile Index<K, V> head;
 
     final Comparator<? super K> comparator;
 
     private void initialize() {
-        head = new HeadIndex<K, V>(new Node<K, V>(null, BASE_HEADER, null),
+        head = new Index<K, V>(new Node<K, V>(null, BASE_HEADER, null),
                 null, null, 1);
     }
 
-    private boolean casHead(HeadIndex<K, V> cmp, HeadIndex<K, V> val) {
+    private boolean casHead(Index<K, V> cmp, Index<K, V> val) {
         this.head = val;
         return true;
     }
@@ -59,6 +59,7 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
             if ((d = q.down) == null) {
                 return q.node;
             }
+            q = d;
             r = d.right;
         }
     }
@@ -92,7 +93,11 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
                     n = n.next;
                     continue;
                 }
-                if (c == 0) return (V) n.value;
+                if (c == 0) {
+                    Object oldV = n.value;
+                    n.value = value;
+                    return (V) oldV;
+                }
             }
 
             // 本次需要添加的节点
@@ -109,26 +114,28 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
                 ++level; // 本次索引高度
             }
             Index<K, V> idx = null;
-            HeadIndex<K, V> h = head;
+            Index<K, V> h = head;
 
             if (level <= max) {
                 for (int i = 1; i <= level; ++i) {
-                    idx = new Index<K, V>(z, idx, null);
+                    idx = new Index<K, V>(z, idx, null, i);
                 }
+                z.ic = level;
             } else {
                 level = max + 1;
+                z.ic = level;
                 Index<K, V>[] idxs = (Index<K, V>[]) new Index<?, ?>[level + 1];
                 for (int i = 1; i <= level; ++i) {
                     // 循环创建索引层级, 将其串成链表
-                    idxs[i] = idx = new Index<K, V>(z, idx, null);
+                    idxs[i] = idx = new Index<K, V>(z, idx, null, i);
                 }
                 // 跳跃表原最大高度
                 int oldLevel = h.level;
                 if (level > oldLevel) {
-                    HeadIndex<K, V> newh = h;
+                    Index<K, V> newh = h;
                     Node<K, V> oldbase = h.node;
                     for (int j = oldLevel + 1; j <= level; ++j) {
-                        newh = new HeadIndex<K, V>(oldbase, newh, idxs[j], j);
+                        newh = new Index<K, V>(oldbase, newh, idxs[j], j);
                     }
                     this.head = newh;
                     h = newh;
@@ -139,27 +146,28 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
             // 串索引
             int insertionLevel = level;
                 int j = h.level;
-                for (Index<K, V> q = h, r = q.right, t = idx; ; ) {
+                for (Index<K, V> q = h, right = q.right, t = idx; ; ) {
                     if (q == null || t == null){
                         return null;
                     }
-                    if (r != null) {
-                        Node<K, V> n = r.node;
+                    if (right != null) {
+                        Node<K, V> n = right.node;
                         int c = cpr(key, n.key);
                         if (n.value == null) {
-                            q.right = r.right;
-                            r = q.right;
+                            q.right = right.right;
+                            right = q.right;
                             continue;
                         }
                         if (c > 0) {
-                            q = r;
-                            r = r.right;
+                            q = right;
+                            right = right.right;
                             continue;
                         }
                     }
 
                     if (j == insertionLevel) {
-                        q.link(r, t);
+                        t.right = right;
+                        q.right = t;
                         --insertionLevel;
                     }
 
@@ -170,7 +178,7 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
                     if (q == null) {
                         break;
                     }
-                    r = q.right;
+                    right = q.right;
                 }
         }
         return null;
@@ -200,12 +208,12 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
     }
 
     private void tryReduceLevel() {
-        HeadIndex<K, V> h = head;
-        HeadIndex<K, V> d;
-        HeadIndex<K, V> e;
+        Index<K, V> h = head;
+        Index<K, V> d;
+        Index<K, V> e;
         if (h.level > 3 &&
-                (d = (HeadIndex<K, V>) h.down) != null &&
-                (e = (HeadIndex<K, V>) d.down) != null &&
+                (d = (Index<K, V>) h.down) != null &&
+                (e = (Index<K, V>) d.down) != null &&
                 e.right == null &&
                 d.right == null &&
                 h.right == null &&
@@ -230,7 +238,7 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
             Index<K, V> d, r;
             if ((r = q.right) != null) {
                 if (r.indexesDeletedNode()) {
-                    q.unlink(r);
+                    q.right = r.right;
                     q = head; // restart
                 } else
                     q = r;
@@ -331,8 +339,9 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
     @Data
     static final class Node<K, V> {
         final K key;
-        volatile Object value;
-        volatile Node<K, V> next;
+        Object value;
+        Node<K, V> next;
+        int ic;
 
         Node(K key, Object value, Node<K, V> next) {
             this.key = key;
@@ -372,38 +381,25 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
     static class Index<K, V> {
         final Node<K, V> node;
         final Index<K, V> down;
-        volatile Index<K, V> right;
+        Index<K, V> right;
+        int level;
 
         Index(Node<K, V> node, Index<K, V> down, Index<K, V> right) {
             this.node = node;
             this.down = down;
             this.right = right;
         }
+        Index(Node<K, V> node, Index<K, V> down, Index<K, V> right, int level) {
+            this.node = node;
+            this.down = down;
+            this.right = right;
+            this.level = level;
+        }
 
         final boolean indexesDeletedNode() {
             return node.value == null;
         }
 
-        final boolean link(Index<K, V> succ, Index<K, V> newSucc) {
-            newSucc.right = succ;
-            right = newSucc;
-            return true;
-        }
-
-        final boolean unlink(Index<K, V> succ) {
-            right = succ.right;
-            return true;
-        }
-
-    }
-
-    static final class HeadIndex<K, V> extends Index<K, V> {
-        final int level;
-
-        HeadIndex(Node<K, V> node, Index<K, V> down, Index<K, V> right, int level) {
-            super(node, down, right);
-            this.level = level;
-        }
     }
 
 
@@ -420,6 +416,7 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
         while (hn != null) {
             // 链表遍历
             sb.append(count++).append(". ")
+                    .append(" ic=").append(hn.ic)
                     .append("\t")
                     .append("{").append(wrap(hn.key)).append(":").append(wrap(hn.value)).append("} ");
             if (hi != null && hi.node == hn) {
@@ -435,7 +432,7 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
     }
 
     private String wrap(Object o) {
-        String s = String.valueOf(o == null ? "" : o);
+        String s = String.valueOf(o == null || BASE_HEADER == o ? "" : o );
         StringBuilder sb = new StringBuilder();
         int max = 4;
         for (int i = 0; i < max - s.length(); i++) {
@@ -449,7 +446,7 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
             return;
         }
         reversed(index.down, sb);
-        sb.append("<-[").append("]");
+        sb.append("<-[").append(index.level).append("]");
     }
 
     /**
@@ -462,8 +459,8 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
         if (node == null || node.next == null) {
             return null;
         }
-        HeadIndex<K, V> oneLevel = head;
-        while (oneLevel != null && oneLevel.level > 1) oneLevel = (HeadIndex<K, V>) oneLevel.down;
+        Index<K, V> oneLevel = head;
+        while (oneLevel != null && oneLevel.level > 1) oneLevel = (Index<K, V>) oneLevel.down;
         Node<K, V> nextIndexNode = null;
         Index<K, V> oneLevelIndex = oneLevel;
         while (oneLevelIndex != null) {
