@@ -34,7 +34,11 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
         return x.compareTo(y);
     }
 
-    private Node<K, V> findPredecessor(K key, Comparator<? super K> cmp) {
+    final int cpr(K x, K y) {
+        return x.compareTo(y);
+    }
+
+    private Node<K, V> findPredecessor(K key) {
         if (key == null)
             throw new NullPointerException(); // don't postpone errors
 
@@ -47,8 +51,7 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
          */
         for (Index<K, V> q = head, r = q.right, d; ; ) {
             if (r != null) {
-                if (cpr(cmp, key, r.node.key) > 0) {
-                    q = r;
+                if (cpr(key, r.node.key) > 0) {
                     r = r.right;
                     continue;
                 }
@@ -56,7 +59,6 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
             if ((d = q.down) == null) {
                 return q.node;
             }
-            q = d;
             r = d.right;
         }
     }
@@ -65,18 +67,13 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
         if (key == null)
             throw new NullPointerException();
         Comparator<? super K> cmp = comparator;
-        for (Node<K, V> b = findPredecessor(key, cmp), n = b.next; ; ) {
-            if (n == null) {
-                return null;
-            }
-            Object v = n.value;
-            Node<K, V> f = n.next;
+        for (Node<K, V> b = findPredecessor(key), n = b.next; n != null; ) {
             if (cpr(cmp, key, n.key) == 0) {
-                return (V) v;
+                return (V) n.value;
             }
-            b = n;
-            n = f;
+            n = n.next;
         }
+        return null;
     }
 
     private V doPut(K key, V value) {
@@ -85,21 +82,17 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
         }
         Node<K, V> z = null;             // added node
         Comparator<? super K> cmp = comparator;
-        for (Node<K, V> b = findPredecessor(key, cmp), // 需要插入点, 需要找到节点的前驱节点
+        for (Node<K, V> b = findPredecessor(key), // 需要插入点, 需要找到节点的前驱节点
              n = b.next; // 元素需要插入在 [b, n] 之间
                 ; ) {
             if (n != null) {
                 int c;
-                // f 后继节点
-                Node<K, V> f = n.next;
                 if ((c = cpr(cmp, key, n.key)) > 0) {
                     b = n;
-                    n = f;
+                    n = n.next;
                     continue;
                 }
-                if (c == 0) {
-                    return (V) n.value;
-                }
+                if (c == 0) return (V) n.value;
             }
 
             // 本次需要添加的节点
@@ -111,14 +104,14 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
         // 开始为节点添加索引层, rnd 范围int全值(正负)
         int rnd = ThreadLocalRandom.current().nextInt();
         if ((rnd & 0x80000001) == 0) {
-            int level = 1, max;
+            int level = 1, max = head.level; // head最高索引高度
             while (((rnd >>>= 1) & 1) != 0) {
-                ++level;
+                ++level; // 本次索引高度
             }
             Index<K, V> idx = null;
             HeadIndex<K, V> h = head;
 
-            if (level <= (max = h.level)) {
+            if (level <= max) {
                 for (int i = 1; i <= level; ++i) {
                     idx = new Index<K, V>(z, idx, null);
                 }
@@ -129,8 +122,6 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
                     // 循环创建索引层级, 将其串成链表
                     idxs[i] = idx = new Index<K, V>(z, idx, null);
                 }
-                // 左上角节点
-                h = head;
                 // 跳跃表原最大高度
                 int oldLevel = h.level;
                 if (level > oldLevel) {
@@ -144,8 +135,9 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
                     idx = idxs[level = oldLevel];
                 }
             }
+            
+            // 串索引
             int insertionLevel = level;
-                // j 当前正在遍历的索引链表的层级
                 int j = h.level;
                 for (Index<K, V> q = h, r = q.right, t = idx; ; ) {
                     if (q == null || t == null){
@@ -153,9 +145,9 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
                     }
                     if (r != null) {
                         Node<K, V> n = r.node;
-                        int c = cpr(cmp, key, n.key);
+                        int c = cpr(key, n.key);
                         if (n.value == null) {
-                            q.unlink(r);
+                            q.right = r.right;
                             r = q.right;
                             continue;
                         }
@@ -187,13 +179,12 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
     final V doRemove(K key, Object value) {
         if (key == null)
             throw new NullPointerException();
-        Comparator<? super K> cmp = comparator;
-        for (Node<K, V> b = findPredecessor(key, cmp), n = b.next; ; ) {
+        for (Node<K, V> b = findPredecessor(key), n = b.next; ; ) {
             if (n == null) {
                 return null;
             }
             Object v = n.value;
-            int c = cpr(cmp, key, n.key);
+            int c = cpr(key, n.key);
             Node<K, V> f = n.next;
             if (c > 0) {
                 b = n;
@@ -201,9 +192,8 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
                 continue;
             }
             n.value = null;
-            n.appendMarker(f);
+            n.next = new Node<K, V>(f);
             b.next = f;
-            findPredecessor(key, cmp);      // clean index
             if (head.right == null) tryReduceLevel();
             return (V) v;
         }
@@ -358,11 +348,6 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
 
         boolean isBaseHeader() {
             return value == BASE_HEADER;
-        }
-
-        boolean appendMarker(Node<K, V> f) {
-            next = new Node<K, V>(f);
-            return true;
         }
 
         void helpDelete(Node<K, V> b, Node<K, V> f) {
