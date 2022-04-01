@@ -110,16 +110,18 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
 
             if (level <= max) {
                 for (int i = 1; i <= level; ++i) {
-                    idx = new Index<K, V>(z, idx, null, i);
+                    idx = new Index<K, V>(z, idx, null);
+//                    idx = new Index<K, V>(z, idx, null, i);
                 }
-                z.ic = level;
+//                z.ic = level;
             } else {
                 level = max + 1;
-                z.ic = level;
+//                z.ic = level;
                 Index<K, V>[] idxs = (Index<K, V>[]) new Index<?, ?>[level + 1];
                 for (int i = 1; i <= level; ++i) {
                     // 循环创建索引层级, 将其串成链表
-                    idxs[i] = idx = new Index<K, V>(z, idx, null, i);
+//                    idxs[i] = idx = new Index<K, V>(z, idx, null, i);
+                    idxs[i] = idx = new Index<K, V>(z, idx, null);
                 }
                 // 跳跃表原最大高度
                 int oldLevel = h.level;
@@ -127,7 +129,8 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
                     Index<K, V> newh = h;
                     Node<K, V> oldbase = h.node;
                     for (int j = oldLevel + 1; j <= level; ++j) {
-                        newh = new Index<K, V>(oldbase, newh, idxs[j], j);
+//                        newh = new Index<K, V>(oldbase, newh, idxs[j], j);
+                        newh = new Index<K, V>(oldbase, newh, idxs[j]);
                     }
                     this.head = newh;
                     h = newh;
@@ -221,40 +224,6 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
         }
     }
 
-    final Node<K, V> findLast() {
-        Index<K, V> q = head;
-        for (; ; ) {
-            Index<K, V> d, r;
-            if ((r = q.right) != null) {
-                if (r.indexesDeletedNode()) {
-                    q.right = r.right;
-                    q = head; // restart
-                } else
-                    q = r;
-            } else if ((d = q.down) != null) {
-                q = d;
-            } else {
-                for (Node<K, V> b = q.node, n = b.next; ; ) {
-                    if (n == null)
-                        return b.isBaseHeader() ? null : b;
-                    Node<K, V> f = n.next;            // inconsistent read
-                    if (n != b.next)
-                        break;
-                    Object v = n.value;
-                    if (v == null) {                 // n is deleted
-                        n.helpDelete(b, f);
-                        break;
-                    }
-                    if (b.value == null || v == n)      // b is deleted
-                        break;
-                    b = n;
-                    n = f;
-                }
-                q = head; // restart
-            }
-        }
-    }
-
     public SkipListMapLinked02() {
         initialize();
     }
@@ -307,20 +276,6 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
         if (key == null)
             throw new NullPointerException();
         return value != null && doRemove(key, value) != null;
-    }
-
-    public K firstKey() {
-        Node<K, V> n = findFirst();
-        if (n == null)
-            throw new NoSuchElementException();
-        return n.key;
-    }
-
-    public K lastKey() {
-        Node<K, V> n = findLast();
-        if (n == null)
-            throw new NoSuchElementException();
-        return n.key;
     }
 
     @Data
@@ -403,7 +358,7 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
         while (hn != null) {
             // 链表遍历
             sb.append(count++).append(". ")
-                    .append(" ic=").append(hn.ic)
+//                    .append(" ic=").append(hn.ic)
                     .append("\t")
                     .append("{").append(wrap(hn.key)).append(":").append(wrap(hn.value)).append("} ");
             if (hi != null && hi.node == hn) {
@@ -433,7 +388,8 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends AbstractSki
             return;
         }
         reversed(index.down, sb);
-        sb.append("<-[").append(index.level).append("]");
+        sb.append("<-[").append("]");
+//        sb.append("<-[").append(index.level).append("]");
     }
 
     /**
