@@ -313,7 +313,7 @@ public class ConcurrentSkipListMap02<K, V> {
                     if (j == insertionLevel) {
                         q.link(r, t);
                         if (t.node.value == null) {
-                            findNode(key);
+//                            findNode(key);
                             break ;
                         }
                         if (--insertionLevel == 0) {
@@ -363,8 +363,8 @@ public class ConcurrentSkipListMap02<K, V> {
                     break ;
                 if (!n.casValue(v, null))
                     break;
-                if (!n.appendMarker(f) || !b.casNext(n, f))
-                    findNode(key);                  // retry via findNode
+                if (!n.appendMarker(f) || !b.casNext(n, f)){}
+//                    findNode(key);                  // retry via findNode
                 else {
                     findPredecessor(key, cmp);      // clean index
                     if (head.right == null)

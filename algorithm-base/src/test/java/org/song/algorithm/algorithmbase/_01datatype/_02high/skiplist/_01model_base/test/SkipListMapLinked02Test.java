@@ -43,7 +43,7 @@ public class SkipListMapLinked02Test {
         int maxVal = 10_0000;
         int maxSize = 1_0000;
 
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 100; i++) {
 
 //            SkipListMapLinked02<Integer, Integer> skip1 = new SkipListMapLinked02<>();
             ConcurrentSkipListMap02<Integer, Integer> skip1 = new ConcurrentSkipListMap02<>();
