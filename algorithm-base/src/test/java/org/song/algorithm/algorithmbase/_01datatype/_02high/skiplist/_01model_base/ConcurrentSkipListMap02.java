@@ -110,14 +110,13 @@ public class ConcurrentSkipListMap02<K, V> {
     private Node<K, V> findPredecessor(Object key, Comparator<? super K> cmp) {
         if (key == null)
             throw new NullPointerException(); // don't postpone errors
-        for (; ; ) {
+//        for (; ; ) {
             for (Index<K, V> q = head, r = q.right, d; ; ) {
                 if (r != null) {
                     Node<K, V> n = r.node;
                     K k = n.key;
                     if (n.value == null) {
-                        if (!q.unlink(r))
-                            break;           // restart
+                        q.unlink(r);
                         r = q.right;         // reread r
                         continue;
                     }
@@ -133,7 +132,7 @@ public class ConcurrentSkipListMap02<K, V> {
                 q = d;
                 r = d.right;
             }
-        }
+//        }
     }
 
     private Node<K, V> findNode(Object key) {
@@ -271,12 +270,12 @@ public class ConcurrentSkipListMap02<K, V> {
                 for (int i = 1; i <= level; ++i) {
                     idxs[i] = idx = new Index<K, V>(z, idx, null);
                 }
-                for (; ; ) {
+//                for (; ; ) {
                     h = head;
                     int oldLevel = h.level;
-                    if (level <= oldLevel) { // lost race to add level
-                        break;
-                    }
+//                    if (level <= oldLevel) { // lost race to add level
+//                        break;
+//                    }
                     HeadIndex<K, V> newh = h;
                     Node<K, V> oldbase = h.node;
                     for (int j = oldLevel + 1; j <= level; ++j) {
@@ -285,17 +284,18 @@ public class ConcurrentSkipListMap02<K, V> {
                     if (casHead(h, newh)) {
                         h = newh;
                         idx = idxs[level = oldLevel];
-                        break;
+//                        break;
                     }
-                }
+//                }
             }
-            splice:
-            for (int insertionLevel = level; ; ) {
+            int insertionLevel = level;
+//            splice:
+//            for (int insertionLevel = level; ; ) {
                 // j 当前正在遍历的索引链表的层级
                 int j = h.level;
                 for (Index<K, V> q = h, r = q.right, t = idx; ; ) {
                     if (q == null || t == null)
-                        break splice;
+                        break ;
                     if (r != null) {
                         Node<K, V> n = r.node;
                         int c = cpr(cmp, key, n.key);
@@ -317,10 +317,10 @@ public class ConcurrentSkipListMap02<K, V> {
                             break; // restart
                         if (t.node.value == null) {
                             findNode(key);
-                            break splice;
+                            break ;
                         }
                         if (--insertionLevel == 0) {
-                            break splice;
+                            break ;
                         }
                     }
 
@@ -330,7 +330,7 @@ public class ConcurrentSkipListMap02<K, V> {
                     q = q.down;
                     r = q.right;
                 }
-            }
+//            }
         }
         return null;
     }
