@@ -168,13 +168,13 @@ public class ConcurrentSkipListMap02<K, V> {
              n = b.next; // 元素需要插入在 [b, n] 之间
                 ; ) {
             if (n != null) {
-                Object v;
-                int c;
+                Object v = n.value;
                 Node<K, V> f = n.next;
-                if ((v = n.value) == null) {   // n is deleted
-                    n.helpDelete(b, f);
-                    continue;
-                }
+//                if ((v = n.value) == null) {   // n is deleted
+//                    n.helpDelete(b, f);
+//                    continue;
+//                }
+                int c;
                 if ((c = cpr(cmp, key, n.key)) > 0) {
                     b = n;
                     n = f;
@@ -186,15 +186,11 @@ public class ConcurrentSkipListMap02<K, V> {
                         return vv;
                     }
                     return null;
-//                        continue; // restart if lost race to replace value 如果race失败, 重新启动以替换value
                 }
-                // else c < 0; fall through
             }
 
             z = new Node<K, V>(key, value, n);
-            if (!b.casNext(n, z)) {
-                continue;         // restart if lost race to append to b}
-            }
+            b.casNext(n, z);
             break;
         }
 
@@ -276,17 +272,11 @@ public class ConcurrentSkipListMap02<K, V> {
             throw new NullPointerException();
         Comparator<? super K> cmp = comparator;
         for (Node<K, V> b = findPredecessor(key, cmp), n = b.next; ; ) {
-            Object v;
-            int c;
             if (n == null)
                 break;
+            Object v = n.value;
             Node<K, V> f = n.next;
-            if ((v = n.value) == null) {        // n is deleted
-                n.helpDelete(b, f);
-                break;
-            }
-            if (b.value == null || v == n)      // b is deleted
-                break;
+            int c;
             if ((c = cpr(cmp, key, n.key)) < 0)
                 break;
             if (c > 0) {
@@ -296,8 +286,7 @@ public class ConcurrentSkipListMap02<K, V> {
             }
             if (value != null && !value.equals(v))
                 break;
-            if (!n.casValue(v, null))
-                break;
+            n.casValue(v, null);
             n.appendMarker(f);
             b.casNext(n, f);
             @SuppressWarnings("unchecked") V vv = (V) v;
