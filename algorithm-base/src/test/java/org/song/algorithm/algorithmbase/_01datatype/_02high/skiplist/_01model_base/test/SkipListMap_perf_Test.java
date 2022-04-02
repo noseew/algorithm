@@ -2,7 +2,7 @@ package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_b
 
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05RB01;
-import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinked02;
+import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinkedJDK;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapArray;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinked;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_redis.SkipListLinked01;
@@ -145,7 +145,7 @@ public class SkipListMap_perf_Test {
                 int key = r.nextInt(maxVal);
                 jdk.put(key, 0);
             }
-            SkipListMapLinked02<Integer, Integer> jdk2 = new SkipListMapLinked02<>(Comparator.comparing(Integer::doubleValue));
+            SkipListMapLinkedJDK<Integer, Integer> jdk2 = new SkipListMapLinkedJDK<>(Comparator.comparing(Integer::doubleValue));
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 jdk2.put(key, 0);
@@ -179,7 +179,7 @@ public class SkipListMap_perf_Test {
             }
         });
         Runnable r4 = () -> StopWatchUtils.run(stopWatch, "ConcurrentSkipListMap02", () -> {
-            SkipListMapLinked02<Integer, Integer> jdk2 = new SkipListMapLinked02<>(Comparator.comparing(Integer::doubleValue));
+            SkipListMapLinkedJDK<Integer, Integer> jdk2 = new SkipListMapLinkedJDK<>(Comparator.comparing(Integer::doubleValue));
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 jdk2.put(key, 0);
