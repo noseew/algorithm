@@ -54,8 +54,8 @@ public class SkipListMapArrayTest {
                 }
 
                 if (j % 10 == 0) {
-                    skip1.remove(j);
-                    equals = skip1.get(j) == null;
+                    skip1.remove(key);
+                    equals = skip1.get(key) == null;
                     if (!equals) {
                         System.out.println(skip1);
                         assert equals;
