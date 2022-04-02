@@ -1,9 +1,6 @@
 
 package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base;
 
-import sun.misc.Unsafe;
-
-import java.lang.reflect.Field;
 import java.util.Comparator;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -110,7 +107,6 @@ public class ConcurrentSkipListMap02<K, V> {
     private Node<K, V> findPredecessor(Object key, Comparator<? super K> cmp) {
         if (key == null)
             throw new NullPointerException(); // don't postpone errors
-//        for (; ; ) {
             for (Index<K, V> q = head, r = q.right, d; ; ) {
                 if (r != null) {
                     Node<K, V> n = r.node;
@@ -132,54 +128,18 @@ public class ConcurrentSkipListMap02<K, V> {
                 q = d;
                 r = d.right;
             }
-//        }
-    }
-
-    private Node<K, V> findNode(Object key) {
-        if (key == null)
-            throw new NullPointerException(); // don't postpone errors
-        Comparator<? super K> cmp = comparator;
-        outer:
-        for (; ; ) {
-            for (Node<K, V> b = findPredecessor(key, cmp), n = b.next; ; ) {
-                Object v;
-                int c;
-                if (n == null)
-                    break outer;
-                Node<K, V> f = n.next;
-                if (n != b.next)                // inconsistent read
-                    break;
-                if ((v = n.value) == null) {    // n is deleted
-                    n.helpDelete(b, f);
-                    break;
-                }
-                if (b.value == null || v == n)  // b is deleted
-                    break;
-                if ((c = cpr(cmp, key, n.key)) == 0)
-                    return n;
-                if (c < 0)
-                    break outer;
-                b = n;
-                n = f;
-            }
-        }
-        return null;
     }
 
     private V doGet(Object key) {
         if (key == null)
             throw new NullPointerException();
         Comparator<? super K> cmp = comparator;
-        outer:
-        for (; ; ) {
             for (Node<K, V> b = findPredecessor(key, cmp), n = b.next; ; ) {
                 Object v;
                 int c;
                 if (n == null)
-                    break outer;
+                    break ;
                 Node<K, V> f = n.next;
-                if (n != b.next)                // inconsistent read
-                    break;
                 if ((v = n.value) == null) {    // n is deleted
                     n.helpDelete(b, f);
                     break;
@@ -191,11 +151,10 @@ public class ConcurrentSkipListMap02<K, V> {
                     return vv;
                 }
                 if (c < 0)
-                    break outer;
+                    break ;
                 b = n;
                 n = f;
             }
-        }
         return null;
     }
 
@@ -205,8 +164,6 @@ public class ConcurrentSkipListMap02<K, V> {
             throw new NullPointerException();
         }
         Comparator<? super K> cmp = comparator;
-//        outer:
-//        for (; ; ) {
             for (Node<K, V> b = findPredecessor(key, cmp), // 需要插入点, 需要找到节点的前驱节点
                  n = b.next; // 元素需要插入在 [b, n] 之间
                     ; ) {
@@ -214,16 +171,10 @@ public class ConcurrentSkipListMap02<K, V> {
                     Object v;
                     int c;
                     Node<K, V> f = n.next;
-//                    if (n != b.next) {               // inconsistent read
-//                        continue ;
-//                    }
                     if ((v = n.value) == null) {   // n is deleted
                         n.helpDelete(b, f);
                         continue;
                     }
-//                    if (b.value == null || v == n) { // b is deleted
-//                        continue;
-//                    }
                     if ((c = cpr(cmp, key, n.key)) > 0) {
                         b = n;
                         n = f;
@@ -244,10 +195,8 @@ public class ConcurrentSkipListMap02<K, V> {
                 if (!b.casNext(n, z)) {
                     continue;         // restart if lost race to append to b}
                 }
-//                break outer;
                 break;
             }
-//        }
 
 //        int rnd = ThreadLocalRandom.nextSecondarySeed();
         int rnd = ThreadLocalRandom.current().nextInt();
@@ -270,12 +219,8 @@ public class ConcurrentSkipListMap02<K, V> {
                 for (int i = 1; i <= level; ++i) {
                     idxs[i] = idx = new Index<K, V>(z, idx, null);
                 }
-//                for (; ; ) {
                     h = head;
                     int oldLevel = h.level;
-//                    if (level <= oldLevel) { // lost race to add level
-//                        break;
-//                    }
                     HeadIndex<K, V> newh = h;
                     Node<K, V> oldbase = h.node;
                     for (int j = oldLevel + 1; j <= level; ++j) {
@@ -285,12 +230,8 @@ public class ConcurrentSkipListMap02<K, V> {
                 casHead(h, newh);
                 h = newh;
                 idx = idxs[level = oldLevel];
-//                }
             }
             int insertionLevel = level;
-//            splice:
-//            for (int insertionLevel = level; ; ) {
-                // j 当前正在遍历的索引链表的层级
                 int j = h.level;
                 for (Index<K, V> q = h, r = q.right, t = idx; ; ) {
                     if (q == null || t == null)
@@ -313,7 +254,6 @@ public class ConcurrentSkipListMap02<K, V> {
                     if (j == insertionLevel) {
                         q.link(r, t);
                         if (t.node.value == null) {
-//                            findNode(key);
                             break ;
                         }
                         if (--insertionLevel == 0) {
@@ -327,7 +267,6 @@ public class ConcurrentSkipListMap02<K, V> {
                     q = q.down;
                     r = q.right;
                 }
-//            }
         }
         return null;
     }
@@ -336,16 +275,12 @@ public class ConcurrentSkipListMap02<K, V> {
         if (key == null)
             throw new NullPointerException();
         Comparator<? super K> cmp = comparator;
-//        outer:
-//        for (; ; ) {
             for (Node<K, V> b = findPredecessor(key, cmp), n = b.next; ; ) {
                 Object v;
                 int c;
                 if (n == null)
                     break ;
                 Node<K, V> f = n.next;
-//                if (n != b.next)                    // inconsistent read
-//                    break;
                 if ((v = n.value) == null) {        // n is deleted
                     n.helpDelete(b, f);
                     break;
@@ -363,33 +298,12 @@ public class ConcurrentSkipListMap02<K, V> {
                     break ;
                 if (!n.casValue(v, null))
                     break;
-                if (!n.appendMarker(f) || !b.casNext(n, f)){}
-//                    findNode(key);                  // retry via findNode
-                else {
-                    findPredecessor(key, cmp);      // clean index
-                    if (head.right == null)
-                        tryReduceLevel();
-                }
+                n.appendMarker(f);
+                b.casNext(n, f);
                 @SuppressWarnings("unchecked") V vv = (V) v;
                 return vv;
             }
-//        }
         return null;
-    }
-
-    private void tryReduceLevel() {
-        HeadIndex<K, V> h = head;
-        HeadIndex<K, V> d;
-        HeadIndex<K, V> e;
-        if (h.level > 3 &&
-                (d = (HeadIndex<K, V>) h.down) != null &&
-                (e = (HeadIndex<K, V>) d.down) != null &&
-                e.right == null &&
-                d.right == null &&
-                h.right == null &&
-                casHead(h, d) && // try to set
-                h.right != null) // recheck
-            casHead(d, h);   // try to backout
     }
 
     public ConcurrentSkipListMap02() {
