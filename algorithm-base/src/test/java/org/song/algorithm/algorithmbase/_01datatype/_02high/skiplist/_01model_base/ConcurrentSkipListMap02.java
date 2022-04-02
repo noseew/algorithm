@@ -336,16 +336,16 @@ public class ConcurrentSkipListMap02<K, V> {
         if (key == null)
             throw new NullPointerException();
         Comparator<? super K> cmp = comparator;
-        outer:
-        for (; ; ) {
+//        outer:
+//        for (; ; ) {
             for (Node<K, V> b = findPredecessor(key, cmp), n = b.next; ; ) {
                 Object v;
                 int c;
                 if (n == null)
-                    break outer;
+                    break ;
                 Node<K, V> f = n.next;
-                if (n != b.next)                    // inconsistent read
-                    break;
+//                if (n != b.next)                    // inconsistent read
+//                    break;
                 if ((v = n.value) == null) {        // n is deleted
                     n.helpDelete(b, f);
                     break;
@@ -353,14 +353,14 @@ public class ConcurrentSkipListMap02<K, V> {
                 if (b.value == null || v == n)      // b is deleted
                     break;
                 if ((c = cpr(cmp, key, n.key)) < 0)
-                    break outer;
+                    break ;
                 if (c > 0) {
                     b = n;
                     n = f;
                     continue;
                 }
                 if (value != null && !value.equals(v))
-                    break outer;
+                    break ;
                 if (!n.casValue(v, null))
                     break;
                 if (!n.appendMarker(f) || !b.casNext(n, f))
@@ -373,7 +373,7 @@ public class ConcurrentSkipListMap02<K, V> {
                 @SuppressWarnings("unchecked") V vv = (V) v;
                 return vv;
             }
-        }
+//        }
         return null;
     }
 
