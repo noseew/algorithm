@@ -107,54 +107,54 @@ public class ConcurrentSkipListMap02<K, V> {
     private Node<K, V> findPredecessor(Object key, Comparator<? super K> cmp) {
         if (key == null)
             throw new NullPointerException(); // don't postpone errors
-            for (Index<K, V> q = head, r = q.right, d; ; ) {
-                if (r != null) {
-                    Node<K, V> n = r.node;
-                    K k = n.key;
-                    if (n.value == null) {
-                        q.unlink(r);
-                        r = q.right;         // reread r
-                        continue;
-                    }
-                    if (cpr(cmp, key, k) > 0) {
-                        q = r;
-                        r = r.right;
-                        continue;
-                    }
+        for (Index<K, V> q = head, r = q.right, d; ; ) {
+            if (r != null) {
+                Node<K, V> n = r.node;
+                K k = n.key;
+                if (n.value == null) {
+                    q.unlink(r);
+                    r = q.right;         // reread r
+                    continue;
                 }
-                if ((d = q.down) == null) {
-                    return q.node;
+                if (cpr(cmp, key, k) > 0) {
+                    q = r;
+                    r = r.right;
+                    continue;
                 }
-                q = d;
-                r = d.right;
             }
+            if ((d = q.down) == null) {
+                return q.node;
+            }
+            q = d;
+            r = d.right;
+        }
     }
 
     private V doGet(Object key) {
         if (key == null)
             throw new NullPointerException();
         Comparator<? super K> cmp = comparator;
-            for (Node<K, V> b = findPredecessor(key, cmp), n = b.next; ; ) {
-                Object v;
-                int c;
-                if (n == null)
-                    break ;
-                Node<K, V> f = n.next;
-                if ((v = n.value) == null) {    // n is deleted
-                    n.helpDelete(b, f);
-                    break;
-                }
-                if (b.value == null || v == n)  // b is deleted
-                    break;
-                if ((c = cpr(cmp, key, n.key)) == 0) {
-                    @SuppressWarnings("unchecked") V vv = (V) v;
-                    return vv;
-                }
-                if (c < 0)
-                    break ;
-                b = n;
-                n = f;
+        for (Node<K, V> b = findPredecessor(key, cmp), n = b.next; ; ) {
+            Object v;
+            int c;
+            if (n == null)
+                break;
+            Node<K, V> f = n.next;
+            if ((v = n.value) == null) {    // n is deleted
+                n.helpDelete(b, f);
+                break;
             }
+            if (b.value == null || v == n)  // b is deleted
+                break;
+            if ((c = cpr(cmp, key, n.key)) == 0) {
+                @SuppressWarnings("unchecked") V vv = (V) v;
+                return vv;
+            }
+            if (c < 0)
+                break;
+            b = n;
+            n = f;
+        }
         return null;
     }
 
@@ -164,39 +164,39 @@ public class ConcurrentSkipListMap02<K, V> {
             throw new NullPointerException();
         }
         Comparator<? super K> cmp = comparator;
-            for (Node<K, V> b = findPredecessor(key, cmp), // 需要插入点, 需要找到节点的前驱节点
-                 n = b.next; // 元素需要插入在 [b, n] 之间
-                    ; ) {
-                if (n != null) {
-                    Object v;
-                    int c;
-                    Node<K, V> f = n.next;
-                    if ((v = n.value) == null) {   // n is deleted
-                        n.helpDelete(b, f);
-                        continue;
+        for (Node<K, V> b = findPredecessor(key, cmp), // 需要插入点, 需要找到节点的前驱节点
+             n = b.next; // 元素需要插入在 [b, n] 之间
+                ; ) {
+            if (n != null) {
+                Object v;
+                int c;
+                Node<K, V> f = n.next;
+                if ((v = n.value) == null) {   // n is deleted
+                    n.helpDelete(b, f);
+                    continue;
+                }
+                if ((c = cpr(cmp, key, n.key)) > 0) {
+                    b = n;
+                    n = f;
+                    continue;
+                }
+                if (c == 0) {
+                    if (onlyIfAbsent || n.casValue(v, value)) {
+                        @SuppressWarnings("unchecked") V vv = (V) v;
+                        return vv;
                     }
-                    if ((c = cpr(cmp, key, n.key)) > 0) {
-                        b = n;
-                        n = f;
-                        continue;
-                    }
-                    if (c == 0) {
-                        if (onlyIfAbsent || n.casValue(v, value)) {
-                            @SuppressWarnings("unchecked") V vv = (V) v;
-                            return vv;
-                        }
-                        return null;
+                    return null;
 //                        continue; // restart if lost race to replace value 如果race失败, 重新启动以替换value
-                    }
-                    // else c < 0; fall through
                 }
-
-                z = new Node<K, V>(key, value, n);
-                if (!b.casNext(n, z)) {
-                    continue;         // restart if lost race to append to b}
-                }
-                break;
+                // else c < 0; fall through
             }
+
+            z = new Node<K, V>(key, value, n);
+            if (!b.casNext(n, z)) {
+                continue;         // restart if lost race to append to b}
+            }
+            break;
+        }
 
 //        int rnd = ThreadLocalRandom.nextSecondarySeed();
         int rnd = ThreadLocalRandom.current().nextInt();
@@ -219,54 +219,54 @@ public class ConcurrentSkipListMap02<K, V> {
                 for (int i = 1; i <= level; ++i) {
                     idxs[i] = idx = new Index<K, V>(z, idx, null);
                 }
-                    h = head;
-                    int oldLevel = h.level;
-                    HeadIndex<K, V> newh = h;
-                    Node<K, V> oldbase = h.node;
-                    for (int j = oldLevel + 1; j <= level; ++j) {
-                        newh = new HeadIndex<K, V>(oldbase, newh, idxs[j], j);
-                    }
+                h = head;
+                int oldLevel = h.level;
+                HeadIndex<K, V> newh = h;
+                Node<K, V> oldbase = h.node;
+                for (int j = oldLevel + 1; j <= level; ++j) {
+                    newh = new HeadIndex<K, V>(oldbase, newh, idxs[j], j);
+                }
 
                 casHead(h, newh);
                 h = newh;
                 idx = idxs[level = oldLevel];
             }
             int insertionLevel = level;
-                int j = h.level;
-                for (Index<K, V> q = h, r = q.right, t = idx; ; ) {
-                    if (q == null || t == null)
-                        break ;
-                    if (r != null) {
-                        Node<K, V> n = r.node;
-                        int c = cpr(cmp, key, n.key);
-                        if (n.value == null) {
-                            q.unlink(r);
-                            r = q.right;
-                            continue;
-                        }
-                        if (c > 0) {
-                            q = r;
-                            r = r.right;
-                            continue;
-                        }
+            int j = h.level;
+            for (Index<K, V> q = h, r = q.right, t = idx; ; ) {
+                if (q == null || t == null)
+                    break;
+                if (r != null) {
+                    Node<K, V> n = r.node;
+                    int c = cpr(cmp, key, n.key);
+                    if (n.value == null) {
+                        q.unlink(r);
+                        r = q.right;
+                        continue;
                     }
-
-                    if (j == insertionLevel) {
-                        q.link(r, t);
-                        if (t.node.value == null) {
-                            break ;
-                        }
-                        if (--insertionLevel == 0) {
-                            break ;
-                        }
+                    if (c > 0) {
+                        q = r;
+                        r = r.right;
+                        continue;
                     }
-
-                    if (--j >= insertionLevel && j < level) {
-                        t = t.down;
-                    }
-                    q = q.down;
-                    r = q.right;
                 }
+
+                if (j == insertionLevel) {
+                    q.link(r, t);
+                    if (t.node.value == null) {
+                        break;
+                    }
+                    if (--insertionLevel == 0) {
+                        break;
+                    }
+                }
+
+                if (--j >= insertionLevel && j < level) {
+                    t = t.down;
+                }
+                q = q.down;
+                r = q.right;
+            }
         }
         return null;
     }
@@ -275,34 +275,34 @@ public class ConcurrentSkipListMap02<K, V> {
         if (key == null)
             throw new NullPointerException();
         Comparator<? super K> cmp = comparator;
-            for (Node<K, V> b = findPredecessor(key, cmp), n = b.next; ; ) {
-                Object v;
-                int c;
-                if (n == null)
-                    break ;
-                Node<K, V> f = n.next;
-                if ((v = n.value) == null) {        // n is deleted
-                    n.helpDelete(b, f);
-                    break;
-                }
-                if (b.value == null || v == n)      // b is deleted
-                    break;
-                if ((c = cpr(cmp, key, n.key)) < 0)
-                    break ;
-                if (c > 0) {
-                    b = n;
-                    n = f;
-                    continue;
-                }
-                if (value != null && !value.equals(v))
-                    break ;
-                if (!n.casValue(v, null))
-                    break;
-                n.appendMarker(f);
-                b.casNext(n, f);
-                @SuppressWarnings("unchecked") V vv = (V) v;
-                return vv;
+        for (Node<K, V> b = findPredecessor(key, cmp), n = b.next; ; ) {
+            Object v;
+            int c;
+            if (n == null)
+                break;
+            Node<K, V> f = n.next;
+            if ((v = n.value) == null) {        // n is deleted
+                n.helpDelete(b, f);
+                break;
             }
+            if (b.value == null || v == n)      // b is deleted
+                break;
+            if ((c = cpr(cmp, key, n.key)) < 0)
+                break;
+            if (c > 0) {
+                b = n;
+                n = f;
+                continue;
+            }
+            if (value != null && !value.equals(v))
+                break;
+            if (!n.casValue(v, null))
+                break;
+            n.appendMarker(f);
+            b.casNext(n, f);
+            @SuppressWarnings("unchecked") V vv = (V) v;
+            return vv;
+        }
         return null;
     }
 
