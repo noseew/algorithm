@@ -206,8 +206,8 @@ public class ConcurrentSkipListMap02<K, V> {
             throw new NullPointerException();
         }
         Comparator<? super K> cmp = comparator;
-        outer:
-        for (; ; ) {
+//        outer:
+//        for (; ; ) {
             for (Node<K, V> b = findPredecessor(key, cmp), // 需要插入点, 需要找到节点的前驱节点
                  n = b.next; // 元素需要插入在 [b, n] 之间
                     ; ) {
@@ -215,16 +215,16 @@ public class ConcurrentSkipListMap02<K, V> {
                     Object v;
                     int c;
                     Node<K, V> f = n.next;
-                    if (n != b.next) {               // inconsistent read
-                        break;
-                    }
+//                    if (n != b.next) {               // inconsistent read
+//                        continue ;
+//                    }
                     if ((v = n.value) == null) {   // n is deleted
                         n.helpDelete(b, f);
-                        break;
+                        continue;
                     }
-                    if (b.value == null || v == n) { // b is deleted
-                        break;
-                    }
+//                    if (b.value == null || v == n) { // b is deleted
+//                        continue;
+//                    }
                     if ((c = cpr(cmp, key, n.key)) > 0) {
                         b = n;
                         n = f;
@@ -235,18 +235,20 @@ public class ConcurrentSkipListMap02<K, V> {
                             @SuppressWarnings("unchecked") V vv = (V) v;
                             return vv;
                         }
-                        break; // restart if lost race to replace value 如果race失败, 重新启动以替换value
+                        return null;
+//                        continue; // restart if lost race to replace value 如果race失败, 重新启动以替换value
                     }
                     // else c < 0; fall through
                 }
 
                 z = new Node<K, V>(key, value, n);
                 if (!b.casNext(n, z)) {
-                    break;         // restart if lost race to append to b}
+                    continue;         // restart if lost race to append to b}
                 }
-                break outer;
+//                break outer;
+                break;
             }
-        }
+//        }
 
 //        int rnd = ThreadLocalRandom.nextSecondarySeed();
         int rnd = ThreadLocalRandom.current().nextInt();
