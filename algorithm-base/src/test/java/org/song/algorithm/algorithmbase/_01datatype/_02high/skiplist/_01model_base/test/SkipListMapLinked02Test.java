@@ -1,8 +1,6 @@
 package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.test;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.ConcurrentSkipListMap02;
-import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinked;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinked02;
 
 import java.util.Random;
@@ -18,7 +16,7 @@ public class SkipListMapLinked02Test {
     public void test01() {
 
 //        SkipListMapLinked02<Integer, Integer> skip1 = new SkipListMapLinked02<>();
-        ConcurrentSkipListMap02<Integer, Integer> skip1 = new ConcurrentSkipListMap02<>();
+        SkipListMapLinked02<Integer, Integer> skip1 = new SkipListMapLinked02<>();
         for (int i = 0; i < maxSize; i++) {
             int val = r.nextInt(maxVal);
             int key = r.nextInt(maxVal / 10);
@@ -46,7 +44,7 @@ public class SkipListMapLinked02Test {
         for (int i = 0; i < 100; i++) {
 
 //            SkipListMapLinked02<Integer, Integer> skip1 = new SkipListMapLinked02<>();
-            ConcurrentSkipListMap02<Integer, Integer> skip1 = new ConcurrentSkipListMap02<>();
+            SkipListMapLinked02<Integer, Integer> skip1 = new SkipListMapLinked02<>();
             for (int j = 0; j < maxSize; j++) {
                 int key = r.nextInt(maxVal);
                 int val = r.nextInt(maxVal);
