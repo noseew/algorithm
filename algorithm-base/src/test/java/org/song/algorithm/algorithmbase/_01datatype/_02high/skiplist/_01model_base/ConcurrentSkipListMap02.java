@@ -281,11 +281,10 @@ public class ConcurrentSkipListMap02<K, V> {
                     for (int j = oldLevel + 1; j <= level; ++j) {
                         newh = new HeadIndex<K, V>(oldbase, newh, idxs[j], j);
                     }
-                    if (casHead(h, newh)) {
-                        h = newh;
-                        idx = idxs[level = oldLevel];
-//                        break;
-                    }
+
+                casHead(h, newh);
+                h = newh;
+                idx = idxs[level = oldLevel];
 //                }
             }
             int insertionLevel = level;
@@ -300,8 +299,7 @@ public class ConcurrentSkipListMap02<K, V> {
                         Node<K, V> n = r.node;
                         int c = cpr(cmp, key, n.key);
                         if (n.value == null) {
-                            if (!q.unlink(r))
-                                break;
+                            q.unlink(r);
                             r = q.right;
                             continue;
                         }
@@ -313,8 +311,7 @@ public class ConcurrentSkipListMap02<K, V> {
                     }
 
                     if (j == insertionLevel) {
-                        if (!q.link(r, t))
-                            break; // restart
+                        q.link(r, t);
                         if (t.node.value == null) {
                             findNode(key);
                             break ;
