@@ -63,10 +63,11 @@ public class Tree03AVL01<V extends Comparable<V>> extends Tree02BST03<V> {
         }
 
         // 复用 BST
-        if (less(v, parent.val)) {
+        int cpr = compare(v, parent.val);
+        if (cpr < 0) {
             // 向左插入
             parent.left = insert_recursive(parent.left, v);
-        } else if (greater(v, parent.val)) {
+        } else if (cpr > 0) {
             // 向右插入
             parent.right = insert_recursive(parent.right, v);
         } else {
@@ -89,9 +90,10 @@ public class Tree03AVL01<V extends Comparable<V>> extends Tree02BST03<V> {
             return parent;
         }
         // 复用 BST 的删除
-        if (less(v, parent.val)) {
+        int cpr = compare(v, parent.val);
+        if (cpr < 0) {
             parent.left = remove_recursive(parent.left, v);
-        } else if (greater(v, parent.val)) {
+        } else if (cpr > 0) {
             parent.right = remove_recursive(parent.right, v);
         } else if (parent.right != null && parent.left != null) {
             parent.val = getMinNode(parent.right).val;

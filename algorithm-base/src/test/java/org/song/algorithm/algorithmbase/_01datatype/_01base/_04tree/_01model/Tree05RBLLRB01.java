@@ -63,10 +63,11 @@ public class Tree05RBLLRB01<V extends Comparable<V>> extends Tree05RBAbs<V> {
             return parent;
         }
 
-        if (less(v, parent.val)) {
+        int cpr = compare(v, parent.val);
+        if (cpr < 0) {
             // 向左插入
             parent.left = insert_recursive(parent.left, v);
-        } else if (greater(v, parent.val)) {
+        } else if (cpr > 0) {
             // 向右插入
             parent.right = insert_recursive(parent.right, v);
         } else {
@@ -95,10 +96,11 @@ public class Tree05RBLLRB01<V extends Comparable<V>> extends Tree05RBAbs<V> {
             2. 直接后继节点: 就是s的右子树的左左..右子节点
          */
 
-        if (less(v, parent.val)) {
+        int cpr = compare(v, parent.val);
+        if (cpr < 0) {
             // 小于当前根节点
             parent.left = remove_recursive(parent.left, v);
-        } else if (greater(v, parent.val)) {
+        } else if (cpr > 0) {
             // 大于当前根节点
             parent.right = remove_recursive(parent.left, v);
         } else if (parent.left != null && parent.right != null) {

@@ -131,7 +131,8 @@ public class Tree02BST01<V extends Comparable<V>> extends AbsBSTTree<V> {
         AtomicInteger rank = new AtomicInteger(1);
         // 采用中序遍历, 并计数
         traverse(root, Order.MidOrder, e -> {
-            if (greater(v, e.val)) {
+            int cpr = compare(v, e.val);
+            if (cpr > 0) {
                 rank.incrementAndGet();
                 return true;
             }
@@ -151,12 +152,14 @@ public class Tree02BST01<V extends Comparable<V>> extends AbsBSTTree<V> {
     @Override
     public List<V> range(V min, V max) {
         List<V> list = new ArrayList<>();
-        if (greater(min, max)) {
+        int cpr = compare(min, max);
+        if (cpr > 0) {
             return list;
         }
         // 先找到 min
         TreeNode<V> minNode = getCeilingNode(root, min);
-        if (minNode == null || greater(minNode.val, max)) {
+        cpr = compare(minNode.val, max);
+        if (minNode == null || cpr > 0) {
             return list;
         }
         /*
@@ -170,7 +173,7 @@ public class Tree02BST01<V extends Comparable<V>> extends AbsBSTTree<V> {
         AtomicInteger step = new AtomicInteger(1);
         traverse(root, Order.MidOrder, e -> {
             // 遍历整棵树 e 要在 min max 之间 
-            if (less(e.val, max) && !less(e.val, min) && step.get() < 3) {
+            if (compare(e.val, max) < 0 && compare(e.val, min) >= 0 && step.get() < 3) {
                 list.add(e.val);
                 step.set(2);
                 return true;
@@ -211,10 +214,11 @@ public class Tree02BST01<V extends Comparable<V>> extends AbsBSTTree<V> {
             return newNode(v);
         }
 
-        if (less(v, parent.val)) {
+        int cpr = compare(v, parent.val);
+        if (cpr < 0) {
             // 向左插入
             parent.left = insert_recursive(parent.left, v);
-        } else if (greater(v, parent.val)) {
+        } else if (cpr > 0) {
             // 向右插入
             parent.right = insert_recursive(parent.right, v);
         } else {
@@ -235,9 +239,10 @@ public class Tree02BST01<V extends Comparable<V>> extends AbsBSTTree<V> {
         if (parent == null) {
             return null;
         }
-        if (less(v, parent.val)) {
+        int cpr = compare(v, parent.val);
+        if (cpr < 0) {
             return search_recursive(parent.left, v);
-        } else if (greater(v, parent.val)) {
+        } else if (cpr > 0) {
             return search_recursive(parent.right, v);
         } else {
             return parent;
@@ -266,10 +271,11 @@ public class Tree02BST01<V extends Comparable<V>> extends AbsBSTTree<V> {
         4. 删除叶子结点s2, 递归当前删除方法定位到待删除的叶子结点, 将叶子结点的父节点的叶子节点置空即可
          */
 
-        if (less(v, parent.val)) {
+        int cpr = compare(v, parent.val);
+        if (cpr < 0) {
             // 小于当前根节点
             parent.left = remove_recursive(parent.left, v);
-        } else if (greater(v, parent.val)) {
+        } else if (cpr > 0) {
             // 大于当前根节点
             parent.right = remove_recursive(parent.right, v);
         } else if (parent.right != null && parent.left != null) {
@@ -305,16 +311,17 @@ public class Tree02BST01<V extends Comparable<V>> extends AbsBSTTree<V> {
             return parent;
         }
 
-        if ((xp.left != null && eq(xp.left.val, v))
-                || (xp.right != null && eq(xp.right.val, v))) {
+        if ((xp.left != null && compare(xp.left.val, v) == 0)
+                || (xp.right != null && compare(xp.right.val, v) == 0)) {
             // 等值不处理
             return parent;
         }
 
         TreeNode<V> x = newNode(v);
-        if (less(v, xp.val)) {
+        int cpr = compare(v, xp.val);
+        if (cpr < 0) {
             xp.left = x;
-        } else if (greater(v, xp.val)) {
+        } else if (cpr > 0) {
             xp.right = x;
         }
         return x;
@@ -350,9 +357,10 @@ public class Tree02BST01<V extends Comparable<V>> extends AbsBSTTree<V> {
         // 待删除的节点x, x的父节点xp
         TreeNode<V> x = parent, xp = null;
         do {
-            if (eq(v, x.val)) break;
+            int cpr = compare(v, x.val);
+            if (cpr == 0) break;
             xp = x;
-            x = less(v, x.val) ? x.left : x.right;
+            x = cpr < 0 ? x.left : x.right;
         } while (x != null);
         
         if (x == null) return parent; // 无需删除, 原样返回
@@ -493,19 +501,20 @@ public class Tree02BST01<V extends Comparable<V>> extends AbsBSTTree<V> {
     protected TreeNode<V> getFloorNode(TreeNode<V> parent, V v) {
         TreeNode<V> floor = null;
         while (parent != null) {
+            int cpr = compare(v, parent.val);
             if (parent.val == v) {
                 // v == 当前
                 return parent;
-            } else if (less(v, parent.val) && parent.left != null) {
+            } else if (cpr < 0 && parent.left != null) {
                 // v < 当前, 向左移动, 等待下次判断
                 parent = parent.left;
-            } else if (parent.right != null && less(parent.right.val, v)) {
+            } else if (parent.right != null && compare(parent.right.val, v) < 0) {
                 // v > 当前.right, 向右移动, 等待下次判断
                 parent = parent.right;
             } else {
                 // floor 介于 parent 和 parent.right 之间, 将满足条件的 node 放入候选单独比较
-                if (less(parent.val, v)) {
-                    if (floor == null || less(floor.val, parent.val)) {
+                if (compare(parent.val, v) < 0) {
+                    if (floor == null || compare(floor.val, parent.val) < 0) {
                         floor = parent;
                     }
                 }
@@ -528,16 +537,16 @@ public class Tree02BST01<V extends Comparable<V>> extends AbsBSTTree<V> {
             if (parent.val == v) {
                 // v == 当前
                 return parent;
-            } else if (greater(v, parent.val) && parent.right != null) {
+            } else if (compare(v, parent.val) > 0 && parent.right != null) {
                 // v > 当前, 向右移动, 等待下次判断
                 parent = parent.right;
-            } else if (parent.left != null && greater(parent.left.val, v)) {
+            } else if (parent.left != null && compare(parent.left.val, v) > 0) {
                 // v < 当前.left, 向左移动, 等待下次判断
                 parent = parent.left;
             } else {
                 // floor 介于 parent 和 parent.left 之间, 将满足条件的 node 放入候选单独比较
-                if (greater(parent.val, v)) {
-                    if (ceiling == null || greater(ceiling.val, parent.val)) {
+                if (compare(parent.val, v) > 0) {
+                    if (ceiling == null || compare(ceiling.val, parent.val) > 0) {
                         ceiling = parent;
                     }
                 }

@@ -44,8 +44,8 @@ public class Tree02BST02<V extends Comparable<V>> extends Tree02BST01<V> {
             return parent;
         }
 
-        if ((xp.left != null && eq(xp.left.val, v))
-                || (xp.right != null && eq(xp.right.val, v))) {
+        if ((xp.left != null && compare(xp.left.val, v) == 0)
+                || (xp.right != null && compare(xp.right.val, v) == 0)) {
             // 等值不处理
             return parent;
         }

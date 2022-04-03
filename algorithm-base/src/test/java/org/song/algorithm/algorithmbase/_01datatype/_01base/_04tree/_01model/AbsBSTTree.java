@@ -36,18 +36,6 @@ public abstract class AbsBSTTree<V extends Comparable<V>> {
         return new TreeNode<>(v);
     }
 
-    public boolean less(V v1, V v2) {
-        return comparator.compare(v1, v2) < 0;
-    }
-
-    public boolean greater(V v1, V v2) {
-        return comparator.compare(v1, v2) > 0;
-    }
-
-    public boolean eq(V v1, V v2) {
-        return comparator.compare(v1, v2) == 0;
-    }
-
     public int compare(V v1, V v2) {
         return comparator.compare(v1, v2);
     }

@@ -61,17 +61,18 @@ public class Tree03AVL02<V extends Comparable<V>> extends Tree03AVL01<V> {
             return parent;
         }
 
-        if ((xp.left != null && eq(xp.left.val, v))
-                || (xp.right != null && eq(xp.right.val, v))) {
+        if ((xp.left != null && compare(xp.left.val, v) == 0)
+                || (xp.right != null && compare(xp.right.val, v) == 0)) {
             // 等值不处理
             return parent;
         }
 
         TreeNode<V> x = newNode(v);
         x.parent = xp;
-        if (less(v, xp.val)) {
+        int cpr = compare(v, xp.val);
+        if (cpr < 0) {
             xp.left = x;
-        } else if (greater(v, xp.val)) {
+        } else if (cpr > 0) {
             xp.right = x;
         }
 
@@ -87,8 +88,9 @@ public class Tree03AVL02<V extends Comparable<V>> extends Tree03AVL01<V> {
      */
     protected TreeNode<V> search_traverse(TreeNode<V> parent, V v) {
         while (parent != null) {
-            if (eq(v, parent.val)) return parent;
-            parent = less(v, parent.val) ? parent.left : parent.right;
+            int cpr = compare(v, parent.val);
+            if (cpr == 0) return parent;
+            parent = cpr < 0 ? parent.left : parent.right;
         }
         return parent;
     }
