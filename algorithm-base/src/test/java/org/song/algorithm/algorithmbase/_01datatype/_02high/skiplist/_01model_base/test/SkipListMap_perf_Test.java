@@ -2,10 +2,9 @@ package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_b
 
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05RB01;
-import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinked02;
-import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinkedJDK;
+import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinked02OptRemove;
+import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinkedFromJDK;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapArray;
-import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinked;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_redis.SkipListLinked01;
 import org.song.algorithm.algorithmbase.utils.StopWatchUtils;
 import org.springframework.util.StopWatch;
@@ -81,7 +80,7 @@ public class SkipListMap_perf_Test {
         StopWatch stopWatch = new StopWatch();
 
         StopWatchUtils.warnup(() -> {
-            SkipListMapLinked02<Integer, Integer> skip1 = new SkipListMapLinked02<>();
+            SkipListMapLinked02OptRemove<Integer, Integer> skip1 = new SkipListMapLinked02OptRemove<>();
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip1.put(key, 0);
@@ -94,7 +93,7 @@ public class SkipListMap_perf_Test {
         });
 
         Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListMapLinked02", () -> {
-            SkipListMapLinked02<Integer, Integer> skip1 = new SkipListMapLinked02<>();
+            SkipListMapLinked02OptRemove<Integer, Integer> skip1 = new SkipListMapLinked02OptRemove<>();
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip1.put(key, 0);
@@ -146,7 +145,7 @@ public class SkipListMap_perf_Test {
                 int key = r.nextInt(maxVal);
                 jdk.put(key, 0);
             }
-            SkipListMapLinkedJDK<Integer, Integer> jdk2 = new SkipListMapLinkedJDK<>(Comparator.comparing(Integer::doubleValue));
+            SkipListMapLinkedFromJDK<Integer, Integer> jdk2 = new SkipListMapLinkedFromJDK<>(Comparator.comparing(Integer::doubleValue));
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 jdk2.put(key, 0);
@@ -180,7 +179,7 @@ public class SkipListMap_perf_Test {
             }
         });
         Runnable r4 = () -> StopWatchUtils.run(stopWatch, "ConcurrentSkipListMap02", () -> {
-            SkipListMapLinkedJDK<Integer, Integer> jdk2 = new SkipListMapLinkedJDK<>(Comparator.comparing(Integer::doubleValue));
+            SkipListMapLinkedFromJDK<Integer, Integer> jdk2 = new SkipListMapLinkedFromJDK<>(Comparator.comparing(Integer::doubleValue));
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 jdk2.put(key, 0);

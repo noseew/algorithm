@@ -4,7 +4,7 @@ package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_b
 import java.util.Comparator;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class SkipListMapLinkedJDK<K, V> {
+public class SkipListMapLinkedFromJDK<K, V> {
 
     private static final Object BASE_HEADER = new Object();
 
@@ -306,12 +306,12 @@ public class SkipListMapLinkedJDK<K, V> {
         return null;
     }
 
-    public SkipListMapLinkedJDK() {
+    public SkipListMapLinkedFromJDK() {
         this.comparator = null;
         initialize();
     }
 
-    public SkipListMapLinkedJDK(Comparator<? super K> comparator) {
+    public SkipListMapLinkedFromJDK(Comparator<? super K> comparator) {
         this.comparator = comparator;
         initialize();
     }

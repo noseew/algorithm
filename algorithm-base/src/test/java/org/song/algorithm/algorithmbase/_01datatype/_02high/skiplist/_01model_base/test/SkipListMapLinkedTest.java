@@ -1,9 +1,8 @@
 package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.test;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapArray;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinked;
-import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinked02;
+import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinked02OptRemove;
 
 import java.util.Random;
 
@@ -18,7 +17,7 @@ public class SkipListMapLinkedTest {
     public void test01() {
 
 //        SkipListMapLinked<Integer, Integer> skip1 = new SkipListMapLinked<>();
-        SkipListMapLinked02<Integer, Integer> skip1 = new SkipListMapLinked02<>();
+        SkipListMapLinked02OptRemove<Integer, Integer> skip1 = new SkipListMapLinked02OptRemove<>();
         for (int i = 0; i < maxSize; i++) {
             int val = r.nextInt(maxVal);
             int key = r.nextInt(maxVal / 10);
