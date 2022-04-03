@@ -7,6 +7,7 @@ import org.song.algorithm.algorithmbase.utils.StopWatchUtils;
 import org.springframework.util.StopWatch;
 
 import java.util.HashMap;
+import java.util.Random;
 import java.util.UUID;
 
 public class HashMap_perf_test {
@@ -20,28 +21,29 @@ public class HashMap_perf_test {
     public void test_perf_put_01() {
         int num = 10_0000;
         StopWatch stopWatch = new StopWatch();
+        Random r = new Random();
 
         StopWatchUtils.warnup(() -> {
             HashMap_base_03<String, String> map = new HashMap_base_03<>();
             for (int i = 0; i < num; i++) {
-                map.put(UUID.randomUUID().toString(), "");
+                map.put(String.valueOf(r.nextInt()), "");
             }
             Dict_base_01<String, String> map2 = new Dict_base_01<>();
             for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
+                map2.put(String.valueOf(r.nextInt()), "");
             }
         });
 
         Runnable r1 = () -> StopWatchUtils.run(stopWatch, "HashMap_base_03", () -> {
             HashMap_base_03<String, String> map2 = new HashMap_base_03<>();
             for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
+                map2.put(String.valueOf(r.nextInt()), "");
             }
         });
         Runnable r2 = () -> StopWatchUtils.run(stopWatch, "Dict_base_01", () -> {
             Dict_base_01<String, String> map2 = new Dict_base_01<>();
             for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
+                map2.put(String.valueOf(r.nextInt()), "");
             }
         });
         for (int i = 0; i < 20; i++) {
@@ -66,15 +68,16 @@ public class HashMap_perf_test {
     public void test_perf_link_vs_open() {
         int num = 10_0000;
         StopWatch stopWatch = new StopWatch();
+        Random r = new Random();
 
         StopWatchUtils.warnup(() -> {
             HashMap_base_03<String, String> map = new HashMap_base_03<>();
             for (int i = 0; i < num; i++) {
-                map.put(UUID.randomUUID().toString(), "");
+                map.put(String.valueOf(r.nextInt()), "");
             }
             HashMap_openAddressing_02<String, String> map2 = new HashMap_openAddressing_02<>();
             for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
+                map2.put(String.valueOf(r.nextInt()), "");
             }
         });
 
@@ -82,13 +85,13 @@ public class HashMap_perf_test {
         Runnable r1 = () -> StopWatchUtils.run(stopWatch, "HashMap_base_03", () -> {
             HashMap_base_03<String, String> map2 = new HashMap_base_03<>();
             for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
+                map2.put(String.valueOf(r.nextInt()), "");
             }
         });
         Runnable r2 = () -> StopWatchUtils.run(stopWatch, "HashMap_openAddressing_02", () -> {
             HashMap_openAddressing_02<String, String> map2 = new HashMap_openAddressing_02<>();
             for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
+                map2.put(String.valueOf(r.nextInt()), "");
             }
         });
         for (int i = 0; i < 20; i++) {
@@ -113,28 +116,29 @@ public class HashMap_perf_test {
     public void test_perf_mod_vs_bit() {
         int num = 10_0000;
         StopWatch stopWatch = new StopWatch();
+        Random r = new Random();
 
         StopWatchUtils.warnup(() -> {
             HashMap_base_01<String, String> map = new HashMap_base_01<>();
             for (int i = 0; i < num; i++) {
-                map.put(UUID.randomUUID().toString(), "");
+                map.put(String.valueOf(r.nextInt()), "");
             }
             HashMap_base_02<String, String> map2 = new HashMap_base_02<>();
             for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
+                map2.put(String.valueOf(r.nextInt()), "");
             }
         });
 
         Runnable r1 = () -> StopWatchUtils.run(stopWatch, "HashMap_base_01 %", () -> {
             HashMap_base_01<String, String> map2 = new HashMap_base_01<>();
             for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
+                map2.put(String.valueOf(r.nextInt()), "");
             }
         });
         Runnable r2 = () -> StopWatchUtils.run(stopWatch, "HashMap_base_02 bit", () -> {
             HashMap_base_02<String, String> map2 = new HashMap_base_02<>();
             for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
+                map2.put(String.valueOf(r.nextInt()), "");
             }
         });
         for (int i = 0; i < 20; i++) {
@@ -160,28 +164,29 @@ public class HashMap_perf_test {
     public void test_perf_tail_vs_proTail() {
         int num = 10_0000;
         StopWatch stopWatch = new StopWatch();
+        Random r = new Random();
 
         StopWatchUtils.warnup(() -> {
             HashMap_base_03<String, String> map = new HashMap_base_03<>();
             for (int i = 0; i < num; i++) {
-                map.put(UUID.randomUUID().toString(), "");
+                map.put(String.valueOf(r.nextInt()), "");
             }
             HashMap_base_02<String, String> map2 = new HashMap_base_02<>();
             for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
+                map2.put(String.valueOf(r.nextInt()), "");
             }
         });
 
         Runnable r1 = () -> StopWatchUtils.run(stopWatch, "HashMap_base_02 tail", () -> {
             HashMap_base_02<String, String> map2 = new HashMap_base_02<>();
             for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
+                map2.put(String.valueOf(r.nextInt()), "");
             }
         });
         Runnable r2 = () -> StopWatchUtils.run(stopWatch, "HashMap_base_03 优化tail", () -> {
             HashMap_base_03<String, String> map2 = new HashMap_base_03<>();
             for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
+                map2.put(String.valueOf(r.nextInt()), "");
             }
         });
         for (int i = 0; i < 20; i++) {
@@ -206,28 +211,29 @@ public class HashMap_perf_test {
     public void test_perf_link_vs_RBRee() {
         int num = 10_0000;
         StopWatch stopWatch = new StopWatch();
+        Random r = new Random();
 
         StopWatchUtils.warnup(() -> {
             HashMap_base_03<String, String> map = new HashMap_base_03<>();
             for (int i = 0; i < num; i++) {
-                map.put(UUID.randomUUID().toString(), "");
+                map.put(String.valueOf(r.nextInt()), "");
             }
             HashMap_base_05<String, String> map2 = new HashMap_base_05<>();
             for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
+                map2.put(String.valueOf(r.nextInt()), "");
             }
         });
 
         Runnable r1 = () -> StopWatchUtils.run(stopWatch, "HashMap_base_03 链表", () -> {
             HashMap_base_03<String, String> map2 = new HashMap_base_03<>();
             for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
+                map2.put(String.valueOf(r.nextInt()), "");
             }
         });
         Runnable r2 = () -> StopWatchUtils.run(stopWatch, "HashMap_base_05 红黑树", () -> {
             HashMap_base_05<String, String> map2 = new HashMap_base_05<>();
             for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
+                map2.put(String.valueOf(r.nextInt()), "");
             }
         });
         for (int i = 0; i < 20; i++) {
@@ -252,28 +258,29 @@ public class HashMap_perf_test {
     public void test_perf_AVL_vs_RBRee() {
         int num = 10_0000;
         StopWatch stopWatch = new StopWatch();
+        Random r = new Random();
 
         StopWatchUtils.warnup(() -> {
             HashMap_base_04<String, String> map = new HashMap_base_04<>();
             for (int i = 0; i < num; i++) {
-                map.put(UUID.randomUUID().toString(), "");
+                map.put(String.valueOf(r.nextInt()), "");
             }
             HashMap_base_05<String, String> map2 = new HashMap_base_05<>();
             for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
+                map2.put(String.valueOf(r.nextInt()), "");
             }
         });
 
         Runnable r1 = () -> StopWatchUtils.run(stopWatch, "HashMap_base_04 AVL", () -> {
             HashMap_base_04<String, String> map2 = new HashMap_base_04<>();
             for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
+                map2.put(String.valueOf(r.nextInt()), "");
             }
         });
         Runnable r2 = () -> StopWatchUtils.run(stopWatch, "HashMap_base_05 红黑树", () -> {
             HashMap_base_05<String, String> map2 = new HashMap_base_05<>();
             for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
+                map2.put(String.valueOf(r.nextInt()), "");
             }
         });
         for (int i = 0; i < 20; i++) {
@@ -298,28 +305,29 @@ public class HashMap_perf_test {
     public void test_perf_AVL_vs_link() {
         int num = 10_0000;
         StopWatch stopWatch = new StopWatch();
+        Random r = new Random();
 
         StopWatchUtils.warnup(() -> {
             HashMap_base_04<String, String> map = new HashMap_base_04<>();
             for (int i = 0; i < num; i++) {
-                map.put(UUID.randomUUID().toString(), "");
+                map.put(String.valueOf(r.nextInt()), "");
             }
             HashMap_base_03<String, String> map2 = new HashMap_base_03<>();
             for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
+                map2.put(String.valueOf(r.nextInt()), "");
             }
         });
 
         Runnable r1 = () -> StopWatchUtils.run(stopWatch, "HashMap_base_04 AVL", () -> {
             HashMap_base_04<String, String> map2 = new HashMap_base_04<>();
             for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
+                map2.put(String.valueOf(r.nextInt()), "");
             }
         });
         Runnable r2 = () -> StopWatchUtils.run(stopWatch, "HashMap_base_03 链表", () -> {
             HashMap_base_03<String, String> map2 = new HashMap_base_03<>();
             for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
+                map2.put(String.valueOf(r.nextInt()), "");
             }
         });
         for (int i = 0; i < 20; i++) {
@@ -344,28 +352,29 @@ public class HashMap_perf_test {
     public void test_perf_HashMap_vs_05() {
         int num = 10_0000;
         StopWatch stopWatch = new StopWatch();
+        Random r = new Random();
 
         StopWatchUtils.warnup(() -> {
             HashMap<String, String> map = new HashMap<>();
             for (int i = 0; i < num; i++) {
-                map.put(UUID.randomUUID().toString(), "");
+                map.put(String.valueOf(r.nextInt()), "");
             }
             HashMap_base_05<String, String> map2 = new HashMap_base_05<>();
             for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
+                map2.put(String.valueOf(r.nextInt()), "");
             }
         });
 
         Runnable r1 = () -> StopWatchUtils.run(stopWatch, "HashMap", () -> {
             HashMap<String, String> map2 = new HashMap<>();
             for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
+                map2.put(String.valueOf(r.nextInt()), "");
             }
         });
         Runnable r2 = () -> StopWatchUtils.run(stopWatch, "HashMap_base_05", () -> {
             HashMap_base_05<String, String> map2 = new HashMap_base_05<>();
             for (int i = 0; i < num; i++) {
-                map2.put(UUID.randomUUID().toString(), "");
+                map2.put(String.valueOf(r.nextInt()), "");
             }
         });
         for (int i = 0; i < 20; i++) {
