@@ -14,25 +14,6 @@ public class SkipListMapLinked02OptLevel<K extends Comparable<K>, V> extends Ski
         super();
     }
 
-    protected Node<K, V> getNode(K k) {
-        Node<K, V> prev = getPrecursorNode(k);
-        while (prev != null) {
-            Node<K, V> nextNode = prev.next;
-            if (nextNode == null) {
-                break;
-            }
-            int cpr = compare(nextNode.k, k);
-            if (cpr == 0) {
-                return nextNode;
-            }
-            if (cpr > 0) {
-                break;
-            }
-            prev = nextNode;
-        }
-        return null;
-    }
-
     protected V putOrUpdate(K k, V v) {
         Node<K, V> prev = getPrecursorNode(k);
         // 跳链表
@@ -56,9 +37,10 @@ public class SkipListMapLinked02OptLevel<K extends Comparable<K>, V> extends Ski
                     // 需要升索引
                     upHead(newIndex);
                     n = newIndex.down;
+                    y = header.down;
                 }
                 // 串索引
-                addIndex(n);
+                addIndex(y, n);
                 break;
             } else if (Objects.equals(nextNode.k, k)) {
                 // 相等则更新
@@ -71,8 +53,8 @@ public class SkipListMapLinked02OptLevel<K extends Comparable<K>, V> extends Ski
         return null;
     }
 
-    protected void addIndex(Index<K, V> newIndex) {
-        Index<K, V> x = header, next;
+    protected void addIndex(Index<K, V> indexHead, Index<K, V> newIndex) {
+        Index<K, V> x = indexHead, next;
         while (x != null) { // y轴遍历
             next = x.right;
             while (next != null) { // x轴遍历
@@ -93,7 +75,7 @@ public class SkipListMapLinked02OptLevel<K extends Comparable<K>, V> extends Ski
                 x = next;
                 next = x.right;
             }
-            if (next == null) {
+            if (next == null && x.level == newIndex.level) {
                 x.right = newIndex;
             }
             if (x.level == newIndex.level) {
@@ -104,59 +86,4 @@ public class SkipListMapLinked02OptLevel<K extends Comparable<K>, V> extends Ski
         }
     }
 
-    protected V doRemove(K k) {
-        Node<K, V> prev = getPrecursorNode(k);
-        // 跳链表
-        while (prev != null) {
-            Node<K, V> nextNode = prev.next;
-            if (nextNode != null && nextNode.k != null) {
-                int cpr = compare(nextNode.k, k);
-                if (cpr < 0) {
-                    prev = nextNode;
-                    continue;
-                }
-                if (cpr == 0) {
-                    size--;
-                    V oldV = nextNode.v;
-                    nextNode.k = null;
-                    nextNode.v = null;
-                    prev.next = nextNode.next;
-                    return oldV;
-                }
-                break;
-            }
-            prev = nextNode;
-        }
-        return null;
-    }
-
-    protected Node<K, V> getPrecursorNode(K k) {
-        Index<K, V> x = header, next;
-        while (x != null) { // y轴遍历
-            next = x.right;
-            while (next != null) { // x轴遍历
-                if (next.node.k == null) {
-                    // 均摊复杂度删除索引
-                    x.right = next.right;
-                    next = x.right;
-                    continue;
-                }
-                int cpr = compare(next.node.k, k);
-                if (cpr == 0) {
-                    return x.node;
-                } else if (cpr < 0) {
-                    x = next;
-                    next = next.right;
-                    continue;
-                }
-                break;
-            }
-            // 向下
-            if (x.down == null) {
-                return x.node;
-            }
-            x = x.down;
-        }
-        return x.node;
-    }
 }

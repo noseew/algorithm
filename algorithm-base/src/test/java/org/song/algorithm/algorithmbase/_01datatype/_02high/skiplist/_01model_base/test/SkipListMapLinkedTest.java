@@ -17,7 +17,8 @@ public class SkipListMapLinkedTest {
     public void test01() {
 
 //        SkipListMapLinked<Integer, Integer> skip1 = new SkipListMapLinked<>();
-        SkipListMapLinked02OptRemove<Integer, Integer> skip1 = new SkipListMapLinked02OptRemove<>();
+//        SkipListMapLinked02OptRemove<Integer, Integer> skip1 = new SkipListMapLinked02OptRemove<>();
+        SkipListMapLinked02OptLevel<Integer, Integer> skip1 = new SkipListMapLinked02OptLevel<>();
         for (int i = 0; i < maxSize; i++) {
             int val = r.nextInt(maxVal);
             int key = r.nextInt(maxVal / 10);
@@ -47,7 +48,7 @@ public class SkipListMapLinkedTest {
         for (int i = 0; i < 50; i++) {
 
 //            SkipListMapLinked<Integer, Integer> skip1 = new SkipListMapLinked<>();
-//            SkipListMapLinked02<Integer, Integer> skip1 = new SkipListMapLinked02<>();
+//            SkipListMapLinked02OptRemove<Integer, Integer> skip1 = new SkipListMapLinked02OptRemove<>();
             SkipListMapLinked02OptLevel<Integer, Integer> skip1 = new SkipListMapLinked02OptLevel<>();
             for (int j = 0; j < maxSize; j++) {
                 int key = r.nextInt(maxVal);
