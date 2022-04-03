@@ -48,6 +48,10 @@ public abstract class AbsBSTTree<V extends Comparable<V>> {
         return comparator.compare(v1, v2) == 0;
     }
 
+    public int compare(V v1, V v2) {
+        return comparator.compare(v1, v2);
+    }
+
     /**
      * 二叉树遍历
      * 

@@ -52,9 +52,10 @@ public class Tree02BST02<V extends Comparable<V>> extends Tree02BST01<V> {
 
         TreeNode<V> x = newNode(v);
         x.parent = xp; // 记录parent指针
-        if (less(v, xp.val)) {
+        int cpr = compare(v, xp.val);
+        if (cpr < 0) {
             xp.left = x;
-        } else if (greater(v, xp.val)) {
+        } else if (cpr > 0) {
             xp.right = x;
         }
         return x;

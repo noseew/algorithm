@@ -136,16 +136,16 @@ public class SkipListMap_perf_Test {
         StopWatch stopWatch = new StopWatch();
 
         StopWatchUtils.warnup(() -> {
-            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>();
-            for (int i = 0; i < num; i++) {
-                int key = r.nextInt(maxVal);
-                skip1.put(key, 0);
-            }
-            ConcurrentSkipListMap<Integer, Integer> jdk = new ConcurrentSkipListMap<>(Comparator.comparing(Integer::doubleValue));
-            for (int i = 0; i < num; i++) {
-                int key = r.nextInt(maxVal);
-                jdk.put(key, 0);
-            }
+//            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>();
+//            for (int i = 0; i < num; i++) {
+//                int key = r.nextInt(maxVal);
+//                skip1.put(key, 0);
+//            }
+//            ConcurrentSkipListMap<Integer, Integer> jdk = new ConcurrentSkipListMap<>(Comparator.comparing(Integer::doubleValue));
+//            for (int i = 0; i < num; i++) {
+//                int key = r.nextInt(maxVal);
+//                jdk.put(key, 0);
+//            }
             SkipListMapLinkedFromJDK<Integer, Integer> jdk2 = new SkipListMapLinkedFromJDK<>(Comparator.comparing(Integer::doubleValue));
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
@@ -165,20 +165,20 @@ public class SkipListMap_perf_Test {
                 rbTree1.add(key);
             }
         });
-        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListMapArray", () -> {
-            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>();
-            for (int i = 0; i < num; i++) {
-                int key = r.nextInt(maxVal);
-                skip1.put(key, 0);
-            }
-        });
-        Runnable r2 = () -> StopWatchUtils.run(stopWatch, "ConcurrentSkipListMap", () -> {
-            ConcurrentSkipListMap<Integer, Integer> skip1 = new ConcurrentSkipListMap<>(Comparator.comparing(Integer::doubleValue));
-            for (int i = 0; i < num; i++) {
-                int key = r.nextInt(maxVal);
-                skip1.put(key, 0);
-            }
-        });
+//        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListMapArray", () -> {
+//            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>();
+//            for (int i = 0; i < num; i++) {
+//                int key = r.nextInt(maxVal);
+//                skip1.put(key, 0);
+//            }
+//        });
+//        Runnable r2 = () -> StopWatchUtils.run(stopWatch, "ConcurrentSkipListMap", () -> {
+//            ConcurrentSkipListMap<Integer, Integer> skip1 = new ConcurrentSkipListMap<>(Comparator.comparing(Integer::doubleValue));
+//            for (int i = 0; i < num; i++) {
+//                int key = r.nextInt(maxVal);
+//                skip1.put(key, 0);
+//            }
+//        });
         Runnable r4 = () -> StopWatchUtils.run(stopWatch, "ConcurrentSkipListMap02", () -> {
             SkipListMapLinkedFromJDK<Integer, Integer> jdk2 = new SkipListMapLinkedFromJDK<>(Comparator.comparing(Integer::doubleValue));
             for (int i = 0; i < num; i++) {
@@ -189,13 +189,13 @@ public class SkipListMap_perf_Test {
         for (int i = 0; i < 50; i++) {
             if (i % 2 == 0) {
                 r0.run();
-                r1.run();
-                r2.run();
+//                r1.run();
+//                r2.run();
                 r4.run();
             } else {
                 r4.run();
-                r2.run();
-                r1.run();
+//                r2.run();
+//                r1.run();
                 r0.run();
             }
         }

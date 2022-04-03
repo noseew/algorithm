@@ -329,8 +329,9 @@ public class Tree02BST01<V extends Comparable<V>> extends AbsBSTTree<V> {
      */
     protected TreeNode<V> search_traverse(TreeNode<V> parent, V v) {
         while (parent != null) {
-            if (eq(v, parent.val)) return parent;
-            parent = less(v, parent.val) ? parent.left : parent.right;
+            int cpr = compare(v, parent.val);
+            if (cpr == 0) return parent;
+            parent = cpr < 0 ? parent.left : parent.right;
         }
         return parent;
     }
@@ -586,11 +587,12 @@ public class Tree02BST01<V extends Comparable<V>> extends AbsBSTTree<V> {
     protected TreeNode<V> getParentNode(TreeNode<V> tree, V v) {
         TreeNode<V> p = tree, pp = null;
         while (p != null) {
-            if (eq(v, p.val)) {
+            int cpr = compare(v, p.val);
+            if (cpr == 0) {
                 return pp;
             }
             pp = p;
-            p = less(v, p.val) ? p.left : p.right;
+            p = cpr < 0 ? p.left : p.right;
         }
         return pp;
     }
