@@ -141,11 +141,11 @@ public class SkipListMap_perf_Test {
 //                int key = r.nextInt(maxVal);
 //                skip1.put(key, 0);
 //            }
-//            ConcurrentSkipListMap<Integer, Integer> jdk = new ConcurrentSkipListMap<>(Comparator.comparing(Integer::doubleValue));
-//            for (int i = 0; i < num; i++) {
-//                int key = r.nextInt(maxVal);
-//                jdk.put(key, 0);
-//            }
+            SkipListMapLinked02OptLevel<Integer, Integer> skip2 = new SkipListMapLinked02OptLevel<>();
+            for (int i = 0; i < num; i++) {
+                int key = r.nextInt(maxVal);
+                skip2.put(key, 0);
+            }
             SkipListMapLinkedFromJDK<Integer, Integer> jdk2 = new SkipListMapLinkedFromJDK<>(Comparator.comparing(Integer::doubleValue));
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
@@ -172,14 +172,14 @@ public class SkipListMap_perf_Test {
 //                skip1.put(key, 0);
 //            }
 //        });
-//        Runnable r2 = () -> StopWatchUtils.run(stopWatch, "ConcurrentSkipListMap", () -> {
-//            ConcurrentSkipListMap<Integer, Integer> skip1 = new ConcurrentSkipListMap<>(Comparator.comparing(Integer::doubleValue));
-//            for (int i = 0; i < num; i++) {
-//                int key = r.nextInt(maxVal);
-//                skip1.put(key, 0);
-//            }
-//        });
-        Runnable r4 = () -> StopWatchUtils.run(stopWatch, "ConcurrentSkipListMap02", () -> {
+        Runnable r2 = () -> StopWatchUtils.run(stopWatch, "SkipListMapLinked02OptLevel", () -> {
+            SkipListMapLinked02OptLevel<Integer, Integer> skip2 = new SkipListMapLinked02OptLevel<>();
+            for (int i = 0; i < num; i++) {
+                int key = r.nextInt(maxVal);
+                skip2.put(key, 0);
+            }
+        });
+        Runnable r4 = () -> StopWatchUtils.run(stopWatch, "SkipListMapLinkedFromJDK", () -> {
             SkipListMapLinkedFromJDK<Integer, Integer> jdk2 = new SkipListMapLinkedFromJDK<>(Comparator.comparing(Integer::doubleValue));
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
@@ -190,11 +190,11 @@ public class SkipListMap_perf_Test {
             if (i % 2 == 0) {
                 r0.run();
 //                r1.run();
-//                r2.run();
+                r2.run();
                 r4.run();
             } else {
                 r4.run();
-//                r2.run();
+                r2.run();
 //                r1.run();
                 r0.run();
             }

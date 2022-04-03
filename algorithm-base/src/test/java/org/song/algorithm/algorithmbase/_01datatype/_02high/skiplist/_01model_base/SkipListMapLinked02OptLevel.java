@@ -3,7 +3,7 @@ package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_b
 import java.util.Objects;
 
 /**
- * 优化构建索引, 效果并不好 TODO
+ * 优化构建索引, 效果明显
  *
  * @param <K>
  * @param <V>
@@ -53,6 +53,12 @@ public class SkipListMapLinked02OptLevel<K extends Comparable<K>, V> extends Ski
         return null;
     }
 
+    /**
+     * 采用跳索引的方式, 跳到合适的位置
+     * 
+     * @param indexHead
+     * @param newIndex
+     */
     protected void addIndex(Index<K, V> indexHead, Index<K, V> newIndex) {
         Index<K, V> x = indexHead, next;
         while (x != null) { // y轴遍历
