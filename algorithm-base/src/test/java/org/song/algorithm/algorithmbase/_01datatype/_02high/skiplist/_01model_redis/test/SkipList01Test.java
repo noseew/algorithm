@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._01linear.list._01model.ArrayBase01;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_redis.AbstractSkipList;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_redis.SkipListLinked01;
+import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_redis.SkipListLinked02;
 
 import java.util.Objects;
 import java.util.Random;
@@ -19,6 +20,7 @@ public class SkipList01Test {
     public void test01() {
 
         SkipListLinked01<Integer, Integer> skip1 = new SkipListLinked01<>();
+//        SkipListLinked02<Integer, Integer> skip1 = new SkipListLinked02<>();
         for (int i = 0; i < maxSize; i++) {
             int val = r.nextInt(maxVal);
             int key = r.nextInt(maxVal / 10);
@@ -52,7 +54,8 @@ public class SkipList01Test {
 
         for (int i = 0; i < 10; i++) {
 
-            SkipListLinked01<Integer, Integer> skip1 = new SkipListLinked01<>();
+//            SkipListLinked01<Integer, Integer> skip1 = new SkipListLinked01<>();
+            SkipListLinked02<Integer, Integer> skip1 = new SkipListLinked02<>();
             for (int j = 0; j < maxSize; j++) {
                 int key = r.nextInt(maxVal);
                 int val = r.nextInt(maxVal);
