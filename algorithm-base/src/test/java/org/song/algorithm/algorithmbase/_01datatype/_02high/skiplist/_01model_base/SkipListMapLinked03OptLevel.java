@@ -8,9 +8,9 @@ import java.util.Objects;
  * @param <K>
  * @param <V>
  */
-public class SkipListMapLinked02OptLevel<K extends Comparable<K>, V> extends SkipListMapLinked02OptRemove<K, V> {
+public class SkipListMapLinked03OptLevel<K extends Comparable<K>, V> extends SkipListMapLinked02OptRemove<K, V> {
 
-    public SkipListMapLinked02OptLevel() {
+    public SkipListMapLinked03OptLevel() {
         super();
     }
 

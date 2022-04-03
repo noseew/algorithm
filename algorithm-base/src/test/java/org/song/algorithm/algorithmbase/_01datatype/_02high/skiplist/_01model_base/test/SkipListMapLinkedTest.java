@@ -1,8 +1,7 @@
 package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.test;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinked02OptLevel;
-import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinked02OptRemove;
+import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinked03OptLevel;
 
 import java.util.Random;
 
@@ -18,7 +17,7 @@ public class SkipListMapLinkedTest {
 
 //        SkipListMapLinked<Integer, Integer> skip1 = new SkipListMapLinked<>();
 //        SkipListMapLinked02OptRemove<Integer, Integer> skip1 = new SkipListMapLinked02OptRemove<>();
-        SkipListMapLinked02OptLevel<Integer, Integer> skip1 = new SkipListMapLinked02OptLevel<>();
+        SkipListMapLinked03OptLevel<Integer, Integer> skip1 = new SkipListMapLinked03OptLevel<>();
         for (int i = 0; i < maxSize; i++) {
             int val = r.nextInt(maxVal);
             int key = r.nextInt(maxVal / 10);
@@ -49,7 +48,7 @@ public class SkipListMapLinkedTest {
 
 //            SkipListMapLinked<Integer, Integer> skip1 = new SkipListMapLinked<>();
 //            SkipListMapLinked02OptRemove<Integer, Integer> skip1 = new SkipListMapLinked02OptRemove<>();
-            SkipListMapLinked02OptLevel<Integer, Integer> skip1 = new SkipListMapLinked02OptLevel<>();
+            SkipListMapLinked03OptLevel<Integer, Integer> skip1 = new SkipListMapLinked03OptLevel<>();
             for (int j = 0; j < maxSize; j++) {
                 int key = r.nextInt(maxVal);
                 int val = r.nextInt(maxVal);

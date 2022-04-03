@@ -2,77 +2,23 @@ package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_b
 
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05RB01;
-import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinked02OptLevel;
-import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinked02OptRemove;
+import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapArray02OptLevel;
+import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinked03OptLevel;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinkedFromJDK;
-import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapArray;
-import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_redis.SkipListLinked01;
 import org.song.algorithm.algorithmbase.utils.StopWatchUtils;
 import org.springframework.util.StopWatch;
 
 import java.util.Comparator;
 import java.util.Random;
-import java.util.concurrent.ConcurrentSkipListMap;
 
 public class SkipListMap_perf_Test {
 
     private Random r = new Random();
 
     /**
-     * Zset版本链表 VS 简单版本跳表map
-     * 简单版本跳表map 效率高2倍
-     */
-    @Test
-    public void test_perf_skip3_vs_skip1() {
-        int maxVal = 100_0000;
-        int num = 1_0000;
-        StopWatch stopWatch = new StopWatch();
-
-        StopWatchUtils.warnup(() -> {
-            SkipListLinked01<Integer, Integer> skip1 = new SkipListLinked01<>();
-            for (int i = 0; i < num; i++) {
-                int key = r.nextInt(maxVal);
-                skip1.put(key, 0, key);
-            }
-            SkipListMapArray<Integer, Integer> skip2 = new SkipListMapArray<>();
-            for (int i = 0; i < num; i++) {
-                int key = r.nextInt(maxVal);
-                skip2.put(key, 0);
-            }
-        });
-
-        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListLinked01", () -> {
-            SkipListLinked01<Integer, Integer> skip1 = new SkipListLinked01<>();
-            for (int i = 0; i < num; i++) {
-                int key = r.nextInt(maxVal);
-                skip1.put(key, 0, key);
-            }
-        });
-        Runnable r2 = () -> StopWatchUtils.run(stopWatch, "SkipListMap", () -> {
-            SkipListMapArray<Integer, Integer> skip2 = new SkipListMapArray<>();
-            for (int i = 0; i < num; i++) {
-                int key = r.nextInt(maxVal);
-                skip2.put(key, 0);
-            }
-        });
-        for (int i = 0; i < 20; i++) {
-            if (i % 2 == 0) {
-                r2.run();
-                r1.run();
-            } else {
-                r1.run();
-                r2.run();
-            }
-        }
-
-        System.out.println(stopWatch.prettyPrint());
-        System.out.println(StopWatchUtils.calculate(stopWatch));
-
-    }
-
-    /**
-     * 简单版跳表, 数组 VS 链表
-     * 数组效率高2倍
+     * 简单版跳表 索引实现不同的对比, 数组 VS 链表
+     * <p>
+     * 链表速度更快
      */
     @Test
     public void test_perf_skipLink_vs_skipArray() {
@@ -81,30 +27,30 @@ public class SkipListMap_perf_Test {
         StopWatch stopWatch = new StopWatch();
 
         StopWatchUtils.warnup(() -> {
-            SkipListMapLinked02OptLevel<Integer, Integer> skip1 = new SkipListMapLinked02OptLevel<>();
+            SkipListMapLinked03OptLevel<Integer, Integer> skip1 = new SkipListMapLinked03OptLevel<>();
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip1.put(key, 0);
             }
-            SkipListMapArray<Integer, Integer> skip2 = new SkipListMapArray<>();
+            SkipListMapArray02OptLevel<Integer, Integer> skip3 = new SkipListMapArray02OptLevel<>();
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
-                skip2.put(key, 0);
+                skip3.put(key, 0);
             }
         });
 
         Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListMapLinked02OptLevel", () -> {
-            SkipListMapLinked02OptLevel<Integer, Integer> skip1 = new SkipListMapLinked02OptLevel<>();
+            SkipListMapLinked03OptLevel<Integer, Integer> skip1 = new SkipListMapLinked03OptLevel<>();
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip1.put(key, 0);
             }
         });
-        Runnable r2 = () -> StopWatchUtils.run(stopWatch, "SkipListMapArray", () -> {
-            SkipListMapArray<Integer, Integer> skip2 = new SkipListMapArray<>();
+        Runnable r2 = () -> StopWatchUtils.run(stopWatch, "SkipListMapArray02OptLevel", () -> {
+            SkipListMapArray02OptLevel<Integer, Integer> skip3 = new SkipListMapArray02OptLevel<>();
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
-                skip2.put(key, 0);
+                skip3.put(key, 0);
             }
         });
         for (int i = 0; i < 20; i++) {
@@ -123,11 +69,12 @@ public class SkipListMap_perf_Test {
     }
 
     /**
+     * 各种数据结构实现的 全对比
      *
-     * Tree05RB01	            1304	7.07%
-     * ConcurrentSkipListMap	1523	8.26%
-     * SkipListMapArray index4	3621	19.63%
-     * SkipListMapArray index2	11890	64.46%
+     * SkipListMapLinked02OptLevel	1686	16.64%
+     * SkipListMapArray02OptLevel	2023	19.96%
+     * Tree05RB01	                2330	22.99%
+     * SkipListMapLinkedFromJDK	    3991	39.38%
      */
     @Test
     public void test_perf_vs_all() {
@@ -136,12 +83,12 @@ public class SkipListMap_perf_Test {
         StopWatch stopWatch = new StopWatch();
 
         StopWatchUtils.warnup(() -> {
-//            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>();
-//            for (int i = 0; i < num; i++) {
-//                int key = r.nextInt(maxVal);
-//                skip1.put(key, 0);
-//            }
-            SkipListMapLinked02OptLevel<Integer, Integer> skip2 = new SkipListMapLinked02OptLevel<>();
+            SkipListMapArray02OptLevel<Integer, Integer> skip1 = new SkipListMapArray02OptLevel<>();
+            for (int i = 0; i < num; i++) {
+                int key = r.nextInt(maxVal);
+                skip1.put(key, 0);
+            }
+            SkipListMapLinked03OptLevel<Integer, Integer> skip2 = new SkipListMapLinked03OptLevel<>();
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip2.put(key, 0);
@@ -165,15 +112,15 @@ public class SkipListMap_perf_Test {
                 rbTree1.add(key);
             }
         });
-//        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListMapArray", () -> {
-//            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>();
-//            for (int i = 0; i < num; i++) {
-//                int key = r.nextInt(maxVal);
-//                skip1.put(key, 0);
-//            }
-//        });
+        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListMapArray02OptLevel", () -> {
+            SkipListMapArray02OptLevel<Integer, Integer> skip1 = new SkipListMapArray02OptLevel<>();
+            for (int i = 0; i < num; i++) {
+                int key = r.nextInt(maxVal);
+                skip1.put(key, 0);
+            }
+        });
         Runnable r2 = () -> StopWatchUtils.run(stopWatch, "SkipListMapLinked02OptLevel", () -> {
-            SkipListMapLinked02OptLevel<Integer, Integer> skip2 = new SkipListMapLinked02OptLevel<>();
+            SkipListMapLinked03OptLevel<Integer, Integer> skip2 = new SkipListMapLinked03OptLevel<>();
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip2.put(key, 0);
@@ -189,13 +136,13 @@ public class SkipListMap_perf_Test {
         for (int i = 0; i < 50; i++) {
             if (i % 2 == 0) {
                 r0.run();
-//                r1.run();
+                r1.run();
                 r2.run();
                 r4.run();
             } else {
                 r4.run();
                 r2.run();
-//                r1.run();
+                r1.run();
                 r0.run();
             }
         }

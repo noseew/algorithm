@@ -2,6 +2,7 @@ package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_b
 
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapArray;
+import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapArray02OptLevel;
 
 import java.util.Random;
 
@@ -15,7 +16,8 @@ public class SkipListMapArrayTest {
     @Test
     public void test01() {
 
-        SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>();
+//        SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>();
+        SkipListMapArray02OptLevel<Integer, Integer> skip1 = new SkipListMapArray02OptLevel<>();
         for (int i = 0; i < maxSize; i++) {
             int val = r.nextInt(maxVal);
             int key = r.nextInt(maxVal / 10);
@@ -43,7 +45,8 @@ public class SkipListMapArrayTest {
 
         for (int i = 0; i < 50; i++) {
 
-            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>();
+//            SkipListMapArray<Integer, Integer> skip1 = new SkipListMapArray<>();
+            SkipListMapArray02OptLevel<Integer, Integer> skip1 = new SkipListMapArray02OptLevel<>();
             for (int j = 0; j < maxSize; j++) {
                 int key = r.nextInt(maxVal);
                 int val = r.nextInt(maxVal);
