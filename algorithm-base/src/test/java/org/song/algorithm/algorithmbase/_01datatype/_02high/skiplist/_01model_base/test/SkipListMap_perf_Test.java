@@ -2,6 +2,7 @@ package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_b
 
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05RB01;
+import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinked02;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinkedJDK;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapArray;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinked;
@@ -80,7 +81,7 @@ public class SkipListMap_perf_Test {
         StopWatch stopWatch = new StopWatch();
 
         StopWatchUtils.warnup(() -> {
-            SkipListMapLinked<Integer, Integer> skip1 = new SkipListMapLinked<>();
+            SkipListMapLinked02<Integer, Integer> skip1 = new SkipListMapLinked02<>();
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip1.put(key, 0);
@@ -92,8 +93,8 @@ public class SkipListMap_perf_Test {
             }
         });
 
-        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListMapLinked", () -> {
-            SkipListMapLinked<Integer, Integer> skip1 = new SkipListMapLinked<>();
+        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListMapLinked02", () -> {
+            SkipListMapLinked02<Integer, Integer> skip1 = new SkipListMapLinked02<>();
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip1.put(key, 0);

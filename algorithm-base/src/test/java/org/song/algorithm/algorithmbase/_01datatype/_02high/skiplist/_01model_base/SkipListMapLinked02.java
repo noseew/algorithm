@@ -4,7 +4,6 @@ import java.util.Objects;
 
 /**
  * 使用延迟删除优化效率
- * TODO 未完成
  *
  * @param <K>
  * @param <V>
@@ -19,8 +18,15 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends SkipListMap
         Node<K, V> prev = getPrecursorNode(k);
         while (prev != null) {
             Node<K, V> nextNode = prev.next;
-            if (nextNode != null && Objects.equals(nextNode.k, k)) {
+            if (nextNode == null) {
+                break;
+            }
+            int cpr = compare(nextNode.k, k);
+            if (cpr == 0) {
                 return nextNode;
+            }
+            if (cpr > 0) {
+                break;
             }
             prev = nextNode;
         }
@@ -33,14 +39,12 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends SkipListMap
         while (prev != null) {
             Node<K, V> nextNode = prev.next;
             if (nextNode == null || gather(nextNode.k, k)) {
-                Node<K, V> newNode = Node.<K, V>builder().k(k).v(v).build();
+                Node<K, V> newNode = Node.<K, V>builder().k(k).v(v).next(nextNode).build();
+                prev.next = newNode;
                 size++;
                 // 新增节点
                 int level = buildLevel(header.level + 1);
                 Index<K, V> newIndex = buildIndex(level, newNode);
-                // 串链表
-                prev.next = newNode;
-                newNode.next = nextNode;
 
                 if (level == 0) {
                     // 无需串索引
@@ -77,7 +81,7 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends SkipListMap
         while (x != null) { // y轴遍历
             next = x.right;
             while (next != null) { // x轴遍历
-                if (next.node == null || next.node.k == null) {
+                if (next.node.k == null) {
                     // 均摊复杂度删除索引
                     x.right = next.right;
                     next = x.right;
@@ -106,13 +110,21 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends SkipListMap
         // 跳链表
         while (prev != null) {
             Node<K, V> nextNode = prev.next;
-            if (nextNode != null && Objects.equals(nextNode.k, k)) {
-                size--;
-                V oldV = nextNode.v;
-                nextNode.k = null;
-                nextNode.v = null;
-                prev.next = nextNode.next;
-                return oldV;
+            if (nextNode != null && nextNode.k != null) {
+                int cpr = compare(nextNode.k, k);
+                if (cpr < 0) {
+                    prev = nextNode;
+                    continue;
+                }
+                if (cpr == 0) {
+                    size--;
+                    V oldV = nextNode.v;
+                    nextNode.k = null;
+                    nextNode.v = null;
+                    prev.next = nextNode.next;
+                    return oldV;
+                }
+                break;
             }
             prev = nextNode;
         }
@@ -124,7 +136,7 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends SkipListMap
         while (x != null) { // y轴遍历
             next = x.right;
             while (next != null) { // x轴遍历
-                if (next.node == null || next.node.k == null) {
+                if (next.node.k == null) {
                     // 均摊复杂度删除索引
                     x.right = next.right;
                     next = x.right;
