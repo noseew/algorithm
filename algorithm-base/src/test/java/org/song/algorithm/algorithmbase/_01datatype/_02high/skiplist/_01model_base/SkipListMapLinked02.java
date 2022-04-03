@@ -94,7 +94,7 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends SkipListMap
                     break;
                 }
                 x = next;
-                next = next.right;
+                next = x.right;
             }
             if (next == null) {
                 x.right = newIndex;

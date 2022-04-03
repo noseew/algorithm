@@ -80,9 +80,10 @@ public class SkipListMapLinked<K extends Comparable<K>, V> extends AbstractSkipL
         while (x != null) { // y轴遍历
             next = x.right;
             while (next != null) { // x轴遍历
-                if (Objects.equals(next.node.k, k)) {
+                int cpr = compare(next.node.k, k);
+                if (cpr == 0) {
                     return next.node;
-                } else if (less(next.node.k, k)) {
+                } else if (cpr < 0) {
                     x = next;
                     // 向右跳
                     next = next.right;

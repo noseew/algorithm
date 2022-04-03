@@ -36,6 +36,9 @@ public class SkipListMapLinkedTest {
 
     }
 
+    /**
+     * -XX:+UnlockCommercialFeatures IDEA查看运行火焰图
+     */
     @Test
     public void testAuto01() {
 
@@ -44,8 +47,8 @@ public class SkipListMapLinkedTest {
 
         for (int i = 0; i < 50; i++) {
 
-//            SkipListMapLinked<Integer, Integer> skip1 = new SkipListMapLinked<>();
-            SkipListMapLinked02<Integer, Integer> skip1 = new SkipListMapLinked02<>();
+            SkipListMapLinked<Integer, Integer> skip1 = new SkipListMapLinked<>();
+//            SkipListMapLinked02<Integer, Integer> skip1 = new SkipListMapLinked02<>();
             for (int j = 0; j < maxSize; j++) {
                 int key = r.nextInt(maxVal);
                 int val = r.nextInt(maxVal);
