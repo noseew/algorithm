@@ -2,6 +2,7 @@ package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_b
 
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree05RB01;
+import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinked02OptLevel;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinked02OptRemove;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapLinkedFromJDK;
 import org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base.SkipListMapArray;
@@ -80,7 +81,7 @@ public class SkipListMap_perf_Test {
         StopWatch stopWatch = new StopWatch();
 
         StopWatchUtils.warnup(() -> {
-            SkipListMapLinked02OptRemove<Integer, Integer> skip1 = new SkipListMapLinked02OptRemove<>();
+            SkipListMapLinked02OptLevel<Integer, Integer> skip1 = new SkipListMapLinked02OptLevel<>();
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip1.put(key, 0);
@@ -92,8 +93,8 @@ public class SkipListMap_perf_Test {
             }
         });
 
-        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListMapLinked02", () -> {
-            SkipListMapLinked02OptRemove<Integer, Integer> skip1 = new SkipListMapLinked02OptRemove<>();
+        Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListMapLinked02OptLevel", () -> {
+            SkipListMapLinked02OptLevel<Integer, Integer> skip1 = new SkipListMapLinked02OptLevel<>();
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip1.put(key, 0);
