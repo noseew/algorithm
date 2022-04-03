@@ -63,11 +63,7 @@ public class SkipListMapLinked<K extends Comparable<K>, V> extends AbstractSkipL
         Index<K, V> head = null;
         for (int i = 1; i <= level; i++) {
             Index<K, V> down = head;
-            head = new Index<>();
-            head.node = newNode;
-            head.level = i;
-
-            head.down = down;
+            head = new Index<>(null, down, newNode, i);
         }
         if (head != null) {
             newNode.ic = head.level;

@@ -19,7 +19,8 @@ public class SkipListMapLinked03OptLevel<K extends Comparable<K>, V> extends Ski
         // 跳链表
         while (prev != null) {
             Node<K, V> nextNode = prev.next;
-            if (nextNode == null || gather(nextNode.k, k)) {
+            int cpr;
+            if (nextNode == null || (cpr = compare(nextNode.k, k)) > 0) {
                 Node<K, V> newNode = Node.<K, V>builder().k(k).v(v).next(nextNode).build();
                 prev.next = newNode;
                 size++;
@@ -41,8 +42,9 @@ public class SkipListMapLinked03OptLevel<K extends Comparable<K>, V> extends Ski
                 }
                 // 串索引
                 addIndex(y, n);
-                break;
-            } else if (Objects.equals(nextNode.k, k)) {
+                return null;
+            }
+            if (cpr == 0) {
                 // 相等则更新
                 V oldV = nextNode.v;
                 nextNode.v = v;

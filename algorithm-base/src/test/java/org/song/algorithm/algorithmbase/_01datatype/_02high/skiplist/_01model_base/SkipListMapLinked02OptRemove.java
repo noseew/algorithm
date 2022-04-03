@@ -143,12 +143,13 @@ public class SkipListMapLinked02OptRemove<K extends Comparable<K>, V> extends Sk
                     continue;
                 }
                 int cpr = compare(next.node.k, k);
-                if (cpr == 0) {
-                    return x.node;
-                } else if (cpr < 0) {
+                if (cpr < 0) {
                     x = next;
                     next = next.right;
                     continue;
+                }
+                if (cpr == 0) {
+                    return x.node;
                 }
                 break;
             }

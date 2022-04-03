@@ -41,8 +41,8 @@ public class SkipListMapLinkedTest {
     @Test
     public void testAuto01() {
 
-        int maxVal = 10_0000;
-        int maxSize = 5000;
+        int maxVal = 100_0000;
+        int maxSize = 1_0000;
 
         for (int i = 0; i < 50; i++) {
 
