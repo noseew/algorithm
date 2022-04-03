@@ -77,6 +77,12 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends SkipListMap
         while (x != null) { // y轴遍历
             next = x.right;
             while (next != null) { // x轴遍历
+                if (next.node == null || next.node.k == null) {
+                    // 均摊复杂度删除索引
+                    x.right = next.right;
+                    next = x.right;
+                    continue;
+                }
                 if (gather(next.node.k, newIndex.node.k)) {
                     // 跳过了, 串索引, 新索引在中间
                     newIndex.right = next;
@@ -84,14 +90,11 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends SkipListMap
                     break;
                 }
                 x = next;
-                // 向右
                 next = next.right;
             }
             if (next == null) {
-                // 跳过了, 串索引, 新索引在右边
                 x.right = newIndex;
             }
-            // 向下
             x = x.down;
             // 新索引同时向下
             newIndex = newIndex.down;
@@ -106,6 +109,8 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends SkipListMap
             if (nextNode != null && Objects.equals(nextNode.k, k)) {
                 size--;
                 V oldV = nextNode.v;
+                nextNode.k = null;
+                nextNode.v = null;
                 prev.next = nextNode.next;
                 return oldV;
             }
@@ -119,10 +124,10 @@ public class SkipListMapLinked02<K extends Comparable<K>, V> extends SkipListMap
         while (x != null) { // y轴遍历
             next = x.right;
             while (next != null) { // x轴遍历
-                if (next.node == null) {
+                if (next.node == null || next.node.k == null) {
                     // 均摊复杂度删除索引
-                    next = next.right;
-                    x.right = next;
+                    x.right = next.right;
+                    next = x.right;
                     continue;
                 }
                 int cpr = compare(next.node.k, k);

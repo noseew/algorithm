@@ -17,14 +17,15 @@ public class SkipListMapLinkedTest {
     @Test
     public void test01() {
 
-        SkipListMapLinked<Integer, Integer> skip1 = new SkipListMapLinked<>();
+//        SkipListMapLinked<Integer, Integer> skip1 = new SkipListMapLinked<>();
+        SkipListMapLinked02<Integer, Integer> skip1 = new SkipListMapLinked02<>();
         for (int i = 0; i < maxSize; i++) {
             int val = r.nextInt(maxVal);
             int key = r.nextInt(maxVal / 10);
             skip1.put(key, val);
 
-            if (i >= maxSize - 5) {
-                System.out.println(skip1);
+            if (i % 5 == 0) {
+//                System.out.println(skip1);
                 Integer v2 = skip1.remove(key);
                 System.out.println(v2);
             }
@@ -54,12 +55,13 @@ public class SkipListMapLinkedTest {
                 if (!equals) {
                     System.out.println(skip1);
                     skip1.get(key);
+                    skip1.put(key, val);
                     assert equals;
                 }
 
                 if (j % 10 == 0) {
-                    skip1.remove(j);
-                    equals = skip1.get(j) == null;
+                    skip1.remove(key);
+                    equals = skip1.get(key) == null;
                     if (!equals) {
                         System.out.println(skip1);
                         assert equals;

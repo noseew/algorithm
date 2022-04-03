@@ -318,7 +318,7 @@ public class SkipListMapLinked<K extends Comparable<K>, V> extends AbstractSkipL
         // 找到下一个索引的第1层
         Node<K, V> nextIndexNode = null;
         while (oneLevel != null) {
-            if (gather(oneLevel.node.k, node.k)) {
+            if (oneLevel.node != null && oneLevel.node.k != null && gather(oneLevel.node.k, node.k)) {
                 nextIndexNode = oneLevel.node;
                 break;
             }
