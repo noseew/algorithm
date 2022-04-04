@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase._01datatype._02high.hashmap.redis;
+package org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model_redis;
 
 import org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model.AbstractMap;
 import org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model.HashMap_base_03;

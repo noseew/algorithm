@@ -1,4 +1,4 @@
-package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_redis;
+package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._02alg;
 
 import org.junit.jupiter.api.Test;
 

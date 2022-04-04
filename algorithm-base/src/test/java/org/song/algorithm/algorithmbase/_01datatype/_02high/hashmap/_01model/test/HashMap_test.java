@@ -2,7 +2,7 @@ package org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model.te
 
 import org.junit.Test;
 import org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model.*;
-import org.song.algorithm.algorithmbase._01datatype._02high.hashmap.redis.Dict_base_01;
+import org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model_redis.Dict_base_01;
 
 import java.util.HashMap;
 import java.util.Objects;

@@ -4,6 +4,11 @@ package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_b
 import java.util.Comparator;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * 实现方式摘自 ConcurrentSkipListMap 中的跳表
+ * @param <K>
+ * @param <V>
+ */
 public class SkipListMapLinkedFromJDK<K, V> {
 
     private static final Object BASE_HEADER = new Object();

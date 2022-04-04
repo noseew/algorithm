@@ -2,13 +2,12 @@ package org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model.te
 
 import org.junit.Test;
 import org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model.*;
-import org.song.algorithm.algorithmbase._01datatype._02high.hashmap.redis.Dict_base_01;
+import org.song.algorithm.algorithmbase._01datatype._02high.hashmap._01model_redis.Dict_base_01;
 import org.song.algorithm.algorithmbase.utils.StopWatchUtils;
 import org.springframework.util.StopWatch;
 
 import java.util.HashMap;
 import java.util.Random;
-import java.util.UUID;
 
 public class HashMap_perf_test {
 

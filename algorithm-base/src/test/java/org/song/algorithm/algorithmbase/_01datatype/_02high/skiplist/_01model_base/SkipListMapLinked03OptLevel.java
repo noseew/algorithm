@@ -1,7 +1,5 @@
 package org.song.algorithm.algorithmbase._01datatype._02high.skiplist._01model_base;
 
-import java.util.Objects;
-
 /**
  * 优化构建索引, 效果明显
  *
