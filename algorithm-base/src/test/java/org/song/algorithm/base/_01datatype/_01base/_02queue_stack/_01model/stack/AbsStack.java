@@ -1,0 +1,28 @@
+package org.song.algorithm.base._01datatype._01base._02queue_stack._01model.stack;
+
+/**
+ * 栈, 先进后出 FILO
+ * 
+ * @param <T>
+ */
+public abstract class AbsStack<T> {
+
+    public AbsStack() {
+    }
+
+    public AbsStack(int capacity) {
+    }
+
+    public abstract void clean();
+
+    public abstract boolean isEmpty();
+
+    public abstract int length();
+
+    public abstract T getTop();
+
+    public abstract void push(T v);
+
+    public abstract T pop();
+
+}
