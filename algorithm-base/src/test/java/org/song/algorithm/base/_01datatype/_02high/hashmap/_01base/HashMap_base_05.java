@@ -1,9 +1,11 @@
 package org.song.algorithm.base._01datatype._02high.hashmap._01base;
 
+import org.song.algorithm.base._01datatype._01base._01linear.list._01model.ArrayBase01;
 import org.song.algorithm.base._01datatype._01base._04tree.binarytree._01model.Tree05RB01;
 import org.song.algorithm.base.utils.Strings;
 
 import java.util.Comparator;
+import java.util.function.Predicate;
 
 /**
  * 实现简单功能的 HashMap, 模仿JDK中的HashMap
@@ -168,6 +170,28 @@ public class HashMap_base_05<K extends Comparable<K>, V> extends HashMap_base_04
         dilatation = false;
     }
 
+    public ArrayBase01<Entry<K, V>> toList() {
+        ArrayBase01<Entry<K, V>> list = new ArrayBase01<>();
+        for (Entry<K, V> entry : datas) {
+            if (entry == null) {
+                continue;
+            }
+            if (entry instanceof HashMap_base_05.TreeNode) {
+                traverse((TreeNode<K, V>) entry, e -> {
+                    list.add(e);
+                    return true;
+                });
+            } else {
+                Entry<K, V> h = entry;
+                while (h != null) {
+                    list.add(entry);
+                    h = h.next;
+                }
+            }
+        }
+        return list;
+    }
+
     /**
      * 确保容量
      */
@@ -298,6 +322,13 @@ public class HashMap_base_05<K extends Comparable<K>, V> extends HashMap_base_04
         head.next = new Entry<>(node.k, node.val, null);
         traverse(node.left, head.next);
         traverse(node.right, head.next);
+    }
+
+    protected void traverse(TreeNode<K, V> node, Predicate<Entry<K, V>> goon) {
+        if (node == null) return;
+        if (!goon.test(node)) return;
+        traverse(node.left, goon);
+        traverse(node.right, goon);
     }
 
     @Override
