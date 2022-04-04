@@ -1,7 +1,7 @@
 package org.song.algorithm.algorithmbase._02alg._02search.alg;
 
 import org.junit.Test;
-import org.song.algorithm.algorithmbase._01datatype._01base._04tree._01model.Tree03AVL01;
+import org.song.algorithm.algorithmbase._01datatype._01base._04tree.binarytree._01model.Tree03AVL01;
 import org.song.algorithm.algorithmbase._02alg._01sort.AbstractSort;
 import org.song.algorithm.algorithmbase._02alg._02search.AbstractSearch;
 
