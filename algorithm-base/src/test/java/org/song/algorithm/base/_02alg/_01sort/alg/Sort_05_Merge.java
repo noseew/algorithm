@@ -31,12 +31,25 @@ public class Sort_05_Merge {
      * 归并排序的核心, 合并
      */
     public static abstract class AbstractMergeSort extends AbstractSort {
-
+        /**
+         * 注意: 
+         * 1. 原地归并, 实现可能太过复杂, 通常都是用额外的辅助空间来实现
+         * 2. 只需要一个额外数组, 之后所有的归并,都共用这个数组, 防止重复创建数组的时间开销
+         * 
+         */
         protected Comparable[] temp;
 
+        /**
+         * low, mid, hi, 采用左闭右开
+         * 
+         * @param cs
+         * @param low
+         * @param mid
+         * @param hi
+         */
         protected void merge(Comparable[] cs, int low, int mid, int hi) {
             for (int k = low; k <= hi; k++) {
-                // 复制到临时数组, [low~hi]
+                // 复制到临时数组, [low~hi], 为什么只取一半?, 因为节省性能, 后半个绝对不会被覆盖, 可以直接使用
                 temp[k] = cs[k];
             }
             /*
@@ -46,9 +59,11 @@ public class Sort_05_Merge {
             for (int k = low; k <= hi; k++) {
                 // 归并到 cs
                 if (i > mid) {
+                    // 左边提前结束
                     // 如果i到头了, 第一个数组用完了, 则直接使用第2个数组
                     cs[k] = temp[j++];
                 } else if (j > hi) {
+                    // 右边提前结束
                     // 如果j到头了, 第二个数组用完了, 则直接使用第1个数组
                     cs[k] = temp[i++];
                 } else if (less(temp[j], temp[i])) {
