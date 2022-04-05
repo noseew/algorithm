@@ -1,7 +1,6 @@
 package org.song.algorithm.base._01datatype._01base._04tree.trie;
 
 import org.song.algorithm.base._01datatype._01base._01linear.list._01model.ArrayBase01;
-import org.song.algorithm.base._01datatype._01base._02queue_stack._01model.queue.Queue_Link_01;
 import org.song.algorithm.base._01datatype._02high.hashmap._01base.AbstractMap;
 import org.song.algorithm.base._01datatype._02high.hashmap._01base.HashMap_base_05;
 
@@ -52,21 +51,13 @@ public class TrieBase<V> {
      * @return
      */
     public ArrayBase01<String> startMatch(String key) {
-        int limit = 10; // 最多匹配数, 防止查询数据过多
+        int limit = 10; // 最多匹配数, 防止查询数据过多, 或递归过深
         ArrayBase01<String> array = new ArrayBase01<>();
         Node<V> node = getNode(key);
         if (node == null) {
             return array;
         }
-        // 暂时只取下一层
-        HashMap_base_05<Character, Node<V>> children = node.children;
-        ArrayBase01<AbstractMap.Entry<Character, Node<V>>> cArray = children.toList();
-        for (int i = 0; i < cArray.length() && i < limit; i++) {
-            if (cArray.get(i).val.word) {
-                limit--;
-                array.add(key + cArray.get(i).val.c);
-            }
-        }
+        appendChildren(key, node, array, limit, limit);
         return array;
     }
 
@@ -139,10 +130,42 @@ public class TrieBase<V> {
             }
         }
         return node;
-        
+
     }
-    
-    
+
+    /**
+     * 递归拼接模糊的前缀匹配key
+     *
+     * @param key       前缀key
+     * @param node      待处理的node
+     * @param array     存储结果的数组
+     * @param limitSize 限制最大数量
+     * @param limitDeep 限制最大深度, 防止递归过深
+     */
+    protected void appendChildren(String key, Node<V> node, ArrayBase01<String> array, int limitSize, int limitDeep) {
+        if (array.length() >= limitSize || node == null || limitDeep <= 0) {
+            return;
+        }
+        if (node.word) {
+            // 如果本身是key, 则直接添加
+            limitSize--;
+            array.add(key);
+        }
+
+        ArrayBase01<AbstractMap.Entry<Character, Node<V>>> cArray = node.children.toList();
+        for (int i = 0; i < cArray.length() && i < limitSize; i++) {
+            if (cArray.get(i).val.word) {
+                limitSize--;
+                array.add(key + cArray.get(i).val.c);
+            }
+        }
+        // 广度优先递归
+        for (int i = 0; i < cArray.length(); i++) {
+            appendChildren(key + cArray.get(i).val.c, cArray.get(i).val, array, limitSize, limitDeep - 1);
+        }
+    }
+
+
     /*
     字典树的node
     

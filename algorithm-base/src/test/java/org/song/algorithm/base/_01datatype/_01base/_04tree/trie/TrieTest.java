@@ -14,9 +14,13 @@ public class TrieTest {
     @Test
     public void test01() {
         TrieBase<String> trie = new TrieBase<>();
+        trie.put("ab", "ab");
         trie.put("abc", "abc");
         trie.put("abd", "abd");
         trie.put("abdf", "abdf");
+        trie.put("abdff", "abdff");
+        trie.put("abdfg", "abdfg");
+        trie.put("abdfgg", "abdfgg");
         trie.put("aa", "aa");
 
 
