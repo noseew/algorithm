@@ -22,6 +22,10 @@ public class TrieTest {
         trie.put("bb", "bb");
         trie.put("bbr", "bbr");
 
+        trie.remove("bb");
+        trie.remove("abdf");
+        trie.remove("ab");
+
         System.out.println(trie);
     }
 
@@ -39,6 +43,21 @@ public class TrieTest {
                 trie.get(key);
                 trie.put(key, key);
                 assert equals;
+            }
+
+            if (key.length() > 1) {
+                boolean startWith = trie.startWith(key.substring(0, key.length() / 2));
+                if (!startWith) {
+                    assert startWith;
+                }
+            }
+
+            if (i % 5 == 0) {
+                String val = trie.remove(key);
+                boolean rem = trie.get(key) == null;
+                if (!rem) {
+                    assert rem;
+                }
             }
         }
 
