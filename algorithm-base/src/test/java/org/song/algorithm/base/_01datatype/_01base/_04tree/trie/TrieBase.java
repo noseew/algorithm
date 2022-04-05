@@ -57,7 +57,7 @@ public class TrieBase<V> {
         if (node == null) {
             return array;
         }
-        appendChildren(key, node, array, limit, limit);
+        appendChildren(key, node, array, limit, 3);
         return array;
     }
 
@@ -135,6 +135,7 @@ public class TrieBase<V> {
 
     /**
      * 递归拼接模糊的前缀匹配key
+     * 待优化
      *
      * @param key       前缀key
      * @param node      待处理的node
