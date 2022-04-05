@@ -30,29 +30,17 @@ public class LbPerfTest {
     }
     
     /*
-    第一次
-    Lb05Hash1	            1	0.00%
-    Lb05ConsistencyHash1	1	0.00%
-    Lb01RR2	                4	0.01%
-    Lb02Random1	            101	0.22%
-    Lb01RR1	                103	0.23%
-    Lb03WRR2	            103	0.23%
-    Lb03WR1	            1720	3.77%
-    Lb03WRR1	        3332	7.30%
-    Lb04SmoothWRR2	    19874	43.56%
-    Lb04SmoothWRR1	    19954	43.74%
-    
-    第二次, 不考虑并发
-    Lb05ConsistencyHash1	1	0.00%
-    Lb05Hash1	            1	0.00%
-    Lb01RR1	                4	0.01%
-    Lb01RR2	                3	0.01%
-    Lb02Random1	            102	0.23%
-    Lb03WRR2	            108	0.24%
-    Lb03WR1	            1850	4.11%
-    Lb03WRR1	        3377	7.50%
-    Lb04SmoothWRR1	    19281	42.82%
-    Lb04SmoothWRR2	    19896	44.18%
+    不考虑并发
+    Lb01RR1	                    5	0.01%
+    Lb01RR2	                    3	0.01%
+    Lb05Hash1	                5	0.01%
+    Lb02Random1	                102	0.22%
+    Lb03WRR2	                105	0.23%
+    Lb05ConsistencyHash1	1065	2.28%
+    Lb03WR1	                1864	4.00%
+    Lb03WRR1	            3341	7.16%
+    Lb04SmoothWRR1	        19783	42.41%
+    Lb04SmoothWRR2	        19841	42.54%
      */
     @Test
     public void test01() {
@@ -94,11 +82,11 @@ public class LbPerfTest {
             }
             Lb05Hash1 hash1 = new Lb05Hash1();
             for (int i = 0; i < num; i++) {
-                AbstractLB.Task task = hash1.select(tasks);
+                AbstractLB.Task task = hash1.select(tasks, i);
             }
             Lb05ConsistencyHash1 chash1 = new Lb05ConsistencyHash1();
             for (int i = 0; i < num; i++) {
-                AbstractLB.Task task = chash1.select(tasks);
+                AbstractLB.Task task = chash1.select(tasks, i);
             }
         });
 
@@ -153,13 +141,13 @@ public class LbPerfTest {
         Runnable r9 = () -> StopWatchUtils.run(stopWatch, "Lb05Hash1", () -> {
             Lb05Hash1 hash1 = new Lb05Hash1();
             for (int i = 0; i < num; i++) {
-                AbstractLB.Task task = hash1.select(tasks);
+                AbstractLB.Task task = hash1.select(tasks, i);
             }
         });
         Runnable r10 = () -> StopWatchUtils.run(stopWatch, "Lb05ConsistencyHash1", () -> {
             Lb05ConsistencyHash1 chash1 = new Lb05ConsistencyHash1();
             for (int i = 0; i < num; i++) {
-                AbstractLB.Task task = chash1.select(tasks);
+                AbstractLB.Task task = chash1.select(tasks, i);
             }
         });
         for (int i = 0; i < 100; i++) {
