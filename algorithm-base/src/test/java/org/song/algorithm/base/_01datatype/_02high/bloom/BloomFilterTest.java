@@ -1,4 +1,4 @@
-package org.song.algorithm.base._01datatype._01base._01linear.bit._03app.bitmap._03app;
+package org.song.algorithm.base._01datatype._02high.bloom;
 
 import org.junit.Test;
 

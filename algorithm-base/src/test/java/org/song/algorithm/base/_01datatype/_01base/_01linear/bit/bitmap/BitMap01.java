@@ -1,4 +1,4 @@
-package org.song.algorithm.base._01datatype._01base._01linear.bit._03app.bitmap._01model;
+package org.song.algorithm.base._01datatype._01base._01linear.bit.bitmap;
 
 import org.song.algorithm.base.utils.BinaryUtils;
 
