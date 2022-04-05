@@ -1,6 +1,7 @@
 package org.song.algorithm.base._01datatype._01base._04tree.trie;
 
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.base._01datatype._01base._01linear.list._01model.ArrayBase01;
 
 import java.util.Random;
 
@@ -21,6 +22,9 @@ public class TrieTest {
 
         trie.put("bb", "bb");
         trie.put("bbr", "bbr");
+
+        ArrayBase01<String> array = trie.startMatch("ab");
+        System.out.println(array);
 
         trie.remove("bb");
         trie.remove("abdf");

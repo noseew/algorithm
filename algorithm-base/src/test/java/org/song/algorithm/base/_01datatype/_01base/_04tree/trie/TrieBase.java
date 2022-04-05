@@ -1,6 +1,7 @@
 package org.song.algorithm.base._01datatype._01base._04tree.trie;
 
 import org.song.algorithm.base._01datatype._01base._01linear.list._01model.ArrayBase01;
+import org.song.algorithm.base._01datatype._01base._02queue_stack._01model.queue.Queue_Link_01;
 import org.song.algorithm.base._01datatype._02high.hashmap._01base.AbstractMap;
 import org.song.algorithm.base._01datatype._02high.hashmap._01base.HashMap_base_05;
 
@@ -45,6 +46,31 @@ public class TrieBase<V> {
     }
 
     /**
+     * 前缀模糊搜索
+     * 
+     * @param key
+     * @return
+     */
+    public ArrayBase01<String> startMatch(String key) {
+        int limit = 10; // 最多匹配数, 防止查询数据过多
+        ArrayBase01<String> array = new ArrayBase01<>();
+        Node<V> node = getNode(key);
+        if (node == null) {
+            return array;
+        }
+        // 暂时只取下一层
+        HashMap_base_05<Character, Node<V>> children = node.children;
+        ArrayBase01<AbstractMap.Entry<Character, Node<V>>> cArray = children.toList();
+        for (int i = 0; i < cArray.length() && i < limit; i++) {
+            if (cArray.get(i).val.word) {
+                limit--;
+                array.add(key + cArray.get(i).val.c);
+            }
+        }
+        return array;
+    }
+
+    /**
      * 存储k\v
      * 
      * @param key
@@ -80,6 +106,7 @@ public class TrieBase<V> {
             // key 不存在
             return null;
         }
+        size--;
         V oldVal = node.val;
         node.val = null; // 删除val
         node.word = false; // 删除标记
@@ -96,6 +123,10 @@ public class TrieBase<V> {
             parent = parent.parent;
         }
         return oldVal;
+    }
+    
+    public int size() {
+        return size;
     }
     
     protected Node<V> getNode(String key) {
