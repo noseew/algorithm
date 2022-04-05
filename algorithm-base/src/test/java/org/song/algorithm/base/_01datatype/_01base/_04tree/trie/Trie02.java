@@ -11,7 +11,7 @@ import java.util.Map;
  * 摘自网络
  * 字典树, 优化node存储, 将公共前缀字符放到同一个node中
  */
-public class DictionaryTree {
+public class Trie02 {
 
     // 字典树根节点
     private Node root = new Node();

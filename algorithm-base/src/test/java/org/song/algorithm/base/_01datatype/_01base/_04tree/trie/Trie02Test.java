@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 /**
  *
  */
-public class DictionaryTreeTest {
+public class Trie02Test {
     @Test
     public void test01() {
-        DictionaryTree dt = new DictionaryTree();
+        Trie02 dt = new Trie02();
 
         dt.add("interest");
         dt.add("interesting");

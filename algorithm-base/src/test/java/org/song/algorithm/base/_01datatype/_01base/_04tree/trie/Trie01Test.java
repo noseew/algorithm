@@ -5,7 +5,7 @@ import org.song.algorithm.base._01datatype._01base._01linear.list._01model.Array
 
 import java.util.Random;
 
-public class TrieTest {
+public class Trie01Test {
 
     private Random r = new Random();
     private final int valueSize = 10_0000;
@@ -13,7 +13,7 @@ public class TrieTest {
 
     @Test
     public void test01() {
-        TrieBase<String> trie = new TrieBase<>();
+        Trie01<String> trie = new Trie01<>();
         trie.put("ab", "ab");
         trie.put("abc", "abc");
         trie.put("abd", "abd");
@@ -39,7 +39,7 @@ public class TrieTest {
 
     @Test
     public void test_auto() {
-        TrieBase<String> trie = new TrieBase<>();
+        Trie01<String> trie = new Trie01<>();
 
         for (int i = 0; i < valueSize; i++) {
 //            String key = randomHalfString(8);

@@ -9,7 +9,7 @@ Trie/字典树/前缀树
 
 简单版本
  */
-public class TrieBase<V> extends AbstractTrie<V> {
+public class Trie01<V> extends AbstractTrie<V> {
 
     protected Node<V> root = new Node<>(null, null);
     protected int size;
