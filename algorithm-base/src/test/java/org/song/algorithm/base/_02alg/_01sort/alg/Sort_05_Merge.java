@@ -133,4 +133,43 @@ public class Sort_05_Merge {
             }
         }
     }
+
+
+    /**
+     * 左程云
+     */
+    public static class MergeSort3 extends AbstractSort {
+
+        @Override
+        public void sort(Comparable[] cs) {
+            sort(cs, 0, cs.length - 1);
+        }
+
+        public static void sort(Comparable[] arr, int left, int right) {
+            if (left == right) return;
+            int mid = left + (right - left) / 2;
+            sort(arr, left, mid);
+            sort(arr, mid + 1, right);
+            merge(arr, left, mid + 1, right);
+        }
+
+        static void merge(Comparable[] arr, int leftPtr, int rightPtr, int rightBound) {
+            int mid = rightPtr - 1;
+            Comparable[] temp = new Comparable[rightBound - leftPtr + 1];
+
+            int i = leftPtr;
+            int j = rightPtr;
+            int k = 0;
+
+            while (i <= mid && j <= rightBound) {
+                temp[k++] = lessEq(arr[i], arr[j]) ? arr[i++] : arr[j++];
+            }
+
+            while (i <= mid) temp[k++] = arr[i++];
+            while (j <= rightBound) temp[k++] = arr[j++];
+
+            for (int m = 0; m < temp.length; m++) arr[leftPtr + m] = temp[m];
+
+        }
+    }
 }

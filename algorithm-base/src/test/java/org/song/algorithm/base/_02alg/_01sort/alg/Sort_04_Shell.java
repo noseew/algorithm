@@ -48,11 +48,35 @@ public class Sort_04_Shell {
                 // 将数组变为h有序
                 for (int i = h; i < n; i++) {
                     // 将 [j] 插入到 [i-h], [i-2*h], [i-3*h]...
-                    for (int j = i; j >= h && less(cs[j], cs[j - h]); j-=h) {
+                    for (int j = i; j >= h && less(cs[j], cs[j - h]); j -= h) {
                         exchange(cs, j, j - h);
                     }
                 }
                 h = h / 3;
+            }
+        }
+    }
+
+    /**
+     * 左程云
+     */
+    public static class ShellSort2 extends AbstractSort {
+        @Override
+        public void sort(Comparable[] cs) {
+            int h = 1;
+            while (h <= cs.length / 3) {
+                h = h * 3 + 1;
+            }
+
+            for (int gap = h; gap > 0; gap = (gap - 1) / 3) {
+
+                for (int i = gap; i < cs.length; i++) {
+                    for (int j = i; j > gap - 1; j -= gap) {
+                        if (less(cs[j], cs[j - gap])) {
+                            exchange(cs, j, j - gap);
+                        }
+                    }
+                }
             }
         }
     }

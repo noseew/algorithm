@@ -52,4 +52,19 @@ public class Sort_03_Insert {
         }
     }
 
+    /**
+     * 左程云
+     */
+    public static class InsertSort2 extends AbstractSort {
+
+        @Override
+        public void sort(Comparable[] cs) {
+            for (int i = 1; i < cs.length; i++) {
+                for (int j = i; j > 0 && less(cs[j], cs[j - 1]); j--) {
+                    exchange(cs, j, j - 1);
+                }
+            }
+        }
+    }
+
 }

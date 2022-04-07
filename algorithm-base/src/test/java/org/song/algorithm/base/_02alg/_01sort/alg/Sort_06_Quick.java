@@ -106,5 +106,55 @@ public class Sort_06_Quick {
         }
     }
 
+    /**
+     * 左程云
+     */
+    public static class QuickSort2 extends AbstractSort {
+
+        private static Random r;
+
+        @Override
+        public void sort(Comparable[] cs) {
+            // 重新洗牌数组, 消除 因输入数据 切分数据的选组 对 快速排序 的影响
+            shuffle(cs);
+            sort(cs, 0, cs.length - 1);
+        }
+
+        public void sort(Comparable[] arr, int leftBound, int rightBound) {
+            if (leftBound >= rightBound) return;
+            int mid = partition(arr, leftBound, rightBound);
+            sort(arr, leftBound, mid - 1);
+            sort(arr, mid + 1, rightBound);
+        }
+
+        int partition(Comparable[] arr, int leftBound, int rightBound) {
+            Comparable pivot = arr[rightBound];
+            int left = leftBound;
+            int right = rightBound - 1;
+            while (left <= right) {
+                while (left <= right && lessEq(arr[left], pivot)) left++;
+                while (left <= right && greater(arr[right], pivot)) right--;
+                if (left < right) exchange(arr, left, right);
+            }
+            exchange(arr, left, rightBound);
+            return left;
+        }
+
+        /**
+         * 数组重新洗牌, 算法改变自JDK Collections
+         *
+         * @param cs
+         */
+        private void shuffle(Comparable[] cs) {
+            if (r == null) {
+                r = new Random();
+            }
+            // Shuffle array
+            for (int i = cs.length; i > 1; i--) {
+                exchange(cs, i - 1, r.nextInt(i));
+            }
+        }
+    }
+
 
 }

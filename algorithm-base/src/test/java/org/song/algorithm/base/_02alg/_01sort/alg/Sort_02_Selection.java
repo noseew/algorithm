@@ -54,4 +54,20 @@ public class Sort_02_Selection {
         }
     }
 
+    /**
+     * 左程云
+     */
+    public static class SelectionSort2 extends AbstractSort {
+        @Override
+        public void sort(Comparable[] cs) {
+            for (int i = 0; i < cs.length - 1; i++) {
+                int minPos = i;
+                for (int j = i + 1; j < cs.length; j++) {
+                    minPos = less(cs[j], cs[minPos]) ? j : minPos;
+                }
+                exchange(cs, i, minPos);
+            }
+        }
+    }
+
 }

@@ -4,6 +4,8 @@ import org.junit.Test;
 import org.song.algorithm.base._01datatype._01base._01linear.list._01model.ArrayBase01;
 import org.song.algorithm.base._02alg._01sort.AbstractSort;
 
+import java.util.Arrays;
+
 /*
 基数排序
 基数排序可以看作桶排序的扩展, 它是一种多关键字排序算法, 每个桶中数据的范围称作基数
@@ -79,7 +81,7 @@ public class Sort_09_Radix {
 
         /**
          * 获取数的10进制位数
-         * 
+         *
          * @param num
          * @return
          */
@@ -118,6 +120,37 @@ public class Sort_09_Radix {
                 buckets[i] = new ArrayBase01<Comparable>();
             }
             return buckets;
+        }
+    }
+
+    /**
+     * 左程云
+     */
+    public static class RadixSort2 {
+
+        public static int[] sort(int[] arr) {
+            int[] result = new int[arr.length];
+            int[] count = new int[10];
+
+
+            for (int i = 0; i < 3; i++) {
+                int division = (int) Math.pow(10, i);
+                System.out.println(division);
+                for (int j = 0; j < arr.length; j++) {
+                    int num = arr[j] / division % 10;
+                    count[num]++;
+                }
+                for (int m = 1; m < count.length; m++) {
+                    count[m] = count[m] + count[m - 1];
+                }
+                for (int n = arr.length - 1; n >= 0; n--) {
+                    int num = arr[n] / division % 10;
+                    result[--count[num]] = arr[n];
+                }
+                System.arraycopy(result, 0, arr, 0, arr.length);
+                Arrays.fill(count, 0);
+            }
+            return result;
         }
     }
 

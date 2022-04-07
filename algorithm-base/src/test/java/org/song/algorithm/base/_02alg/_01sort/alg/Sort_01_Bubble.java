@@ -86,7 +86,7 @@ public class Sort_01_Bubble {
             }
         }
     }
-    
+
     /*
     将预先排序优化和尾部优化合并
      */
@@ -103,6 +103,26 @@ public class Sort_01_Bubble {
                     }
                 }
                 end = lastSwapIndex; // 已经排好序的尾部
+            }
+        }
+    }
+
+    /**
+     * 左程云
+     */
+    public static class BubbleSort5 extends AbstractSort {
+        @Override
+        public void sort(Comparable[] cs) {
+            for (int i = cs.length - 1; i > 0; i--) {
+                findMax(cs, i);
+            }
+        }
+
+        public void findMax(Comparable[] a, int n) {
+            for (int j = 0; j < n; j++) {
+                if (less(a[j + 1], a[j])) {
+                    exchange(a, j, j + 1);
+                }
             }
         }
     }
