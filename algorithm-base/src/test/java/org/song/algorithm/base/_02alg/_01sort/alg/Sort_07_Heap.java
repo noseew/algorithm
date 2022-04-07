@@ -29,18 +29,59 @@ public class Sort_07_Heap {
 
         assert AbstractSort.isSorted(build);
     }
-    
+
     public static class HeapSort extends AbstractSort {
         @Override
         public void sort(Comparable[] cs) {
             // 将数组原地建堆(如果需要升序, 则需要大堆)
             Heap_base_03 heapLittle = new Heap_base_03(false, cs);
             heapLittle.heapify3();
-            
+
             // 依次取出, 并原地排序, 取出大堆头数据放入队尾, 完成后正好是升序
             for (int i = 0; i < cs.length; i++) {
                 cs[cs.length - i - 1] = (Comparable) heapLittle.pop();
             }
+        }
+
+    }
+
+    public static class HeapSort2 extends AbstractSort {
+        private int heapSize; // 堆大小
+
+        @Override
+        public void sort(Comparable[] cs) {
+//         原地建堆（自下而上的下滤）
+            heapSize = cs.length;
+            for (int i = (heapSize >> 1) - 1; i >= 0; i--) {
+                siftDown(cs, i);
+            }
+            while (heapSize > 1) {
+//             交换堆顶元素和尾部元素
+                exchange(cs, 0, --heapSize);
+//             对0位置进行siftDown（恢复堆的性质）
+                siftDown(cs, 0);
+            }
+        }
+
+        private void siftDown(Comparable[] cs, int index) {
+            Comparable element = cs[index];
+            int half = heapSize >> 1;
+            while (index < half) { // index必须是非叶子节点
+//             默认是左边跟父节点比
+                int childIndex = (index << 1) + 1;
+                Comparable child = cs[childIndex];
+                int rightIndex = childIndex + 1;
+//             右子节点比左子节点大
+                if (rightIndex < heapSize &&
+                        greater(cs[rightIndex], child)) {
+                    child = cs[childIndex = rightIndex];
+                }
+//             大于等于子节点
+                if (!less(element, child)) break;
+                cs[index] = child;
+                index = childIndex;
+            }
+            cs[index] = element;
         }
 
     }
