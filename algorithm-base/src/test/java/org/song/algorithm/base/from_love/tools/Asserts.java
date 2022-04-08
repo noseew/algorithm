@@ -1,4 +1,4 @@
-package org.song.algorithm.base.from_love.alg.tools;
+package org.song.algorithm.base.from_love.tools;
 // public class Asserts {
 // public static void test(boolean value) {
 // try {

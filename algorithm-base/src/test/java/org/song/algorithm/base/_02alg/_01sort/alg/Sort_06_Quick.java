@@ -156,5 +156,60 @@ public class Sort_06_Quick {
         }
     }
 
+    public static class QuickSort3 extends AbstractSort {
+
+        public void sort(Comparable[] array) {
+            sort(array, 0, array.length);
+        }
+
+        /**
+         * 对 [begin, end) 范围的元素进行快速排序
+         */
+        private void sort(Comparable[] array, int begin, int end) {
+            if (end - begin < 2) return;
+//         确定轴点位置 O (n)
+            int mid = pivotIndex(array, begin, end);
+//         对子序列进行快速排序
+            sort(array, begin, mid);
+            sort(array, mid + 1, end);
+        }
+
+        /**
+         * 构造出 [begin, end) 范围的轴点元素
+         *
+         * @return 轴点元素的最终位置
+         */
+        private int pivotIndex(Comparable[] array, int begin, int end) {
+//         随机选择轴点元素
+            exchange(array, begin, begin + (int) Math.random() * (end - begin));
+//         备份begin位置的元素
+            Comparable pivot = array[begin];
+//         end指向最后一个元素
+            end--;
+            while (begin < end) {
+                while (begin < end) {    // 从右往左扫描
+                    if (less(pivot, array[end])) { // 右边元素 > 轴点元素
+                        end--;
+                    } else { // 右边元素 <= 轴点元素
+                        array[begin++] = array[end];
+                        break;
+                    }
+                }
+                while (begin < end) { // 从左往右扫描
+                    if (greater(pivot, array[begin])) { // 左边元素 < 轴点元素
+                        begin++;
+                    } else { // 左边元素 >= 轴点元素
+                        array[end--] = array[begin];
+                        break;
+                    }
+                }
+            }
+//         将轴点元素放入最终的位置
+            array[begin] = pivot;
+//         返回轴点元素的位置
+            return begin; // begin==end
+        }
+    }
+
 
 }

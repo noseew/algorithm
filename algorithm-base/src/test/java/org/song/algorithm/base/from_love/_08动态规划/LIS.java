@@ -1,4 +1,4 @@
-package org.song.algorithm.base.from_love.alg._08动态规划;
+package org.song.algorithm.base.from_love._08动态规划;
 // /**
 // * 最长连续子序列
 // * @author yusael

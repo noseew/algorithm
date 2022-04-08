@@ -1,4 +1,4 @@
-package org.song.algorithm.base.from_love.alg.tools;
+package org.song.algorithm.base.from_love.tools;
  import java.util.Arrays;
 
 public class Integers {

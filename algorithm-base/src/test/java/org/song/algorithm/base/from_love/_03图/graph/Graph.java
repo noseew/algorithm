@@ -1,4 +1,4 @@
-package org.song.algorithm.base.from_love.alg._03图.graph;
+package org.song.algorithm.base.from_love._03图.graph;
 // import java.util.LinkedList;
 // import java.util.List;
 // import java.util.Map;

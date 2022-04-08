@@ -3,6 +3,10 @@ package org.song.algorithm.base._02alg._01sort.alg;
 import org.junit.Test;
 import org.song.algorithm.base._02alg._01sort.AbstractSort;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * shell排序
  * 属于分组的插入排序, 分组规则是使用二分法,
@@ -78,6 +82,72 @@ public class Sort_04_Shell {
                     }
                 }
             }
+        }
+    }
+
+    public static class ShellSort3 extends AbstractSort {
+
+        @Override
+        public void sort(Comparable[] cs) {
+//        根据元素数量算出步长序列
+            List<Integer> stepSequence = sedgewickStepSequence(cs);
+//        按步长序列划分进行排序
+            for (Integer step : stepSequence) {
+                sort(cs, step); // 按step进行排序
+            }
+        }
+
+        /**
+         * 分成step列进行排序
+         */
+        private void sort(Comparable[] cs, int step) {
+            col:
+//        第几列, column的简称
+            for (int col = 0; col < step; col++) {
+//            插入排序
+                for (int begin = col + step; begin < cs.length; begin += step) {
+//                col、col + step、col + 2 * step、col + 3 * step
+                    int cur = begin;
+                    while (cur > col && less(cur, cur - step)) {
+                        exchange(cs, cur, cur - step);
+                        cur -= step;
+                    }
+                }
+            }
+        }
+
+        /**
+         * 希尔本人提出的步长序列
+         */
+        public List<Integer> shellStpSequence(Comparable[] cs) {
+            List<Integer> stepSequence = new ArrayList<>();
+            int step = cs.length;
+            while ((step >>= 1) > 0) {
+                stepSequence.add(step);
+            }
+            return stepSequence;
+        }
+
+        /**
+         * 目前效率最高的步长序列
+         */
+        private List<Integer> sedgewickStepSequence(Comparable[] cs) {
+            List<Integer> stepSequence = new LinkedList<>();
+            int k = 0, step = 0;
+            while (true) {
+                if (k % 2 == 0) {
+                    int pow = (int) Math.pow(2, k >> 1);
+                    step = 1 + 9 * (pow * pow - pow);
+                } else {
+                    int pow1 = (int) Math.pow(2, (k - 1) >> 1);
+                    int pow2 = (int) Math.pow(2, (k + 1) >> 1);
+                    step = 1 + 8 * pow1 * pow2 - 6 * pow2;
+                }
+                if (step >= cs.length) break;
+                stepSequence.add(0, step);
+                k++;
+            }
+            return stepSequence;
         }
     }
 

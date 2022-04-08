@@ -70,4 +70,19 @@ public class Sort_02_Selection {
         }
     }
 
+    public static class SelectionSort3 extends AbstractSort {
+        @Override
+        public void sort(Comparable[] cs) {
+            for (int end = cs.length - 1; end > 0; end--) {
+                int max = 0;
+                for (int begin = 1; begin <= end; begin++) {
+                    if (less(max, begin)) {
+                        max = begin;
+                    }
+                }
+                exchange(cs, max, end);
+            }
+        }
+    }
+
 }

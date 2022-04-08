@@ -1,4 +1,4 @@
-package org.song.algorithm.base.from_love.alg._02并查集;
+package org.song.algorithm.base.from_love._02并查集;
 // import org.song.algorithm.algorithmbase.from_love.alg.tools.Asserts;
 // import org.song.algorithm.algorithmbase.from_love.alg.tools.Times;
 // import org.song.algorithm.algorithmbase.from_love.alg._02并查集.union.GenericUnionFind;

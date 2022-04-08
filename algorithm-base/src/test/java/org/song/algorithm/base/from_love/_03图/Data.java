@@ -1,4 +1,4 @@
-package org.song.algorithm.base.from_love.alg._03图;
+package org.song.algorithm.base.from_love._03图;
 // public class Data {
 // public static final Object[][] BFS_01 = {//P26,left
 // {"A", "B"}, {"A", "F"},
