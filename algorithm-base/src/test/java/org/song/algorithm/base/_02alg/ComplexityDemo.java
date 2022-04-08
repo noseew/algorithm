@@ -1,6 +1,9 @@
-package org.song.algorithm.base.from_love.datatype._01data复杂度;
+package org.song.algorithm.base._02alg;
 
-public class Main {
+/**
+ * 复杂度
+ */
+public class ComplexityDemo {
     /* 0 1 2 3 4 5
      * 0 1 1 2 3 5 8 13 ....
      */
