@@ -39,10 +39,10 @@ public class Heap_base_03<T> extends Heap_base_02<T> {
      * 注意由于是直接操作数组, 所以要考虑size
      */
     public void heapify2() {
+        size = datas.length;
         for (int i = 0; i < datas.length; i++) {
             shiftUp(i);
         }
-//        size = datas.length;
     }
 
     /**
@@ -50,11 +50,11 @@ public class Heap_base_03<T> extends Heap_base_02<T> {
      * 注意由于是直接操作数组, 所以要考虑size
      */
     public void heapify3() {
+        size = datas.length;
         int length = datas.length; // 忽略叶子结点
         for (int i = (length >> 1) - 1; i >= 0; i--) {
             shiftDown(i);
         }
-//        size = datas.length;
     }
 
 }

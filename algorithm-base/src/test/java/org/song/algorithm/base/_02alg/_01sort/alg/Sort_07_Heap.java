@@ -21,9 +21,19 @@ public class Sort_07_Heap {
 
     @Test
     public void test() {
-        Comparable[] build = AbstractSort.build(10);
+        Comparable[] build = AbstractSort.build(100);
 
         new HeapSort().sort(build);
+
+        AbstractSort.toString(build);
+
+        assert AbstractSort.isSorted(build);
+    }
+    @Test
+    public void test2() {
+        Comparable[] build = AbstractSort.build(100);
+
+        new HeapSort2().sort(build);
 
         AbstractSort.toString(build);
 
@@ -46,6 +56,7 @@ public class Sort_07_Heap {
     }
 
     public static class HeapSort2 extends AbstractSort {
+        
         private int heapSize; // 堆大小
 
         @Override
@@ -53,12 +64,12 @@ public class Sort_07_Heap {
 //         原地建堆（自下而上的下滤）
             heapSize = cs.length;
             for (int i = (heapSize >> 1) - 1; i >= 0; i--) {
+                // 原地建堆
                 siftDown(cs, i);
             }
             while (heapSize > 1) {
-//             交换堆顶元素和尾部元素
+                // 取出top
                 exchange(cs, 0, --heapSize);
-//             对0位置进行siftDown（恢复堆的性质）
                 siftDown(cs, 0);
             }
         }
@@ -66,17 +77,13 @@ public class Sort_07_Heap {
         private void siftDown(Comparable[] cs, int index) {
             Comparable element = cs[index];
             int half = heapSize >> 1;
-            while (index < half) { // index必须是非叶子节点
-//             默认是左边跟父节点比
+            while (index < half) {
                 int childIndex = (index << 1) + 1;
                 Comparable child = cs[childIndex];
                 int rightIndex = childIndex + 1;
-//             右子节点比左子节点大
-                if (rightIndex < heapSize &&
-                        greater(cs[rightIndex], child)) {
+                if (rightIndex < heapSize && greater(cs[rightIndex], child)) {
                     child = cs[childIndex = rightIndex];
                 }
-//             大于等于子节点
                 if (!less(element, child)) break;
                 cs[index] = child;
                 index = childIndex;
