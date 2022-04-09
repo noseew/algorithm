@@ -18,6 +18,28 @@ public class Sort_06_Quick {
         assert AbstractSort.isSorted(build);
     }
 
+    @Test
+    public void test02() {
+        Comparable[] build = AbstractSort.build(10);
+
+        new QuickSort2().sort(build);
+
+        AbstractSort.toString(build);
+
+        assert AbstractSort.isSorted(build);
+    }
+
+    @Test
+    public void test03() {
+        Comparable[] build = AbstractSort.build(10);
+
+        new QuickSort3().sort(build);
+
+        AbstractSort.toString(build);
+
+        assert AbstractSort.isSorted(build);
+    }
+
     /*
     长度为N的数组排序所需的时间和NlgN成正比. 
     
