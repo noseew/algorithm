@@ -27,6 +27,28 @@ public class Sort_04_Shell {
         assert AbstractSort.isSorted(build);
     }
 
+    @Test
+    public void test02() {
+        Comparable[] build = AbstractSort.build(10);
+
+        new ShellSort2().sort(build);
+
+        AbstractSort.toString(build);
+
+        assert AbstractSort.isSorted(build);
+    }
+
+    @Test
+    public void test03() {
+        Comparable[] build = AbstractSort.build(10);
+
+        new ShellSort3().sort(build);
+
+        AbstractSort.toString(build);
+
+        assert AbstractSort.isSorted(build);
+    }
+
     /*
     基于插入排序的快速的排序算法. 对于大规模乱序数组插入排序很慢, 因为它只会交换相邻的元素, 因此元素只能一点一点地从数组的一端移动到另一端. 
     例如, 如果主键最小的元素正好在数组的尽头, 要将它挪到正确的位置就需要N-1次移动. 

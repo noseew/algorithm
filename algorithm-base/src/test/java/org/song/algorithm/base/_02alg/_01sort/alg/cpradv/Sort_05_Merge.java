@@ -8,27 +8,39 @@ public class Sort_05_Merge {
     @Test
     public void test() {
         Comparable[] build = AbstractSort.build(10);
-
         new MergeSort().sort(build);
-
         AbstractSort.toString(build);
-
         assert AbstractSort.isSorted(build);
     }
 
     @Test
-    public void test2() {
+    public void test02() {
         Comparable[] build = AbstractSort.build(10);
-
         new MergeSort2().sort(build);
-
         AbstractSort.toString(build);
+        assert AbstractSort.isSorted(build);
+    }
 
+    @Test
+    public void test03() {
+        Comparable[] build = AbstractSort.build(10);
+        new MergeSort3().sort(build);
+        AbstractSort.toString(build);
+        assert AbstractSort.isSorted(build);
+    }
+
+    @Test
+    public void test04() {
+        Comparable[] build = AbstractSort.build(10);
+        new MergeSort4().sort(build);
+        AbstractSort.toString(build);
         assert AbstractSort.isSorted(build);
     }
 
     /**
      * 归并排序的核心, 合并
+     * 
+     * 来自 <算法4>
      */
     public static abstract class AbstractMergeSort extends AbstractSort {
         /**
@@ -134,7 +146,6 @@ public class Sort_05_Merge {
         }
     }
 
-
     /**
      * 左程云
      */
@@ -174,6 +185,7 @@ public class Sort_05_Merge {
     }
 
     public static class MergeSort4 extends AbstractSort {
+        
         private Comparable[] leftArray;
 
         public void sort(Comparable[] array) {
