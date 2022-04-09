@@ -1,4 +1,4 @@
-package org.song.algorithm.base._02alg._01sort.alg;
+package org.song.algorithm.base._02alg._01sort.alg.cpradv;
 
 import org.junit.Test;
 import org.song.algorithm.base._02alg._01sort.AbstractSort;

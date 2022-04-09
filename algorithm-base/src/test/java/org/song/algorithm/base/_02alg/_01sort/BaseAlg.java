@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-public class Base {
+public class BaseAlg {
     
     /*
     时间复杂度: 记作O

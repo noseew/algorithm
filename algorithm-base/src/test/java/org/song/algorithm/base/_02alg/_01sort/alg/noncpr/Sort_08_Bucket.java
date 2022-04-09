@@ -1,8 +1,9 @@
-package org.song.algorithm.base._02alg._01sort.alg;
+package org.song.algorithm.base._02alg._01sort.alg.noncpr;
 
 import org.junit.Test;
 import org.song.algorithm.base._01datatype._01base._01linear.list._01model.ArrayBase01;
 import org.song.algorithm.base._02alg._01sort.AbstractSort;
+import org.song.algorithm.base._02alg._01sort.alg.cprbase.Sort_03_Insert;
 
 /*
 桶排序将待排序序列划分成若干个区间, 每个区间可形象地看作一个桶, 

@@ -2,7 +2,7 @@ package org.song.algorithm.base._02alg._02search.alg;
 
 import org.junit.Test;
 import org.song.algorithm.base._02alg._01sort.AbstractSort;
-import org.song.algorithm.base._02alg._01sort.alg.Sort_06_Quick;
+import org.song.algorithm.base._02alg._01sort.alg.cpradv.Sort_06_Quick;
 import org.song.algorithm.base._02alg._02search.AbstractSearch;
 
 /*
