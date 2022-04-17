@@ -19,6 +19,8 @@ public class LRURedisTest03 {
     这里实现的LRU仅仅是实验性质, 并没有证据表明他比普通LRU效率更高或空间更小, 待测试, 不过他写法更简单是真的
     
     为什么redis不使用普通的链表LRU算法?
+    个人猜测: redis的cache有TTL, 不一定哪个cache会随时失效, 而失效的key补发通过普通LRU来删除, 但是可以通过随机采样来删除
+    因此此方法兼容性更好
      */
     @Test
     public void test_01() {
