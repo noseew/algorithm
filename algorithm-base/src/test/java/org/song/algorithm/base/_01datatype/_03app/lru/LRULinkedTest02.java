@@ -164,15 +164,13 @@ public class LRULinkedTest02 {
             return sb.toString();
         }
 
-        class CacheNode {
-            CacheNode pre;
-            CacheNode next;
-            Object key;
-            Object value;
+        public static class CacheNode {
+            public CacheNode pre;
+            public CacheNode next;
+            public Object key;
+            public Object value;
 
-            public CacheNode() {
-
-            }
+            public int times; // 用于LFU缓存的计数, LRU不用他
         }
     }
 }

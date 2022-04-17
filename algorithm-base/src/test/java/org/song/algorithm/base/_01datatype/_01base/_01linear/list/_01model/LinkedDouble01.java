@@ -173,6 +173,28 @@ public class LinkedDouble01<T> extends AbsLine<T> {
     public DuplexNode<T> getTail() {
         return tail;
     }
+    
+    public T deleteHead() {
+        if (head != null) {
+            DuplexNode<T> oldHead = head;
+            head = (DuplexNode<T>) head.next;
+            head.prev = null;
+            size--;
+            return oldHead.value;
+        }
+        return null;
+    }
+    
+    public T deleteTail() {
+        if (tail != null) {
+            DuplexNode<T> oldTail = tail;
+            tail = (DuplexNode<T>) tail.prev;
+            tail.next = null;
+            size--;
+            return oldTail.value;
+        }
+        return null;
+    }
 
     @Override
     public String toString() {
