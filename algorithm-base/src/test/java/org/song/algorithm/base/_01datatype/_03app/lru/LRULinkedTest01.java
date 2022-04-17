@@ -97,7 +97,7 @@ public class LRULinkedTest01 {
      * @param <K>
      * @param <V>
      */
-    public class LRULinkedHashMap<K, V> extends LinkedHashMap<K, V> {
+    public static class LRULinkedHashMap<K, V> extends LinkedHashMap<K, V> {
         /**
          * 最大容量
          * LRU淘汰的最大容量
@@ -140,7 +140,7 @@ public class LRULinkedTest01 {
      * @param <K>
      * @param <V>
      */
-    public class ConcurrentLRULinkedHashMap<K, V> extends LinkedHashMap<K, V> {
+    public static class ConcurrentLRULinkedHashMap<K, V> extends LinkedHashMap<K, V> {
         /**
          * 最大容量
          * LRU淘汰的最大容量

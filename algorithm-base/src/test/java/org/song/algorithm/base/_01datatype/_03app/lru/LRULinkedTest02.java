@@ -6,7 +6,6 @@ import java.util.HashMap;
 
 public class LRULinkedTest02 {
 
-
     /*
     采用 HashMap 和双向链表实现 LRU
     
@@ -30,9 +29,7 @@ public class LRULinkedTest02 {
         lru.put("2", 2);
     }
     
-    
-    
-    class LRUCache<K, V> {
+    public static class LRUCache<K, V> {
 
         private int currentCacheSize;
         private int capacity;

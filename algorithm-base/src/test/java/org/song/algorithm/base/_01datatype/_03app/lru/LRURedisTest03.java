@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 public class LRURedisTest03 {
 
-
     /*
     参考 redis 3.0- 实现 LRU
     
@@ -40,7 +39,6 @@ public class LRURedisTest03 {
         lru.put("6", 6);
         lru.put("2", 2);
     }
-
 
     public static class LRURedis2Cache<K, V> {
 
