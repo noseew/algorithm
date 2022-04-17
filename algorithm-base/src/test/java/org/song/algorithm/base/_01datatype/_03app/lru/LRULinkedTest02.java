@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
-public class LRUTest02 {
+public class LRULinkedTest02 {
 
 
     /*

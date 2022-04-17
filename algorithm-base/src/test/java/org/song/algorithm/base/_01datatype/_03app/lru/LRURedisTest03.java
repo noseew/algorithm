@@ -6,16 +6,23 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
-public class LRUTest03 {
+public class LRURedisTest03 {
 
 
     /*
     参考 redis 3.0- 实现 LRU
     
+    和普通LRU相比, 普通LRU是通过双向链表来维护时间关系, 链表尾部元素一定是最早访问的元素, 如果需要删除, 则删除它即可
+    这里的实现是, 通过时间戳字段lru来维护访问时间, lru越小则一定是最早访问元素, 如何定位他呢? 这里并不是采用排除而是随机采样
+    随机取出比如5个, 在这5个中找出lru最小的那个然后删除
+    
+    这里实现的LRU仅仅是实验性质, 并没有证据表明他比普通LRU效率更高或空间更小, 待测试, 不过他写法更简单是真的
+    
+    为什么redis不使用普通的链表LRU算法?
      */
     @Test
     public void test_01() {
-        LRUCache<String, Object> lru = new LRUCache<>(5);
+        LRURedis2Cache<String, Object> lru = new LRURedis2Cache<>(5);
         lru.put("1", 1);
         lru.put("5", 5);
         lru.put("7", 7);
@@ -33,12 +40,12 @@ public class LRUTest03 {
     }
 
 
-    class LRUCache<K, V> {
+    public static class LRURedis2Cache<K, V> {
 
-        private int capacity;
-        private HashMap<K, CacheNode> cacheMaps;
+        public int capacity;
+        public HashMap<K, CacheNode> cacheMaps;
 
-        public LRUCache(int size) {
+        public LRURedis2Cache(int size) {
             this.capacity = size;
             cacheMaps = new HashMap<K, CacheNode>(size);
         }
@@ -53,7 +60,7 @@ public class LRUTest03 {
                 node.key = k;
             }
             node.value = v;
-            node.lru = System.currentTimeMillis();
+            node.lru = System.currentTimeMillis(); // 访问时间
             cacheMaps.put(k, node);
         }
 
@@ -62,15 +69,32 @@ public class LRUTest03 {
             if (node == null) {
                 return null;
             }
-            node.lru = System.currentTimeMillis();
+            node.lru = System.currentTimeMillis(); // 更新访问时间
             return node.value;
         }
 
-        private void removeLast() {
-            CacheNode cacheNode = sample(capacity).get(0);
+        public void removeLast() {
+            CacheNode cacheNode = getMin(sample(capacity));
             if (cacheNode != null) {
                 cacheMaps.remove(cacheNode.key);
             }
+        }
+
+        public CacheNode getMin(Collection<CacheNode> nodes) {
+            if (nodes != null && !nodes.isEmpty()) {
+                CacheNode minNode = null;
+                for (CacheNode node : nodes) {
+                    if (minNode == null) {
+                        minNode = node;
+                        continue;
+                    }
+                    if (minNode.lru > node.lru) {
+                        minNode = node;
+                    }
+                }
+                return minNode;
+            }
+            return null;
         }
 
         /**
@@ -78,7 +102,7 @@ public class LRUTest03 {
          * redis中随机获取entry采用的方式是, 对数组随机然后对链表随机, 获取到最终的entry, 调用一次获取一个entry
          * java中无法直接获取到数组和链表, 且java中有红黑树的存在, 所以这里采用近似的方式获取
          */
-        private List<CacheNode> sample(int size) {
+        public List<CacheNode> sample(int size) {
             // 随机位置
             int randomSkip = ThreadLocalRandom.current().nextInt(cacheMaps.size() / 2);
             ArrayList<CacheNode> entrys = new ArrayList<>(size);
@@ -91,7 +115,6 @@ public class LRUTest03 {
                     break;
                 }
             }
-            entrys.sort(Comparator.comparing(e -> e.lru));
             return entrys;
         }
 
@@ -105,7 +128,7 @@ public class LRUTest03 {
             return sb.toString();
         }
 
-        class CacheNode {
+        public static class CacheNode {
             long lru;
             Object key;
             Object value;
