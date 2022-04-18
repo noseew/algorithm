@@ -121,6 +121,20 @@ public class LFUTest01 {
             keyFreMap.put(node.key, fre);
         }
 
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append("次数map").append("\r\n");
+            freMap.forEach((k, v) -> {
+                sb.append("key=").append(k).append(", val={").append(v).append("}").append("\r\n");
+            });
+            sb.append("\r\n").append("数据map").append("\r\n");
+            keyNodeMap.forEach((k, v) -> {
+                sb.append("key=").append(k).append(", val={").append(v).append("}").append("\r\n");
+            });
+            return sb.toString();
+        }
+
         class DoubleList {
             private Node head, tail; // 头尾虚节点
             private int size; // 链表元素数
@@ -184,6 +198,18 @@ public class LFUTest01 {
             public boolean isEmpty() {
                 return size == 0;
             }
+
+            @Override
+            public String toString() {
+                StringBuilder sb = new StringBuilder();
+                sb.append("size=").append(size);
+                Node h = this.head;
+                while (h != null) {
+                    sb.append("[").append(h).append("]").append(">");
+                    h = h.next;
+                }
+                return sb.toString();
+            }
         }
 
         // 双向链表的节点
@@ -199,6 +225,11 @@ public class LFUTest01 {
 
             public Node() {
 
+            }
+
+            @Override
+            public String toString() {
+                return key == null ? "" : key + ":" + (val == null ? "" : val);
             }
         }
 
