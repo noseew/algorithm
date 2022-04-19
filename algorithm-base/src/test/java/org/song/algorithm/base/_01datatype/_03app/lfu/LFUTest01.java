@@ -19,6 +19,7 @@ public class LFUTest01 {
         LRU链表: head [lru=4,times=1]<=>[lru=3,times=2]<=>[lru=2,times=1]<=>[lru=1,times=2] tail
         访问次数map: key=1, val=[lru=4,times=1]<=>[lru=2,times=1]
                    key=2, val=[lru=3,times=2]<=>[lru=1,times=2]
+                   每一个map的val 都是一个独立的LRU链表
         删除的时候
             优先访问次数最小: key=1
             其次LRU: [lru=2,times=1]
@@ -45,101 +46,96 @@ public class LFUTest01 {
 
     public static class LFUCache<K, V> {
 
-        Map<Integer, DoubleList> freMap = new HashMap<>(); // 访问次数map
-        Map<K, Integer> keyFreMap = new HashMap<>();
-        Map<K, Node> keyNodeMap = new HashMap<>(); // 数据map
+        Map<Integer, InnerDoubleLinked> timesMap = new HashMap<>(); // 访问次数map
+        Map<K, Node> dataMap = new HashMap<>(); // 数据map
         int cap;
-        int minFre;
+        int minTimes;
 
         public LFUCache(int capacity) {
             cap = capacity;
         }
 
         public V get(K key) {
-            if (!keyFreMap.containsKey(key)) {
+            Node node = dataMap.get(key);
+            if (node == null) {
                 return null;
             }
-            int fre = keyFreMap.get(key);
-            Node oldNode = keyNodeMap.get(key);
-            V retVal = oldNode.val;
-            // 删除旧的
-            removeExistKey(key);
-            // 设置新的
-            addNewNode(fre + 1, oldNode);
-            return retVal;
+            V oldVal = node.val;
+            // 从次数小的LRU链表中删除
+            removeNode(node);
+            node.times = node.times + 1;
+            // 添加到次数大的LRU链表头中
+            addNode(node);
+            return oldVal;
         }
 
         public void put(K key, V value) {
             if (cap == 0) {
                 return;
             }
-            if (!keyFreMap.containsKey(key)) { // put新元素
-                if (keyNodeMap.size() == cap) {
+            Node node = dataMap.get(key);
+            if (node == null) { // put新元素
+                if (dataMap.size() == cap) {
                     // 需要删除
-                    DoubleList doubleList = freMap.get(minFre);
-                    Node removeNode = doubleList.getLast();
-                    removeExistKey(removeNode.key);
+                    InnerDoubleLinked innerDoubleLinked = timesMap.get(minTimes);
+                    Node removeNode = innerDoubleLinked.getLast();
+                    removeNode(removeNode);
                 }
-                Node newNode = new Node(key, value);
+                node = new Node(key, value);
                 // 添加新节点，其频率是1
-                addNewNode(1, newNode);
-                minFre = 1;
+                addNode(node);
+                minTimes = 1;
             } else {
-                int fre = keyFreMap.get(key);
                 // 删除旧的
-                removeExistKey(key);
+                removeNode(node);
                 // 设置新的
-                Node newNode = new Node(key, value);
-                addNewNode(fre + 1, newNode);
+                node.times = node.times + 1;
+                addNode(node);
             }
         }
 
         // 删除原来就存在的一个key
-        private void removeExistKey(K key) {
-            int fre = keyFreMap.get(key);
-            DoubleList doubleList = freMap.get(fre);
-            // 删除老的
-            Node oldNode = keyNodeMap.get(key);
-            doubleList.remove(oldNode);
-            keyNodeMap.remove(key);
-            keyFreMap.remove(key);
-            if (doubleList.isEmpty()) {
-                freMap.remove(fre);
-                if (minFre == fre) {
-                    minFre++;
+        private void removeNode(Node node) {
+            InnerDoubleLinked innerDoubleLinked = timesMap.get(node.times);
+            innerDoubleLinked.remove(node);
+            dataMap.remove(node.key);
+            if (innerDoubleLinked.isEmpty()) {
+                timesMap.remove(node.times);
+                if (minTimes == node.times) {
+                    // 当前次数的key为空了, 且是最小次数, 最小key加1
+                    minTimes++;
                 }
             }
         }
 
         // 添加新节点，fre为新节点的fre， node为新Node
-        private void addNewNode(int fre, Node node) {
+        private void addNode(Node node) {
             // 设置新的
-            DoubleList doubleList = freMap.getOrDefault(fre, new DoubleList());
-            doubleList.addFirst(node);
-            keyNodeMap.put(node.key, doubleList.getFirst());
-            freMap.put(fre, doubleList);
-            keyFreMap.put(node.key, fre);
+            InnerDoubleLinked innerDoubleLinked = timesMap.getOrDefault(node.times, new InnerDoubleLinked());
+            innerDoubleLinked.addFirst(node);
+            dataMap.put(node.key, innerDoubleLinked.getFirst());
+            timesMap.put(node.times, innerDoubleLinked);
         }
 
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
             sb.append("次数map").append("\r\n");
-            freMap.forEach((k, v) -> {
+            timesMap.forEach((k, v) -> {
                 sb.append("key=").append(k).append(", val={").append(v).append("}").append("\r\n");
             });
             sb.append("\r\n").append("数据map").append("\r\n");
-            keyNodeMap.forEach((k, v) -> {
+            dataMap.forEach((k, v) -> {
                 sb.append("key=").append(k).append(", val={").append(v).append("}").append("\r\n");
             });
             return sb.toString();
         }
 
-        class DoubleList {
+        class InnerDoubleLinked {
             private Node head, tail; // 头尾虚节点
             private int size; // 链表元素数
 
-            public DoubleList() {
+            public InnerDoubleLinked() {
                 head = new Node();
                 tail = new Node();
                 head.next = tail;
@@ -217,6 +213,7 @@ public class LFUTest01 {
             public K key;
             public V val;
             public Node next, prev;
+            int times = 1; // 该节点的访问次数
 
             public Node(K k, V v) {
                 this.key = k;
