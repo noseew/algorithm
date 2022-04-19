@@ -46,7 +46,7 @@ public class LFUTest01 {
 
     public static class LFUCache<K, V> {
 
-        Map<Integer, InnerDoubleLinked> timesMap = new HashMap<>(); // 访问次数map
+        Map<Integer, InnerLinked> timesMap = new HashMap<>(); // 访问次数map
         Map<K, Node> dataMap = new HashMap<>(); // 数据map
         int cap;
         int minTimes;
@@ -60,13 +60,8 @@ public class LFUTest01 {
             if (node == null) {
                 return null;
             }
-            V oldVal = node.val;
-            // 从次数小的LRU链表中删除
-            removeNode(node);
-            node.times = node.times + 1;
-            // 添加到次数大的LRU链表头中
-            addNode(node);
-            return oldVal;
+            addNodeTimes(node);
+            return node.val;
         }
 
         public void put(K key, V value) {
@@ -77,29 +72,32 @@ public class LFUTest01 {
             if (node == null) { // put新元素
                 if (dataMap.size() == cap) {
                     // 需要删除
-                    InnerDoubleLinked innerDoubleLinked = timesMap.get(minTimes);
-                    Node removeNode = innerDoubleLinked.getLast();
+                    InnerLinked innerLinked = timesMap.get(minTimes);
+                    Node removeNode = innerLinked.getLast();
                     removeNode(removeNode);
                 }
                 node = new Node(key, value);
-                // 添加新节点，其频率是1
+                // 添加新节点, 其频率是1
                 addNode(node);
-                minTimes = 1;
+                minTimes = 1; // 最小次数重置成1
             } else {
-                // 删除旧的
-                removeNode(node);
-                // 设置新的
-                node.times = node.times + 1;
-                addNode(node);
+                addNodeTimes(node);
             }
         }
+        
+        private void addNodeTimes(Node node) {
+            // 从次数小的LRU链表中删除
+            removeNode(node);
+            // 添加到次数大的LRU链表头中
+            node.times = node.times + 1;
+            addNode(node);
+        }
 
-        // 删除原来就存在的一个key
         private void removeNode(Node node) {
-            InnerDoubleLinked innerDoubleLinked = timesMap.get(node.times);
-            innerDoubleLinked.remove(node);
+            InnerLinked innerLinked = timesMap.get(node.times);
+            innerLinked.remove(node);
             dataMap.remove(node.key);
-            if (innerDoubleLinked.isEmpty()) {
+            if (innerLinked.isEmpty()) {
                 timesMap.remove(node.times);
                 if (minTimes == node.times) {
                     // 当前次数的key为空了, 且是最小次数, 最小key加1
@@ -108,13 +106,12 @@ public class LFUTest01 {
             }
         }
 
-        // 添加新节点，fre为新节点的fre， node为新Node
         private void addNode(Node node) {
             // 设置新的
-            InnerDoubleLinked innerDoubleLinked = timesMap.getOrDefault(node.times, new InnerDoubleLinked());
-            innerDoubleLinked.addFirst(node);
-            dataMap.put(node.key, innerDoubleLinked.getFirst());
-            timesMap.put(node.times, innerDoubleLinked);
+            InnerLinked innerLinked = timesMap.getOrDefault(node.times, new InnerLinked());
+            innerLinked.addFirst(node);
+            dataMap.put(node.key, node);
+            timesMap.put(node.times, innerLinked);
         }
 
         @Override
@@ -131,11 +128,11 @@ public class LFUTest01 {
             return sb.toString();
         }
 
-        class InnerDoubleLinked {
+        class InnerLinked {
             private Node head, tail; // 头尾虚节点
             private int size; // 链表元素数
 
-            public InnerDoubleLinked() {
+            public InnerLinked() {
                 head = new Node();
                 tail = new Node();
                 head.next = tail;
@@ -176,7 +173,7 @@ public class LFUTest01 {
             }
 
             // O(1)
-            // 删除链表中最后一个节点，并返回该节点
+            // 删除链表中最后一个节点, 并返回该节点
             public Node removeLast() {
                 if (tail.prev == head) {
                     return null;
@@ -229,7 +226,5 @@ public class LFUTest01 {
                 return key == null ? "" : key + ":" + (val == null ? "" : val);
             }
         }
-
     }
-
 }
