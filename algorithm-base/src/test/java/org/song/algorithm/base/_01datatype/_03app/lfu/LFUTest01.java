@@ -81,6 +81,7 @@ public class LFUTest01 {
                 addNode(node);
                 minTimes = 1; // 最小次数重置成1
             } else {
+                node.val = value;
                 addNodeTimes(node);
             }
         }
