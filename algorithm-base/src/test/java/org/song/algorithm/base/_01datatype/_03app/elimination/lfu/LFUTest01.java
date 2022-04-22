@@ -131,7 +131,7 @@ public class LFUTest01 {
             return sb.toString();
         }
 
-        class InnerLinked {
+        public class InnerLinked {
             private Node head, tail; // 头尾虚节点
             private int size; // 链表元素数
 
@@ -209,7 +209,7 @@ public class LFUTest01 {
         }
 
         // 双向链表的节点
-        class Node {
+        public class Node {
             public K key;
             public V val;
             public Node next, prev;
