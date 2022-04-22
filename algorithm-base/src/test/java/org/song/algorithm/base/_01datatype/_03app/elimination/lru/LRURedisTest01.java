@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
-public class LRURedisTest03 {
+public class LRURedisTest01 {
 
     /*
     参考 redis 3.0- 实现 LRU
@@ -170,7 +170,7 @@ public class LRURedisTest03 {
         }
     }
 
-    public static class LRURedis3Cache<K, V> extends LRURedisTest03.LRURedis2Cache<K, V> {
+    public static class LRURedis3Cache<K, V> extends LRURedisTest01.LRURedis2Cache<K, V> {
 
         /*
         在 redis 3.0 以后对该算法进行了一个升级, 新的算法维护了一个候选池(pool), 
