@@ -314,6 +314,8 @@ public class LRUTest01 {
                 if (node == last) {
                     last = node.pre;
                 }
+                node.pre = null;
+                node.next = null;
             }
 
             return cacheMaps.remove(k);
@@ -323,6 +325,10 @@ public class LRUTest01 {
             first = null;
             last = null;
             cacheMaps.clear();
+        }
+        
+        public int size() {
+            return cacheMaps.size();
         }
 
         /**
