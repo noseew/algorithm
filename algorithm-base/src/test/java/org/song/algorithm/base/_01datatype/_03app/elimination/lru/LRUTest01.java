@@ -255,22 +255,20 @@ public class LRUTest01 {
      */
     public static class LRUCache<K, V> {
 
-        private int currentCacheSize;
         private int capacity;
-        private HashMap<K, LRUCache.CacheNode> cacheMaps;
+        private HashMap<K, CacheNode> cacheMaps;
         // 头节点
-        private LRUCache.CacheNode first;
+        private CacheNode first;
         // 尾节点
-        private LRUCache.CacheNode last;
+        private CacheNode last;
 
         public LRUCache(int size) {
-            currentCacheSize = 0;
             this.capacity = size;
-            cacheMaps = new HashMap<K, LRUCache.CacheNode>(size);
+            cacheMaps = new HashMap<K, CacheNode>(size);
         }
 
         public void put(K k, V v) {
-            LRUCache.CacheNode node = cacheMaps.get(k);
+            CacheNode node = cacheMaps.get(k);
             if (node == null) {
                 // 删除旧值
                 if (cacheMaps.size() >= capacity) {
@@ -281,7 +279,7 @@ public class LRUTest01 {
                     removeLast();
                 }
                 // 如果节点不存在, 则新建一个
-                node = new LRUCache.CacheNode();
+                node = new CacheNode();
                 node.key = k;
             }
             // 如果节点已存在, 则更新值
@@ -292,7 +290,7 @@ public class LRUTest01 {
         }
 
         public Object get(K k) {
-            LRUCache.CacheNode node = cacheMaps.get(k);
+            CacheNode node = cacheMaps.get(k);
             if (node == null) {
                 return null;
             }
@@ -302,7 +300,7 @@ public class LRUTest01 {
         }
 
         public Object remove(K k) {
-            LRUCache.CacheNode node = cacheMaps.get(k);
+            CacheNode node = cacheMaps.get(k);
             if (node != null) {
                 if (node.pre != null) {
                     node.pre.next = node.next;
@@ -332,7 +330,7 @@ public class LRUTest01 {
          *
          * @param node
          */
-        private void moveToFirst(LRUCache.CacheNode node) {
+        private void moveToFirst(CacheNode node) {
             // 如果已经是队首, 则不处理
             if (first == node) {
                 return;
@@ -379,7 +377,7 @@ public class LRUTest01 {
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
-            LRUCache.CacheNode node = first;
+            CacheNode node = first;
             while (node != null) {
                 sb.append(String.format("%s:%s ", node.key, node.value));
                 node = node.next;
@@ -389,8 +387,8 @@ public class LRUTest01 {
         }
 
         public static class CacheNode {
-            public LRUCache.CacheNode pre;
-            public LRUCache.CacheNode next;
+            public CacheNode pre;
+            public CacheNode next;
             public Object key;
             public Object value;
 
