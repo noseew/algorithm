@@ -1,4 +1,4 @@
-package org.song.algorithm.base._01datatype._03app.lfu;
+package org.song.algorithm.base._01datatype._03app.elimination.lfu;
 
 import org.junit.jupiter.api.Test;
 
@@ -11,6 +11,8 @@ public class LFUTest01 {
     LFU 最近不经常使用算法, 相当于LRU的升级版
     和LRU类似, 维护数据的最近使用时间, 但是要多维护一个使用次数
     当cache已满的时候, 优先删除使用次数最小的cache, 如果使用次数相等, 则优先删除最近使用时间最早的那个cache
+    
+    
      */
 
     /*
@@ -166,7 +168,7 @@ public class LFUTest01 {
             }
 
             // O(1)
-            // 删除链表中的 x 节点（x 一定存在）
+            // 删除链表中的 x 节点(x 一定存在)
             public void remove(Node x) {
                 x.prev.next = x.next;
                 x.next.prev = x.prev;
