@@ -2,6 +2,8 @@ package org.song.algorithm.base._01datatype._03app.elimination.lfu;
 
 public class WLFUTest03 {
     /*
+    https://blog.csdn.net/yunhua_lee/article/details/7648549
+    Windows-LFU是LFU的一个改进版，差别在于Window-LFU并不记录所有数据的访问历史，而只是记录过去一段时间内的访问历史，这就是Window的由来，基于这个原因，传统的LFU又被称为“Perfect-LFU”。
     
     
     https://blog.csdn.net/weixin_38569499/article/details/113268370
