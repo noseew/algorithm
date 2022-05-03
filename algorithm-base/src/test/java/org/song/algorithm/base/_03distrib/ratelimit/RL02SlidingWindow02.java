@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * 滑动窗口,
  * RateLimitFixedWindow03 的优化版本, 可以自定义窗口大小, 和窗口精度
+ * 和RL02SlidingWindow相比, 增加阻塞等待功能
  */
 public class RL02SlidingWindow02 extends AbstractRateLimit {
     /**
