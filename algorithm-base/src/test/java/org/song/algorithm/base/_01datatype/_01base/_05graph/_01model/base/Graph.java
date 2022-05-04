@@ -1,6 +1,15 @@
 package org.song.algorithm.base._01datatype._01base._05graph._01model.base;
 
 /*
+图的存储
+数组
+    邻接矩阵
+链表
+    邻接表
+    十字链表, 解决有向图邻接表度计算问题
+    邻接多重表, 解决无向图邻接表重复边问题
+
+
 构建图的顺序
 1. 规定定点数和边数: {@link Graph(int vertex, int edge)}
 2. 构建顶点表: {@link buildVertexes(int[] vertexes)}
