@@ -1,5 +1,11 @@
 package org.song.algorithm.base._01datatype._01base._05graph._01model.base;
 
+/*
+构建图的顺序
+1. 规定定点数和边数: {@link Graph(int vertex, int edge)}
+2. 构建顶点表: {@link buildVertexes(int[] vertexes)}
+3. 构建顶点和边的关系: {@link build(int e1, int e2, int wight)}
+ */
 public abstract class Graph {
     
     // 顶点数
@@ -10,9 +16,32 @@ public abstract class Graph {
     // 极大值, 表示权值的正无穷, 如果是带权图的话
     protected static final int maxInt = 32767;
 
+    /**
+     * 初始化
+     * 
+     * @param vertex
+     * @param edge
+     */
     public Graph(int vertex, int edge) {
         this.vertex = vertex;
         this.edge = edge;
     }
+
+    /**
+     * 构建顶点表
+     * 
+     * @param vertexes
+     */
+    public abstract void buildVertexes(int[] vertexes);
+
+    /**
+     * 构建顶点和边的关系
+     * 通过 e1 到 e2 加上 权值 wight, 构建邻接矩阵
+     * 
+     * @param e1
+     * @param e2
+     * @param wight
+     */
+    public abstract void build(int e1, int e2, int wight);
     
 }

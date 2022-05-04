@@ -34,7 +34,7 @@ public class AdJacentMatrix extends Graph {
      * 
      * @param vertexes
      */
-    public void addVertexes(int[] vertexes) {
+    public void buildVertexes(int[] vertexes) {
         for (int i = 0; i < this.vertexes.length; i++) {
             this.vertexes[i] = vertexes[i];
         }

@@ -3,6 +3,7 @@ package org.song.algorithm.base._01datatype._01base._05graph._01model.base;
 /**
  * 链表存储
  * 邻接表方式存储
+ * 注意具体的定义方式根据语言等有所区别, 能表达意思即可
  */
 public class AdJacentList extends Graph {
     /**
@@ -13,6 +14,9 @@ public class AdJacentList extends Graph {
     public AdJacentList(int vertex, int edge) {
         super(vertex, edge);
         vertexes = new Node[vertex];
+//        for (int i = 0; i < vertex; i++) {
+//            vertexes[i] = new Node();
+//        }
     }
 
     /**
@@ -20,7 +24,7 @@ public class AdJacentList extends Graph {
      *
      * @param vertexes
      */
-    public void addVertexes(int[] vertexes) {
+    public void buildVertexes(int[] vertexes) {
         for (int i = 0; i < this.vertexes.length; i++) {
             this.vertexes[i] = new Node().setEle(vertexes[i]);
         }
@@ -37,7 +41,7 @@ public class AdJacentList extends Graph {
     public void build(int e1, int e2, int wight) {
         int i = locateVertex(e1);
         int j = locateVertex(e2);
-        last(vertexes[i]).next = new Node().setEdge(j);
+        last(vertexes[i]).next = new Node().setEdge(j).setWight(wight);
     }
 
     /**
@@ -64,7 +68,8 @@ public class AdJacentList extends Graph {
 
     public static class Node {
         int ele; // 顶点表用, 表示顶点值
-        int edge; // 边用, 表示对应的顶点下标
+        int edge; // 边用, 表示对应的顶点下标, 也可以记录顶点的指针
+        int wight; // 边用, 表示边的权值
         Node next;
 
         public Node() {
@@ -78,6 +83,11 @@ public class AdJacentList extends Graph {
 
         public Node setEle(int ele) {
             this.ele = ele;
+            return this;
+        }
+
+        public Node setWight(int wight) {
+            this.wight = wight;
             return this;
         }
     }
