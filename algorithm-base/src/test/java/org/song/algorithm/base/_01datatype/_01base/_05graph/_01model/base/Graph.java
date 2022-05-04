@@ -58,6 +58,8 @@ public abstract class Graph {
     /**
      * 深度优先遍历
      * 
+     * 深度优先遍历秘籍：后被访问的顶点，其邻接点先被访问。
+     * 
      * @param goon 是否继续遍历
      */
     public abstract void dfs(Predicate<Integer> goon);

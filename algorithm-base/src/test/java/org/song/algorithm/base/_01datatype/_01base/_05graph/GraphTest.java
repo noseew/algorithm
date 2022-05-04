@@ -23,7 +23,7 @@ public class GraphTest {
         AdJacentMatrix adJacentMatrix = new AdJacentMatrix(4, 3);
 
         // 构建顶点
-        adJacentMatrix.buildVertexes(new int[]{1, 2, 3, 4});
+        adJacentMatrix.buildVertexes(new int[]{2, 1, 3, 4});
 
         // 构建3条边
         adJacentMatrix.buildEdge(1, 2, 1);
@@ -37,8 +37,16 @@ public class GraphTest {
         // 打印邻接表
         System.out.println(adJacentMatrix.toMatrixString());
 
+        System.out.println("广度遍历: ");
         // 广度遍历
         adJacentMatrix.bfs(e -> {
+            System.out.println(e);
+            return true;
+        });
+
+        System.out.println("深度遍历: ");
+        // 深度遍历
+        adJacentMatrix.dfs(e -> {
             System.out.println(e);
             return true;
         });
