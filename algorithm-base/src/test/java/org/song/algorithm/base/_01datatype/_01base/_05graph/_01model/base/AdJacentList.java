@@ -1,5 +1,7 @@
 package org.song.algorithm.base._01datatype._01base._05graph._01model.base;
 
+import java.util.function.Predicate;
+
 /**
  * 链表存储
  * 邻接表方式存储
@@ -35,10 +37,20 @@ public class AdJacentList extends Graph {
      * @param e2
      * @param wight
      */
-    public void build(int e1, int e2, int wight) {
+    public void buildEdge(int e1, int e2, int wight) {
         int i = locateVertex(e1);
         int j = locateVertex(e2);
         lastDegree(vertexes[i]).degree = new Edge().setDegree(vertexes[j]).setWight(wight);
+    }
+
+    @Override
+    public void dfs(Predicate<Integer> goon) {
+        
+    }
+
+    @Override
+    public void bfs(Predicate<Integer> goon) {
+
     }
 
     /**

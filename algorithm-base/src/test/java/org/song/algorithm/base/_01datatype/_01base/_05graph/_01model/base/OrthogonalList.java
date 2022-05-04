@@ -51,7 +51,7 @@ public class OrthogonalList extends AdJacentList {
      * @param e2
      * @param wight
      */
-    public void build(int e1, int e2, int wight) {
+    public void buildEdge(int e1, int e2, int wight) {
         int i = locateVertex(e1);
         int j = locateVertex(e2);
         

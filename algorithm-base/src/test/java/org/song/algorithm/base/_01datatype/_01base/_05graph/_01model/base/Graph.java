@@ -1,5 +1,7 @@
 package org.song.algorithm.base._01datatype._01base._05graph._01model.base;
 
+import java.util.function.Predicate;
+
 /*
 图的存储
 数组
@@ -51,6 +53,21 @@ public abstract class Graph {
      * @param e2
      * @param wight
      */
-    public abstract void build(int e1, int e2, int wight);
-    
+    public abstract void buildEdge(int e1, int e2, int wight);
+
+    /**
+     * 深度优先遍历
+     * 
+     * @param goon 是否继续遍历
+     */
+    public abstract void dfs(Predicate<Integer> goon);
+
+    /**
+     * 广度优先遍历
+     * 
+     * 广度优先遍历秘籍：先被访问的顶点，其邻接点先被访问。
+     * 
+     * @param goon 是否继续遍历
+     */
+    public abstract void bfs(Predicate<Integer> goon);
 }

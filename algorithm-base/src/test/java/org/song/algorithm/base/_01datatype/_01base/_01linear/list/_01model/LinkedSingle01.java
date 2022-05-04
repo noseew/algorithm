@@ -130,6 +130,9 @@ public class LinkedSingle01<T> extends AbsLine<T> {
         if (index == 0) {
             SingleNode<T> old = head;
             head = head.next;
+            if (head == null) {
+                tail = null;
+            }
             size--;
             return old.value;
         }
