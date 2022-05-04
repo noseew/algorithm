@@ -78,12 +78,6 @@ public class AdJacentMatrix extends Graph {
             if (isEdge(edges[i][j])
                     // 未被访问的节点, 由于是x轴遍历, 所以每次遍历对应的顶点下标都+1, 所以取j
                     && visited[j] != 1) {
-//                if (!goon.test(vertexes[j])) {
-//                    // 遍历中断条件
-//                    break;
-//                }
-//                // 标记已访问, 这里取j是看其对应的x轴的顶点下标
-//                visited[j] = 1;
                 dfs(goon, visited, j);
             }
         }
