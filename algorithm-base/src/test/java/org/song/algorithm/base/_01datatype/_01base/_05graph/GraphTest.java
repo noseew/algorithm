@@ -19,7 +19,7 @@ public class GraphTest {
     [0,0,1,0]
      */
     @Test
-    public void test() {
+    public void test_AdJacentMatrix() {
         AdJacentMatrix adJacentMatrix = new AdJacentMatrix(4, 3);
 
         // 构建顶点
@@ -34,8 +34,10 @@ public class GraphTest {
         adJacentMatrix.buildEdge(3, 1, 1);
         adJacentMatrix.buildEdge(3, 4, 1);
 
+        // 打印邻接表
         System.out.println(adJacentMatrix.toMatrixString());
 
+        // 广度遍历
         adJacentMatrix.bfs(e -> {
             System.out.println(e);
             return true;
