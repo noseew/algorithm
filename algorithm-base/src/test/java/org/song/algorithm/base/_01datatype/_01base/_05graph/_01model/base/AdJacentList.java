@@ -9,14 +9,11 @@ public class AdJacentList extends Graph {
     /**
      * 顶点表
      */
-    protected Node[] vertexes;
+    protected Edge[] vertexes;
 
     public AdJacentList(int vertex, int edge) {
         super(vertex, edge);
-        vertexes = new Node[vertex];
-//        for (int i = 0; i < vertex; i++) {
-//            vertexes[i] = new Node();
-//        }
+        vertexes = new Edge[vertex];
     }
 
     /**
@@ -26,7 +23,7 @@ public class AdJacentList extends Graph {
      */
     public void buildVertexes(int[] vertexes) {
         for (int i = 0; i < this.vertexes.length; i++) {
-            this.vertexes[i] = new Node().setEle(vertexes[i]);
+            this.vertexes[i] = new Edge().setEle(vertexes[i]);
         }
     }
 
@@ -41,7 +38,7 @@ public class AdJacentList extends Graph {
     public void build(int e1, int e2, int wight) {
         int i = locateVertex(e1);
         int j = locateVertex(e2);
-        last(vertexes[i]).next = new Node().setEdge(j).setWight(wight);
+        lastDegree(vertexes[i]).degree = new Edge().setDegree(vertexes[j]).setWight(wight);
     }
 
     /**
@@ -59,34 +56,43 @@ public class AdJacentList extends Graph {
         return -1;
     }
 
-    protected Node last(Node node) {
-        while (node != null && node.next != null) {
-            node = node.next;
+    protected Edge lastDegree(Edge edge) {
+        while (edge != null && edge.next != null) {
+            edge = edge.next;
         }
-        return node;
+        return edge;
     }
 
-    public static class Node {
+    public static class Edge {
         int ele; // 顶点表用, 表示顶点值
-        int edge; // 边用, 表示对应的顶点下标, 也可以记录顶点的指针
+        /**
+         * 边用, 出度边所邻接的顶点指针, 连接表中默认出度, 如果表示入度那就是逆邻接表
+         * 也可以只记录顶点的下标
+         */
+        Edge degree; // 
         int wight; // 边用, 表示边的权值
-        Node next;
+        Edge next;
 
-        public Node() {
+        public Edge() {
 
         }
 
-        public Node setEdge(int edge) {
-            this.edge = edge;
+        public Edge setNext(Edge next) {
+            this.next = next;
             return this;
         }
 
-        public Node setEle(int ele) {
+        public Edge setDegree(Edge degree) {
+            this.degree = degree;
+            return this;
+        }
+
+        public Edge setEle(int ele) {
             this.ele = ele;
             return this;
         }
 
-        public Node setWight(int wight) {
+        public Edge setWight(int wight) {
             this.wight = wight;
             return this;
         }
