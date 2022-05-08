@@ -16,7 +16,7 @@ LRU
 
 LRU-K
     只有访问次数是K的时候, 才会进入LRU
-    org.song.algorithm.base._01datatype._03app.elimination.lru.LRUKTest02
+    org.song.algorithm.base._01datatype._03app.elimination.lru.LRU02_lruk
 ```
 
 ## LFU 最不经常使用算法, 最近最少访问

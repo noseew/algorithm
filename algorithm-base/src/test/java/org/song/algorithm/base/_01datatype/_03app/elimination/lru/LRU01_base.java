@@ -1,12 +1,13 @@
 package org.song.algorithm.base._01datatype._03app.elimination.lru;
 
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.base._01datatype._03app.elimination.AbstractEliminate;
 
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class LRUTest01 {
+public class LRU01_base {
 
     /*
     LRU (最近很少用的)
@@ -253,22 +254,21 @@ public class LRUTest01 {
     /**
      * HashMap + 链表 实现
      */
-    public static class LRUCache<K, V> {
+    public static class LRUCache<K, V> extends AbstractEliminate<K, V> {
 
-        private int capacity;
-        private HashMap<K, CacheNode> cacheMaps;
+        private HashMap<K, CacheNode<K, V>> cacheMaps;
         // 头节点
-        private CacheNode first;
+        private CacheNode<K, V> first;
         // 尾节点
-        private CacheNode last;
+        private CacheNode<K, V> last;
 
         public LRUCache(int size) {
-            this.capacity = size;
-            cacheMaps = new HashMap<K, CacheNode>(size);
+            super(size);
+            cacheMaps = new HashMap<>(size);
         }
 
-        public void put(K k, V v) {
-            CacheNode node = cacheMaps.get(k);
+        public V put(K k, V v) {
+            CacheNode<K, V> node = cacheMaps.get(k);
             if (node == null) {
                 // 删除旧值
                 if (cacheMaps.size() >= capacity) {
@@ -279,18 +279,19 @@ public class LRUTest01 {
                     removeLast();
                 }
                 // 如果节点不存在, 则新建一个
-                node = new CacheNode();
+                node = new CacheNode<>();
                 node.key = k;
             }
             // 如果节点已存在, 则更新值
             node.value = v;
             // 将节点移动到队首
             moveToFirst(node);
-            cacheMaps.put(k, node);
+            CacheNode<K, V> put = cacheMaps.put(k, node);
+            return put != null ? put.value : null;
         }
 
-        public Object get(K k) {
-            CacheNode node = cacheMaps.get(k);
+        public V get(K k) {
+            CacheNode<K, V> node = cacheMaps.get(k);
             if (node == null) {
                 return null;
             }
@@ -299,8 +300,8 @@ public class LRUTest01 {
             return node.value;
         }
 
-        public Object remove(K k) {
-            CacheNode node = cacheMaps.get(k);
+        public V remove(K k) {
+            CacheNode<K, V> node = cacheMaps.get(k);
             if (node != null) {
                 if (node.pre != null) {
                     node.pre.next = node.next;
@@ -318,7 +319,8 @@ public class LRUTest01 {
                 node.next = null;
             }
 
-            return cacheMaps.remove(k);
+            CacheNode<K, V> remove = cacheMaps.remove(k);
+            return remove != null ? remove.value : null;
         }
 
         public void clear() {
@@ -392,11 +394,11 @@ public class LRUTest01 {
             return sb.toString();
         }
 
-        public static class CacheNode {
-            public CacheNode pre;
-            public CacheNode next;
-            public Object key;
-            public Object value;
+        public class CacheNode<K, V> {
+            public CacheNode<K, V> pre;
+            public CacheNode<K, V> next;
+            public K key;
+            public V value;
 
             public int times; // 用于LFU缓存的计数, LRU不用他
         }

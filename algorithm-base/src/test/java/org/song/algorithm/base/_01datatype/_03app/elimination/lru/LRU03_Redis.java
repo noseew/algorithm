@@ -2,12 +2,13 @@ package org.song.algorithm.base._01datatype._03app.elimination.lru;
 
 import org.assertj.core.util.Sets;
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.base._01datatype._03app.elimination.AbstractEliminate;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
-public class LRURedisTest03 {
+public class LRU03_Redis {
 
     /*
     参考 redis 3.0- 实现 LRU
@@ -70,32 +71,39 @@ public class LRURedisTest03 {
         lru.put("2", 2);
     }
 
-    public static class LRURedis2Cache<K, V> {
+    public static class LRURedis2Cache<K, V> extends AbstractEliminate<K, V> {
 
-        public int capacity;
-        public HashMap<K, CacheNode> cacheMaps;
+        public HashMap<K, CacheNode<K, V>> cacheMaps;
 
         public LRURedis2Cache(int size) {
+            super(size);
             this.capacity = size;
-            cacheMaps = new HashMap<K, CacheNode>(size);
+            cacheMaps = new HashMap<>(size);
         }
 
-        public void put(K k, V v) {
-            CacheNode node = cacheMaps.get(k);
+        public V put(K k, V v) {
+            CacheNode<K, V> node = cacheMaps.get(k);
             if (node == null) {
                 if (cacheMaps.size() >= capacity) {
                     removeLast();
                 }
-                node = new CacheNode();
+                node = new CacheNode<>();
                 node.key = k;
             }
             node.value = v;
             node.lru = System.currentTimeMillis(); // 访问时间
-            cacheMaps.put(k, node);
+            CacheNode<K, V> put = cacheMaps.put(k, node);
+            return put != null ? put.value : null;
         }
 
-        public Object get(K k) {
-            CacheNode node = cacheMaps.get(k);
+        @Override
+        public V remove(K k) {
+            CacheNode<K, V> node = cacheMaps.remove(k);
+            return node != null ? node.value : null;
+        }
+
+        public V get(K k) {
+            CacheNode<K, V> node = cacheMaps.get(k);
             if (node == null) {
                 return null;
             }
@@ -104,16 +112,16 @@ public class LRURedisTest03 {
         }
 
         public void removeLast() {
-            CacheNode cacheNode = getMin(sample(capacity));
+            CacheNode<K, V> cacheNode = getMin(sample(capacity));
             if (cacheNode != null) {
                 cacheMaps.remove(cacheNode.key);
             }
         }
 
-        public CacheNode getMin(Collection<CacheNode> nodes) {
+        public CacheNode<K, V> getMin(Collection<CacheNode<K, V>> nodes) {
             if (nodes != null && !nodes.isEmpty()) {
-                CacheNode minNode = null;
-                for (CacheNode node : nodes) {
+                CacheNode<K, V> minNode = null;
+                for (CacheNode<K, V> node : nodes) {
                     if (minNode == null) {
                         minNode = node;
                         continue;
@@ -132,11 +140,11 @@ public class LRURedisTest03 {
          * redis中随机获取entry采用的方式是, 对数组随机然后对链表随机, 获取到最终的entry, 调用一次获取一个entry
          * java中无法直接获取到数组和链表, 且java中有红黑树的存在, 所以这里采用近似的方式获取
          */
-        public List<CacheNode> sample(int size) {
+        public List<CacheNode<K, V>> sample(int size) {
             // 随机位置
             int randomSkip = ThreadLocalRandom.current().nextInt(cacheMaps.size() / 2);
-            ArrayList<CacheNode> entrys = new ArrayList<>(size);
-            for (Map.Entry<K, CacheNode> kCacheNodeEntry : cacheMaps.entrySet()) {
+            ArrayList<CacheNode<K, V>> entrys = new ArrayList<>(size);
+            for (Map.Entry<K, CacheNode<K, V>> kCacheNodeEntry : cacheMaps.entrySet()) {
                 if (randomSkip-- > 0) {
                     continue;
                 }
@@ -151,17 +159,17 @@ public class LRURedisTest03 {
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
-            List<CacheNode> collect = cacheMaps.values().stream().sorted(Comparator.comparing(e -> e.lru)).collect(Collectors.toList());
+            List<CacheNode<K, V>> collect = cacheMaps.values().stream().sorted(Comparator.comparing(e -> e.lru)).collect(Collectors.toList());
             collect.forEach(v -> {
                 sb.append(v).append(", ");
             });
             return sb.toString();
         }
 
-        public static class CacheNode {
+        public class CacheNode<K, V> {
             long lru;
-            Object key;
-            Object value;
+            K key;
+            V value;
 
             @Override
             public String toString() {
@@ -170,14 +178,14 @@ public class LRURedisTest03 {
         }
     }
 
-    public static class LRURedis3Cache<K, V> extends LRURedisTest03.LRURedis2Cache<K, V> {
+    public static class LRURedis3Cache<K, V> extends LRU03_Redis.LRURedis2Cache<K, V> {
 
         /*
         在 redis 3.0 以后对该算法进行了一个升级, 新的算法维护了一个候选池(pool), 
         首次筛选出来的 key 会被全部放入到候选池中, 在后续的筛选过程中只有 lru 小于候选池中最小的 lru 才能被放入到候选池, 
         直至候选池放满, 当候选池满了的时候, 如果有新的数据继续放入, 则需要将候选池中 lru 字段最大值取出
          */
-        private Set<CacheNode> pool;
+        private Set<CacheNode<K, V>> pool;
 
         public LRURedis3Cache(int size) {
             super(size);
@@ -188,12 +196,12 @@ public class LRURedisTest03 {
                 pool = Sets.newHashSet(sample(capacity));
             }
 
-            CacheNode last = getMin(pool);
+            CacheNode<K, V> last = getMin(pool);
 
             // 随机一个 key 和 pool 合并
             int max = 100;
             for (int i = 0; i < max && pool.size() < capacity; i++) {
-                List<CacheNode> sample = sample(1);
+                List<CacheNode<K, V>> sample = sample(1);
                 if (sample.isEmpty()) {
                     continue;
                 }

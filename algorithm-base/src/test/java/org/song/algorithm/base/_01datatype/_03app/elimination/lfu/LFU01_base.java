@@ -1,6 +1,10 @@
 package org.song.algorithm.base._01datatype._03app.elimination.lfu;
 
+import lombok.Data;
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.base._01datatype._01base._04tree.heap.Heap_base_02;
+import org.song.algorithm.base._01datatype._01base._04tree.heap.Heap_build_01;
+import org.song.algorithm.base._01datatype._03app.elimination.AbstractEliminate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -68,15 +72,14 @@ public class LFU01_base {
      * @param <K>
      * @param <V>
      */
-    public static class LFUCache<K, V> {
+    public static class LFUCache<K, V> extends AbstractEliminate<K, V> {
 
         Map<Integer, InnerLinked> timesMap = new HashMap<>(); // 访问次数map
         Map<K, Node> dataMap = new HashMap<>(); // 数据map
-        int cap;
         int minTimes;
 
         public LFUCache(int capacity) {
-            cap = capacity;
+            super(capacity);
         }
 
         public V get(K key) {
@@ -88,13 +91,13 @@ public class LFU01_base {
             return node.val;
         }
 
-        public void put(K key, V value) {
-            if (cap == 0) {
-                return;
+        public V put(K key, V value) {
+            if (capacity == 0) {
+                return null;
             }
             Node node = dataMap.get(key);
             if (node == null) { // put新元素
-                if (dataMap.size() == cap) {
+                if (dataMap.size() == capacity) {
                     // 需要删除
                     InnerLinked innerLinked = timesMap.get(minTimes);
                     Node removeNode = innerLinked.getLast();
@@ -104,12 +107,25 @@ public class LFU01_base {
                 // 添加新节点, 其频率是1
                 addNode(node);
                 minTimes = 1; // 最小次数重置成1
+                return null;
             } else {
+                V oldVal = node.val;
                 node.val = value;
                 addNodeTimes(node);
+                return oldVal;
             }
         }
-        
+
+        @Override
+        public V remove(K k) {
+            Node node = dataMap.remove(k);
+            if (node != null) {
+                timesMap.get(node.times).remove(node);
+                return node.val;
+            }
+            return null;
+        }
+
         private void addNodeTimes(Node node) {
             // 从次数小的LRU链表中删除
             removeNode(node);
@@ -249,6 +265,79 @@ public class LFU01_base {
             @Override
             public String toString() {
                 return key == null ? "" : key + ":" + (val == null ? "" : val);
+            }
+        }
+    }
+
+    /**
+     * TODO LFU 采用优先级队列实现
+     * 
+     * @param <K>
+     * @param <V>
+     */
+    public static class LFUCache2<K, V> extends AbstractEliminate<K, V> {
+
+        Heap_base_02<Node> minHeap = new Heap_base_02<>();
+        Map<K, Node> dataMap = new HashMap<>(); // 数据map
+
+        public LFUCache2(int cap) {
+            super(cap);
+        }
+
+        @Override
+        public V get(K k) {
+            return null;
+        }
+
+        @Override
+        public V put(K k, V v) {
+            return null;
+        }
+
+        @Override
+        public V remove(K k) {
+            return null;
+        }
+
+
+        // 节点
+        public class Node implements Comparable<Node> {
+            public K key;
+            public V val;
+            int times = 1; // 该节点的访问次数
+            int index = 1; // 该节点的访问时间位置, 实现LRU功能, 越小越久没访问, 就越应该删除
+
+            public Node(K k, V v) {
+                this.key = k;
+                this.val = v;
+            }
+
+            public Node() {
+
+            }
+
+            @Override
+            public String toString() {
+                return key == null ? "" : key + ":" + (val == null ? "" : val);
+            }
+
+            /**
+             * Node 节点需要比较大小
+             * 
+             * @param o
+             * @return
+             */
+            @Override
+            public int compareTo(Node o) {
+                if (o == null) {
+                    return times;
+                }
+                // 优先对比访问次数
+                if (times != o.times) {
+                    return times - o.times;
+                }
+                // 然后对比访问时间, 
+                return index - o.index;
             }
         }
     }

@@ -2,10 +2,11 @@ package org.song.algorithm.base._01datatype._03app.elimination.lru;
 
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.base._01datatype._03app.elimination.AbstractEliminate;
 
 import java.util.HashMap;
 
-public class LRUKTest02 {
+public class LRU02_lruk {
     
     /*
     LRU-K中的K代表最近使用的次数, 因此LRU可以认为是LRU-1. LRU-K的主要目的是为了解决LRU算法"缓存污染"的问题, 其核心思想是将"最近使用过1次"的判断标准扩展为"最近使用过K次". 
@@ -36,7 +37,7 @@ public class LRUKTest02 {
         
     }
 
-    public static class LURKCache<K, V> {
+    public static class LURKCache<K, V> extends AbstractEliminate<K, V> {
 
         // 访问历史记录缓存
         private LRUCache<K, V> timesMaps;
@@ -46,23 +47,26 @@ public class LRUKTest02 {
         private int timesK;
 
         public LURKCache(int timesK, int cap) {
+            super(cap);
             this.timesK = timesK;
             timesMaps = new LRUCache<>(timesK);
             cacheMaps = new LRUCache<>(cap);
         }
 
-        public void put(K k, V v) {
+        public V put(K k, V v) {
             CacheNode<K, V> exitNode = timesMaps.get(k);
             if (exitNode == null) {
                 timesMaps.putNode(new CacheNode<>(k, v, 1));
-                return;
+                return null;
             }
             exitNode.times++;
+            V oldVal = exitNode.value;
             exitNode.value = v;
 
             if (exitNode.times >= timesK) {
-                cacheMaps.putNode(exitNode);
+                return cacheMaps.putNode(exitNode);
             }
+            return oldVal;
         }
 
         public V get(K k) {
@@ -140,7 +144,7 @@ public class LRUKTest02 {
             cacheMaps = new HashMap<K, CacheNode<K, V>>(size);
         }
 
-        public void putNode(CacheNode<K, V> node) {
+        public V putNode(CacheNode<K, V> node) {
             CacheNode<K, V> exitNode = cacheMaps.get(node.key);
             if (exitNode == null) {
                 if (cacheMaps.size() >= capacity) {
@@ -152,7 +156,8 @@ public class LRUKTest02 {
             exitNode.value = node.value;
             exitNode.times = node.times;
             moveToFirst(node);
-            cacheMaps.put(node.key, node);
+            CacheNode<K, V> put = cacheMaps.put(node.key, node);
+            return put != null ? put.value : null;
         }
 
         public CacheNode<K, V> get(K k) {
