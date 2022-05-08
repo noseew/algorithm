@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LFUTest01 {
+public class LFU01_base {
 
     /*
     LFU 最近不经常使用算法, 相当于LRU的升级版

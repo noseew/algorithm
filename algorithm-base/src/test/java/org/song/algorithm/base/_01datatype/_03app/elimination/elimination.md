@@ -1,4 +1,4 @@
-# 淘汰算法
+# 淘汰算法/置换算法
 
 [参考](https://www.jianshu.com/p/18285ecffbfb)
 
@@ -9,7 +9,7 @@ LRU, LFU, ARC, MRU, OPT, NRU(CLOCK算法)
 FIFO, 随机淘汰 命中率全靠运气, 这里仅当参考
 ```
 
-## LRU 最近最少使用算法
+## LRU 最近最少使用算法, 
 
 ```
 LRU
@@ -19,7 +19,7 @@ LRU-K
     org.song.algorithm.base._01datatype._03app.elimination.lru.LRUKTest02
 ```
 
-## LFU 最不经常使用算法
+## LFU 最不经常使用算法, 最近最少访问
 
 ```
 普通LFU
@@ -34,6 +34,10 @@ Window-Tiny-LFU
 ## MRU 最近最常使用算法, 和LRU相反
 
 ## OPT 最佳置换算法
+
+```
+淘汰的是最不可能使用的
+```
 
 ## NRU(CLOCK算法) 最近未用算法
 
