@@ -15,6 +15,18 @@ public abstract class AbstractHeap<T> {
     public abstract T replace(T v);
 
     public abstract T getTop();
+    
+    public int getSize() {
+        return size;
+    }
+    
+    public boolean isEmpty() {
+        return size == datas.length;
+    }
+    
+    public boolean isFull() {
+        return size == 0;
+    }
 
 
     /**

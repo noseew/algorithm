@@ -1,5 +1,14 @@
 package org.song.algorithm.base._01datatype._03app.elimination.lfu;
 
+import com.sun.istack.internal.NotNull;
+import lombok.Data;
+import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Random;
+
 public class LFU03_WLFU {
     /*
     https://blog.csdn.net/yunhua_lee/article/details/7648549
@@ -19,4 +28,220 @@ public class LFU03_WLFU {
     3.2 缺点
         但是Window-LFU需要维护一个队列去记录历史的访问流, 复杂度略高于LFU. 
      */
+
+
+    @Test
+    public void test() {
+        WindowLFU<String, Integer> cache = new WindowLFU<>(10, 20);
+        Random random = new Random();
+        // cal func(x,y) = 3*x+y
+        for (int i = 0; i < 1000; i++) {
+            int x = random.nextInt() % 5;
+            int y = random.nextInt() % 5;
+            String key = String.format("x=%d,y=%d", x, y);
+            if (cache.get(key) == null) {
+                cache.put(key, 3 * x + y);
+            }
+        }
+        System.out.println("HitRate=" + cache.hitrate());
+    }
+
+    public static class WindowLFU<K, V extends Comparable<V>> {
+        private MinHeap<K, V> minHeap;
+        //        private Heap_base_02<Node<K, V>>
+        private Map<K, Node<K, V>> map;
+        private LinkedList<K> window;
+        private int windowSize;
+        private int total;
+        private int hits;
+
+
+        public WindowLFU(int cacheSize, int windowSize) {
+            minHeap = new MinHeap<>(cacheSize);
+            window = new LinkedList<>();
+            map = new HashMap<>((int) ((float) cacheSize / 0.75F + 1.0F));
+            this.windowSize = windowSize;
+            total = 0;
+            hits = 0;
+        }
+
+        public void put(K key, V value) {
+            if (key == null || value == null) {
+                return;
+            }
+
+            appendWindow(key);
+            Node<K, V> previous;
+            if ((previous = map.get(key)) != null) { // exists
+                previous.setValue(value);
+                minHeap.reVisited(previous.getIndex());
+            } else {
+                if (minHeap.isFull()) {
+                    map.remove(minHeap.getMin()
+                            .getKey());
+                }
+                int cnt = 0;
+                for (K k : window) {
+                    if (k.equals(key)) {
+                        cnt++;
+                    }
+                }
+                Node<K, V> node = new Node<>(key, value, cnt);
+                map.put(key, node);
+                minHeap.add(node);
+            }
+        }
+
+        public V get(K key) {
+            total++;
+            V value = null;
+            if (key != null) {
+                Node<K, V> node = map.get(key);
+                if (node != null) {
+                    hits++;
+                    appendWindow(key);
+                    value = node.getValue();
+                    minHeap.reVisited(node.getIndex());
+                }
+            }
+            return value;
+        }
+
+        private void appendWindow(K key) {
+            window.offer(key);
+            if (map.containsKey(key)) {
+                map.get(key).addCount(1);
+            }
+            if (window.size() > windowSize) {
+                K first = window.poll(); // 移除队首元素
+                if (map.containsKey(first)) {
+                    Node<K, V> item = map.get(first);
+                    item.addCount(-1);
+                }
+            }
+
+        }
+
+        public float hitrate() {
+            if (total == 0) {
+                return 0;
+            }
+            return (float) hits / total;
+        }
+    }
+
+    @Data
+    static class Node<K, V extends Comparable<V>> implements Comparable<Node<K, V>> {
+        private K key;
+        private V value;
+        private int index;
+        private int counts;
+        private long lastTime;
+
+        Node(K key, V value, int counts) {
+            this.key = key;
+            this.value = value;
+            this.counts = counts;
+        }
+
+        @Override
+        public int compareTo(@NotNull Node<K, V> node) {
+            if (counts == node.counts) {
+                return (int) (this.lastTime - node.lastTime);
+            }
+            return counts - node.counts;
+        }
+
+        void addCount(int val) {
+            this.counts += val;
+        }
+
+    }
+
+    static class MinHeap<K, V extends Comparable<V>> {
+        private Node<K, V>[] heap;
+        private int currentSize;
+        private long count;
+
+        MinHeap(int size) {
+            count = 0;
+            currentSize = 1;
+            heap = new Node[size + 1];
+        }
+
+        boolean isFull() {
+            return currentSize >= heap.length;
+        }
+
+        Node<K, V> add(Node<K, V> value) {
+            Node<K, V> previous = value;
+            if (currentSize >= heap.length) {
+                previous = removeMin();
+            }
+            value.setLastTime(count++);
+            value.setIndex(currentSize);
+            heap[currentSize++] = value;
+            siftUp(currentSize - 1);
+            return previous;
+        }
+
+        Node<K, V> getMin() {
+            return heap[1];
+        }
+
+        Node<K, V> removeMin() {
+            return remove(1);
+        }
+
+        /**
+         * @param index
+         * @return
+         */
+        Node<K, V> reVisited(int index) {
+            Node<K, V> node = heap[index];
+            remove(node.getIndex());
+            add(node);
+            return node;
+        }
+
+        Node<K, V> remove(int index) {
+            Node<K, V> previous = heap[index];
+            heap[index] = heap[--currentSize];
+            siftDown(index);
+            return previous;
+        }
+
+        private void siftDown(int index) {
+            int left = 2 * index;
+            int right = 2 * index + 1;
+            int largest;
+            if (left < currentSize && heap[left].compareTo(heap[index]) < 0)
+                largest = left;
+            else
+                largest = index;
+            if (right < currentSize && heap[right].compareTo(heap[largest]) < 0)
+                largest = right;
+            if (largest != index) {
+                Node<K, V> temp = heap[index];
+                heap[index] = heap[largest];
+                heap[largest] = temp;
+                heap[index].setIndex(largest);
+                heap[largest].setIndex(index);
+                siftDown(largest);
+            }
+        }
+
+        private void siftUp(int index) {
+            while (index > 1 && heap[index].compareTo(heap[index / 2]) < 0) {
+                Node<K, V> temp = heap[index];
+                heap[index] = heap[index / 2];
+                heap[index / 2] = temp;
+                heap[index].setIndex(index / 2);
+                heap[index / 2].setIndex(index);
+                index = index / 2;
+            }
+        }
+    }
+
+
 }

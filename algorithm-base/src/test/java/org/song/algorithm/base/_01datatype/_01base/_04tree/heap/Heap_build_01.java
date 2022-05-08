@@ -14,13 +14,13 @@ package org.song.algorithm.base._01datatype._01base._04tree.heap;
  *      
  * 注意: 其他的(自上而下下滤/自下而上上滤) 都不行
  */
-public class Heap_base_03<T> extends Heap_base_02<T> {
+public class Heap_build_01<T> extends Heap_base_02<T> {
 
-    public Heap_base_03(T[] datas) {
+    public Heap_build_01(T[] datas) {
         this(true, datas);
     }
 
-    public Heap_base_03(boolean little, T[] datas) {
+    public Heap_build_01(boolean little, T[] datas) {
         this.little = little;
         this.datas = datas;
     }
