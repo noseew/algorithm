@@ -1,6 +1,5 @@
 package org.song.algorithm.base._01datatype._03app.elimination.lfu;
 
-import com.sun.istack.internal.NotNull;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
 
@@ -48,7 +47,6 @@ public class LFU03_WLFU {
 
     public static class WindowLFU<K, V extends Comparable<V>> {
         private MinHeap<K, V> minHeap;
-        //        private Heap_base_02<Node<K, V>>
         private Map<K, Node<K, V>> map;
         private LinkedList<K> window;
         private int windowSize;
@@ -128,120 +126,120 @@ public class LFU03_WLFU {
             }
             return (float) hits / total;
         }
+
+
+        @Data
+        static class Node<K, V extends Comparable<V>> implements Comparable<Node<K, V>> {
+            private K key;
+            private V value;
+            private int index;
+            private int counts;
+            private long lastTime;
+
+            Node(K key, V value, int counts) {
+                this.key = key;
+                this.value = value;
+                this.counts = counts;
+            }
+
+            @Override
+            public int compareTo(Node<K, V> node) {
+                if (counts == node.counts) {
+                    return (int) (this.lastTime - node.lastTime);
+                }
+                return counts - node.counts;
+            }
+
+            void addCount(int val) {
+                this.counts += val;
+            }
+
+        }
+
+        static class MinHeap<K, V extends Comparable<V>> {
+            private Node<K, V>[] heap;
+            private int currentSize;
+            private long count;
+
+            MinHeap(int size) {
+                count = 0;
+                currentSize = 1;
+                heap = new Node[size + 1];
+            }
+
+            boolean isFull() {
+                return currentSize >= heap.length;
+            }
+
+            Node<K, V> add(Node<K, V> value) {
+                Node<K, V> previous = value;
+                if (currentSize >= heap.length) {
+                    previous = removeMin();
+                }
+                value.setLastTime(count++);
+                value.setIndex(currentSize);
+                heap[currentSize++] = value;
+                siftUp(currentSize - 1);
+                return previous;
+            }
+
+            Node<K, V> getMin() {
+                return heap[1];
+            }
+
+            Node<K, V> removeMin() {
+                return remove(1);
+            }
+
+            /**
+             * @param index
+             * @return
+             */
+            Node<K, V> reVisited(int index) {
+                Node<K, V> node = heap[index];
+                remove(node.getIndex());
+                add(node);
+                return node;
+            }
+
+            Node<K, V> remove(int index) {
+                Node<K, V> previous = heap[index];
+                heap[index] = heap[--currentSize];
+                siftDown(index);
+                return previous;
+            }
+
+            private void siftDown(int index) {
+                int left = 2 * index;
+                int right = 2 * index + 1;
+                int largest;
+                if (left < currentSize && heap[left].compareTo(heap[index]) < 0)
+                    largest = left;
+                else
+                    largest = index;
+                if (right < currentSize && heap[right].compareTo(heap[largest]) < 0)
+                    largest = right;
+                if (largest != index) {
+                    Node<K, V> temp = heap[index];
+                    heap[index] = heap[largest];
+                    heap[largest] = temp;
+                    heap[index].setIndex(largest);
+                    heap[largest].setIndex(index);
+                    siftDown(largest);
+                }
+            }
+
+            private void siftUp(int index) {
+                while (index > 1 && heap[index].compareTo(heap[index / 2]) < 0) {
+                    Node<K, V> temp = heap[index];
+                    heap[index] = heap[index / 2];
+                    heap[index / 2] = temp;
+                    heap[index].setIndex(index / 2);
+                    heap[index / 2].setIndex(index);
+                    index = index / 2;
+                }
+            }
+        }
     }
-
-    @Data
-    static class Node<K, V extends Comparable<V>> implements Comparable<Node<K, V>> {
-        private K key;
-        private V value;
-        private int index;
-        private int counts;
-        private long lastTime;
-
-        Node(K key, V value, int counts) {
-            this.key = key;
-            this.value = value;
-            this.counts = counts;
-        }
-
-        @Override
-        public int compareTo(@NotNull Node<K, V> node) {
-            if (counts == node.counts) {
-                return (int) (this.lastTime - node.lastTime);
-            }
-            return counts - node.counts;
-        }
-
-        void addCount(int val) {
-            this.counts += val;
-        }
-
-    }
-
-    static class MinHeap<K, V extends Comparable<V>> {
-        private Node<K, V>[] heap;
-        private int currentSize;
-        private long count;
-
-        MinHeap(int size) {
-            count = 0;
-            currentSize = 1;
-            heap = new Node[size + 1];
-        }
-
-        boolean isFull() {
-            return currentSize >= heap.length;
-        }
-
-        Node<K, V> add(Node<K, V> value) {
-            Node<K, V> previous = value;
-            if (currentSize >= heap.length) {
-                previous = removeMin();
-            }
-            value.setLastTime(count++);
-            value.setIndex(currentSize);
-            heap[currentSize++] = value;
-            siftUp(currentSize - 1);
-            return previous;
-        }
-
-        Node<K, V> getMin() {
-            return heap[1];
-        }
-
-        Node<K, V> removeMin() {
-            return remove(1);
-        }
-
-        /**
-         * @param index
-         * @return
-         */
-        Node<K, V> reVisited(int index) {
-            Node<K, V> node = heap[index];
-            remove(node.getIndex());
-            add(node);
-            return node;
-        }
-
-        Node<K, V> remove(int index) {
-            Node<K, V> previous = heap[index];
-            heap[index] = heap[--currentSize];
-            siftDown(index);
-            return previous;
-        }
-
-        private void siftDown(int index) {
-            int left = 2 * index;
-            int right = 2 * index + 1;
-            int largest;
-            if (left < currentSize && heap[left].compareTo(heap[index]) < 0)
-                largest = left;
-            else
-                largest = index;
-            if (right < currentSize && heap[right].compareTo(heap[largest]) < 0)
-                largest = right;
-            if (largest != index) {
-                Node<K, V> temp = heap[index];
-                heap[index] = heap[largest];
-                heap[largest] = temp;
-                heap[index].setIndex(largest);
-                heap[largest].setIndex(index);
-                siftDown(largest);
-            }
-        }
-
-        private void siftUp(int index) {
-            while (index > 1 && heap[index].compareTo(heap[index / 2]) < 0) {
-                Node<K, V> temp = heap[index];
-                heap[index] = heap[index / 2];
-                heap[index / 2] = temp;
-                heap[index].setIndex(index / 2);
-                heap[index / 2].setIndex(index);
-                index = index / 2;
-            }
-        }
-    }
-
 
 }
