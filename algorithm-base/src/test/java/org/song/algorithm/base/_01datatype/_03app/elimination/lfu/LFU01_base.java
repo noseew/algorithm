@@ -60,6 +60,14 @@ public class LFU01_base {
 
     }
 
+    /**
+     * LFU
+     * 采用 HashMap 来统计访问次数, key=访问次数, val=LRU链表
+     * 加上 LRU 来实现
+     * 
+     * @param <K>
+     * @param <V>
+     */
     public static class LFUCache<K, V> {
 
         Map<Integer, InnerLinked> timesMap = new HashMap<>(); // 访问次数map
