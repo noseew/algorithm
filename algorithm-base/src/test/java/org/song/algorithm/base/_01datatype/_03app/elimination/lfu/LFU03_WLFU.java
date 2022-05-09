@@ -108,13 +108,14 @@ public class LFU03_WLFU {
         private void appendWindow(K key) {
             window.offer(key);
             if (map.containsKey(key)) {
+                // 进一次窗口, 次数+1
                 map.get(key).addCount(1);
             }
             if (window.size() > windowSize) {
                 K first = window.poll(); // 移除队首元素
                 if (map.containsKey(first)) {
-                    Node<K, V> item = map.get(first);
-                    item.addCount(-1);
+                    // 出一次窗口, 次数-1
+                    map.get(first).addCount(-1);
                 }
             }
 
@@ -192,6 +193,8 @@ public class LFU03_WLFU {
             }
 
             /**
+             * 堆元素不会主动排序, 而是每次新增的时候才会排序, 所以需要将元素删除, 然后再新增
+             * 
              * @param index
              * @return
              */
