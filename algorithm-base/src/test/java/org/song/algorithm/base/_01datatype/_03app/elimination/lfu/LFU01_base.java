@@ -79,6 +79,7 @@ public class LFU01_base {
 
     /**
      * LFU 采用优先级队列实现
+     * 优先队列效率 O(logn), 删除优先队列效率 O(n)
      * 
      * @param <K>
      * @param <V>
@@ -185,6 +186,7 @@ public class LFU01_base {
      * LFU
      * 采用 HashMap 来统计访问次数, key=访问次数, val=LRU链表
      * 加上 LRU 来实现
+     * 效率  O(1)
      *
      * @param <K>
      * @param <V>
