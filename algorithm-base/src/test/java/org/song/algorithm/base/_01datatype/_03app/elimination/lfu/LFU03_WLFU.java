@@ -283,6 +283,16 @@ public class LFU03_WLFU {
         }
     }
 
+    /**
+     * TODO 未完成
+     * LFU 基础上增加了一个 窗口
+     * 进入窗口 访问次数+1, 出窗口 访问次数-1
+     * 访问就是 LFU中的优先排序访问次数
+     * 通过出窗口操作, 将访问次数逐渐减少, 这样就不会存留缓存污染的数据了(瞬间访问次数过多, 之后就不再访问的缓存, 迟迟得不到淘汰)
+     * 
+     * @param <K>
+     * @param <V>
+     */
     public static class WindowLFU2<K, V extends Comparable<V>> extends AbstractEliminate<K, V> {
 
         Map<Integer, InnerLinked> timesMap = new HashMap<>(); // 访问次数map
