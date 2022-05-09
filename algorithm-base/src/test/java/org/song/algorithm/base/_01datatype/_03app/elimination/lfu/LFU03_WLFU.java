@@ -2,6 +2,7 @@ package org.song.algorithm.base._01datatype._03app.elimination.lfu;
 
 import lombok.Data;
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.base._01datatype._03app.elimination.AbstractEliminate;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -45,9 +46,29 @@ public class LFU03_WLFU {
         System.out.println("HitRate=" + cache.hitrate());
     }
 
+    @Test
+    public void test2() {
+        WindowLFU<String, Integer> cache = new WindowLFU<>(5, 10);
+        WindowLFU2<String, Integer> cache2 = new WindowLFU2<>(5, 10);
+        Random random = new Random();
+        // cal func(x,y) = 3*x+y
+        for (int i = 0; i < 20; i++) {
+            int x = random.nextInt() % 5;
+            int y = random.nextInt() % 5;
+            String key = String.format("x=%d,y=%d", x, y);
+            if (cache.get(key) == null) {
+                cache.put(key, 3 * x + y);
+            }
+            if (cache2.get(key) == null) {
+                cache2.put(key, 3 * x + y);
+            }
+        }
+        System.out.println("HitRate=" + cache.hitrate());
+    }
+
     public static class WindowLFU<K, V extends Comparable<V>> {
         private MinHeap<K, V> minHeap;
-        private Map<K, Node<K, V>> map;
+        private Map<K, Node2<K, V>> dataMap;
         private LinkedList<K> window;
         private int windowSize;
         private int total;
@@ -57,7 +78,7 @@ public class LFU03_WLFU {
         public WindowLFU(int cacheSize, int windowSize) {
             minHeap = new MinHeap<>(cacheSize);
             window = new LinkedList<>();
-            map = new HashMap<>((int) ((float) cacheSize / 0.75F + 1.0F));
+            dataMap = new HashMap<>((int) ((float) cacheSize / 0.75F + 1.0F));
             this.windowSize = windowSize;
             total = 0;
             hits = 0;
@@ -69,13 +90,13 @@ public class LFU03_WLFU {
             }
 
             appendWindow(key);
-            Node<K, V> previous;
-            if ((previous = map.get(key)) != null) { // exists
+            Node2<K, V> previous;
+            if ((previous = dataMap.get(key)) != null) { // exists
                 previous.setValue(value);
                 minHeap.reVisited(previous.getIndex());
             } else {
                 if (minHeap.isFull()) {
-                    map.remove(minHeap.getMin()
+                    dataMap.remove(minHeap.getMin()
                             .getKey());
                 }
                 int cnt = 0;
@@ -84,8 +105,8 @@ public class LFU03_WLFU {
                         cnt++;
                     }
                 }
-                Node<K, V> node = new Node<>(key, value, cnt);
-                map.put(key, node);
+                Node2<K, V> node = new Node2<>(key, value, cnt);
+                dataMap.put(key, node);
                 minHeap.add(node);
             }
         }
@@ -94,7 +115,7 @@ public class LFU03_WLFU {
             total++;
             V value = null;
             if (key != null) {
-                Node<K, V> node = map.get(key);
+                Node2<K, V> node = dataMap.get(key);
                 if (node != null) {
                     hits++;
                     appendWindow(key);
@@ -107,15 +128,15 @@ public class LFU03_WLFU {
 
         private void appendWindow(K key) {
             window.offer(key);
-            if (map.containsKey(key)) {
+            if (dataMap.containsKey(key)) {
                 // 进一次窗口, 次数+1
-                map.get(key).addCount(1);
+                dataMap.get(key).addCount(1);
             }
             if (window.size() > windowSize) {
                 K first = window.poll(); // 移除队首元素
-                if (map.containsKey(first)) {
+                if (dataMap.containsKey(first)) {
                     // 出一次窗口, 次数-1
-                    map.get(first).addCount(-1);
+                    dataMap.get(first).addCount(-1);
                 }
             }
 
@@ -128,23 +149,40 @@ public class LFU03_WLFU {
             return (float) hits / total;
         }
 
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+
+            sb.append("\r\n").append("数据map").append("\r\n");
+            dataMap.forEach((k, v) -> {
+                sb.append("key=").append(k).append(", val={").append(v).append("}").append("\r\n");
+            });
+            sb.append("window").append("\r\n");
+            sb.append("[");
+            window.forEach(e -> {
+                sb.append(e).append(",");
+            });
+            sb.append("]");
+            return sb.toString();
+        }
+
 
         @Data
-        static class Node<K, V extends Comparable<V>> implements Comparable<Node<K, V>> {
+        static class Node2<K, V extends Comparable<V>> implements Comparable<Node2<K, V>> {
             private K key;
             private V value;
             private int index;
             private int counts;
             private long lastTime;
 
-            Node(K key, V value, int counts) {
+            Node2(K key, V value, int counts) {
                 this.key = key;
                 this.value = value;
                 this.counts = counts;
             }
 
             @Override
-            public int compareTo(Node<K, V> node) {
+            public int compareTo(Node2<K, V> node) {
                 if (counts == node.counts) {
                     return (int) (this.lastTime - node.lastTime);
                 }
@@ -158,22 +196,22 @@ public class LFU03_WLFU {
         }
 
         static class MinHeap<K, V extends Comparable<V>> {
-            private Node<K, V>[] heap;
+            private Node2<K, V>[] heap;
             private int currentSize;
             private long count;
 
             MinHeap(int size) {
                 count = 0;
                 currentSize = 1;
-                heap = new Node[size + 1];
+                heap = new Node2[size + 1];
             }
 
             boolean isFull() {
                 return currentSize >= heap.length;
             }
 
-            Node<K, V> add(Node<K, V> value) {
-                Node<K, V> previous = value;
+            Node2<K, V> add(Node2<K, V> value) {
+                Node2<K, V> previous = value;
                 if (currentSize >= heap.length) {
                     previous = removeMin();
                 }
@@ -184,29 +222,29 @@ public class LFU03_WLFU {
                 return previous;
             }
 
-            Node<K, V> getMin() {
+            Node2<K, V> getMin() {
                 return heap[1];
             }
 
-            Node<K, V> removeMin() {
+            Node2<K, V> removeMin() {
                 return remove(1);
             }
 
             /**
              * 堆元素不会主动排序, 而是每次新增的时候才会排序, 所以需要将元素删除, 然后再新增
-             * 
+             *
              * @param index
              * @return
              */
-            Node<K, V> reVisited(int index) {
-                Node<K, V> node = heap[index];
+            Node2<K, V> reVisited(int index) {
+                Node2<K, V> node = heap[index];
                 remove(node.getIndex());
                 add(node);
                 return node;
             }
 
-            Node<K, V> remove(int index) {
-                Node<K, V> previous = heap[index];
+            Node2<K, V> remove(int index) {
+                Node2<K, V> previous = heap[index];
                 heap[index] = heap[--currentSize];
                 siftDown(index);
                 return previous;
@@ -223,7 +261,7 @@ public class LFU03_WLFU {
                 if (right < currentSize && heap[right].compareTo(heap[largest]) < 0)
                     largest = right;
                 if (largest != index) {
-                    Node<K, V> temp = heap[index];
+                    Node2<K, V> temp = heap[index];
                     heap[index] = heap[largest];
                     heap[largest] = temp;
                     heap[index].setIndex(largest);
@@ -234,7 +272,7 @@ public class LFU03_WLFU {
 
             private void siftUp(int index) {
                 while (index > 1 && heap[index].compareTo(heap[index / 2]) < 0) {
-                    Node<K, V> temp = heap[index];
+                    Node2<K, V> temp = heap[index];
                     heap[index] = heap[index / 2];
                     heap[index / 2] = temp;
                     heap[index].setIndex(index / 2);
@@ -243,6 +281,249 @@ public class LFU03_WLFU {
                 }
             }
         }
+    }
+
+    public static class WindowLFU2<K, V extends Comparable<V>> extends AbstractEliminate<K, V> {
+
+        Map<Integer, InnerLinked> timesMap = new HashMap<>(); // 访问次数map
+        private Map<K, Node> dataMap;
+        private LinkedList<K> window;
+        private int windowSize;
+        int minTimes;
+
+
+        public WindowLFU2(int cacheSize, int windowSize) {
+            super(cacheSize);
+            window = new LinkedList<>();
+            dataMap = new HashMap<>((int) ((float) cacheSize / 0.75F + 1.0F));
+            this.windowSize = windowSize;
+        }
+
+        public V get(K key) {
+            Node node = dataMap.get(key);
+            if (node == null) {
+                return null;
+            }
+            addNodeTimes(node);
+            appendWindow(key);
+            return node.val;
+        }
+
+        public V put(K key, V value) {
+            if (key == null || value == null || capacity == 0) {
+                return null;
+            }
+            appendWindow(key);
+            Node node = dataMap.get(key);
+            if (node == null) { // put新元素
+                if (dataMap.size() == capacity) {
+                    // 需要删除
+                    InnerLinked innerLinked = timesMap.get(minTimes);
+                    Node removeNode = innerLinked.getLast();
+                    removeNode(removeNode);
+                }
+                int cnt = 0;
+                for (K k : window) {
+                    if (k.equals(key)) {
+                        cnt++;
+                    }
+                }
+                node = new Node(key, value, cnt);
+                addNode(node);
+                minTimes = 1; // 最小次数重置成1
+                return null;
+            } else {
+                V oldVal = node.val;
+                node.val = value;
+                addNodeTimes(node);
+                return oldVal;
+            }
+        }
+
+        @Override
+        public V remove(K k) {
+            Node node = dataMap.remove(k);
+            if (node != null) {
+                timesMap.get(node.times).remove(node);
+                return node.val;
+            }
+            return null;
+        }
+
+        private void addNodeTimes(Node node) {
+            // 从次数小的LRU链表中删除
+            removeNode(node);
+            // 添加到次数大的LRU链表头中
+            node.times = node.times + 1;
+            addNode(node);
+        }
+
+        private void removeNode(Node node) {
+            InnerLinked innerLinked = timesMap.get(node.times);
+            innerLinked.remove(node);
+            dataMap.remove(node.key);
+            if (innerLinked.isEmpty()) {
+                timesMap.remove(node.times);
+                if (minTimes == node.times) {
+                    // 当前次数的key为空了, 且是最小次数, 最小key加1
+                    minTimes++;
+                }
+            }
+        }
+
+        private void addNode(Node node) {
+            // 设置新的
+            InnerLinked innerLinked = timesMap.getOrDefault(node.times, new InnerLinked());
+            innerLinked.addFirst(node);
+            dataMap.put(node.key, node);
+            timesMap.put(node.times, innerLinked);
+        }
+
+        private void appendWindow(K key) {
+            window.offer(key);
+            if (dataMap.containsKey(key)) {
+                // 进一次窗口, 次数+1
+                dataMap.get(key).addCount(1);
+            }
+            if (window.size() > windowSize) {
+                K first = window.poll(); // 移除队首元素
+                if (dataMap.containsKey(first)) {
+                    // 出一次窗口, 次数-1
+                    dataMap.get(first).addCount(-1);
+                }
+            }
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append("次数map").append("\r\n");
+            timesMap.forEach((k, v) -> {
+                sb.append("key=").append(k).append(", val={").append(v).append("}").append("\r\n");
+            });
+            sb.append("\r\n").append("数据map").append("\r\n");
+            dataMap.forEach((k, v) -> {
+                sb.append("key=").append(k).append(", val={").append(v).append("}").append("\r\n");
+            });
+            sb.append("window").append("\r\n");
+            sb.append("[");
+            window.forEach(e -> {
+                sb.append(e).append(",");
+            });
+            sb.append("]");
+            return sb.toString();
+        }
+
+        public class InnerLinked {
+            private Node head, tail; // 头尾虚节点
+            private int size; // 链表元素数
+
+            public InnerLinked() {
+                head = new Node();
+                tail = new Node();
+                head.next = tail;
+                tail.prev = head;
+                size = 0;
+            }
+
+            // O(1)
+            // 头插
+            public void addFirst(Node x) {
+                x.next = head.next;
+                x.prev = head;
+                head.next.prev = x;
+                head.next = x;
+                size++;
+            }
+
+            public Node getFirst() {
+                if (tail.prev == head) {
+                    return null;
+                }
+                return head.next;
+            }
+
+            public Node getLast() {
+                if (tail.prev == head) {
+                    return null;
+                }
+                return tail.prev;
+            }
+
+            // O(1)
+            // 删除链表中的 x 节点(x 一定存在)
+            public void remove(Node x) {
+                x.prev.next = x.next;
+                x.next.prev = x.prev;
+                size--;
+            }
+
+            // O(1)
+            // 删除链表中最后一个节点, 并返回该节点
+            public Node removeLast() {
+                if (tail.prev == head) {
+                    return null;
+                }
+                Node last = tail.prev;
+                remove(last);
+                return last;
+            }
+
+            // 返回链表长度
+            public int size() {
+                return size;
+            }
+
+            public boolean isEmpty() {
+                return size == 0;
+            }
+
+            @Override
+            public String toString() {
+                StringBuilder sb = new StringBuilder();
+                sb.append("size=").append(size);
+                Node h = this.head;
+                while (h != null) {
+                    sb.append("[").append(h).append("]").append(">");
+                    h = h.next;
+                }
+                return sb.toString();
+            }
+        }
+
+        // 双向链表的节点
+        public class Node {
+            public K key;
+            public V val;
+            public Node next, prev;
+            int times = 1; // 该节点的访问次数
+            private int counts;
+
+            public Node(K k, V v) {
+                this.key = k;
+                this.val = v;
+            }
+
+            public Node(K k, V v, int counts) {
+                this.key = k;
+                this.val = v;
+                this.counts = counts;
+            }
+
+            void addCount(int val) {
+                this.counts += val;
+            }
+
+            public Node() {
+
+            }
+
+            @Override
+            public String toString() {
+                return key == null ? "" : key + ":" + (val == null ? "" : val);
+            }
+        }
+
     }
 
 }

@@ -211,7 +211,7 @@ public class LFU01_base {
         }
 
         public V put(K key, V value) {
-            if (capacity == 0) {
+            if (key == null || value == null || capacity == 0) {
                 return null;
             }
             Node node = dataMap.get(key);
