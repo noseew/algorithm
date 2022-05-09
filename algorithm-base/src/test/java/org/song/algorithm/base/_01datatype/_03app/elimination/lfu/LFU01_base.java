@@ -6,8 +6,10 @@ import org.song.algorithm.base._01datatype._01base._04tree.heap.Heap_base_02;
 import org.song.algorithm.base._01datatype._01base._04tree.heap.Heap_build_01;
 import org.song.algorithm.base._01datatype._03app.elimination.AbstractEliminate;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.PriorityQueue;
 
 public class LFU01_base {
 
@@ -277,11 +279,12 @@ public class LFU01_base {
      */
     public static class LFUCache2<K, V> extends AbstractEliminate<K, V> {
 
-        Heap_base_02<Node> minHeap = new Heap_base_02<>();
+        PriorityQueue<Node> minHeap;
         Map<K, Node> dataMap = new HashMap<>(); // 数据map
 
         public LFUCache2(int cap) {
             super(cap);
+            minHeap = new PriorityQueue<Node>(cap, Comparator.comparing(e -> e));
         }
 
         @Override
