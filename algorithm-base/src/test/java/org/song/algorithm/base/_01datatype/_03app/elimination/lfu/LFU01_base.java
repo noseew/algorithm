@@ -47,37 +47,155 @@ public class LFU01_base {
      */
     @Test
     public void test_01() {
-        LFUCache<String, Object> lfu = new LFUCache<>(5);
+        LFUCache2<String, Object> lfu1 = new LFUCache2<>(5);
 
-        lfu.put("1", 1);
-        lfu.put("5", 5);
-        lfu.put("7", 7);
-        lfu.put("4", 4);
-        lfu.put("3", 3);
-        System.out.println(lfu.get("1"));
-        System.out.println(lfu.get("4"));
-        lfu.put("8", 8);
-        System.out.println(lfu.get("5")); // 应该为null
-        lfu.put("9", 9);
-        System.out.println(lfu.get("7")); // 应该为null
+        lfu1.put("1", 1);
+        lfu1.put("5", 5);
+        lfu1.put("7", 7);
+        lfu1.put("4", 4);
+        lfu1.put("3", 3);
+        System.out.println(lfu1.get("1"));
+        System.out.println(lfu1.get("4"));
+        lfu1.put("8", 8);
+        System.out.println(lfu1.get("5")); // 应该为null
+        lfu1.put("9", 9);
+        System.out.println(lfu1.get("7")); // 应该为null
+        
+        LFUCache2<String, Object> lfu2 = new LFUCache2<>(5);
 
+        lfu2.put("1", 1);
+        lfu2.put("5", 5);
+        lfu2.put("7", 7);
+        lfu2.put("4", 4);
+        lfu2.put("3", 3);
+        System.out.println(lfu2.get("1"));
+        System.out.println(lfu2.get("4"));
+        lfu2.put("8", 8);
+        System.out.println(lfu2.get("5")); // 应该为null
+        lfu2.put("9", 9);
+        System.out.println(lfu2.get("7")); // 应该为null
+
+    }
+
+    /**
+     * LFU 采用优先级队列实现
+     * 
+     * @param <K>
+     * @param <V>
+     */
+    public static class LFUCache1<K, V> extends AbstractEliminate<K, V> {
+
+        PriorityQueue<Node> minHeap; // 排序
+        Map<K, Node> dataMap = new HashMap<>(); // 数据map
+
+        public LFUCache1(int cap) {
+            super(cap);
+            minHeap = new PriorityQueue<Node>(cap, Comparator.comparing(e -> e));
+            dataMap = new HashMap<>(cap);
+        }
+
+        @Override
+        public V get(K k) {
+            Node node = dataMap.get(k);
+            if (node != null) {
+                node.count++; // 次数升级
+                node.time = System.currentTimeMillis(); // 访问时间更新
+                minHeap.remove(node);
+                minHeap.offer(node);
+                return node.val;
+            }
+            return null;
+        }
+
+        @Override
+        public V put(K k, V v) {
+            Node node = dataMap.get(k);
+            if (node != null) {
+                V oldVal = node.val;
+                node.val = v;
+                node.count++; // 次数升级
+                node.time = System.currentTimeMillis(); // 访问时间更新
+                minHeap.remove(node);
+                minHeap.offer(node);
+                return oldVal;
+            }
+            if (dataMap.size() >= capacity) {
+                Node poll = minHeap.poll();
+                dataMap.remove(poll.key);
+            }
+            node = new Node(k, v);
+            minHeap.offer(node);
+            dataMap.put(k, node);
+            return null;
+        }
+
+        @Override
+        public V remove(K k) {
+            Node node = dataMap.remove(k);
+            if (node != null) {
+                minHeap.remove(node);
+                return node.val;
+            }
+            return null;
+        }
+
+        // 节点
+        public class Node implements Comparable<Node> {
+            public K key;
+            public V val;
+            int count = 1; // 该节点的访问次数
+            long time = System.currentTimeMillis(); // 该节点的访问时间位置, 实现LRU功能, 越小越久没访问, 就越应该删除
+
+            public Node(K k, V v) {
+                this.key = k;
+                this.val = v;
+            }
+
+            public Node() {
+
+            }
+
+            @Override
+            public String toString() {
+                return key == null ? "" : key + ":" + (val == null ? "" : val);
+            }
+
+            /**
+             * Node 节点需要比较大小
+             * 
+             * @param o
+             * @return
+             */
+            @Override
+            public int compareTo(Node o) {
+                if (o == null) {
+                    return count;
+                }
+                // 优先对比访问次数
+                if (count != o.count) {
+                    return count - o.count;
+                }
+                // 然后对比访问时间, 
+                return (int) (time - o.time);
+            }
+        }
     }
 
     /**
      * LFU
      * 采用 HashMap 来统计访问次数, key=访问次数, val=LRU链表
      * 加上 LRU 来实现
-     * 
+     *
      * @param <K>
      * @param <V>
      */
-    public static class LFUCache<K, V> extends AbstractEliminate<K, V> {
+    public static class LFUCache2<K, V> extends AbstractEliminate<K, V> {
 
         Map<Integer, InnerLinked> timesMap = new HashMap<>(); // 访问次数map
         Map<K, Node> dataMap = new HashMap<>(); // 数据map
         int minTimes;
 
-        public LFUCache(int capacity) {
+        public LFUCache2(int capacity) {
             super(capacity);
         }
 
@@ -264,110 +382,6 @@ public class LFU01_base {
             @Override
             public String toString() {
                 return key == null ? "" : key + ":" + (val == null ? "" : val);
-            }
-        }
-    }
-
-    /**
-     * LFU 采用优先级队列实现
-     * 
-     * @param <K>
-     * @param <V>
-     */
-    public static class LFUCache2<K, V> extends AbstractEliminate<K, V> {
-
-        PriorityQueue<Node> minHeap; // 排序
-        Map<K, Node> dataMap = new HashMap<>(); // 数据map
-
-        public LFUCache2(int cap) {
-            super(cap);
-            minHeap = new PriorityQueue<Node>(cap, Comparator.comparing(e -> e));
-            dataMap = new HashMap<>(cap);
-        }
-
-        @Override
-        public V get(K k) {
-            Node node = dataMap.get(k);
-            if (node != null) {
-                node.count++; // 次数升级
-                node.time = System.currentTimeMillis(); // 访问时间更新
-                minHeap.remove(node);
-                minHeap.offer(node);
-                return node.val;
-            }
-            return null;
-        }
-
-        @Override
-        public V put(K k, V v) {
-            Node node = dataMap.get(k);
-            if (node != null) {
-                V oldVal = node.val;
-                node.val = v;
-                node.count++; // 次数升级
-                node.time = System.currentTimeMillis(); // 访问时间更新
-                minHeap.remove(node);
-                minHeap.offer(node);
-                return oldVal;
-            }
-            if (dataMap.size() >= capacity) {
-                Node poll = minHeap.poll();
-                dataMap.remove(poll.key);
-            }
-            node = new Node(k, v);
-            minHeap.offer(node);
-            dataMap.put(k, node);
-            return null;
-        }
-
-        @Override
-        public V remove(K k) {
-            Node node = dataMap.remove(k);
-            if (node != null) {
-                minHeap.remove(node);
-                return node.val;
-            }
-            return null;
-        }
-
-        // 节点
-        public class Node implements Comparable<Node> {
-            public K key;
-            public V val;
-            int count = 1; // 该节点的访问次数
-            long time = System.currentTimeMillis(); // 该节点的访问时间位置, 实现LRU功能, 越小越久没访问, 就越应该删除
-
-            public Node(K k, V v) {
-                this.key = k;
-                this.val = v;
-            }
-
-            public Node() {
-
-            }
-
-            @Override
-            public String toString() {
-                return key == null ? "" : key + ":" + (val == null ? "" : val);
-            }
-
-            /**
-             * Node 节点需要比较大小
-             * 
-             * @param o
-             * @return
-             */
-            @Override
-            public int compareTo(Node o) {
-                if (o == null) {
-                    return count;
-                }
-                // 优先对比访问次数
-                if (count != o.count) {
-                    return count - o.count;
-                }
-                // 然后对比访问时间, 
-                return (int) (time - o.time);
             }
         }
     }
