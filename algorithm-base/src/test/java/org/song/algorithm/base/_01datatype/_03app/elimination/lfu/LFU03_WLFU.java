@@ -332,15 +332,15 @@ public class LFU03_WLFU {
                     Node removeNode = innerLinked.getLast();
                     removeNode(removeNode);
                 }
-                int cnt = 0;
+                int times = 1;
                 for (K k : window) {
                     if (k.equals(key)) {
-                        cnt++;
+                        times++;
                     }
                 }
-                node = new Node(key, value, cnt);
+                node = new Node(key, value, times);
                 addNode(node);
-                minTimes = 1; // 最小次数重置成1
+                minTimes = Math.min(minTimes, times); // 最小次数重置
             } else {
                 oldVal = node.val;
                 node.val = value;
@@ -511,21 +511,16 @@ public class LFU03_WLFU {
             public V val;
             public Node next, prev;
             int times = 1; // 该节点的访问次数
-            private int counts;
 
             public Node(K k, V v) {
                 this.key = k;
                 this.val = v;
             }
 
-            public Node(K k, V v, int counts) {
+            public Node(K k, V v, int times) {
                 this.key = k;
                 this.val = v;
-                this.counts = counts;
-            }
-
-            void addCount(int val) {
-                this.counts += val;
+                this.times = times;
             }
 
             public Node() {
