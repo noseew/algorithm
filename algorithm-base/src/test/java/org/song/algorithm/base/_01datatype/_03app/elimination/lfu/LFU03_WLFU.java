@@ -284,11 +284,11 @@ public class LFU03_WLFU {
     }
 
     /**
-     * TODO 未完成
      * LFU 基础上增加了一个 窗口
-     * 进入窗口 访问次数+1, 出窗口 访问次数-1
-     * 访问就是 LFU中的优先排序访问次数
+     * 出窗口 访问次数-1
      * 通过出窗口操作, 将访问次数逐渐减少, 这样就不会存留缓存污染的数据了(瞬间访问次数过多, 之后就不再访问的缓存, 迟迟得不到淘汰)
+     * 
+     * 特点: 窗口的大小就是访问次数最高的大小, 
      * 
      * @param <K>
      * @param <V>
@@ -314,8 +314,8 @@ public class LFU03_WLFU {
             if (node == null) {
                 return null;
             }
-            addNodeTimes(node);
-            appendWindow(key);
+            addNodeTimes(node, 1);
+            appendWindow(node);
             return node.val;
         }
 
@@ -323,8 +323,8 @@ public class LFU03_WLFU {
             if (key == null || value == null || capacity == 0) {
                 return null;
             }
-            appendWindow(key);
             Node node = dataMap.get(key);
+            V oldVal = null;
             if (node == null) { // put新元素
                 if (dataMap.size() == capacity) {
                     // 需要删除
@@ -341,13 +341,13 @@ public class LFU03_WLFU {
                 node = new Node(key, value, cnt);
                 addNode(node);
                 minTimes = 1; // 最小次数重置成1
-                return null;
             } else {
-                V oldVal = node.val;
+                oldVal = node.val;
                 node.val = value;
-                addNodeTimes(node);
-                return oldVal;
+                addNodeTimes(node, 1);
             }
+            appendWindow(node);
+            return oldVal;
         }
 
         @Override
@@ -360,11 +360,11 @@ public class LFU03_WLFU {
             return null;
         }
 
-        private void addNodeTimes(Node node) {
+        private void addNodeTimes(Node node, int addTimes) {
             // 从次数小的LRU链表中删除
             removeNode(node);
             // 添加到次数大的LRU链表头中
-            node.times = node.times + 1;
+            node.times = node.times + addTimes;
             addNode(node);
         }
 
@@ -389,17 +389,21 @@ public class LFU03_WLFU {
             timesMap.put(node.times, innerLinked);
         }
 
-        private void appendWindow(K key) {
-            window.offer(key);
-            if (dataMap.containsKey(key)) {
-                // 进一次窗口, 次数+1
-                dataMap.get(key).addCount(1);
-            }
+        /**
+         * 每一次访问, 都会进入一次窗口, 可以重复进入窗口
+         * 每次出窗口, 访问次数就会-1, 也就是次数衰减
+         * 如果入窗口和出窗口是同一个缓存, 则总体上次数不变, 维持原来次数,  
+         * 
+         * @param node
+         */
+        private void appendWindow(Node node) {
+            window.offer(node.key);
             if (window.size() > windowSize) {
-                K first = window.poll(); // 移除队首元素
-                if (dataMap.containsKey(first)) {
+                K tailKey = window.poll(); // 移除队首元素
+                Node tail = dataMap.get(tailKey);
+                if (tail != null) {
                     // 出一次窗口, 次数-1
-                    dataMap.get(first).addCount(-1);
+                    addNodeTimes(tail, -1);
                 }
             }
         }
