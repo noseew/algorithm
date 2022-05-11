@@ -157,6 +157,15 @@ public class BitMap01 {
     }
 
     /**
+     * 获取位图数组长度
+     * 
+     * @return
+     */
+    public int arrayLength() {
+        return BitMapBase.length;
+    }
+
+    /**
      * 获取位图所有的数据, 并返回数组
      *
      * @return

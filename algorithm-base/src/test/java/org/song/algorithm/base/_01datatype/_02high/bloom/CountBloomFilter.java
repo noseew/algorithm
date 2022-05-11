@@ -2,6 +2,7 @@ package org.song.algorithm.base._01datatype._02high.bloom;
 
 
 /*
+CBF
 计数布隆过滤器
 和普通布隆过滤器相比, 
 优点: 
@@ -11,11 +12,14 @@ package org.song.algorithm.base._01datatype._02high.bloom;
     内存消耗是标准布隆过滤器的3-4倍
     
 标准Bloom filter对于需要精确检测结果的场景将不再适用，而带计数器的Bloom filter的出现解决了这个问题。Counting Bloom filter实际只是在标准Bloom filter的每一个位上都额外对应得增加了一个计数器，
+
+https://blog.csdn.net/vipshop_fin_dev/article/details/102647115
  */
 public class CountBloomFilter extends BloomFilter {
 
     /**
      * 和位图对应的一个计数数组, 用来记录该bit位存储了多少次数据
+     * 由于计数数组和bit位长度相同, 所以计数数组空间占用比较大
      */
     protected int[] counter;
 
