@@ -41,18 +41,24 @@ import java.security.NoSuchAlgorithmException;
  */
 public class BloomFilter {
 
-    private final BitMap01 bitmap;
+    protected final BitMap01 bitmap;
+    protected int initSize;
+    protected int maxSize;
+    protected int maxMask;
 
-    public BloomFilter(int size) {
-        size = Math.min(size, (2 << 16));
-        bitmap = new BitMap01(size);
+    public BloomFilter(int initSize, int maxSize) {
+        this.initSize = Math.min(initSize, (2 << 16));
+        this.maxSize = maxSize;
+        this.maxMask = (Integer.highestOneBit(maxSize) << 1) - 1;
+        bitmap = new BitMap01(this.initSize);
     }
 
     public boolean contains(String key) {
         boolean contains = true;
         for (Hash hash : Hash.values()) {
             // 经过n个hash算法, 是否全部命中
-            contains = contains && bitmap.getBit(hash.calculate(key)) == 1;
+            int index = hash.calculate(key) & this.maxMask;
+            contains = contains && bitmap.getBit(index) == 1;
         }
         return contains;
     }
@@ -60,11 +66,17 @@ public class BloomFilter {
     public void add(String key) {
         for (Hash hash : Hash.values()) {
             // 经过n个hash算法, 存入bitmap
-            bitmap.setBit(hash.calculate(key));
+            int index = hash.calculate(key) & this.maxMask;
+            bitmap.setBit(index);
+            postAdd(key, index);
         }
     }
+    
+    protected void postAdd(String key, int index) {
+        
+    }
 
-    enum Hash {
+    protected enum Hash {
 
         /**
          * 采用MD5, 计算出Hash值
@@ -85,7 +97,7 @@ public class BloomFilter {
                 byte[] md5s = messageDigest.digest(key.getBytes());
 //                        String javaMd5Str = DatatypeConverter.printHexBinary(md5s);
                 int code = precisionCompress(bytesToInt(md5s));
-                System.out.println(String.format("MD5:key=%s, code=%s", key, code));
+//                System.out.println(String.format("MD5:key=%s, code=%s", key, code));
                 return code;
             }
         },
@@ -107,7 +119,7 @@ public class BloomFilter {
             public int calculate(String key) {
                 byte[] shas = messageDigest.digest(key.getBytes());
                 int code = precisionCompress(bytesToInt(shas));
-                System.out.println(String.format("SHA:key=%s, code=%s", key, code));
+//                System.out.println(String.format("SHA:key=%s, code=%s", key, code));
                 return code;
             }
         },
@@ -134,7 +146,7 @@ public class BloomFilter {
             public int calculate(String key) {
                 byte[] hmacMD5Bytes = mac.doFinal(key.getBytes());
                 int code = precisionCompress(bytesToInt(hmacMD5Bytes));
-                System.out.println(String.format("MAC:key=%s, code=%s", key, code));
+//                System.out.println(String.format("MAC:key=%s, code=%s", key, code));
                 return code;
             }
         },

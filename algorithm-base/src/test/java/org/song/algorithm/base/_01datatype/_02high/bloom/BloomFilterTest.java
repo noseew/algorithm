@@ -10,7 +10,7 @@ public class BloomFilterTest {
 
     @Test
     public void test_01_start() {
-        BloomFilter bloomFilter = new BloomFilter(1 << 16);
+        BloomFilter bloomFilter = new BloomFilter(1 << 16, 1 << 16);
         System.out.println("存放----------------");
         for (int i = 0; i < 5; i++) {
             bloomFilter.add(i + "");
