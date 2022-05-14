@@ -7,14 +7,14 @@ import java.util.BitSet;
 
 /**
  * 内容来自网络, 原始来自Hadoop源码
- * 
+ * <p>
  * 实现一个<i>Bloom filter</i>，由Bloom在1970年定义。
- * 
+ * <p>
  * Bloom过滤器是1970年引入的一种数据结构，在过去十年中，由于它为网络主机之间的集合成员信息传输提供了带宽效率，
  * 网络研究团体已经采用了这种数据结构。发送方将信息编码成比特向量，即布卢姆滤波器，它比传统的表示形式更紧凑。
  * 计算和空间成本的建设是线性的数量的元素。接收方使用过滤器来测试各种元素是否属于集合。
  * 尽管过滤器偶尔会返回假阳性，但它永远不会返回假阴性。在创建过滤器时，发送方可以在假阳性率和大小之间选择自己想要的点。
- * 
+ *
  * <p>
  * Originally created by
  * <a href="http://www.one-lab.org">European Commission One-Lab Project 034819</a>.
@@ -36,7 +36,7 @@ public class BloomFilter extends Filter {
 
     /**
      * bit向量
-     * 
+     * <p>
      * The bit vector.
      */
     BitSet bits;
