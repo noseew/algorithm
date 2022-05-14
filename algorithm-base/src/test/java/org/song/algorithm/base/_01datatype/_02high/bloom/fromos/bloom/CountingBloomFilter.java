@@ -5,6 +5,8 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 /**
+ * 实现位图计数, 由于已经有计数了, 所以这里可以没有使用位图, 计数=0就等价于位图=0
+ * 
  * 实现一个 counting Bloom filter，如Fan等人在ToN 2000论文中定义的那样。
  *
  * <p>
@@ -19,6 +21,8 @@ import java.io.IOException;
 public final class CountingBloomFilter extends Filter {
     /**
      * 存储计数桶
+     * 一个long值当成多个计数单位
+     * 每4bit(BUCKET_MAX_VALUE), 为一个桶, 进行计数, 一个long, 可以为15个bit进行计数
      */
     private long[] buckets;
 
@@ -43,6 +47,10 @@ public final class CountingBloomFilter extends Filter {
      */
     public CountingBloomFilter(int vectorSize, int nbHash, int hashType) {
         super(vectorSize, nbHash, hashType);
+        /*
+        vectorSize 最大bit位数, 也就是int最大位
+        这里 buckets 最大位数= vectorSize/16, 
+         */
         buckets = new long[buckets2words(vectorSize)];
     }
 
@@ -67,8 +75,10 @@ public final class CountingBloomFilter extends Filter {
         for (int i = 0; i < nbHash; i++) {
             // find the bucket
             int wordNum = h[i] >> 4;          // div 16
+            // (1111 & hash值) * 4, 最大 60
             int bucketShift = (h[i] & 0x0f) << 2;  // (mod 16) * 4
 
+            // 1111 左移最大60位, 定位到具体桶位置
             long bucketMask = 15L << bucketShift;
             long bucketValue = (buckets[wordNum] & bucketMask) >>> bucketShift;
 

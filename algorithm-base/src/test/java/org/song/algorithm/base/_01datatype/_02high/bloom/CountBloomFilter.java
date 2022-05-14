@@ -21,6 +21,9 @@ public class CountBloomFilter extends BloomFilter {
     /**
      * 和位图对应的一个计数数组, 用来记录该bit位存储了多少次数据
      * 由于计数数组和bit位长度相同, 所以计数数组空间占用比较大
+     * 
+     * 由于已经有计数了, 所以也可以没有使用位图, 计数=0就等价于位图=0, 不过这里还是用了位图
+     * 具体参见 org.song.algorithm.base._01datatype._02high.bloom.fromos.bloom.CountingBloomFilter
      */
     protected int[] counter;
 
