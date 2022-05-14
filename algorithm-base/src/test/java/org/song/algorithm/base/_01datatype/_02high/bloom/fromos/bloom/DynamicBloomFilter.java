@@ -28,7 +28,7 @@ import java.io.IOException;
  */
 public class DynamicBloomFilter extends Filter {
     /**
-     * 动态Bloom筛选器行中记录的最大键数的阈值。
+     * 动态Bloom过滤器行中记录的最大键数的阈值。
      * Threshold for the maximum number of key to record in a dynamic Bloom filter row.
      */
     private int nr;
@@ -55,18 +55,19 @@ public class DynamicBloomFilter extends Filter {
      * <p>
      * Builds an empty Dynamic Bloom filter.
      *
-     * @param vectorSize The number of bits in the vector.
+     * @param vectorSize The number of bits in the vector. 位图最大位数
      * @param nbHash     The number of hash function to consider.
      * @param hashType   type of the hashing function (see
      *                   {@link org.apache.hadoop.util.hash.Hash}).
      * @param nr         The threshold for the maximum number of keys to record in a
      *                   dynamic Bloom filter row.
+     *                   动态Bloom过滤器行中记录的最大键数的阈值
      */
     public DynamicBloomFilter(int vectorSize, int nbHash, int hashType, int nr) {
         super(vectorSize, nbHash, hashType);
 
-        this.nr = nr;
-        this.currentNbRecord = 0;
+        this.nr = nr; // 每个过滤器中最大key阈值
+        this.currentNbRecord = 0; // 当前过滤器中key数量
 
         matrix = new BloomFilter[1];
         matrix[0] = new BloomFilter(this.vectorSize, this.nbHash, this.hashType);
