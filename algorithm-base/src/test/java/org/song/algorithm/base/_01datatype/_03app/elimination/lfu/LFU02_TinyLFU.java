@@ -12,7 +12,7 @@ tiny就是采用位图的方式存储key-val, 使用 CountingBloomFilter, 计数
 
 
  */
-public class LFU04_TinyLFU {
+public class LFU02_TinyLFU {
     
     /*
     论文《TinyLFU: A Highly Ecient Cache Admission Policy》阅读笔记

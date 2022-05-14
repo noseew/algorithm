@@ -3,7 +3,7 @@ package org.song.algorithm.base._01datatype._03app.elimination.lfu;
 /*
 没有找到具体实现, 从网上找的一些算法描述
  */
-public class LFU02_LFUDA {
+public class LFU_LFUDA {
     /*
     基于LFU的改进算法, 其核心思想是"除了访问次数外, 还要考虑访问时间”. 这样做的主要原因是解决LFU缓存污染的问题. 
     
