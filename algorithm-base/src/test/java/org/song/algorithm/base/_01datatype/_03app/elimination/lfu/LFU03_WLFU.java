@@ -9,6 +9,12 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Random;
 
+/*
+window 
+
+window 就是通过窗口解决数据老化数据不被淘汰的问题, 缓存污染
+
+ */
 public class LFU03_WLFU {
     /*
     https://blog.csdn.net/yunhua_lee/article/details/7648549
