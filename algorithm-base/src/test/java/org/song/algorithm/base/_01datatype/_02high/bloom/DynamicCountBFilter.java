@@ -4,7 +4,7 @@ package org.song.algorithm.base._01datatype._02high.bloom;
 DCF
 动态计数布隆过滤器, 是CountBloomFilter优化版本, 降低计数数组的空间占用
 
-TODO 未完成
+https://blog.csdn.net/jiaomeng/article/details/1543751
 
  */
 public class DynamicCountBFilter extends BloomFilter {

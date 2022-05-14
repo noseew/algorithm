@@ -1,11 +1,13 @@
 package org.song.algorithm.base._01datatype._02high.bloom;
 
+import com.google.common.hash.Hashing;
 import org.song.algorithm.base._01datatype._01base._01linear.bit.bitmap.BitMap01;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -83,22 +85,10 @@ public class BloomFilter {
          * 不限平台, 不限次数, 同样的key总能得到同样的val, 可以实现布隆过滤器存储, 比如存储在redis中, 进行重用
          */
         MD5() {
-            MessageDigest messageDigest;
-            {
-                try {
-                    messageDigest = MessageDigest.getInstance("MD5");
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                }
-            }
-
             @Override
             public int calculate(String key) {
-                byte[] md5s = messageDigest.digest(key.getBytes());
-//                        String javaMd5Str = DatatypeConverter.printHexBinary(md5s);
-                int code = precisionCompress(bytesToInt(md5s));
-//                System.out.println(String.format("MD5:key=%s, code=%s", key, code));
-                return code;
+                // 这里使用 guava 工具的hash工具
+                return Hashing.hmacMd5(key.getBytes(Charset.defaultCharset())).bits();
             }
         },
         /**
@@ -106,48 +96,10 @@ public class BloomFilter {
          * 不限平台, 不限次数, 同样的key总能得到同样的val, 可以实现布隆过滤器存储, 比如存储在redis中, 进行重用
          */
         SHA1() {
-            MessageDigest messageDigest;
-            {
-                try {
-                    messageDigest = MessageDigest.getInstance("SHA");
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                }
-            }
-
             @Override
             public int calculate(String key) {
-                byte[] shas = messageDigest.digest(key.getBytes());
-                int code = precisionCompress(bytesToInt(shas));
-//                System.out.println(String.format("SHA:key=%s, code=%s", key, code));
-                return code;
-            }
-        },
-        /**
-         * 采用MAC, 计算出Hash值
-         * 由于同样的key在不同的进程中得到的val不一致, 所以使用该算法的布隆过滤器不能够实现存储, 仅限于单次单进程的计算
-         */
-        MAC() {
-            Mac mac;
-            {
-                try {
-                    KeyGenerator keyGenerator = KeyGenerator.getInstance("HmacMD5");
-                    SecretKey secretKey = keyGenerator.generateKey();
-                    byte[] defaultKey = secretKey.getEncoded();
-                    SecretKey restoreSecretKey = new SecretKeySpec(defaultKey, "HmacMD5");
-                    mac = Mac.getInstance(restoreSecretKey.getAlgorithm());
-                    mac.init(restoreSecretKey);
-                } catch (NoSuchAlgorithmException | InvalidKeyException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public int calculate(String key) {
-                byte[] hmacMD5Bytes = mac.doFinal(key.getBytes());
-                int code = precisionCompress(bytesToInt(hmacMD5Bytes));
-//                System.out.println(String.format("MAC:key=%s, code=%s", key, code));
-                return code;
+                // 这里使用 guava 工具的hash工具
+                return Hashing.hmacSha1(key.getBytes(Charset.defaultCharset())).bits();
             }
         },
         ;
