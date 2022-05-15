@@ -69,6 +69,11 @@ public class LRU02_lruk {
             return oldVal;
         }
 
+        @Override
+        public V putReturnEliminated(K k, V v) {
+            return null;
+        }
+
         public V get(K k) {
             CacheNode<K, V> exitNode = timesMaps.get(k);
             if (exitNode != null) {

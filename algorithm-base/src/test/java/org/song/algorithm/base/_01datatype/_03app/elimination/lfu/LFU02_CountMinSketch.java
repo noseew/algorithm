@@ -60,6 +60,7 @@ public class LFU02_CountMinSketch {
         static final long[] SEED = { // 来自FNV-1a, CityHash和Murmur3的混合种子
                 0xc3a5c85c97cb3127L, 0xb492b66fbe98f273L, 0x9ae16a3b2f90404fL, 0xcbf29ce484222325L};
         static final long RESET_MASK = 0x7777777777777777L;
+        // 10001 ... 0001_0001
         static final long ONE_MASK = 0x1111111111111111L;
 
         int sampleSize;
@@ -181,8 +182,24 @@ public class LFU02_CountMinSketch {
         /**
          * 使每个计数器的初始值减半. 
          * 减半使用的方式是为计数器批量进行与运算, 所以效率是计数器所在数组的数量, 也就是计数器/
+         * 
+         * 对突发稀疏流量表现并不好, 不如W-LFU, 如果访稀疏流量访问次数没有到减半阈值
          */
         void reset() {
+            /*
+            方法目标, 重置桶计数器, 和重新计算元素数量size, 这里的减半是约数, 并不是精确值
+            
+            重置计数器方法, 将计数器数值减半, 右移1位
+                每个桶次数 c = 1010
+                count 计算总次数方法为  count = c & 0000_0001
+                循环 c >>> 1, 然后 c & 0000_0001
+            
+            总数size计算, 根据上边count值
+                count数量=每个桶中1的数量, 最多有4个1, size最多16
+                也就是size数量大约和count数量成 4:1
+                
+            总数 = (总数 - (count / 4)) / 2
+             */
             int count = 0;
             for (int i = 0; i < table.length; i++) {
                 count += Long.bitCount(table[i] & ONE_MASK);

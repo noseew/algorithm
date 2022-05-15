@@ -97,6 +97,11 @@ public class LRU03_Redis {
         }
 
         @Override
+        public V putReturnEliminated(K k, V v) {
+            return null;
+        }
+
+        @Override
         public V remove(K k) {
             CacheNode<K, V> node = cacheMaps.remove(k);
             return node != null ? node.value : null;

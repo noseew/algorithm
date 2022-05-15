@@ -1,5 +1,8 @@
 # 淘汰算法/置换算法
 
+```
+https://blog.csdn.net/qq_35423154/article/details/123669876
+```
 
 # 算法简介
 
@@ -41,11 +44,13 @@ CoutingBloomFilter: 计数布隆过滤器
     采用布隆过滤器降低降低计数的空间占用, LFU缺点2问题
 
 CountMinSketch: 类似计数布隆过滤器
-    功能相当于 CoutingBloomFilter + W-LFU
+    功能相当于 CoutingBloomFilter + 不完全 W-LFU
     采用 CoutingBloomFilter 解决计数空间问题
     采用计数次数达到阈值后, 整体计数减半, 来解决历史高频数据淘汰问题
+    缺点:
+        1. 对突发稀疏流量表现并不好, 不如W-LFU, 如果访稀疏流量访问次数没有到减半阈值
 
-TinyLFU: 使用CountMinSketch实现
+TinyLFU: 使用CountMinSketch算法实现
 
 ```
 

@@ -30,6 +30,16 @@ public class LRU02_SLRU {
     
     似乎相当于 LRUK k=2, 未完成 TODO
     
+    主缓存 SLRU 
+    其主要分为两个区域：protected 和 probation. 
+    probation 区即非热门数据区（命中一次）, 其占据主缓存大小的 20%, 
+    而 protected 则是热门缓存区（命中两次及以上）, 其占用了主缓存大小的 80%. 
+    
+    protected 与 probation 的数据是怎样流动的呢?
+        我们在进行 put 操作时, 数据只能被放入 probation. 
+        只有在 probation 中 get 命中缓存时, 才会将数据转移到 protected 中. 
+        此时我们会将新数据与 protected 末尾的数据进行位置交换. 
+    
      */
     
     public static class SLRUCache<K, V> extends AbstractEliminate<K, V> {
@@ -41,10 +51,19 @@ public class LRU02_SLRU {
 
         protected SLRUCache(int capacity) {
             super(capacity);
-            probation = new LRU01_base.LRUCache<>(capacity);
-            protection = new LRU01_base.LRUCache<>(capacity);
+            // 两个占比可以自己调, 这里占比 1:4
+            probation = new LRU01_base.LRUCache<>((int) (capacity * 0.2));
+            protection = new LRU01_base.LRUCache<>((int) (capacity * 0.8));
         }
 
+        /**
+         * 我们在进行 put 操作时, 数据只能被放入 probation.
+         * 只有在 probation 中 get 命中缓存时, 才会将数据转移到 protected 中.
+         * 此时我们会将新数据与 protected 末尾的数据进行位置交换.
+         * 
+         * @param k
+         * @return
+         */
         @Override
         public V get(K k) {
             V exitNode = probation.get(k);
@@ -57,6 +76,15 @@ public class LRU02_SLRU {
             return v;
         }
 
+        /**
+         * 我们在进行 put 操作时, 数据只能被放入 probation.
+         * 只有在 probation 中 get 命中缓存时, 才会将数据转移到 protected 中.
+         * 此时我们会将新数据与 protected 末尾的数据进行位置交换.
+         *
+         * @param k
+         * @param v
+         * @return
+         */
         @Override
         public V putOrUpdate(K k, V v) {
             // 优先存储在 观察组
@@ -72,6 +100,11 @@ public class LRU02_SLRU {
             probation.remove(k);
             // 如果观察组存在, 说明是2次访问, 则直接进入保护区
             return protection.putOrUpdate(k, v);
+        }
+
+        @Override
+        public V putReturnEliminated(K k, V v) {
+            return null;
         }
 
         @Override

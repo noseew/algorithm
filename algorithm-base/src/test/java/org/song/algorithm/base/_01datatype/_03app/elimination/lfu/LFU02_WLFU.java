@@ -357,6 +357,11 @@ public class LFU02_WLFU {
         }
 
         @Override
+        public V putReturnEliminated(K k, V v) {
+            return null;
+        }
+
+        @Override
         public V remove(K k) {
             Node node = dataMap.remove(k);
             if (node != null) {
