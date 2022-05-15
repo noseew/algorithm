@@ -2,6 +2,8 @@
 
 ```
 https://blog.csdn.net/qq_35423154/article/details/123669876
+https://www.jianshu.com/p/13282263339c
+https://segmentfault.com/a/1190000008751999
 ```
 
 # 算法简介
@@ -88,9 +90,10 @@ FIFO, 随机淘汰 命中率全靠运气, 这里仅当参考
 ```
 LRU
 
-LRU-K
-    只有访问次数是K的时候, 才会进入LRU
+LRU-2 只有当数据的访问次数达到2次的时候，才将数据放入缓存。当需要淘汰数据时，LRU-2会淘汰第2次访问时间距当前时间最大的数据。可以拓展为LRU-K。
+LRU-K: 只有访问次数是K的时候, 才会进入LRU
     org.song.algorithm.base._01datatype._03app.elimination.lru.LRU02_lruk
+2Q: （Two queues）：LRU2的改进，不同点在于2Q将LRU-2算法中的访问历史队列改为一个FIFO缓存队列（即包含FIFO队列和LRU队列）。可拓展为MQ算法（ Multi Queue）。
 ```
 
 ## LFU 最不经常使用算法, 最近最少访问
@@ -105,6 +108,16 @@ Window-Tiny-LFU
 
 
 ## ARC 自适应缓存替换算法
+
+```
+https://www.jianshu.com/p/53b97f3b7687
+```
+
+## LIRS
+
+```
+https://cloud.tencent.com/developer/article/1005742
+```
 
 ## MRU 最近最常使用算法, 和LRU相反
 
