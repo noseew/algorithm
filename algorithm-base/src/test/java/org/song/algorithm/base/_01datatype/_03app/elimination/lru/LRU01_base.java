@@ -94,20 +94,20 @@ public class LRU01_base {
     @Test
     public void test_03() {
         LRUCache<String, Object> lru = new LRUCache<>(5);
-        lru.put("1", 1);
-        lru.put("5", 5);
-        lru.put("7", 7);
-        lru.put("4", 4);
-        lru.put("3", 3);
-        lru.put("8", 8);
+        lru.putOrUpdate("1", 1);
+        lru.putOrUpdate("5", 5);
+        lru.putOrUpdate("7", 7);
+        lru.putOrUpdate("4", 4);
+        lru.putOrUpdate("3", 3);
+        lru.putOrUpdate("8", 8);
         System.out.println(lru); // 迭代顺序, 就是插入顺序, 排序越靠前就越 old, 越容易被删除
         System.out.println(lru.get("1"));
 
         System.out.println(lru.get("3")); // 访问会调整它的顺序, 顺序会越靠后
         System.out.println(lru);
 
-        lru.put("6", 6);
-        lru.put("2", 2);
+        lru.putOrUpdate("6", 6);
+        lru.putOrUpdate("2", 2);
     }
 
     /**
@@ -267,7 +267,7 @@ public class LRU01_base {
             cacheMaps = new HashMap<>(size);
         }
 
-        public V put(K k, V v) {
+        public V putOrUpdate(K k, V v) {
             CacheNode<K, V> node = cacheMaps.get(k);
             if (node == null) {
                 // 删除旧值
@@ -288,6 +288,29 @@ public class LRU01_base {
             moveToFirst(node);
             CacheNode<K, V> put = cacheMaps.put(k, node);
             return put != null ? put.value : null;
+        }
+
+        @Override
+        public V putReturnEliminated(K k, V v) {
+            CacheNode<K, V> node = cacheMaps.get(k);
+            CacheNode<K, V> eliminateNode = null;
+            if (node == null) {
+                // 删除旧值
+                if (cacheMaps.size() >= capacity) {
+                    // 如果超出范围, 则删除尾节点
+                    // 从 HashMap 中删除尾节点
+                    eliminateNode = cacheMaps.remove(last.key);
+                    // 从链表中删除尾节点
+                    removeLast();
+                }
+                // 如果节点不存在, 则新建一个
+                node = new CacheNode<>();
+                node.key = k;
+            }
+            // 将节点移动到队首
+            moveToFirst(node);
+            cacheMaps.put(k, node);
+            return eliminateNode != null ? eliminateNode.value : null;
         }
 
         public V get(K k) {

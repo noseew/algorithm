@@ -17,10 +17,38 @@ public abstract class AbstractEliminate<K, V> {
         this.capacity = capacity;
     }
 
+    /**
+     * 获取缓存
+     * 
+     * @param k
+     * @return
+     */
     public abstract V get(K k);
 
-    public abstract V put(K k, V v);
+    /**
+     * 存入或更新
+     * 
+     * @param k
+     * @param v
+     * @return
+     */
+    public abstract V putOrUpdate(K k, V v);
 
+    /**
+     * 存入并返回淘汰的缓存
+     * 
+     * @param k
+     * @param v
+     * @return
+     */
+    public abstract V putReturnEliminated(K k, V v);
+
+    /**
+     * 删除一个缓存
+     * 
+     * @param k
+     * @return
+     */
     public abstract V remove(K k);
 
     public int size() {

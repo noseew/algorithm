@@ -24,6 +24,9 @@ public class CountBloomFilter extends BloomFilter {
      * 
      * 由于已经有计数了, 所以也可以没有使用位图, 计数=0就等价于位图=0, 不过这里还是用了位图
      * 具体参见 org.song.algorithm.base._01datatype._02high.bloom.fromos.bloom.CountingBloomFilter
+     * 
+     * 还有一种实现是用于LFU缓存计数
+     * 具体参见 org.song.algorithm.base._01datatype._03app.elimination.lfu.LFU02_CountMinSketch
      */
     protected int[] counter;
 

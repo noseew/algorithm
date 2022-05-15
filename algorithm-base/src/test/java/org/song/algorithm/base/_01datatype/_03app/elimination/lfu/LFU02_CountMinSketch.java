@@ -1,9 +1,9 @@
-package org.song.algorithm.base._01datatype._02high.bloom;
+package org.song.algorithm.base._01datatype._03app.elimination.lfu;
 
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.junit.jupiter.api.Test;
 
-public class CountMinSketch {
+public class LFU02_CountMinSketch {
     /*
     
     Count-min Sketch 是一个概率数据结构, 用作数据流中事件的频率表. 
@@ -13,15 +13,15 @@ public class CountMinSketch {
     但是, 它们的使用方式各不相同, 因此尺寸也有所不同：
     计数最小草图通常具有次线性单元数, 与草图的所需近似质量有关, 而计数 Bloom filter 的大小通常与其中的元素数集合. 
      */
-    
-    
+
+
     @Test
     public void test01() {
         FrequencySketch<String> frequencySketch = new FrequencySketch<>();
         frequencySketch.ensureCapacity(100);
         // 添加元素
         frequencySketch.increment("key");
-        
+
         // 返回次数
         frequencySketch.frequency("key");
 
@@ -30,7 +30,7 @@ public class CountMinSketch {
 
     /**
      * 摘自caffeine
-     * 
+     *
      * 估计某一元素在时间窗口内受欢迎程度的概率多集. 
      * 一个元素的最大频率被限制在15(4位), 周期性的老化过程会使所有元素的普及程度减半. 
      *
@@ -39,18 +39,18 @@ public class CountMinSketch {
     static class FrequencySketch<E> {
 
         /*
-         * 这个类维护一个4位的CountMinSketch[1], 并定期老化, 以提供TinyLfu准入策略[2]的流行历史. 
-         * 该Sketch的时间和空间效率允许它以较低的成本估计缓存访问事件流中某个条目的频率. 
-         * 
-         * 计数器矩阵表示为单个维度数组, 每个槽容纳16个计数器. 固定深度为4, 可以平衡精度和成本, 因此宽度是阵列长度的4倍. 
-         * 为了保持准确的估计, 数组的长度等于缓存中的最大条目数, 增加到最接近的2次方, 以利用更有效的位掩蔽. 
-         * 这种配置的置信值为93.75%, 误差范围为e / width. 
-         * 
-         * 根据缓存中的最大条目数, 通过采样窗口周期性地老化所有条目的频率. 
-         * 这被TinyLfu称为重置操作, 它通过将所有计数器除以2并根据找到的奇数计数器的数量减去计数器来保持草图的新鲜度. 
-         * 老化的O(n)代价是平摊的, 非常适合硬件预取, 并且在每个数组位置使用廉价的位操作. 
-         * 
-         * 
+         * 这个类维护一个4位的CountMinSketch[1], 并定期老化, 以提供TinyLfu准入策略[2]的流行历史.
+         * 该Sketch的时间和空间效率允许它以较低的成本估计缓存访问事件流中某个条目的频率.
+         *
+         * 计数器矩阵表示为单个维度数组, 每个槽容纳16个计数器. 固定深度为4, 可以平衡精度和成本, 因此宽度是阵列长度的4倍.
+         * 为了保持准确的估计, 数组的长度等于缓存中的最大条目数, 增加到最接近的2次方, 以利用更有效的位掩蔽.
+         * 这种配置的置信值为93.75%, 误差范围为e / width.
+         *
+         * 根据缓存中的最大条目数, 通过采样窗口周期性地老化所有条目的频率.
+         * 这被TinyLfu称为重置操作, 它通过将所有计数器除以2并根据找到的奇数计数器的数量减去计数器来保持草图的新鲜度.
+         * 老化的O(n)代价是平摊的, 非常适合硬件预取, 并且在每个数组位置使用廉价的位操作.
+         *
+         *
          * [1] 一种改进的数据流摘要:Count-Min Sketch及其应用
          * http://dimacs.rutgers.edu/~graham/pubs/papers/cm-full.pdf
          * [2] TinyLFU: 一种高效的缓存接纳策略
@@ -180,6 +180,7 @@ public class CountMinSketch {
 
         /**
          * 使每个计数器的初始值减半. 
+         * 减半使用的方式是为计数器批量进行与运算, 所以效率是计数器所在数组的数量, 也就是计数器/
          */
         void reset() {
             int count = 0;
@@ -192,7 +193,7 @@ public class CountMinSketch {
 
         /**
          * 返回计数器在指定深度的表索引. 
-         * 
+         *
          * @param item the element's hash
          * @param i    the counter depth
          * @return the table index
@@ -218,4 +219,5 @@ public class CountMinSketch {
             return 1 << -Integer.numberOfLeadingZeros(x - 1);
         }
     }
+    
 }

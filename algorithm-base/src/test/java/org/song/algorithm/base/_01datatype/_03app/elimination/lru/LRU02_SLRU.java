@@ -9,13 +9,13 @@ public class LRU02_SLRU {
     @Test
     public void test_01() {
         SLRUCache<String, Object> lru = new SLRUCache<>(5);
-        lru.put("1", 1);
-        lru.put("5", 5);
-        lru.put("7", 7);
+        lru.putOrUpdate("1", 1);
+        lru.putOrUpdate("5", 5);
+        lru.putOrUpdate("7", 7);
         System.out.println(lru.get("1"));
         System.out.println(lru.get("5"));
-        lru.put("4", 4);
-        lru.put("3", 3);
+        lru.putOrUpdate("4", 4);
+        lru.putOrUpdate("3", 3);
         System.out.println(lru.get("7"));
 
         System.out.println();
@@ -28,7 +28,7 @@ public class LRU02_SLRU {
     保护段的大小是有限的. 如果需要清除数据, 那么数据会从保护段的末尾开始清除. 
     
     
-    似乎相当于 LRUK k=2
+    似乎相当于 LRUK k=2, 未完成 TODO
     
      */
     
@@ -53,25 +53,25 @@ public class LRU02_SLRU {
             }
             V v = probation.remove(k);
             // 如果观察组存在, 说明是2次访问, 则直接进入保护区
-            protection.put(k, v);
+            protection.putOrUpdate(k, v);
             return v;
         }
 
         @Override
-        public V put(K k, V v) {
+        public V putOrUpdate(K k, V v) {
             // 优先存储在 观察组
             V exitNode = probation.get(k);
             if (exitNode == null) {
                 exitNode = protection.get(k);
                 if (exitNode == null) {
-                    return probation.put(k, v);
+                    return probation.putOrUpdate(k, v);
                 } else {
-                    return protection.put(k, v);
+                    return protection.putOrUpdate(k, v);
                 }
             }
             probation.remove(k);
             // 如果观察组存在, 说明是2次访问, 则直接进入保护区
-            return protection.put(k, v);
+            return protection.putOrUpdate(k, v);
         }
 
         @Override
