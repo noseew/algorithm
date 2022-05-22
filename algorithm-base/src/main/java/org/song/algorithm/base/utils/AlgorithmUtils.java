@@ -38,6 +38,18 @@ public class AlgorithmUtils {
     }
 
     /**
+     * 返回合理范围的默认值
+     * 
+     * @param val 入参值
+     * @param min 最小不小于
+     * @param max 最大不大于
+     * @return
+     */
+    public static int getValidRange(int val, int min, int max) {
+        return Math.min(Math.max(val, min), val);
+    }
+
+    /**
      * 指定范围指定数量的升序序列
      * 
      * @param count
