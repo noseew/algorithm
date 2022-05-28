@@ -1,16 +1,9 @@
-package org.song.algorithm.base._01datatype._02high.bloom;
+package org.song.algorithm.base._01datatype._03app.filter.bloom;
 
 import com.google.common.hash.Hashing;
 import org.song.algorithm.base._01datatype._01base._01linear.bit.bitmap.BitMap01;
 
-import javax.crypto.KeyGenerator;
-import javax.crypto.Mac;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.Charset;
-import java.security.InvalidKeyException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
     /*
     布隆过滤器
@@ -82,7 +75,7 @@ public class BloomFilter {
         
     }
 
-    protected enum Hash {
+    public enum Hash {
 
         /**
          * 采用MD5, 计算出Hash值

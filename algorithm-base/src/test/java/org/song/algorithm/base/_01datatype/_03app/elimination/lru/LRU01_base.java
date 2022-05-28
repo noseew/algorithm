@@ -308,15 +308,14 @@ public class LRU01_base {
             if (exitNode == null) {
                 // 删除旧值
                 if (cacheMaps.size() >= capacity) {
-                    // 如果超出范围, 则删除尾节点
-                    // 从 HashMap 中删除尾节点
+                    // 如果超出范围, 则删除尾节点, 从 HashMap 中删除尾节点
                     eliminateNode = cacheMaps.remove(last.key);
                     // 从链表中删除尾节点
                     removeLast();
                 }
-                // 如果节点不存在, 则新建一个
-                exitNode = node;
             }
+            // 替换
+            exitNode = node;
             // 将节点移动到队首
             moveToFirst(exitNode);
             cacheMaps.put(node.key, exitNode);

@@ -1,4 +1,4 @@
-package org.song.algorithm.base._01datatype._02high.bloom.fromos.bloom;
+package org.song.algorithm.base._01datatype._03app.filter.bloom.fromos;
 
 import java.io.DataInput;
 import java.io.DataOutput;

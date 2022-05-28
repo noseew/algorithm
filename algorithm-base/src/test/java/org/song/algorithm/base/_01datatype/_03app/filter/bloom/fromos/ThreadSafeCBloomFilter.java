@@ -1,4 +1,4 @@
-package org.song.algorithm.base._01datatype._02high.bloom.fromos.bloom;
+package org.song.algorithm.base._01datatype._03app.filter.bloom.fromos;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

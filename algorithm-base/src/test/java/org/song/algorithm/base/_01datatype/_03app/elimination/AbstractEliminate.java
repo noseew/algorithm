@@ -61,4 +61,39 @@ public abstract class AbstractEliminate<K, V> {
         return Math.abs(x);
     }
 
+    public static int hash4(int x) {
+        String data = String.valueOf(x);
+        char[] chars = data.toCharArray();
+        int len = data.length();
+        int m = 0x5bd1e995;
+        int r = 24;
+        int h = 0xbc9f1d34 ^ len;
+
+        while (len >= 4) {
+            int k = x;
+            k *= m;
+            k ^= k >> r;
+            k *= m;
+            h *= m;
+            h ^= k;
+            data += 4;
+            len -= 4;
+        }
+
+        switch (len) {
+            case 3:
+                h ^= chars[2] << 16;
+            case 2:
+                h ^= chars[1] << 8;
+            case 1:
+                h ^= chars[0];
+                h *= m;
+        }
+
+        h ^= h >> 13;
+        h *= m;
+        h ^= h >> 15;
+        return h;
+    }
+
 }

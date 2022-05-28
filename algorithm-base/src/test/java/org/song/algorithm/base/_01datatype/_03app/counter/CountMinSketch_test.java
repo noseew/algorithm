@@ -1,4 +1,4 @@
-package org.song.algorithm.base._01datatype._03app.elimination.lfu;
+package org.song.algorithm.base._01datatype._03app.counter;
 
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Random;
 
-public class LFU02_CountMinSketch {
+public class CountMinSketch_test {
     /*
     
     Count-min Sketch 是一个概率数据结构, 用作数据流中事件的频率表. 
@@ -275,19 +275,23 @@ public class LFU02_CountMinSketch {
             int hash1 = AbstractEliminate.hash1(e.hashCode());
             int hash2 = AbstractEliminate.hash2(e.hashCode());
             int hash3 = AbstractEliminate.hash3(e.hashCode());
+            int hash4 = AbstractEliminate.hash4(e.hashCode());
             counterWindow.increment(hash1 & mask);
             counterWindow.increment(hash2 & mask);
             counterWindow.increment(hash3 & mask);
+            counterWindow.increment(hash4 & mask);
         }
 
         public int count(E e) {
             int hash1 = AbstractEliminate.hash1(e.hashCode());
             int hash2 = AbstractEliminate.hash2(e.hashCode());
             int hash3 = AbstractEliminate.hash3(e.hashCode());
+            int hash4 = AbstractEliminate.hash4(e.hashCode());
             long count1 = counterWindow.get(hash1 & mask);
             long count2 = counterWindow.get(hash2 & mask);
             long count3 = counterWindow.get(hash3 & mask);
-            return (int) Math.min(Math.min(count1, count2), count3);
+            long count4 = counterWindow.get(hash4 & mask);
+            return (int) AlgorithmUtils.getMin(count1, count2, count3, count4);
         }
         
         public void reset() {

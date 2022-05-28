@@ -39,7 +39,7 @@ public class AlgorithmUtils {
 
     /**
      * 返回合理范围的默认值
-     * 
+     *
      * @param val 入参值
      * @param min 最小不小于
      * @param max 最大不大于
@@ -48,10 +48,26 @@ public class AlgorithmUtils {
     public static int getValidRange(int val, int min, int max) {
         return Math.min(Math.max(val, min), val);
     }
+    
+    public static int getMin(int... vals) {
+        int min = vals[0];
+        for (int val : vals) {
+            min = Math.min(val, min);
+        }
+        return min;
+    }
+    
+    public static long getMin(long... vals) {
+        long min = vals[0];
+        for (long val : vals) {
+            min = Math.min(val, min);
+        }
+        return min;
+    }
 
     /**
      * 指定范围指定数量的升序序列
-     * 
+     *
      * @param count
      * @param min
      * @param max

@@ -1,4 +1,4 @@
-package org.song.algorithm.base._01datatype._02high.bloom;
+package org.song.algorithm.base._01datatype._03app.filter.bloom;
 
 import org.junit.Test;
 

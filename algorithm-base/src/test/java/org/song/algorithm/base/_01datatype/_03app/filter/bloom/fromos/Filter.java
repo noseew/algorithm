@@ -1,4 +1,4 @@
-package org.song.algorithm.base._01datatype._02high.bloom.fromos.bloom;
+package org.song.algorithm.base._01datatype._03app.filter.bloom.fromos;
 
 import org.song.algorithm.base._02alg._03app.hash.Hash;
 
