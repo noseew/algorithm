@@ -2,10 +2,7 @@ package org.song.algorithm.base._01datatype._03app.elimination;
 
 import lombok.AllArgsConstructor;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.TreeMap;
+import java.util.*;
 
 public class Temp {
     enum SEGMENT_ZONE {
@@ -24,18 +21,38 @@ public class Temp {
     static class Pair<K, V>{
         K k;
         V v;
+        
+        public  static <K, V> Pair<K, V> of(K k, V v) {
+            return new Pair(k, v);
+        }
     }
     
-    static class LRUCache<T> {
-        LRUNode<T> LRUNode;
-        int _capacity;
-        //利用哈希表来存储数据以及迭代器，来实现o(1)的get和put
-        TreeMap<Integer, List<LRUNode>> _hashmap;
-        //利用双向链表来保存缓存使用情况，并保证o(1)的插入删除
-        List<LRUNode> _lrulist;
-
-
-    }
+//    static class LRUCache<T> {
+//        LRUNode<T> LRUNode;
+//        int _capacity;
+//        //利用哈希表来存储数据以及迭代器，来实现o(1)的get和put
+//        TreeMap<Integer, List<LRUNode>> _hashmap;
+//        //利用双向链表来保存缓存使用情况，并保证o(1)的插入删除
+//        List<LRUNode> _lrulist;
+//
+//        public LRUCache(int _capacity) {
+//            this._capacity = _capacity;
+//            this._hashmap = new TreeMap<>();
+//            this._lrulist = new ArrayList<>();
+//        }
+//        
+//        public Pair<LRUNode, Boolean> get(LRUNode node) {
+//            List<Temp.LRUNode> currentNode = _hashmap.get(node._key);
+//            List<Temp.LRUNode> last = _hashmap.get(_hashmap.lastKey());
+//            if (currentNode == last) {
+//                return Pair.of(new LRUNode<>(), false);
+//            }
+//
+//        }
+//        
+//        
+//
+//    }
     
 
     static class CountMinRow {
@@ -80,6 +97,7 @@ public class Temp {
         }
 
     }
+    
     static class CountMinSketch {
         private int countNum;
         private int _mask; // 掩码用于取低n位
@@ -89,6 +107,8 @@ public class Temp {
 
         public CountMinSketch(int countNum) {
             this.countNum = Integer.highestOneBit(countNum);
+            this.countNum = Math.max(8, this.countNum);
+            
             this._cmRows = new CountMinRow[this.countNum];
             for (int i = 0; i < 4; i++) {
                 _cmRows[i] = new CountMinRow(this.countNum);
@@ -131,10 +151,6 @@ public class Temp {
             }
         }
 
-    }
-
-    static class SegmentLRUCache<T> {
-        LRUNode<T> LRUNode;
     }
 
 }
