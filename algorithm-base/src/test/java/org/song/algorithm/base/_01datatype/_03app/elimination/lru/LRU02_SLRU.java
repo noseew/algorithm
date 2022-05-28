@@ -36,8 +36,8 @@ public class LRU02_SLRU {
     而 protected 则是热门缓存区（命中两次及以上）, 其占用了主缓存大小的 80%. 
     
     protected 与 probation 的数据是怎样流动的呢?
-        我们在进行 put 操作时, 数据只能被放入 probation. 
-        只有在 probation 中 get 命中缓存时, 才会将数据转移到 protected 中. 
+        1. 我们在进行 put 操作时, 数据只能被放入 probation. 
+        2. 只有在 probation 中 get 命中缓存时, 才会将数据转移到 protected 中. 
         此时我们会将新数据与 protected 末尾的数据进行位置交换. 
     
      */

@@ -2,7 +2,11 @@ package org.song.algorithm.base._01datatype._03app.elimination.lfu;
 
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.base.utils.AlgorithmUtils;
+import org.song.algorithm.base.utils.BinaryUtils;
 
+import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Random;
 
 public class LFU02_CountMinSketch {
@@ -241,13 +245,173 @@ public class LFU02_CountMinSketch {
 
     @Test
     public void test02() {
-
-        
-
+        CountMinSketch<Integer> countMinSketch = new CountMinSketch<>(1024);
+        Random r = new Random();
+        for (int i = 0; i < 100; i++) {
+            int val = r.nextInt(10);
+            countMinSketch.add(val);
+            System.out.println(countMinSketch.count(val));
+        }
     }
-    
-    static class CountMinSketch {
-        
+
+    /**
+     * TODO 未完成 未调试
+     * 
+     * @param <E>
+     */
+    static class CountMinSketch<E> {
+
+        private CounterWindow counterWindow;
+        private int mask;
+
+        public CountMinSketch(int capacity) {
+            capacity = AlgorithmUtils.getValidRange(Integer.highestOneBit(capacity), 1024, 65535);
+            this.mask = capacity - 1;
+            this.counterWindow = new CounterWindow(5, capacity);
+        }
+
+        public void add(E e) {
+            int hash1 = hash1(e.hashCode());
+            int hash2 = hash2(e.hashCode());
+            int hash3 = hash3(e.hashCode());
+            counterWindow.increment(hash1 & mask);
+            counterWindow.increment(hash2 & mask);
+            counterWindow.increment(hash3 & mask);
+        }
+
+        public int count(E e) {
+            int hash1 = hash1(e.hashCode());
+            int hash2 = hash2(e.hashCode());
+            int hash3 = hash3(e.hashCode());
+            long count1 = counterWindow.get(hash1 & mask);
+            long count2 = counterWindow.get(hash2 & mask);
+            long count3 = counterWindow.get(hash3 & mask);
+            return (int) Math.min(Math.min(count1, count2), count3);
+        }
+
+
+        int hash1(int x) {
+            return x ^ (x >>> 16);
+        }
+
+        int hash2(int x) {
+            x = ((x >>> 16) ^ x) * 0x45d9f3b;
+            x = ((x >>> 16) ^ x) * 0x45d9f3b;
+            return (x >>> 16) ^ x;
+        }
+
+        int hash3(int x) {
+            return Math.abs(x);
+        }
+
+        /**
+         * 字段声明
+         * counter: 计数器, 用于为指定元素(这里是位置)进行计数
+         * bucket: 桶, 这里用一个long表示一个桶, 一个桶有多个计数器, 这要看计数器的大小, 如果计数器使用4个bit, 则一个桶有15个计数器
+         * num: 元素位置, 相当于元素下标, 不过不是直接放在数组里的, 从0开始,
+         * capacity: 元素数量, 整个计数器里容纳的元素计数器的数量
+         * countBit: 计数器位数, 也就是用几个bit来作为计数器
+         */
+        class CounterWindow {
+            long[] buckets; // 计数器桶数组
+            int countBit; // 用几个bit来计数, 默认4
+            int capacity; // 计数器的最大样本数, 同时也相当于数据的容量
+            int bucketCapacity; // 一个long能容纳几个计数器
+            long mask; // 如果用4个bit来计数, 则mask = 0B1111
+
+            public CounterWindow(int countBit, int capacity) {
+                this.countBit = AlgorithmUtils.getValidRange(countBit, 4, 32);
+                this.bucketCapacity = Long.SIZE / this.countBit;
+                // 桶数组长度
+                this.buckets = new long[(capacity / bucketCapacity) + 1];
+                this.capacity = capacity;
+                this.mask = (0B1 << this.countBit) - 1;
+            }
+
+            /**
+             * 第 num 个数+1, 从0开始
+             *
+             * @param num
+             * @return -1 表示计数器溢出
+             */
+            public long increment(int num) {
+                // 定位到数组下标
+                int index = num / bucketCapacity;
+                long bucket = buckets[index];
+                // 定位到计数器桶 counterOffset
+                int counterOffset = (num % bucketCapacity) * countBit;
+                // 计数器记录的数量
+                long count = (bucket >>> counterOffset) & mask;
+                if (count < mask) { // 确保计数器不会溢出
+                    // 计数+1, 0B1001_xxxx_1010 + 0B0000_0001_0000
+                    return buckets[index] = bucket + (1 << counterOffset);
+                }
+                // 溢出, 减半
+                reset();
+                return increment(num);
+            }
+
+            /**
+             * 获取第 num 个数的计数
+             *
+             * @param num
+             * @return
+             */
+            public long get(int num) {
+                // 具体参见 increment
+                return (buckets[num / bucketCapacity] >>> ((num % bucketCapacity) * countBit)) & mask;
+            }
+
+            /**
+             * 计数减半
+             */
+            public void reset() {
+                for (int i = 0; i < buckets.length; i++) {
+                    long bucket = buckets[i];
+                    // 0B1001_0101_1010 & 0B1110_1110_1110, 直接舍弃末尾然后右移1
+                    buckets[i] = (bucket & 0XeeeeeeeeeeeeeeeeL) >>> 1;
+                }
+            }
+
+            /**
+             * 计数清空
+             */
+            public void clear() {
+                for (int i = 0; i < buckets.length; i++) {
+                    buckets[i] = 0;
+                }
+            }
+
+
+            @Override
+            public String toString() {
+                StringBuilder sb = new StringBuilder();
+                sb.append("countBit=").append(countBit).append("\r\n");
+                sb.append("bucketCapacity=").append(bucketCapacity).append("\r\n");
+                for (int i = 0; i < buckets.length; i++) {
+                    long bucket = buckets[i];
+                    if (bucket != 0) {
+                        sb.append("bucket=").append(i)
+                                .append(", num=").append(i * bucketCapacity)
+                                .append("[");
+                        StringBuilder sbt = new StringBuilder();
+                        for (int j = 0; j < bucketCapacity; j++) {
+                            sbt.append(bucket & mask);
+                            bucket = bucket >>> countBit;
+                            if (j != bucketCapacity - 1) {
+                                sbt.append(",");
+                            }
+                        }
+                        sb.append(sbt.reverse().toString());
+                        sb.append("]").append("\r\n");
+                        sb.append(BinaryUtils.binaryPretty(buckets[i], countBit)).append("\r\n");
+//                        sb.append(BinaryUtils.binaryPretty(buckets[i])).append("\r\n");
+                    }
+                }
+                return sb.toString();
+            }
+        }
+
     }
 
 }
