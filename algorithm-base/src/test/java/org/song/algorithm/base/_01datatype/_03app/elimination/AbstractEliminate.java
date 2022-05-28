@@ -32,7 +32,7 @@ public abstract class AbstractEliminate<K, V> {
      * @param v
      * @return
      */
-    public abstract V putOrUpdate(K k, V v);
+    public abstract V put(K k, V v);
 
     /**
      * 删除一个缓存
@@ -44,6 +44,21 @@ public abstract class AbstractEliminate<K, V> {
 
     public int size() {
         return size;
+    }
+
+
+    public static int hash1(int x) {
+        return x ^ (x >>> 16);
+    }
+
+    public static int hash2(int x) {
+        x = ((x >>> 16) ^ x) * 0x45d9f3b;
+        x = ((x >>> 16) ^ x) * 0x45d9f3b;
+        return (x >>> 16) ^ x;
+    }
+
+    public static int hash3(int x) {
+        return Math.abs(x);
     }
 
 }

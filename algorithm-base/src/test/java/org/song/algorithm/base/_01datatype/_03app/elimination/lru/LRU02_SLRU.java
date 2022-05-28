@@ -9,13 +9,13 @@ public class LRU02_SLRU {
     @Test
     public void test_01() {
         SLRUCache<String, Object> lru = new SLRUCache<>(5);
-        lru.putOrUpdate("1", 1);
-        lru.putOrUpdate("5", 5);
-        lru.putOrUpdate("7", 7);
+        lru.put("1", 1);
+        lru.put("5", 5);
+        lru.put("7", 7);
         System.out.println(lru.get("1"));
         System.out.println(lru.get("5"));
-        lru.putOrUpdate("4", 4);
-        lru.putOrUpdate("3", 3);
+        lru.put("4", 4);
+        lru.put("3", 3);
         System.out.println(lru.get("7"));
 
         System.out.println();
@@ -48,8 +48,9 @@ public class LRU02_SLRU {
         private LRU01_base.LRUCache<K, V> probation;
         // 保护期
         private LRU01_base.LRUCache<K, V> protection;
+        private int probationSize, protectionSize;
 
-        protected SLRUCache(int capacity) {
+        public SLRUCache(int capacity) {
             super(capacity);
             // 两个占比可以自己调, 这里占比 1:4
             probation = new LRU01_base.LRUCache<>((int) (capacity * 0.2));
@@ -72,7 +73,7 @@ public class LRU02_SLRU {
             }
             V v = probation.remove(k);
             // 如果观察组存在, 说明是2次访问, 则直接进入保护区
-            protection.putOrUpdate(k, v);
+            protection.put(k, v);
             return v;
         }
 
@@ -86,29 +87,47 @@ public class LRU02_SLRU {
          * @return
          */
         @Override
-        public V putOrUpdate(K k, V v) {
+        public V put(K k, V v) {
             // 优先存储在 观察组
             V exitNode = probation.get(k);
             if (exitNode == null) {
                 exitNode = protection.get(k);
                 if (exitNode == null) {
-                    return probation.putOrUpdate(k, v);
+                    probationSize++;
+                    return probation.put(k, v);
                 } else {
-                    return protection.putOrUpdate(k, v);
+                    protectionSize++;
+                    return protection.put(k, v);
                 }
             }
             probation.remove(k);
             // 如果观察组存在, 说明是2次访问, 则直接进入保护区
-            return protection.putOrUpdate(k, v);
+            return protection.put(k, v);
         }
 
         @Override
         public V remove(K k) {
             V v = probation.remove(k);
-            if (v == null) {
+            if (v != null) {
+                probationSize--;
+            } else {
                 v = protection.remove(k);
+                if (v != null) {
+                    protectionSize--;
+                }
             }
             return v;
         }
+        
+        public V victim() {
+            if (protectionSize + probationSize > size) {
+                LRU01_base.LRUNode<K, V> removeLast = probation.removeLast();
+                if (removeLast != null) {
+                    return removeLast.value;
+                }
+            }
+            return null;
+        }
+
     }
 }

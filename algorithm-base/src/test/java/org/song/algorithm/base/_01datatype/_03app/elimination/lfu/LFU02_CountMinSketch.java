@@ -2,6 +2,7 @@ package org.song.algorithm.base._01datatype._03app.elimination.lfu;
 
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.base._01datatype._03app.elimination.AbstractEliminate;
 import org.song.algorithm.base.utils.AlgorithmUtils;
 import org.song.algorithm.base.utils.BinaryUtils;
 
@@ -271,37 +272,30 @@ public class LFU02_CountMinSketch {
         }
 
         public void add(E e) {
-            int hash1 = hash1(e.hashCode());
-            int hash2 = hash2(e.hashCode());
-            int hash3 = hash3(e.hashCode());
+            int hash1 = AbstractEliminate.hash1(e.hashCode());
+            int hash2 = AbstractEliminate.hash2(e.hashCode());
+            int hash3 = AbstractEliminate.hash3(e.hashCode());
             counterWindow.increment(hash1 & mask);
             counterWindow.increment(hash2 & mask);
             counterWindow.increment(hash3 & mask);
         }
 
         public int count(E e) {
-            int hash1 = hash1(e.hashCode());
-            int hash2 = hash2(e.hashCode());
-            int hash3 = hash3(e.hashCode());
+            int hash1 = AbstractEliminate.hash1(e.hashCode());
+            int hash2 = AbstractEliminate.hash2(e.hashCode());
+            int hash3 = AbstractEliminate.hash3(e.hashCode());
             long count1 = counterWindow.get(hash1 & mask);
             long count2 = counterWindow.get(hash2 & mask);
             long count3 = counterWindow.get(hash3 & mask);
             return (int) Math.min(Math.min(count1, count2), count3);
         }
-
-
-        int hash1(int x) {
-            return x ^ (x >>> 16);
+        
+        public void reset() {
+            counterWindow.reset();
         }
-
-        int hash2(int x) {
-            x = ((x >>> 16) ^ x) * 0x45d9f3b;
-            x = ((x >>> 16) ^ x) * 0x45d9f3b;
-            return (x >>> 16) ^ x;
-        }
-
-        int hash3(int x) {
-            return Math.abs(x);
+        
+        public void clear() {
+            counterWindow.clear();
         }
 
         /**

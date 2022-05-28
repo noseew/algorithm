@@ -74,6 +74,10 @@ public class BloomFilter {
         }
     }
     
+    public void clear() {
+        bitmap.clean();
+    }
+    
     protected void postAdd(String key, int index) {
         
     }

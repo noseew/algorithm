@@ -21,13 +21,13 @@ public class LRU02_lruk {
     @Test
     public void test_01() {
         LURKCache<String, Object> lru = new LURKCache<>(2, 3);
-        lru.putOrUpdate("1", 1);
-        lru.putOrUpdate("5", 5);
-        lru.putOrUpdate("7", 7);
+        lru.put("1", 1);
+        lru.put("5", 5);
+        lru.put("7", 7);
         System.out.println(lru.get("1")); // null, 被移除了
         System.out.println(lru.get("5")); // 此时进入缓存
-        lru.putOrUpdate("4", 4);
-        lru.putOrUpdate("3", 3);
+        lru.put("4", 4);
+        lru.put("3", 3);
         System.out.println(lru.get("7")); // null, 被移除了
 
         System.out.println();
@@ -50,7 +50,7 @@ public class LRU02_lruk {
             cacheMaps = new LRU01_base.LRUCacheModel<>(cap);
         }
 
-        public V putOrUpdate(K k, V v) {
+        public V put(K k, V v) {
             LRU01_base.LRUNode<K, V> exitNode = timesMaps.getNode(k);
             if (exitNode == null) {
                 timesMaps.putOrUpdate(new LRU01_base.LRUNode<>(k, v, 1));

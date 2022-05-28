@@ -70,7 +70,7 @@ public class BitMap01 {
     /**
      * 数据数组
      */
-    private int[] BitMapBase;
+    private int[] bitMapBase;
 
     private static final int tableBit = 8;
 
@@ -96,11 +96,11 @@ public class BitMap01 {
     }
 
     public BitMap01(int offset) {
-        this.BitMapBase = new int[newSize(offset)];
+        this.bitMapBase = new int[newSize(offset)];
     }
 
     private BitMap01(int[] BitMapBase) {
-        this.BitMapBase = BitMapBase;
+        this.bitMapBase = BitMapBase;
     }
 
     /**
@@ -118,7 +118,7 @@ public class BitMap01 {
             定位元素: offset / bit
             定位偏移量: 1 << (offset % bit)
              */
-        BitMapBase[offset / bit] = (1 << (offset % bit)) | (BitMapBase[offset / bit]);
+        bitMapBase[offset / bit] = (1 << (offset % bit)) | (bitMapBase[offset / bit]);
     }
 
     /**
@@ -137,7 +137,7 @@ public class BitMap01 {
             
             将指定位置设为0
              */
-        BitMapBase[offset / bit] = ~(1 << (offset % bit)) & BitMapBase[offset / bit];
+        bitMapBase[offset / bit] = ~(1 << (offset % bit)) & bitMapBase[offset / bit];
     }
 
     /**
@@ -153,7 +153,7 @@ public class BitMap01 {
             定位元素: offset / bit
             定位偏移量: 1 << (offset % bit)
              */
-        return ((1 << (offset % bit)) & (BitMapBase[offset / bit])) != 0 ? 1 : 0;
+        return ((1 << (offset % bit)) & (bitMapBase[offset / bit])) != 0 ? 1 : 0;
     }
 
     /**
@@ -162,7 +162,7 @@ public class BitMap01 {
      * @return
      */
     public int arrayLength() {
-        return BitMapBase.length;
+        return bitMapBase.length;
     }
 
     /**
@@ -172,7 +172,7 @@ public class BitMap01 {
      */
     public int[] getValues() {
         List<Integer> list = new ArrayList<>();
-        for (int i = 0; i < BitMapBase.length; i++) {
+        for (int i = 0; i < bitMapBase.length; i++) {
             int[] itemValues = getItemValues(i);
             for (int value : itemValues) {
                 list.add(value);
@@ -194,7 +194,7 @@ public class BitMap01 {
         int baseValue = bit * index;
 
         // 当前下标的元素
-        int n = BitMapBase[index];
+        int n = bitMapBase[index];
         // 有多少个1, 该数组就有多大
         int[] values = new int[bitCountByTable(n)];
 
@@ -219,7 +219,7 @@ public class BitMap01 {
      * @param b
      */
     public void rightShift(int b) {
-        rightShift(this.BitMapBase, b, this.bit);
+        rightShift(this.bitMapBase, b, this.bit);
     }
 
     /**
@@ -276,7 +276,7 @@ public class BitMap01 {
      * @param b
      */
     public void leftShift(int b) {
-        leftShift(this.BitMapBase, b, this.bit);
+        leftShift(this.bitMapBase, b, this.bit);
     }
 
     /**
@@ -332,11 +332,11 @@ public class BitMap01 {
      * @param BitMapBase
      */
     public void and(int[] BitMapBase) {
-        if (this.BitMapBase.length != BitMapBase.length) {
+        if (this.bitMapBase.length != BitMapBase.length) {
             throw new IllegalArgumentException("BitMapBase.length not eq this.BitMapBase.length");
         }
-        for (int i = 0; i < this.BitMapBase.length; i++) {
-            this.BitMapBase[i] = this.BitMapBase[i] & BitMapBase[i];
+        for (int i = 0; i < this.bitMapBase.length; i++) {
+            this.bitMapBase[i] = this.bitMapBase[i] & BitMapBase[i];
         }
     }
 
@@ -351,7 +351,7 @@ public class BitMap01 {
      * @return
      */
     public BitMap01 andNew(int[] BitMapBase) {
-        if (this.BitMapBase.length != BitMapBase.length) {
+        if (this.bitMapBase.length != BitMapBase.length) {
             throw new IllegalArgumentException("BitMapBase.length not eq this.BitMapBase.length");
         }
         int[] bm = bitMapArrayImage();
@@ -371,9 +371,9 @@ public class BitMap01 {
      * @param BitMapBase
      */
     public void or(int[] BitMapBase) {
-        int minLen = Math.min(this.BitMapBase.length, BitMapBase.length);
+        int minLen = Math.min(this.bitMapBase.length, BitMapBase.length);
         for (int i = 0; i < minLen; i++) {
-            this.BitMapBase[i] = this.BitMapBase[i] | BitMapBase[i];
+            this.bitMapBase[i] = this.bitMapBase[i] | BitMapBase[i];
         }
     }
 
@@ -404,8 +404,8 @@ public class BitMap01 {
      * 时间复杂度 O(n), n指的是bitmap数组数量
      */
     public void not() {
-        for (int i = 0; i < this.BitMapBase.length; i++) {
-            this.BitMapBase[i] = ~this.BitMapBase[i];
+        for (int i = 0; i < this.bitMapBase.length; i++) {
+            this.bitMapBase[i] = ~this.bitMapBase[i];
         }
     }
 
@@ -434,7 +434,7 @@ public class BitMap01 {
      * @return
      */
     public int bitCount() {
-        return bitCount(this.BitMapBase, 0, this.BitMapBase.length, false);
+        return bitCount(this.bitMapBase, 0, this.bitMapBase.length, false);
     }
 
     /**
@@ -455,7 +455,7 @@ public class BitMap01 {
      * @return
      */
     public int bitCount(int startOffset, int endOffset) {
-        if (startOffset >= this.BitMapBase.length * bit || endOffset <= 0 || endOffset <= startOffset) {
+        if (startOffset >= this.bitMapBase.length * bit || endOffset <= 0 || endOffset <= startOffset) {
             return 0;
         }
         int moreStartOffset = startOffset % bit, // 头offset
@@ -472,22 +472,22 @@ public class BitMap01 {
                         || moreEndOffset == 0
                         || (endIndex - startIndex) > 1) {
                     // 有完整的元素
-                    bitCount += bitCount(BitMapBase, startIndex, endIndex, moreStartOffset != 0);
+                    bitCount += bitCount(bitMapBase, startIndex, endIndex, moreStartOffset != 0);
                 }
             }
             // 取头, 在bitmap数组中是头部, 单独看这个元素, 取的是其尾部的元素
             if (moreStartOffset > 0) {
                 // 大端序, 所以是int类型中的高位
-                bitCount += bitCountByTable(BitMapBase[startIndex], moreStartOffset, bit);
+                bitCount += bitCountByTable(bitMapBase[startIndex], moreStartOffset, bit);
             }
             // 取尾, 在bitmap数组中是尾部, 单独看这个元素, 取的是其头部的元素
             if (moreEndOffset > 0) {
                 // 大端序, 所以是int类型中的低位
-                bitCount += bitCountByTable(BitMapBase[endIndex], 0, moreEndOffset);
+                bitCount += bitCountByTable(bitMapBase[endIndex], 0, moreEndOffset);
             }
         } else {
             // 特殊情况, 起止偏移量在同一个元素内, 则需要取头尾的交集
-            bitCount += bitCountByTable(BitMapBase[startIndex], moreStartOffset, moreEndOffset);
+            bitCount += bitCountByTable(bitMapBase[startIndex], moreStartOffset, moreEndOffset);
         }
         return bitCount;
     }
@@ -512,9 +512,9 @@ public class BitMap01 {
         int current = 0;
         // 上一个是否连续接上下一个
         boolean lastConsecutive = false;
-        for (int i = 0; i < this.BitMapBase.length; i++) {
+        for (int i = 0; i < this.bitMapBase.length; i++) {
 
-            int[] ints = maxConsecutive(this.BitMapBase[i], val);
+            int[] ints = maxConsecutive(this.bitMapBase[i], val);
             // 当前最大连续个数
             current = ints[1] - ints[0];
             // 当前是否连续接上上一个
@@ -578,8 +578,8 @@ public class BitMap01 {
      * @return
      */
     public int[] bitMapArrayImage() {
-        int[] newBitMap = new int[BitMapBase.length];
-        System.arraycopy(BitMapBase, 0, newBitMap, 0, BitMapBase.length);
+        int[] newBitMap = new int[bitMapBase.length];
+        System.arraycopy(bitMapBase, 0, newBitMap, 0, bitMapBase.length);
         return newBitMap;
     }
 
@@ -587,7 +587,9 @@ public class BitMap01 {
      * 清空bitmap数组
      */
     public void clean() {
-        this.BitMapBase = new int[1];
+        for (int i = 0; i < bitMapBase.length; i++) {
+            bitMapBase[i] = 0;
+        }
     }
 
     /**
@@ -713,7 +715,7 @@ public class BitMap01 {
      * 确保容量
      */
     private void ensureCapacity(int offset) {
-        if (offset > BitMapBase.length * bit - 1) {
+        if (offset > bitMapBase.length * bit - 1) {
             dilatation(newSize(offset));
         }
     }
@@ -723,15 +725,15 @@ public class BitMap01 {
      */
     private void dilatation(int newSize) {
         int[] newBitMap = new int[newSize];
-        System.arraycopy(BitMapBase, 0, newBitMap, 0, BitMapBase.length);
-        this.BitMapBase = newBitMap;
+        System.arraycopy(bitMapBase, 0, newBitMap, 0, bitMapBase.length);
+        this.bitMapBase = newBitMap;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < BitMapBase.length; i++) {
-            sb.append(i).append(": ").append(BinaryUtils.binaryPretty(BitMapBase[i])).append("\r\n");
+        for (int i = 0; i < bitMapBase.length; i++) {
+            sb.append(i).append(": ").append(BinaryUtils.binaryPretty(bitMapBase[i])).append("\r\n");
         }
         return sb.toString();
     }

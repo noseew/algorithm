@@ -96,20 +96,20 @@ public class LRU01_base {
     @Test
     public void test_03() {
         LRUCache<String, Object> lru = new LRUCache<>(5);
-        lru.putOrUpdate("1", 1);
-        lru.putOrUpdate("5", 5);
-        lru.putOrUpdate("7", 7);
-        lru.putOrUpdate("4", 4);
-        lru.putOrUpdate("3", 3);
-        lru.putOrUpdate("8", 8);
+        lru.put("1", 1);
+        lru.put("5", 5);
+        lru.put("7", 7);
+        lru.put("4", 4);
+        lru.put("3", 3);
+        lru.put("8", 8);
         System.out.println(lru); // 迭代顺序, 就是插入顺序, 排序越靠前就越 old, 越容易被删除
         System.out.println(lru.get("1"));
 
         System.out.println(lru.get("3")); // 访问会调整它的顺序, 顺序会越靠后
         System.out.println(lru);
 
-        lru.putOrUpdate("6", 6);
-        lru.putOrUpdate("2", 2);
+        lru.put("6", 6);
+        lru.put("2", 2);
     }
 
     /**
@@ -269,8 +269,12 @@ public class LRU01_base {
             cacheMaps = new HashMap<>(size);
         }
 
-        public V putOrUpdate(K k, V v) {
-            LRUNode<K, V> exitNode = cacheMaps.get(k);
+        public V put(K k, V v) {
+            return putNode(new LRUNode<>(k, v));
+        }
+
+        public V putNode(LRUNode<K, V> node) {
+            LRUNode<K, V> exitNode = cacheMaps.get(node.key);
             if (exitNode == null) {
                 // 删除旧值
                 if (cacheMaps.size() >= capacity) {
@@ -281,21 +285,27 @@ public class LRU01_base {
                     removeLast();
                 }
                 // 如果节点不存在, 则新建一个
-                exitNode = new LRUNode<>();
-                exitNode.key = k;
+                exitNode = node;
+                exitNode.key = node.key;
             }
             // 如果节点已存在, 则更新值
-            exitNode.value = v;
+            exitNode.value = node.value;
             // 将节点移动到队首
             moveToFirst(exitNode);
-            LRUNode<K, V> put = cacheMaps.put(k, exitNode);
+            LRUNode<K, V> put = cacheMaps.put(node.key, exitNode);
             return put != null ? put.value : null;
         }
 
-        public V putReturnEliminated(K k, V v) {
-            LRUNode<K, V> node = cacheMaps.get(k);
+        /**
+         * 放入并返回淘汰的node
+         * 
+         * @param node
+         * @return
+         */
+        public LRUNode<K, V> putReturnEliminated(LRUNode<K, V> node) {
+            LRUNode<K, V> exitNode = cacheMaps.get(node.key);
             LRUNode<K, V> eliminateNode = null;
-            if (node == null) {
+            if (exitNode == null) {
                 // 删除旧值
                 if (cacheMaps.size() >= capacity) {
                     // 如果超出范围, 则删除尾节点
@@ -305,13 +315,12 @@ public class LRU01_base {
                     removeLast();
                 }
                 // 如果节点不存在, 则新建一个
-                node = new LRUNode<>();
-                node.key = k;
+                exitNode = node;
             }
             // 将节点移动到队首
-            moveToFirst(node);
-            cacheMaps.put(k, node);
-            return eliminateNode != null ? eliminateNode.value : null;
+            moveToFirst(exitNode);
+            cacheMaps.put(node.key, exitNode);
+            return eliminateNode;
         }
 
         public V get(K k) {
@@ -401,7 +410,8 @@ public class LRU01_base {
         /**
          * 删除双向链表尾节点
          */
-        protected void removeLast() {
+        protected LRUNode<K, V> removeLast() {
+            LRUNode<K, V> remove = last;
             if (last != null) {
                 // 将尾节点 指针重置指向前一个
                 last = last.pre;
@@ -412,6 +422,7 @@ public class LRU01_base {
                     last.next = null;
                 }
             }
+            return remove;
         }
 
         @Override
@@ -460,6 +471,11 @@ public class LRU01_base {
         public Position position; // 给SLRU使用
         public int times; // 用于LFU缓存的计数, LRU不用他
 
+        public LRUNode(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
+        
         public LRUNode(K key, V value, int times) {
             this.key = key;
             this.value = value;
@@ -468,6 +484,9 @@ public class LRU01_base {
     }
     
     public enum Position {
-        PROTECTION, PROBATION
+        SLRU_PROTECTION,
+        SLRU_PROBATION,
+        SLRU,
+        WINDOWS_LRU,;
     }
 }

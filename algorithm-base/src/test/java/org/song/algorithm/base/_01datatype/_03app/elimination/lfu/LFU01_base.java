@@ -49,30 +49,30 @@ public class LFU01_base {
     public void test_01() {
         LFUCache2<String, Object> lfu1 = new LFUCache2<>(5);
 
-        lfu1.putOrUpdate("1", 1);
-        lfu1.putOrUpdate("5", 5);
-        lfu1.putOrUpdate("7", 7);
-        lfu1.putOrUpdate("4", 4);
-        lfu1.putOrUpdate("3", 3);
+        lfu1.put("1", 1);
+        lfu1.put("5", 5);
+        lfu1.put("7", 7);
+        lfu1.put("4", 4);
+        lfu1.put("3", 3);
         System.out.println(lfu1.get("1"));
         System.out.println(lfu1.get("4"));
-        lfu1.putOrUpdate("8", 8);
+        lfu1.put("8", 8);
         System.out.println(lfu1.get("5")); // 应该为null
-        lfu1.putOrUpdate("9", 9);
+        lfu1.put("9", 9);
         System.out.println(lfu1.get("7")); // 应该为null
         
         LFUCache2<String, Object> lfu2 = new LFUCache2<>(5);
 
-        lfu2.putOrUpdate("1", 1);
-        lfu2.putOrUpdate("5", 5);
-        lfu2.putOrUpdate("7", 7);
-        lfu2.putOrUpdate("4", 4);
-        lfu2.putOrUpdate("3", 3);
+        lfu2.put("1", 1);
+        lfu2.put("5", 5);
+        lfu2.put("7", 7);
+        lfu2.put("4", 4);
+        lfu2.put("3", 3);
         System.out.println(lfu2.get("1"));
         System.out.println(lfu2.get("4"));
-        lfu2.putOrUpdate("8", 8);
+        lfu2.put("8", 8);
         System.out.println(lfu2.get("5")); // 应该为null
-        lfu2.putOrUpdate("9", 9);
+        lfu2.put("9", 9);
         System.out.println(lfu2.get("7")); // 应该为null
 
     }
@@ -109,7 +109,7 @@ public class LFU01_base {
         }
 
         @Override
-        public V putOrUpdate(K k, V v) {
+        public V put(K k, V v) {
             Node node = dataMap.get(k);
             if (node != null) {
                 V oldVal = node.val;
@@ -210,7 +210,7 @@ public class LFU01_base {
             return node.val;
         }
 
-        public V putOrUpdate(K key, V value) {
+        public V put(K key, V value) {
             if (key == null || value == null || capacity == 0) {
                 return null;
             }

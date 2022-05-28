@@ -66,7 +66,7 @@ public class LFU02_WLFU {
                 cache.put(key, 3 * x + y);
             }
             if (cache2.get(key) == null) {
-                cache2.putOrUpdate(key, 3 * x + y);
+                cache2.put(key, 3 * x + y);
             }
         }
         System.out.println("HitRate=" + cache.hitrate());
@@ -325,7 +325,7 @@ public class LFU02_WLFU {
             return node.val;
         }
 
-        public V putOrUpdate(K key, V value) {
+        public V put(K key, V value) {
             if (key == null || value == null || capacity == 0) {
                 return null;
             }
