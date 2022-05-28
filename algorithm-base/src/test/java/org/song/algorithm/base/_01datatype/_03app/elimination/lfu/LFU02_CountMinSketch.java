@@ -242,7 +242,12 @@ public class LFU02_CountMinSketch {
     @Test
     public void test02() {
 
+        
 
+    }
+    
+    static class CountMinSketch {
+        
     }
 
 }

@@ -1,5 +1,7 @@
 package org.song.algorithm.base._01datatype._03app.elimination.lru;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.base._01datatype._03app.elimination.AbstractEliminate;
 
@@ -416,14 +418,144 @@ public class LRU01_base {
 
             return sb.toString();
         }
+    }
 
-        public class CacheNode<K, V> {
-            public CacheNode<K, V> pre;
-            public CacheNode<K, V> next;
-            public K key;
-            public V value;
+    public static class LRUCache4LRUK<K, V> {
 
-            public int times; // 用于LFU缓存的计数, LRU不用他
+        private int capacity;
+        private HashMap<K, CacheNode<K, V>> cacheMaps;
+        private CacheNode<K, V> first;
+        private CacheNode<K, V> last;
+
+        public LRUCache4LRUK(int size) {
+            this.capacity = size;
+            cacheMaps = new HashMap<K, CacheNode<K, V>>(size);
         }
+
+        public V putNode(CacheNode<K, V> node) {
+            CacheNode<K, V> exitNode = cacheMaps.get(node.key);
+            if (exitNode == null) {
+                if (cacheMaps.size() >= capacity) {
+                    cacheMaps.remove(last.key);
+                    removeLast();
+                }
+                exitNode = node;
+            }
+            exitNode.value = node.value;
+            exitNode.times = node.times;
+            moveToFirst(node);
+            CacheNode<K, V> put = cacheMaps.put(node.key, node);
+            return put != null ? put.value : null;
+        }
+
+        public CacheNode<K, V> get(K k) {
+            CacheNode<K, V> node = cacheMaps.get(k);
+            if (node == null) {
+                return null;
+            }
+            moveToFirst(node);
+            return node;
+        }
+
+        public CacheNode<K, V> remove(K k) {
+            CacheNode<K, V> node = cacheMaps.get(k);
+            if (node != null) {
+                if (node.pre != null) {
+                    node.pre.next = node.next;
+                }
+                if (node.next != null) {
+                    node.next.pre = node.pre;
+                }
+                if (node == first) {
+                    first = node.next;
+                }
+                if (node == last) {
+                    last = node.pre;
+                }
+                node.pre = null;
+                node.next = null;
+            }
+
+            return cacheMaps.remove(k);
+        }
+
+        public void clear() {
+            first = null;
+            last = null;
+            cacheMaps.clear();
+        }
+
+        public int size() {
+            return cacheMaps.size();
+        }
+
+        private void moveToFirst(CacheNode node) {
+            if (first == node) {
+                return;
+            }
+            if (node.next != null) {
+                node.next.pre = node.pre;
+            }
+            if (node.pre != null) {
+                node.pre.next = node.next;
+            }
+            if (node == last) {
+                last = last.pre;
+            }
+            if (first == null || last == null) {
+                first = last = node;
+                return;
+            }
+            node.next = first;
+            first.pre = node;
+            first = node;
+            first.pre = null;
+
+        }
+
+        private void removeLast() {
+            if (last != null) {
+                last = last.pre;
+                if (last == null) {
+                    first = null;
+                } else {
+                    last.next = null;
+                }
+            }
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            CacheNode node = first;
+            while (node != null) {
+                sb.append(String.format("%s:%s ", node.key, node.value));
+                node = node.next;
+            }
+
+            return sb.toString();
+        }
+    }
+    
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CacheNode<K, V> {
+        public CacheNode<K, V> pre;
+        public CacheNode<K, V> next;
+        public K key;
+        public V value;
+
+        public Position position; // 给SLRU使用
+        public int times; // 用于LFU缓存的计数, LRU不用他
+
+        public CacheNode(K key, V value, int times) {
+            this.key = key;
+            this.value = value;
+            this.times = times;
+        }
+    }
+    
+    public enum Position {
+        PROTECTION, PROBATION
     }
 }

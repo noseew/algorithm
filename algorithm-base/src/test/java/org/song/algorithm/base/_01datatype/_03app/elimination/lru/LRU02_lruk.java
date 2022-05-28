@@ -1,10 +1,7 @@
 package org.song.algorithm.base._01datatype._03app.elimination.lru;
 
-import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.base._01datatype._03app.elimination.AbstractEliminate;
-
-import java.util.HashMap;
 
 public class LRU02_lruk {
     
@@ -40,23 +37,23 @@ public class LRU02_lruk {
     public static class LURKCache<K, V> extends AbstractEliminate<K, V> {
 
         // 访问历史记录缓存
-        private LRUCache<K, V> timesMaps;
+        private LRU01_base.LRUCache4LRUK<K, V> timesMaps;
         // 数据缓存
-        private LRUCache<K, V> cacheMaps;
+        private LRU01_base.LRUCache4LRUK<K, V> cacheMaps;
 
         private int timesK;
 
         public LURKCache(int timesK, int cap) {
             super(cap);
             this.timesK = timesK;
-            timesMaps = new LRUCache<>(timesK);
-            cacheMaps = new LRUCache<>(cap);
+            timesMaps = new LRU01_base.LRUCache4LRUK<>(timesK);
+            cacheMaps = new LRU01_base.LRUCache4LRUK<>(cap);
         }
 
         public V putOrUpdate(K k, V v) {
-            CacheNode<K, V> exitNode = timesMaps.get(k);
+            LRU01_base.CacheNode<K, V> exitNode = timesMaps.get(k);
             if (exitNode == null) {
-                timesMaps.putNode(new CacheNode<>(k, v, 1));
+                timesMaps.putNode(new LRU01_base.CacheNode<>(k, v, 1));
                 return null;
             }
             exitNode.times++;
@@ -75,7 +72,7 @@ public class LRU02_lruk {
         }
 
         public V get(K k) {
-            CacheNode<K, V> exitNode = timesMaps.get(k);
+            LRU01_base.CacheNode<K, V> exitNode = timesMaps.get(k);
             if (exitNode != null) {
                 exitNode.times++;
                 if (exitNode.times >= timesK) {
@@ -92,7 +89,7 @@ public class LRU02_lruk {
         }
 
         public V remove(K k) {
-            CacheNode<K, V> exitNode = timesMaps.remove(k);
+            LRU01_base.CacheNode<K, V> exitNode = timesMaps.remove(k);
             if (exitNode != null) {
                 return exitNode.value;
             }
@@ -118,138 +115,6 @@ public class LRU02_lruk {
             sb.append("k=").append(timesK).append("\r\n");
             sb.append("data=").append(cacheMaps).append("\r\n");
             sb.append("history=").append(timesMaps).append("\r\n");
-            return sb.toString();
-        }
-    }
-
-    @AllArgsConstructor
-    public static class CacheNode<K, V> {
-        public CacheNode<K, V> pre;
-        public CacheNode<K, V> next;
-        public K key;
-        public V value;
-        public int times; // 缓存访问次数
-
-        public CacheNode(K key, V value, int times) {
-            this.key = key;
-            this.value = value;
-            this.times = times;
-        }
-    }
-
-    public static class LRUCache<K, V> {
-
-        private int capacity;
-        private HashMap<K, CacheNode<K, V>> cacheMaps;
-        private CacheNode<K, V> first;
-        private CacheNode<K, V> last;
-
-        public LRUCache(int size) {
-            this.capacity = size;
-            cacheMaps = new HashMap<K, CacheNode<K, V>>(size);
-        }
-
-        public V putNode(CacheNode<K, V> node) {
-            CacheNode<K, V> exitNode = cacheMaps.get(node.key);
-            if (exitNode == null) {
-                if (cacheMaps.size() >= capacity) {
-                    cacheMaps.remove(last.key);
-                    removeLast();
-                }
-                exitNode = node;
-            }
-            exitNode.value = node.value;
-            exitNode.times = node.times;
-            moveToFirst(node);
-            CacheNode<K, V> put = cacheMaps.put(node.key, node);
-            return put != null ? put.value : null;
-        }
-
-        public CacheNode<K, V> get(K k) {
-            CacheNode<K, V> node = cacheMaps.get(k);
-            if (node == null) {
-                return null;
-            }
-            moveToFirst(node);
-            return node;
-        }
-
-        public CacheNode<K, V> remove(K k) {
-            CacheNode<K, V> node = cacheMaps.get(k);
-            if (node != null) {
-                if (node.pre != null) {
-                    node.pre.next = node.next;
-                }
-                if (node.next != null) {
-                    node.next.pre = node.pre;
-                }
-                if (node == first) {
-                    first = node.next;
-                }
-                if (node == last) {
-                    last = node.pre;
-                }
-                node.pre = null;
-                node.next = null;
-            }
-
-            return cacheMaps.remove(k);
-        }
-
-        public void clear() {
-            first = null;
-            last = null;
-            cacheMaps.clear();
-        }
-
-        public int size() {
-            return cacheMaps.size();
-        }
-
-        private void moveToFirst(CacheNode node) {
-            if (first == node) {
-                return;
-            }
-            if (node.next != null) {
-                node.next.pre = node.pre;
-            }
-            if (node.pre != null) {
-                node.pre.next = node.next;
-            }
-            if (node == last) {
-                last = last.pre;
-            }
-            if (first == null || last == null) {
-                first = last = node;
-                return;
-            }
-            node.next = first;
-            first.pre = node;
-            first = node;
-            first.pre = null;
-
-        }
-
-        private void removeLast() {
-            if (last != null) {
-                last = last.pre;
-                if (last == null) {
-                    first = null;
-                } else {
-                    last.next = null;
-                }
-            }
-        }
-
-        @Override
-        public String toString() {
-            StringBuilder sb = new StringBuilder();
-            CacheNode node = first;
-            while (node != null) {
-                sb.append(String.format("%s:%s ", node.key, node.value));
-                node = node.next;
-            }
-
             return sb.toString();
         }
     }
