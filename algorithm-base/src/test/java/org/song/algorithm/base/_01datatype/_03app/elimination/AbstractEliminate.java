@@ -35,15 +35,6 @@ public abstract class AbstractEliminate<K, V> {
     public abstract V putOrUpdate(K k, V v);
 
     /**
-     * 存入并返回淘汰的缓存
-     * 
-     * @param k
-     * @param v
-     * @return
-     */
-    public abstract V putReturnEliminated(K k, V v);
-
-    /**
      * 删除一个缓存
      * 
      * @param k

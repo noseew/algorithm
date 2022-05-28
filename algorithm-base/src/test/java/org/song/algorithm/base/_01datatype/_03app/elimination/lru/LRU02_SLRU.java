@@ -103,11 +103,6 @@ public class LRU02_SLRU {
         }
 
         @Override
-        public V putReturnEliminated(K k, V v) {
-            return null;
-        }
-
-        @Override
         public V remove(K k) {
             V v = probation.remove(k);
             if (v == null) {

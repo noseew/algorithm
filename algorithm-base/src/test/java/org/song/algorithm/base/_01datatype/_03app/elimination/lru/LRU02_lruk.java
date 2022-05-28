@@ -3,8 +3,6 @@ package org.song.algorithm.base._01datatype._03app.elimination.lru;
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.base._01datatype._03app.elimination.AbstractEliminate;
 
-import java.util.HashMap;
-
 public class LRU02_lruk {
     
     /*
@@ -39,23 +37,23 @@ public class LRU02_lruk {
     public static class LURKCache<K, V> extends AbstractEliminate<K, V> {
 
         // 访问历史记录缓存
-        private LRUCache4LRUK<K, V> timesMaps;
+        private final LRU01_base.LRUCacheModel<K, V> timesMaps;
         // 数据缓存
-        private LRUCache4LRUK<K, V> cacheMaps;
+        private final LRU01_base.LRUCacheModel<K, V> cacheMaps;
 
-        private int timesK;
+        private final int timesK;
 
         public LURKCache(int timesK, int cap) {
             super(cap);
             this.timesK = timesK;
-            timesMaps = new LRUCache4LRUK<>(timesK);
-            cacheMaps = new LRUCache4LRUK<>(cap);
+            timesMaps = new LRU01_base.LRUCacheModel<>(timesK);
+            cacheMaps = new LRU01_base.LRUCacheModel<>(cap);
         }
 
         public V putOrUpdate(K k, V v) {
-            LRU01_base.CacheNode<K, V> exitNode = timesMaps.get(k);
+            LRU01_base.LRUNode<K, V> exitNode = timesMaps.getNode(k);
             if (exitNode == null) {
-                timesMaps.putNode(new LRU01_base.CacheNode<>(k, v, 1));
+                timesMaps.putOrUpdate(new LRU01_base.LRUNode<>(k, v, 1));
                 return null;
             }
             exitNode.times++;
@@ -63,27 +61,23 @@ public class LRU02_lruk {
             exitNode.value = v;
 
             if (exitNode.times >= timesK) {
-                return cacheMaps.putNode(exitNode);
+                exitNode= cacheMaps.putOrUpdate(exitNode);
+                return exitNode != null ? exitNode.value : null;
             }
             return oldVal;
         }
 
-        @Override
-        public V putReturnEliminated(K k, V v) {
-            return null;
-        }
-
         public V get(K k) {
-            LRU01_base.CacheNode<K, V> exitNode = timesMaps.get(k);
+            LRU01_base.LRUNode<K, V> exitNode = timesMaps.getNode(k);
             if (exitNode != null) {
                 exitNode.times++;
                 if (exitNode.times >= timesK) {
                     timesMaps.remove(k);
-                    cacheMaps.putNode(exitNode);
+                    cacheMaps.putOrUpdate(exitNode);
                 }
                 return exitNode.value;
             }
-            exitNode = cacheMaps.get(k);
+            exitNode = cacheMaps.getNode(k);
             if (exitNode != null) {
                 return exitNode.value;
             }
@@ -91,11 +85,11 @@ public class LRU02_lruk {
         }
 
         public V remove(K k) {
-            LRU01_base.CacheNode<K, V> exitNode = timesMaps.remove(k);
+            LRU01_base.LRUNode<K, V> exitNode = timesMaps.removeNode(k);
             if (exitNode != null) {
                 return exitNode.value;
             }
-            exitNode = cacheMaps.remove(k);
+            exitNode = cacheMaps.removeNode(k);
             if (exitNode != null) {
                 return exitNode.value;
             }
@@ -117,123 +111,6 @@ public class LRU02_lruk {
             sb.append("k=").append(timesK).append("\r\n");
             sb.append("data=").append(cacheMaps).append("\r\n");
             sb.append("history=").append(timesMaps).append("\r\n");
-            return sb.toString();
-        }
-    }
-
-    public static class LRUCache4LRUK<K, V> {
-
-        private int capacity;
-        private HashMap<K, LRU01_base.CacheNode<K, V>> cacheMaps;
-        private LRU01_base.CacheNode<K, V> first;
-        private LRU01_base.CacheNode<K, V> last;
-
-        public LRUCache4LRUK(int size) {
-            this.capacity = size;
-            cacheMaps = new HashMap<K, LRU01_base.CacheNode<K, V>>(size);
-        }
-
-        public V putNode(LRU01_base.CacheNode<K, V> node) {
-            LRU01_base.CacheNode<K, V> exitNode = cacheMaps.get(node.key);
-            if (exitNode == null) {
-                if (cacheMaps.size() >= capacity) {
-                    cacheMaps.remove(last.key);
-                    removeLast();
-                }
-                exitNode = node;
-            }
-            exitNode.value = node.value;
-            exitNode.times = node.times;
-            moveToFirst(node);
-            LRU01_base.CacheNode<K, V> put = cacheMaps.put(node.key, node);
-            return put != null ? put.value : null;
-        }
-
-        public LRU01_base.CacheNode<K, V> get(K k) {
-            LRU01_base.CacheNode<K, V> node = cacheMaps.get(k);
-            if (node == null) {
-                return null;
-            }
-            moveToFirst(node);
-            return node;
-        }
-
-        public LRU01_base.CacheNode<K, V> remove(K k) {
-            LRU01_base.CacheNode<K, V> node = cacheMaps.get(k);
-            if (node != null) {
-                if (node.pre != null) {
-                    node.pre.next = node.next;
-                }
-                if (node.next != null) {
-                    node.next.pre = node.pre;
-                }
-                if (node == first) {
-                    first = node.next;
-                }
-                if (node == last) {
-                    last = node.pre;
-                }
-                node.pre = null;
-                node.next = null;
-            }
-
-            return cacheMaps.remove(k);
-        }
-
-        public void clear() {
-            first = null;
-            last = null;
-            cacheMaps.clear();
-        }
-
-        public int size() {
-            return cacheMaps.size();
-        }
-
-        private void moveToFirst(LRU01_base.CacheNode node) {
-            if (first == node) {
-                return;
-            }
-            if (node.next != null) {
-                node.next.pre = node.pre;
-            }
-            if (node.pre != null) {
-                node.pre.next = node.next;
-            }
-            if (node == last) {
-                last = last.pre;
-            }
-            if (first == null || last == null) {
-                first = last = node;
-                return;
-            }
-            node.next = first;
-            first.pre = node;
-            first = node;
-            first.pre = null;
-
-        }
-
-        private void removeLast() {
-            if (last != null) {
-                last = last.pre;
-                if (last == null) {
-                    first = null;
-                } else {
-                    last.next = null;
-                }
-            }
-        }
-
-        @Override
-        public String toString() {
-            StringBuilder sb = new StringBuilder();
-            LRU01_base.CacheNode node = first;
-            while (node != null) {
-                sb.append(String.format("%s:%s ", node.key, node.value));
-                node = node.next;
-            }
-
             return sb.toString();
         }
     }

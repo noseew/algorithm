@@ -258,11 +258,11 @@ public class LRU01_base {
      */
     public static class LRUCache<K, V> extends AbstractEliminate<K, V> {
 
-        private HashMap<K, CacheNode<K, V>> cacheMaps;
+        protected HashMap<K, LRUNode<K, V>> cacheMaps;
         // 头节点
-        private CacheNode<K, V> first;
+        protected LRUNode<K, V> first;
         // 尾节点
-        private CacheNode<K, V> last;
+        protected LRUNode<K, V> last;
 
         public LRUCache(int size) {
             super(size);
@@ -270,8 +270,8 @@ public class LRU01_base {
         }
 
         public V putOrUpdate(K k, V v) {
-            CacheNode<K, V> node = cacheMaps.get(k);
-            if (node == null) {
+            LRUNode<K, V> exitNode = cacheMaps.get(k);
+            if (exitNode == null) {
                 // 删除旧值
                 if (cacheMaps.size() >= capacity) {
                     // 如果超出范围, 则删除尾节点
@@ -281,21 +281,20 @@ public class LRU01_base {
                     removeLast();
                 }
                 // 如果节点不存在, 则新建一个
-                node = new CacheNode<>();
-                node.key = k;
+                exitNode = new LRUNode<>();
+                exitNode.key = k;
             }
             // 如果节点已存在, 则更新值
-            node.value = v;
+            exitNode.value = v;
             // 将节点移动到队首
-            moveToFirst(node);
-            CacheNode<K, V> put = cacheMaps.put(k, node);
+            moveToFirst(exitNode);
+            LRUNode<K, V> put = cacheMaps.put(k, exitNode);
             return put != null ? put.value : null;
         }
 
-        @Override
         public V putReturnEliminated(K k, V v) {
-            CacheNode<K, V> node = cacheMaps.get(k);
-            CacheNode<K, V> eliminateNode = null;
+            LRUNode<K, V> node = cacheMaps.get(k);
+            LRUNode<K, V> eliminateNode = null;
             if (node == null) {
                 // 删除旧值
                 if (cacheMaps.size() >= capacity) {
@@ -306,7 +305,7 @@ public class LRU01_base {
                     removeLast();
                 }
                 // 如果节点不存在, 则新建一个
-                node = new CacheNode<>();
+                node = new LRUNode<>();
                 node.key = k;
             }
             // 将节点移动到队首
@@ -316,36 +315,44 @@ public class LRU01_base {
         }
 
         public V get(K k) {
-            CacheNode<K, V> node = cacheMaps.get(k);
-            if (node == null) {
-                return null;
-            }
-            // 将节点移动到队首
-            moveToFirst(node);
+            LRUNode<K, V> node = getNode(k);
+            if (node == null) return null;
             return node.value;
         }
 
-        public V remove(K k) {
-            CacheNode<K, V> node = cacheMaps.get(k);
-            if (node != null) {
-                if (node.pre != null) {
-                    node.pre.next = node.next;
-                }
-                if (node.next != null) {
-                    node.next.pre = node.pre;
-                }
-                if (node == first) {
-                    first = node.next;
-                }
-                if (node == last) {
-                    last = node.pre;
-                }
-                node.pre = null;
-                node.next = null;
-            }
+        public LRUNode<K, V> getNode(K k) {
+            LRUNode<K, V> node = cacheMaps.get(k);
+            if (node == null) return null;
+            moveToFirst(node);
+            return node;
+        }
 
-            CacheNode<K, V> remove = cacheMaps.remove(k);
-            return remove != null ? remove.value : null;
+        public V remove(K k) {
+            LRUNode<K, V> node = cacheMaps.get(k);
+            if (node == null) {
+                return null;
+            }
+            removeNode(k);
+            return node.value;
+        }
+
+        public LRUNode<K, V> removeNode(K k) {
+            LRUNode<K, V> node = cacheMaps.get(k);
+            if (node.pre != null) {
+                node.pre.next = node.next;
+            }
+            if (node.next != null) {
+                node.next.pre = node.pre;
+            }
+            if (node == first) {
+                first = node.next;
+            }
+            if (node == last) {
+                last = node.pre;
+            }
+            node.pre = null;
+            node.next = null;
+            return node;
         }
 
         public void clear() {
@@ -363,7 +370,7 @@ public class LRU01_base {
          *
          * @param node
          */
-        private void moveToFirst(CacheNode node) {
+        protected void moveToFirst(LRUNode node) {
             // 如果已经是队首, 则不处理
             if (first == node) {
                 return;
@@ -394,7 +401,7 @@ public class LRU01_base {
         /**
          * 删除双向链表尾节点
          */
-        private void removeLast() {
+        protected void removeLast() {
             if (last != null) {
                 // 将尾节点 指针重置指向前一个
                 last = last.pre;
@@ -410,7 +417,7 @@ public class LRU01_base {
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
-            CacheNode node = first;
+            LRUNode node = first;
             while (node != null) {
                 sb.append(String.format("%s:%s ", node.key, node.value));
                 node = node.next;
@@ -419,19 +426,41 @@ public class LRU01_base {
             return sb.toString();
         }
     }
+
+    public static class LRUCacheModel<K, V> extends LRUCache<K, V> {
+
+        public LRUCacheModel(int size) {
+            super(size);
+        }
+
+        public LRUNode<K, V> putOrUpdate(LRUNode<K, V> node) {
+            LRUNode<K, V> exitNode = cacheMaps.get(node.key);
+            if (exitNode == null) {
+                if (cacheMaps.size() >= capacity) {
+                    cacheMaps.remove(last.key);
+                    removeLast();
+                }
+                exitNode = node;
+            }
+            exitNode.value = node.value;
+            exitNode.times = node.times;
+            moveToFirst(node);
+            return cacheMaps.put(node.key, node);
+        }
+    }
     
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class CacheNode<K, V> {
-        public CacheNode<K, V> pre;
-        public CacheNode<K, V> next;
+    public static class LRUNode<K, V> {
+        public LRUNode<K, V> pre;
+        public LRUNode<K, V> next;
         public K key;
         public V value;
 
         public Position position; // 给SLRU使用
         public int times; // 用于LFU缓存的计数, LRU不用他
 
-        public CacheNode(K key, V value, int times) {
+        public LRUNode(K key, V value, int times) {
             this.key = key;
             this.value = value;
             this.times = times;

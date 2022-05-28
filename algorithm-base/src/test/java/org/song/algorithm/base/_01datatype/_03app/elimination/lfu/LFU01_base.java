@@ -131,11 +131,6 @@ public class LFU01_base {
         }
 
         @Override
-        public V putReturnEliminated(K k, V v) {
-            return null;
-        }
-
-        @Override
         public V remove(K k) {
             Node node = dataMap.remove(k);
             if (node != null) {
@@ -238,11 +233,6 @@ public class LFU01_base {
                 addNodeTimes(node);
                 return oldVal;
             }
-        }
-
-        @Override
-        public V putReturnEliminated(K k, V v) {
-            return null;
         }
 
         @Override

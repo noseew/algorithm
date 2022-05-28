@@ -259,7 +259,7 @@ public class LFU02_CountMinSketch {
      * 
      * @param <E>
      */
-    static class CountMinSketch<E> {
+    public static class CountMinSketch<E> {
 
         private CounterWindow counterWindow;
         private int mask;
@@ -312,7 +312,7 @@ public class LFU02_CountMinSketch {
          * capacity: 元素数量, 整个计数器里容纳的元素计数器的数量
          * countBit: 计数器位数, 也就是用几个bit来作为计数器
          */
-        class CounterWindow {
+        public static class CounterWindow {
             long[] buckets; // 计数器桶数组
             int countBit; // 用几个bit来计数, 默认4
             int capacity; // 计数器的最大样本数, 同时也相当于数据的容量
