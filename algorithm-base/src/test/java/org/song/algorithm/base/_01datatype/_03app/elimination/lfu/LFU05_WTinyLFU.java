@@ -22,12 +22,12 @@ public class LFU05_WTinyLFU {
 
     static class WindowsTinyLFU<K, V> {
         LRU01_base.LRUCache<K, V> wlru;
-        LRU02_SLRU.SLRUCache<K, LRU01_base.LRUNode<K, V>> slru;
+        LRU02_SLRU.SLRUCache<K, V> slru;
         BloomFilter bf;
         CountMinSketch_test.CountMinSketch<K> cmSketch;
         Map<K, LRU01_base.LRUNode<K, V>> dataMap;    //用于记录数据所在的区域
         int totalVisit = 0;
-        int threshold = 100;    //保鲜机制
+        int threshold = 100;    // 保鲜机制
 
         public WindowsTinyLFU(int capacity) {
             wlru = new LRU01_base.LRUCache<>(capacity / 100);
@@ -58,7 +58,7 @@ public class LFU05_WTinyLFU {
             LRU01_base.LRUNode<K, V> victim = slru.victim();
             if (victim == null) {
                 dataMap.put(k, newNode);
-                slru.put(k, newNode);
+                slru.putNode(newNode);
                 return null;
             }
 
@@ -75,7 +75,7 @@ public class LFU05_WTinyLFU {
                 return null;
             }
             dataMap.put(k, newNode);
-            slru.put(k, newNode);
+            slru.putNode(newNode);
 
             //如果满了，此时发生了淘汰，将淘汰节点删去
             if (dataMap.get(wlruEliminated.key).position == LRU01_base.Position.SLRU) {

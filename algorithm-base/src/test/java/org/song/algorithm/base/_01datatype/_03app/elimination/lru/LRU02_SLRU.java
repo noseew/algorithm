@@ -89,20 +89,45 @@ public class LRU02_SLRU {
         @Override
         public V put(K k, V v) {
             // 优先存储在 观察组
-            V exitNode = probation.get(k);
+            LRU01_base.LRUNode<K, V> exitNode = probation.getNode(k);
             if (exitNode == null) {
-                exitNode = protection.get(k);
+                exitNode = protection.getNode(k);
                 if (exitNode == null) {
                     probationSize++;
-                    return probation.put(k, v);
+                    exitNode = new LRU01_base.LRUNode<>(k, v);
+                    return probation.putNode(exitNode);
                 } else {
                     protectionSize++;
-                    return protection.put(k, v);
+                    exitNode = new LRU01_base.LRUNode<>(k, v);
+                    return protection.putNode(exitNode);
                 }
             }
             probation.remove(k);
             // 如果观察组存在, 说明是2次访问, 则直接进入保护区
-            return protection.put(k, v);
+            return protection.putNode(exitNode);
+        }
+        
+        public V putNode(LRU01_base.LRUNode<K, V> node) {
+            K k = node.key;
+            V v = node.value;
+            // 优先存储在 观察组
+            LRU01_base.LRUNode<K, V> exitNode = probation.getNode(k);
+            if (exitNode == null) {
+                exitNode = protection.getNode(k);
+                if (exitNode == null) {
+                    probationSize++;
+                    exitNode = node;
+                    return probation.putNode(exitNode);
+                } else {
+                    protectionSize++;
+                    exitNode = node;
+                    return protection.putNode(exitNode);
+                }
+            }
+            exitNode = node;
+            probation.remove(k);
+            // 如果观察组存在, 说明是2次访问, 则直接进入保护区
+            return protection.putNode(exitNode);
         }
 
         @Override
@@ -119,12 +144,9 @@ public class LRU02_SLRU {
             return v;
         }
         
-        public V victim() {
+        public LRU01_base.LRUNode<K, V> victim() {
             if (protectionSize + probationSize > size) {
-                LRU01_base.LRUNode<K, V> removeLast = probation.removeLast();
-                if (removeLast != null) {
-                    return removeLast.value;
-                }
+                return probation.removeLast();
             }
             return null;
         }
