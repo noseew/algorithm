@@ -1,10 +1,9 @@
 package org.song.algorithm.base._01datatype._03app.elimination.lfu;
 
-import org.song.algorithm.base._01datatype._03app.filter.bloom.BloomFilter;
 import org.song.algorithm.base._01datatype._03app.counter.CountMinSketch_test;
-import org.song.algorithm.base._01datatype._03app.elimination.AbstractEliminate;
 import org.song.algorithm.base._01datatype._03app.elimination.lru.LRU01_base;
 import org.song.algorithm.base._01datatype._03app.elimination.lru.LRU02_SLRU;
+import org.song.algorithm.base._01datatype._03app.filter.bloom.BloomFilter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +24,11 @@ public class LFU05_WTinyLFU {
         LRU02_SLRU.SLRUCache<K, V> slru;
         BloomFilter bf;
         CountMinSketch_test.CountMinSketch<K> cmSketch;
-        Map<K, LRU01_base.LRUNode<K, V>> dataMap;    //用于记录数据所在的区域
+        /**
+         * 所有数据的索引
+         * 会记录数据所在的区域
+         */
+        Map<K, LRU01_base.LRUNode<K, V>> dataMap;
         int totalVisit = 0;
         int threshold = 100;    // 保鲜机制
 
@@ -38,10 +41,17 @@ public class LFU05_WTinyLFU {
 
         }
 
+        /**
+         * 主缓存使用SLRU驱逐策略和TinyLFU允许策略，而窗口缓存使用LRU驱逐策略，而不使用任何允许策略。
+         * SLRU策略在主缓存中的A1和A2区域被静态划分，因此80%的空间被分配给热项(A2)，被驱逐者则从20%的非热项(A1)中选取。
+         * 任何到达的项总是允许进入窗口缓存，而窗口缓存的被驱逐者也有机会进入主缓存。
+         * 如果它被承认，那么W-TinyLFU的被驱逐者就是主缓存的被驱逐者，否则就是窗口缓存的被驱逐者
+         *
+         * @param k
+         * @param v
+         * @return
+         */
         public V put(K k, V v) {
-            int hash1 = AbstractEliminate.hash1(k.hashCode());
-            int hash2 = AbstractEliminate.hash2(k.hashCode());
-
             LRU01_base.LRUNode<K, V> newNode = new LRU01_base.LRUNode<>(k, v);
             newNode.position = LRU01_base.Position.WINDOWS_LRU;
             // 将数据放入wlru，如果wlru没满，则直接返回
@@ -51,10 +61,12 @@ public class LFU05_WTinyLFU {
                 return null;
             }
             // 如果此时发生了淘汰，将淘汰节点删去
-            if (dataMap.get(wlruEliminated.key).position == LRU01_base.Position.WINDOWS_LRU) {
+            else if (dataMap.get(wlruEliminated.key).position == LRU01_base.Position.WINDOWS_LRU) {
                 dataMap.remove(wlruEliminated.key);
             }
+
             //如果slru没满，则插入到slru中。
+            newNode.position = LRU01_base.Position.SLRU;
             LRU01_base.LRUNode<K, V> victim = slru.victim();
             if (victim == null) {
                 dataMap.put(k, newNode);
@@ -78,15 +90,13 @@ public class LFU05_WTinyLFU {
             slru.putNode(newNode);
 
             //如果满了，此时发生了淘汰，将淘汰节点删去
-            if (dataMap.get(wlruEliminated.key).position == LRU01_base.Position.SLRU) {
-                dataMap.remove(wlruEliminated.key);
+            if (dataMap.get(victim.key).position == LRU01_base.Position.SLRU) {
+                dataMap.remove(victim.key);
             }
             return null;
         }
 
         public V get(K k) {
-            int hash1 = AbstractEliminate.hash1(k.hashCode());
-            int hash2 = AbstractEliminate.hash2(k.hashCode());
             //判断访问次数，如果访问次数达到限制，则触发保鲜机制
             ++totalVisit;
             if (totalVisit >= threshold) {
@@ -110,8 +120,6 @@ public class LFU05_WTinyLFU {
         }
 
         public V del(K k) {
-            int hash1 = AbstractEliminate.hash1(k.hashCode());
-            int hash2 = AbstractEliminate.hash2(k.hashCode());
             LRU01_base.LRUNode<K, V> lruNode = dataMap.remove(k);
             if (lruNode == null) {
                 return null;
