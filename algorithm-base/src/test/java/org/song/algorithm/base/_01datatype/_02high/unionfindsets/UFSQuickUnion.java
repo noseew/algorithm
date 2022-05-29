@@ -5,6 +5,8 @@ package org.song.algorithm.base._01datatype._02high.unionfindsets;
 
 quick find 的思路是 union快, quick慢
 
+这里实现两个都是 O(logn)
+
  */
 public class UFSQuickUnion extends UnionFindSets {
     

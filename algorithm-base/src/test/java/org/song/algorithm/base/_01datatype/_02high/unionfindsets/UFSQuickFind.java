@@ -3,7 +3,7 @@ package org.song.algorithm.base._01datatype._02high.unionfindsets;
 /*
 采用 quick find 思路实现
 
-quick find 的思路是 find快, union慢
+quick find 的思路是 find快 O(1), union慢O(n)
 
 find依赖于union的实现
  */
