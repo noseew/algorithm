@@ -22,7 +22,7 @@ public class LFU05_WTinyLFU {
     static class WindowsTinyLFU<K, V> {
         LRU01_base.LRUCache<K, V> wlru;
         LRU02_SLRU.SLRUCache<K, V> slru;
-        BloomFilter bf;
+//        BloomFilter bf;
         CountMinSketch_test.CountMinSketch<K> cmSketch;
         /**
          * 所有数据的索引
@@ -35,7 +35,7 @@ public class LFU05_WTinyLFU {
         public WindowsTinyLFU(int capacity) {
             wlru = new LRU01_base.LRUCache<>(capacity / 100);
             slru = new LRU02_SLRU.SLRUCache<>(capacity - (capacity / 100));
-            bf = new BloomFilter(capacity, capacity);
+//            bf = new BloomFilter(capacity, capacity);
             cmSketch = new CountMinSketch_test.CountMinSketch<>(capacity);
             dataMap = new HashMap<>(capacity);
 
@@ -74,11 +74,11 @@ public class LFU05_WTinyLFU {
                 return null;
             }
 
-            //如果该值没有在布隆过滤器中出现过，其就不可能比victimNode高频，则插入布隆过滤器后返回
-            if (!bf.contains(k.toString())) {
-                bf.add(k.toString());
-                return null;
-            }
+//            //如果该值没有在布隆过滤器中出现过，其就不可能比victimNode高频，则插入布隆过滤器后返回
+//            if (!bf.contains(k.toString())) {
+//                bf.add(k.toString());
+//                return null;
+//            }
             //如果其在布隆过滤器出现过，此时就对比其和victim在cmSketch中的计数，保留大的那一个
             int victimCount = cmSketch.count(victim.key);
             int newNodeCount = cmSketch.count(newNode.key);
@@ -101,7 +101,7 @@ public class LFU05_WTinyLFU {
             ++totalVisit;
             if (totalVisit >= threshold) {
                 cmSketch.reset();
-                bf.clear();
+//                bf.clear();
                 totalVisit = 0;
             }
             //在cmSketch对访问计数
