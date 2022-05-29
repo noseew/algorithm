@@ -3,8 +3,10 @@ package org.song.algorithm.base._01datatype._02high.unionfindsets;
 /*
 采用 quick find 思路实现
 
+这种思路实现不了
 一种优化, union更快一些, 不过本质上还是O(n)的
  */
+@Deprecated
 public class UFSQuickFind_opt1 extends UFSQuickFind {
     
     protected UFSQuickFind_opt1(int capacity) {
@@ -14,7 +16,8 @@ public class UFSQuickFind_opt1 extends UFSQuickFind {
 
     /*
     union慢
-    不过本质上还是O(n)的
+    不过本质上还是O(n)的, 因为从当前n1节点向上, 并不能枚举到集合中所有的元素, 
+    1. 因为你只有一条线路, 2. 你的直接父节点就是根节点
      */
     @Override
     public void union(int n1, int n2) {
