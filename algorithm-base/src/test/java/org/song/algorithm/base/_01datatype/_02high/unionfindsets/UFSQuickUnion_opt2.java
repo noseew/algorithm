@@ -8,6 +8,7 @@ package org.song.algorithm.base._01datatype._02high.unionfindsets;
 1. 基于size, 哪边节点数少, 改哪边
     缺点: 可能存在树不平衡问题, 不平衡的树, size不能体现出高度
 2. 基于rank, 哪边树的高度低, 改哪边(这里采用基于rank实现)
+    缺点: 树的高度会越来越高
 
  */
 public class UFSQuickUnion_opt2 extends UFSQuickUnion {
