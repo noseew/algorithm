@@ -27,8 +27,10 @@ UnionFindSets/DisjointSet
 1. quickFind,查快,并慢, 查O(1),合并O(n)
 2. quickUnion(常用),查慢,并快,查O(logn)可优化到O(α(n))n<5, 等价于O(n),并O(logn)可优化到O(α(n))n<5, 等价于O(n)
 
-
-
+使用: 路径压缩, 分裂/减半 + 基于rank或者size 的组合优化
+可确保效率达到 O(α(n))n<5, 等价于O(n)
+建议采用: quickUnion + 基于rank优化 + 路径分裂/减半, 
+详情参见 UFSQuickUnion_opt4_PathHalve和UFSQuickUnion_opt4_PathSplit
 
  */
 public abstract class UnionFindSets {
