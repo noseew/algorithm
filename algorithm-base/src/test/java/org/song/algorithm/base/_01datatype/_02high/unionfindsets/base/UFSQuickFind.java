@@ -1,4 +1,4 @@
-package org.song.algorithm.base._01datatype._02high.unionfindsets;
+package org.song.algorithm.base._01datatype._02high.unionfindsets.base;
 
 /*
 采用 quick find 思路实现
@@ -18,7 +18,7 @@ public class UFSQuickFind extends UnionFindSets {
     由于union后,所有节点的直接父节点就是根节点, 所以直接返回父节点即可
      */
     @Override
-    public int findRoot(int n) {
+    public Integer findRoot(Integer n) {
         validRange(n);
         return parents[n];
     }
@@ -31,7 +31,7 @@ public class UFSQuickFind extends UnionFindSets {
     特点: 树的高度永远是2
      */
     @Override
-    public void union(int n1, int n2) {
+    public void union(Integer n1, Integer n2) {
         validRange(n1);
         validRange(n2);
         int p1 = findRoot(n1);

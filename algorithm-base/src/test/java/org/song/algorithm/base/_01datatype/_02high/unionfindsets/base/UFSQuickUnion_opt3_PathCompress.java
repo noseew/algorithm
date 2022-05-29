@@ -1,4 +1,4 @@
-package org.song.algorithm.base._01datatype._02high.unionfindsets;
+package org.song.algorithm.base._01datatype._02high.unionfindsets.base;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public class UFSQuickUnion_opt3_PathCompress extends UFSQuickUnion_opt2 {
     递归查找父节点同时将当前父节点指向根节点
      */
     @Override
-    public int findRoot(int n) {
+    public Integer findRoot(Integer n) {
         validRange(n);
         // 递归查找父节点同时将当前父节点指向根节点
         while (parents[n] != n) {
@@ -42,7 +42,7 @@ public class UFSQuickUnion_opt3_PathCompress extends UFSQuickUnion_opt2 {
      * @param n
      * @return
      */
-    public int findRoot2(int n) {
+    public Integer findRoot2(Integer n) {
         validRange(n);
         // 向上循环找到跟节点
         List<Integer> list = new ArrayList<>(ranks[n]);

@@ -1,4 +1,4 @@
-package org.song.algorithm.base._01datatype._02high.unionfindsets;
+package org.song.algorithm.base._01datatype._02high.unionfindsets.base;
 
 /*
 采用 quick union 思路实现
@@ -34,7 +34,7 @@ public class UFSQuickUnion_opt1 extends UFSQuickUnion {
     基于size, 哪边节点数少, 改哪边
      */
     @Override
-    public void union(int n1, int n2) {
+    public void union(Integer n1, Integer n2) {
         validRange(n1);
         validRange(n2);
         int p1 = findRoot(n1);

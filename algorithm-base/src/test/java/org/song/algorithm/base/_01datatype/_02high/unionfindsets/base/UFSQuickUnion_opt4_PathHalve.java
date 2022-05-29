@@ -1,4 +1,4 @@
-package org.song.algorithm.base._01datatype._02high.unionfindsets;
+package org.song.algorithm.base._01datatype._02high.unionfindsets.base;
 
 /*
 采用 quick union 思路实现
@@ -29,7 +29,7 @@ public class UFSQuickUnion_opt4_PathHalve extends UFSQuickUnion_opt2 {
     递归查找父节点同时将当前父节点指向根节点
      */
     @Override
-    public int findRoot(int n) {
+    public Integer findRoot(Integer n) {
         validRange(n);
         while (parents[n] != n) {
             parents[n] = parents[parents[n]];

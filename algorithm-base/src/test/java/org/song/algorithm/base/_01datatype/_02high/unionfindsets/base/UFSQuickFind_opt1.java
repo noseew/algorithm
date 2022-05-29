@@ -1,4 +1,4 @@
-package org.song.algorithm.base._01datatype._02high.unionfindsets;
+package org.song.algorithm.base._01datatype._02high.unionfindsets.base;
 
 /*
 采用 quick find 思路实现
@@ -20,7 +20,7 @@ public class UFSQuickFind_opt1 extends UFSQuickFind {
     1. 因为你只有一条线路, 2. 你的直接父节点就是根节点
      */
     @Override
-    public void union(int n1, int n2) {
+    public void union(Integer n1, Integer n2) {
         validRange(n1);
         validRange(n2);
         int p1 = findRoot(n1);

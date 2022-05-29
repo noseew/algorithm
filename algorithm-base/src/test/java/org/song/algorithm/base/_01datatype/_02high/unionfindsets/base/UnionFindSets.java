@@ -1,5 +1,6 @@
-package org.song.algorithm.base._01datatype._02high.unionfindsets;
+package org.song.algorithm.base._01datatype._02high.unionfindsets.base;
 
+import org.song.algorithm.base._01datatype._02high.unionfindsets.UFS;
 import org.springframework.util.Assert;
 
 import java.util.Arrays;
@@ -33,7 +34,8 @@ UnionFindSets/DisjointSet
 详情参见 UFSQuickUnion_opt4_PathHalve和UFSQuickUnion_opt4_PathSplit
 
  */
-public abstract class UnionFindSets {
+public abstract class UnionFindSets implements UFS<Integer> {
+    
     /*
     使用树状数组存储数据
     数组的下标表示元素节点
@@ -41,13 +43,13 @@ public abstract class UnionFindSets {
     
     最顶层的parent元素, 也就是root元素, 就代表了这个集合, 而不是下面某个节点代表这个集合
      */
-    protected int[] parents;
+    protected Integer[] parents;
     protected int capacity;
 
     protected UnionFindSets(int capacity) {
         validRange(capacity);
         this.capacity = capacity;
-        parents = new int[capacity];
+        parents = new Integer[capacity];
         for (int i = 0; i < parents.length; i++) {
             // 目的是, 数组中每个数据和自己都形成独立的集合
             parents[i] = i;
@@ -60,7 +62,7 @@ public abstract class UnionFindSets {
      * @param n
      * @return
      */
-    public abstract int findRoot(int n);
+    public abstract Integer findRoot(Integer n);
 
     /**
      * 合并两个节点所属的集合
@@ -68,7 +70,7 @@ public abstract class UnionFindSets {
      * @param n1
      * @param n2
      */
-    public abstract void union(int n1, int n2);
+    public abstract void union(Integer n1, Integer n2);
 
     /**
      * 判断两个节点是否在同一个集合中
@@ -77,7 +79,7 @@ public abstract class UnionFindSets {
      * @param n2
      * @return
      */
-    public boolean isSame(int n1, int n2) {
+    public boolean isSame(Integer n1, Integer n2) {
         validRange(n1);
         validRange(n2);
         return findRoot(n1) == findRoot(n2);
