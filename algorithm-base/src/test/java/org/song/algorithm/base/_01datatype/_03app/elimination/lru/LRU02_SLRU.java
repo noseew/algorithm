@@ -104,7 +104,12 @@ public class LRU02_SLRU {
             }
             probation.remove(k);
             // 如果观察组存在, 说明是2次访问, 则直接进入保护区
-            return protection.putNode(exitNode);
+            LRU01_base.LRUNode<K, V> eliminated = protection.putReturnEliminated(exitNode);
+            if (eliminated != null) {
+                // 保护去如果有数据被淘汰，则回收到观察组，再给次机会
+                probation.putNode(eliminated);
+            }
+            return null;
         }
         
         public V putNode(LRU01_base.LRUNode<K, V> node) {
