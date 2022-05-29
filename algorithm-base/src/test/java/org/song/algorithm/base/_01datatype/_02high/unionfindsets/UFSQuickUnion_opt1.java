@@ -7,13 +7,13 @@ package org.song.algorithm.base._01datatype._02high.unionfindsets;
 优化思路: union不是单纯的左边根指向右边根, 而是哪个少改哪个
 1. 基于size, 哪边节点数少, 改哪边(这里采用基于size实现)
     缺点: 可能存在树不平衡问题, 不平衡的树, size不能体现出高度
-2. 基于range, 哪边输的高度低, 改哪边
+2. 基于rank, 哪边树的高度低, 改哪边
 
  */
 public class UFSQuickUnion_opt1 extends UFSQuickUnion {
 
     /*
-    size数组下标和
+    size数组, 集合的元素数数组
     数组的下标表示元素节点
     数组的元素表示该元素父节点所在集合的元素个数
      */

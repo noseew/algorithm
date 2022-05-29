@@ -36,6 +36,8 @@ public abstract class UnionFindSets {
     使用树状数组存储数据
     数组的下标表示元素节点
     数组的元素表示该元素的父节点
+    
+    最顶层的parent元素, 也就是root元素, 就代表了这个集合, 而不是下面某个节点代表这个集合
      */
     protected int[] parents;
     protected int capacity;
