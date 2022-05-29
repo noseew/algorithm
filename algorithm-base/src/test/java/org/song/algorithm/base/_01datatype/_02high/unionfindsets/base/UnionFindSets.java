@@ -86,7 +86,7 @@ public abstract class UnionFindSets implements UFS<Integer> {
     }
 
     protected void validRange(int n) {
-        Assert.isTrue(n >= 0 && n < parents.length, "数组下标越界");
+        Assert.isTrue(n >= 0 && n < capacity, "数组下标越界");
     }
 
 }
