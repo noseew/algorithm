@@ -6,6 +6,7 @@ import org.springframework.util.Assert;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /*
 采用泛型对象作为并查集的元素 TODO 未完成
@@ -14,7 +15,6 @@ import java.util.Map;
  */
 public abstract class AbstractUFS<T> implements UFS<T> {
 
-    protected List<Node<T>> dataList;
     protected Map<T, Node<T>> data;
     protected int capacity;
 
@@ -23,12 +23,18 @@ public abstract class AbstractUFS<T> implements UFS<T> {
         this.capacity = capacity;
     }
 
+    public void add(T t) {
+        Node<T> node = new Node<>();
+        node.val = t;
+        data.put(t, node);
+    }
+
     public abstract T findRoot(T t);
 
     public abstract void union(T t1, T t2);
     
     public boolean isSame(T t1, T t2) {
-        return findRoot(t1) == findRoot(t2);
+        return Objects.equals(findRoot(t1), findRoot(t2));
     }
 
     protected void validRange(T n) {
@@ -54,7 +60,7 @@ public abstract class AbstractUFS<T> implements UFS<T> {
     
     public class Node<T> {
         T val;
-        Node<T> parent;
-        int rank;
+        Node<T> parent = this;
+        int rank = 1;
     }
 }

@@ -1,5 +1,7 @@
 package org.song.algorithm.base._01datatype._02high.unionfindsets.common;
 
+import java.util.Objects;
+
 /*
 采用 quick union 思路实现, UFSQuickUnion_opt4_PathHalve 的泛型版本
 
@@ -22,7 +24,7 @@ public class UFSQuickUnion_PathHalve<T> extends AbstractUFS<T> {
     @Override
     public T findRoot(T n) {
         validRange(n);
-        while (parentOf(n) != n) {
+        while (Objects.equals(parentOf(n), n)) {
             setParent(n, parentOf(parentOf(n)));
             n = parentOf(n);
         }
@@ -42,17 +44,17 @@ public class UFSQuickUnion_PathHalve<T> extends AbstractUFS<T> {
         }
 
         //  哪边节点数少, 改哪边
-        if (rankOf(p1) <rankOf(p2)) {
+        if (rankOf(p1) < rankOf(p2)) {
             setParent(p1, p2);
             // 注意: rank不需要增加, 因为: 高度低的加到高度高的树上, 总高度是不变的
-        } else if(rankOf(p2) <rankOf(p1)) {
+        } else if (rankOf(p2) < rankOf(p1)) {
             setParent(p2, p1);
             // 注意: rank不需要增加, 因为: 高度低的加到高度高的树上, 总高度是不变的
-        }else{
+        } else {
             setParent(p1, p2);
             // 注意: 只有此时rank高度才需要增加, 两个高度相等的数相加, 被增加的那个高度+1
             addRank(p2, 1);
         }
     }
-    
+
 }
