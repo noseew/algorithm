@@ -1,6 +1,5 @@
 package org.song.algorithm.base._01datatype._01base._05graph._01model.base;
 
-import org.song.algorithm.base._01datatype._01base._02queue_stack._01model.queue.Queue_Link_01;
 import org.song.algorithm.base._01datatype._01base._02queue_stack._01model.stack.Stack_Link_01;
 
 import java.util.function.Predicate;
