@@ -1,6 +1,6 @@
-package org.song.algorithm.base._01datatype._01base._05graph._01model.demo;
+package org.song.algorithm.base._01datatype._01base._05graph._01model.listgraph;
 
-public interface IGraph<V, E> {
+public interface IListGraph<V, E> {
 
     void addVertex(V v);
 

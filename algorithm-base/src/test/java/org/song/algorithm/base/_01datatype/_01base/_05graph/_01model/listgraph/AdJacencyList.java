@@ -1,4 +1,4 @@
-package org.song.algorithm.base._01datatype._01base._05graph._01model.demo;
+package org.song.algorithm.base._01datatype._01base._05graph._01model.listgraph;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * @param <V>
  * @param <E>
  */
-public class ListGraph<V, E> implements IGraph<V, E> {
+public class AdJacencyList<V, E> implements IListGraph<V, E> {
     /**
      * 顶点的集合
      * key=顶点的值

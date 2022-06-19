@@ -1,9 +1,9 @@
 package org.song.algorithm.base._01datatype._01base._05graph;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.base._01datatype._01base._05graph._01model.base.AdJacentMatrix;
+import org.song.algorithm.base._01datatype._01base._05graph._01model.matrixgraph.AdJacentMatrix;
 
-public class GraphTest {
+public class MatrixGraphTest {
     
     /*
     图:
