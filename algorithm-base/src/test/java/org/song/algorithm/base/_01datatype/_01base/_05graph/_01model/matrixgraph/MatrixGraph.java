@@ -29,13 +29,17 @@ import java.util.Objects;
  */
 public abstract class MatrixGraph<V, E> implements IMatrixGraph<V, E> {
     
+    // 最多顶点数
+    protected int maxVertex;
+    // 最多边数
+    protected int maxEdge;
     // 顶点数
-    protected int vertex;
+    protected int vertexSize;
     // 边数
-    protected int edge;
+    protected int edgeSize;
 
     // 极大值, 表示权值的正无穷, 如果是带权图的话
-    protected E maxInt;
+    protected E maxWight = null;
     /**
      * 顶点表
      */
@@ -48,19 +52,20 @@ public abstract class MatrixGraph<V, E> implements IMatrixGraph<V, E> {
     /**
      * 初始化
      * 
-     * @param vertex
+     * @param vertexSize
      */
-    public MatrixGraph(int vertex) {
-        this.vertex = vertex;
-        vertexes = new Vertex[vertex];
+    public MatrixGraph(int vertexSize) {
+        this.maxVertex = vertexSize;
+        this.maxEdge = vertexSize * vertexSize;
+        vertexes = new Vertex[vertexSize];
         // 邻接矩阵就是长宽都等于顶点长度的矩阵
-        edges = new Edge[vertex][vertex];
+        edges = new Edge[vertexSize][vertexSize];
         // 基本类型/无权图 不需要初始化
 
         // 带权图初始化成最大值
-        for (int i = 0; i < vertex; i++) {
-            for (int j = 0; j < vertex; j++) {
-                edges[i][j] = new Edge(maxInt);
+        for (int i = 0; i < vertexSize; i++) {
+            for (int j = 0; j < vertexSize; j++) {
+                edges[i][j] = new Edge(maxWight);
             }
         }
     }
@@ -90,6 +95,11 @@ public abstract class MatrixGraph<V, E> implements IMatrixGraph<V, E> {
         public int hashCode() {
             return Objects.hash(value);
         }
+
+        @Override
+        public String toString() {
+            return String.valueOf(value);
+        }
     }
 
     /**
@@ -103,6 +113,11 @@ public abstract class MatrixGraph<V, E> implements IMatrixGraph<V, E> {
 
         public Edge(E wight) {
             this.wight = wight;
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(wight);
         }
     }
 }
