@@ -1,6 +1,7 @@
 package org.song.algorithm.base._01datatype._01base._05graph._01model.demo;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -82,12 +83,55 @@ public class ListGraph<V, E> implements IGraph<V, E> {
         edges.add(edge);
     }
 
+    /**
+     * 删除一个顶点
+     * 
+     * @param v
+     */
     @Override
     public void removeVertex(V v) {
+        Vertex<V, E> vertex = vertices.remove(v);
+        if (vertex == null) {
+            return;
+        }
+
+        // 删除这个顶点的  入度边 和 入度边所关联顶点的出度边
+        vertex.inEdges.forEach(e -> {
+            edges.remove(e);
+            e.from.outEdges.remove(e);
+        });
+        // 删除这个顶点的  出度边 和 出度边所关联顶点的入度边
+        vertex.outEdges.forEach(e -> {
+            edges.remove(e);
+            e.to.inEdges.remove(e);
+        });
+        
     }
 
+    /**
+     * 删除一条边
+     * 
+     * @param from
+     * @param to
+     */
     @Override
     public void removeEdge(V from, V to) {
+        Vertex<V, E> fromVertex = vertices.get(from);
+        if (fromVertex == null) {
+            return;
+        }
+        Vertex<V, E> toVertex = vertices.get(to);
+        if (toVertex == null) {
+            return;
+        }
+        // 构建这条边
+        Edge<V, E> edge = new Edge<>(fromVertex, toVertex);
+
+        // 从这条边两个顶点 度列表中删除这条边
+        fromVertex.outEdges.remove(edge);
+        toVertex.inEdges.remove(edge);
+        // 从边集合中删除这条边
+        edges.remove(edge);
 
     }
 
@@ -109,7 +153,8 @@ public class ListGraph<V, E> implements IGraph<V, E> {
         String vertexSet = vertices.keySet().stream().map(Object::toString).collect(Collectors.joining(","));
         sb.append("[").append(vertexSet).append("]\r\n");
         sb.append("边:\r\n");
-        edges.forEach(e -> sb.append(e).append("\r\n"));
+        AtomicInteger count = new AtomicInteger(1);
+        edges.forEach(e -> sb.append(count.getAndIncrement()).append(":").append(e).append("\r\n"));
 
         return sb.toString();
     }
