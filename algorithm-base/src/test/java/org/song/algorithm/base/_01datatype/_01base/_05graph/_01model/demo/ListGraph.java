@@ -86,6 +86,9 @@ public class ListGraph<V, E> implements IGraph<V, E> {
     /**
      * 删除一个顶点
      * 
+     * 需要删除当前顶点所关联的边, 该边的引用存储在3个地方, 1:当前顶点,2:当前顶点边所关联的另一个顶点,3:边的集合
+     * 删除只需要删除,2和3即可, 1的指针会随着1的删除而删除
+     * 
      * @param v
      */
     @Override
@@ -95,12 +98,12 @@ public class ListGraph<V, E> implements IGraph<V, E> {
             return;
         }
 
-        // 删除这个顶点的  入度边 和 入度边所关联顶点的出度边
+        // 删除这个顶点的  入度边 和 入度边所关联顶点的出度边, 当前顶点出入度所关联的边会随着当前顶点删除而断开引用
         vertex.inEdges.forEach(e -> {
             edges.remove(e);
             e.from.outEdges.remove(e);
         });
-        // 删除这个顶点的  出度边 和 出度边所关联顶点的入度边
+        // 删除这个顶点的  出度边 和 出度边所关联顶点的入度边, 当前顶点出入度所关联的边会随着当前顶点删除而断开引用
         vertex.outEdges.forEach(e -> {
             edges.remove(e);
             e.to.inEdges.remove(e);
