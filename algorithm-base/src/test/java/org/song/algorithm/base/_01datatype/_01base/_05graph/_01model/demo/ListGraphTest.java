@@ -2,7 +2,7 @@ package org.song.algorithm.base._01datatype._01base._05graph._01model.demo;
 
 import org.junit.jupiter.api.Test;
 
-public class ListGrapTest {
+public class ListGraphTest {
     
     @Test
     public void test01() {
