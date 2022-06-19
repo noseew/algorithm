@@ -35,7 +35,15 @@ public abstract class MatrixGraph<V, E> implements IMatrixGraph<V, E> {
     protected int edge;
 
     // 极大值, 表示权值的正无穷, 如果是带权图的话
-    protected static final int maxInt = 32767;
+    protected E maxInt;
+    /**
+     * 顶点表
+     */
+    protected Vertex<V>[] vertexes;
+    /**
+     * 邻接矩阵表
+     */
+    protected Edge<E>[][] edges;
 
     /**
      * 初始化
@@ -44,6 +52,17 @@ public abstract class MatrixGraph<V, E> implements IMatrixGraph<V, E> {
      */
     public MatrixGraph(int vertex) {
         this.vertex = vertex;
+        vertexes = new Vertex[vertex];
+        // 邻接矩阵就是长宽都等于顶点长度的矩阵
+        edges = new Edge[vertex][vertex];
+        // 基本类型/无权图 不需要初始化
+
+        // 带权图初始化成最大值
+        for (int i = 0; i < vertex; i++) {
+            for (int j = 0; j < vertex; j++) {
+                edges[i][j] = new Edge(maxInt);
+            }
+        }
     }
 
     /**
