@@ -29,19 +29,57 @@ import java.util.function.Predicate;
     从顶点出发形成两个链表, 一个是出度链表, 一个是入度链表
  */
 public interface IGraph<V, E> {
-
+    /**
+     * 添加一个顶点
+     * 
+     * @param v
+     */
     void addVertex(V v);
 
+    /**
+     * 添加一条边
+     * 
+     * @param from
+     * @param to
+     */
     void addEdge(V from, V to);
 
+    /**
+     * 添加一条边, 加权重
+     * 
+     * @param from
+     * @param to
+     * @param wight
+     */
     void addEdge(V from, V to, E wight);
 
+    /**
+     * 删除一个顶点
+     * 
+     * @param v
+     */
     void removeVertex(V v);
 
+    /**
+     * 删除一条边
+     * 
+     * @param from
+     * @param to
+     */
     void removeEdge(V from, V to);
 
+    /**
+     * 边的数量
+     * 
+     * @return
+     */
     int edgeSize();
 
+    /**
+     * 顶点数量
+     * 
+     * @return
+     */
     int vertices();
 
     /**
@@ -50,8 +88,9 @@ public interface IGraph<V, E> {
      * 深度优先遍历秘籍：后被访问的顶点，其邻接点先被访问。
      * 
      * @param goon 是否继续遍历
+     * @param begin 开始顶点
      */
-    void dfs(Predicate<Integer> goon);
+    void dfs(V begin, Predicate<Integer> goon);
 
     /**
      * 广度优先遍历
@@ -59,6 +98,7 @@ public interface IGraph<V, E> {
      * 广度优先遍历秘籍：先被访问的顶点，其邻接点先被访问。
      * 
      * @param goon 是否继续遍历
+     * @param begin 开始顶点
      */
-    void bfs(Predicate<Integer> goon);
+    void bfs(V begin, Predicate<Integer> goon);
 }
