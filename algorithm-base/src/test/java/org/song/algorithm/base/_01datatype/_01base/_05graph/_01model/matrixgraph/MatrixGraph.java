@@ -1,33 +1,11 @@
 package org.song.algorithm.base._01datatype._01base._05graph._01model.matrixgraph;
 
+import org.song.algorithm.base._01datatype._01base._05graph._01model.IGraph;
+
 import java.util.Objects;
+import java.util.function.Predicate;
 
-/*
-图的存储
-数组
-    邻接矩阵, 简单直观
-链表
-    邻接表
-    十字链表, 解决有向图邻接表度计算问题
-    邻接多重表, 解决无向图邻接表重复边问题, 有点抽象
-
-    链表存储
-    邻接表方式存储
-    注意具体的定义方式根据语言等有所区别, 能表达意思即可
-    
-    十字链表
-    解决有向图邻接表/逆邻接表, 计算度不方便的问题
-    将邻接表的出度和入度结合起来, 则每个链表节点都表示出度链表的一个节点和入度链表的一个节点, 从而形成十字形状链表
-    从顶点出发形成两个链表, 一个是出度链表, 一个是入度链表
-    
-    邻接表存储概念上比较复杂, 这里有简单的实现方式, 具体参见 IListGraph
-
-构建图的顺序
-1. 规定定点数和边数: {@link Graph(int vertex, int edge)}
-2. 构建顶点表: {@link buildVertexes(int[] vertexes)}
-3. 构建顶点和边的关系: {@link build(int e1, int e2, int wight)}
- */
-public abstract class MatrixGraph<V, E> implements IMatrixGraph<V, E> {
+public abstract class MatrixGraph<V, E> implements IGraph<V, E> {
     
     // 最多顶点数
     protected int maxVertex;
@@ -52,24 +30,34 @@ public abstract class MatrixGraph<V, E> implements IMatrixGraph<V, E> {
     /**
      * 初始化
      * 
-     * @param vertexSize
+     * @param maxVertex
      */
-    public MatrixGraph(int vertexSize) {
-        this.maxVertex = vertexSize;
-        this.maxEdge = vertexSize * vertexSize;
-        vertexes = new Vertex[vertexSize];
+    protected MatrixGraph(int maxVertex) {
+        this.maxVertex = maxVertex;
+        this.maxEdge = maxVertex * maxVertex;
+        vertexes = new Vertex[maxVertex];
         // 邻接矩阵就是长宽都等于顶点长度的矩阵
-        edges = new Edge[vertexSize][vertexSize];
+        edges = new Edge[maxVertex][maxVertex];
         // 基本类型/无权图 不需要初始化
 
         // 带权图初始化成最大值
-        for (int i = 0; i < vertexSize; i++) {
-            for (int j = 0; j < vertexSize; j++) {
+        for (int i = 0; i < maxVertex; i++) {
+            for (int j = 0; j < maxVertex; j++) {
                 edges[i][j] = new Edge(maxWight);
             }
         }
     }
 
+    @Override
+    public void dfs(Predicate<Integer> goon) {
+
+    }
+
+    @Override
+    public void bfs(Predicate<Integer> goon) {
+
+    }
+    
     /**
      * 顶点Node
      *

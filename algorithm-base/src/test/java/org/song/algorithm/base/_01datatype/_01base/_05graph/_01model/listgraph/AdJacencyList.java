@@ -1,7 +1,11 @@
 package org.song.algorithm.base._01datatype._01base._05graph._01model.listgraph;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -12,7 +16,7 @@ import java.util.stream.Collectors;
  * @param <V>
  * @param <E>
  */
-public class AdJacencyList<V, E> implements IListGraph<V, E> {
+public class AdJacencyList<V, E> extends ListGraph<V, E> {
     /**
      * 顶点的集合
      * key=顶点的值
@@ -36,7 +40,7 @@ public class AdJacencyList<V, E> implements IListGraph<V, E> {
         if (vertices.containsKey(v)) {
             return;
         }
-        vertices.put(v, new Vertex<>(v));
+        vertices.put(v, new Vertex(v));
     }
 
     @Override
@@ -58,17 +62,17 @@ public class AdJacencyList<V, E> implements IListGraph<V, E> {
         
         Vertex<V, E> fromVertex = vertices.get(from);
         if (fromVertex == null) {
-            fromVertex = new Vertex<>(from);
+            fromVertex = new Vertex(from);
             vertices.put(from, fromVertex);
         }
         Vertex<V, E> toVertex = vertices.get(to);
         if (toVertex == null) {
-            toVertex = new Vertex<>(to);
+            toVertex = new Vertex(to);
             vertices.put(to, toVertex);
         }
 
         // 构建这条边
-        Edge<V, E> edge = new Edge<>(fromVertex, toVertex);
+        Edge<V, E> edge = new Edge(fromVertex, toVertex);
         edge.wight = wight;
 
         // 更新这条边的信息(权值)
@@ -128,7 +132,7 @@ public class AdJacencyList<V, E> implements IListGraph<V, E> {
             return;
         }
         // 构建这条边
-        Edge<V, E> edge = new Edge<>(fromVertex, toVertex);
+        Edge<V, E> edge = new Edge(fromVertex, toVertex);
 
         // 从这条边两个顶点 度列表中删除这条边
         fromVertex.outEdges.remove(edge);
@@ -160,73 +164,6 @@ public class AdJacencyList<V, E> implements IListGraph<V, E> {
         edges.forEach(e -> sb.append(count.getAndIncrement()).append(":").append(e).append("\r\n"));
 
         return sb.toString();
-    }
-
-    /**
-     * 顶点Node
-     *
-     * @param <V> 表示顶点存储的值
-     * @param <E> 适用于边
-     */
-    class Vertex<V, E> {
-        V value; // 顶点的值
-        Set<Edge<V, E>> inEdges = new HashSet<>(); // 当前顶点的入度边
-        Set<Edge<V, E>> outEdges = new HashSet<>(); // 当前顶点的出度边
-
-        Vertex(V value) {
-            this.value = value;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof Vertex)) return false;
-            Vertex<?, ?> vertex = (Vertex<?, ?>) o;
-            return Objects.equals(value, vertex.value);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(value);
-        }
-    }
-
-    /**
-     * 边Node
-     *
-     * @param <V> 适用于顶点
-     * @param <E> 边权重
-     */
-    class Edge<V, E> {
-        Vertex<V, E> from; // 表示该边出度的顶点
-        Vertex<V, E> to; // 表示该边入度的顶点
-        E wight; // 边的权重
-
-        public Edge(Vertex<V, E> from, Vertex<V, E> to) {
-            this.from = from;
-            this.to = to;
-        }
-
-        @Override
-        public String toString() {
-            StringBuilder sb = new StringBuilder();
-            sb.append(from.value).append(" --(").append(wight).append(")--> ").append(to.value);
-            return sb.toString();
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof Edge)) return false;
-            Edge<?, ?> edge = (Edge<?, ?>) o;
-            return Objects.equals(from, edge.from) &&
-                    Objects.equals(to, edge.to);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(from, to);
-        }
     }
 
 }
