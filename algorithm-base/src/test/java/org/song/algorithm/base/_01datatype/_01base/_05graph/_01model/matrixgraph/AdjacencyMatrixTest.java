@@ -1,14 +1,13 @@
 package org.song.algorithm.base._01datatype._01base._05graph._01model.matrixgraph;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.base._01datatype._01base._05graph._01model.listgraph.AdJacencyList;
 
-public class AdJacencyMatrixTest {
+public class AdjacencyMatrixTest {
 
     @Test
     public void test01() {
 
-        AdJacentMatrix<String, Integer> adJacencyMatrix = new AdJacentMatrix<>(5);
+        AdjacencyMatrix<String, Integer> adJacencyMatrix = new AdjacencyMatrix<>(5);
 
         adJacencyMatrix.addEdge("V1", "V2", 1);
         adJacencyMatrix.addEdge("V2", "V3", 2);
@@ -23,7 +22,7 @@ public class AdJacencyMatrixTest {
     @Test
     public void test02() {
 
-        AdJacentMatrix<String, Integer> adJacencyMatrix = new AdJacentMatrix<>(5);
+        AdjacencyMatrix<String, Integer> adJacencyMatrix = new AdjacencyMatrix<>(5);
 
         adJacencyMatrix.addEdge("V1", "V2", 1);
         adJacencyMatrix.addEdge("V2", "V3", 2);
@@ -41,7 +40,7 @@ public class AdJacencyMatrixTest {
     @Test
     public void test03() {
 
-        AdJacentMatrix<String, Integer> adJacencyMatrix = new AdJacentMatrix<>(5);
+        AdjacencyMatrix<String, Integer> adJacencyMatrix = new AdjacencyMatrix<>(5);
 
         adJacencyMatrix.addEdge("V1", "V2", 1);
         adJacencyMatrix.addEdge("V2", "V3", 2);

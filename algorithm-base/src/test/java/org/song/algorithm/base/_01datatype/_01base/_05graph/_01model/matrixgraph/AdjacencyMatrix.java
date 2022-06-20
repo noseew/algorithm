@@ -6,9 +6,9 @@ import java.util.Objects;
  * 数组存储
  * 邻接矩阵方式存储
  */
-public class AdJacentMatrix<V, E> extends MatrixGraph<V, E> {
+public class AdjacencyMatrix<V, E> extends MatrixGraph<V, E> {
 
-    public AdJacentMatrix(int vertex) {
+    public AdjacencyMatrix(int vertex) {
         super(vertex);
     }
 

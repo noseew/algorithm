@@ -1,7 +1,7 @@
 package org.song.algorithm.base._01datatype._01base._05graph;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.base._01datatype._01base._05graph._01model.matrixgraph.AdJacentMatrix;
+import org.song.algorithm.base._01datatype._01base._05graph._01model.matrixgraph.AdjacencyMatrix;
 
 public class MatrixGraphTest {
     
@@ -20,7 +20,7 @@ public class MatrixGraphTest {
      */
     @Test
     public void test_AdJacentMatrix() {
-        AdJacentMatrix adJacentMatrix = new AdJacentMatrix(4);
+        AdjacencyMatrix adJacencyMatrix = new AdjacencyMatrix(4);
 
     }
 }

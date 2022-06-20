@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * @param <V>
  * @param <E>
  */
-public class AdJacencyList<V, E> extends ListGraph<V, E> {
+public class AdjacencyList<V, E> extends ListGraph<V, E> {
     /**
      * 顶点的集合
      * key=顶点的值
