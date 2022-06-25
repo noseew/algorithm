@@ -173,7 +173,7 @@ public class AdjacencyList<V, E extends Comparable<E>> extends ListGraph<V, E> {
             // 遍历的具体操作
             return;
         }
-
+        // visited.add(vertex); // 放在这个地方也可以
         for (Edge<V, E> outEdge : vertex.outEdges) {
             // 重复访问校验
             if (visited.contains(outEdge.to)) {
@@ -182,7 +182,6 @@ public class AdjacencyList<V, E extends Comparable<E>> extends ListGraph<V, E> {
             visited.add(outEdge.to);
             dfs(outEdge.to, visited, goon);
         }
-        
     }
 
     @Override
@@ -207,6 +206,7 @@ public class AdjacencyList<V, E extends Comparable<E>> extends ListGraph<V, E> {
                 // 遍历的具体操作
                 break;
             }
+            // visited.add(vertex); // 放在这个地方也可以
             for (Edge<V, E> outEdge : vertex.outEdges) {
                 // 重复访问校验
                 if (visited.contains(outEdge.to)) {
