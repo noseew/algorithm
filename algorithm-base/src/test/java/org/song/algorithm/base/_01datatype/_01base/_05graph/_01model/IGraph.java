@@ -90,8 +90,18 @@ public interface IGraph<V, E> {
      * @param goon 是否继续遍历
      * @param begin 开始顶点
      */
-    void dfs(V begin, Predicate<Integer> goon);
+    void dfs(V begin, Predicate<V> goon);
 
+    /*
+    广度优先搜索, 
+    应用: 树中的层序遍历
+    如何确定层呢?
+        假设层数从0开始, 
+        则顶点处在第0层, 
+        顶点需要1步达到的点, 处在第1层;
+        顶点需要2步到达的点, 处在第2层;
+        以此类推, 图中思路也是这样
+     */
     /**
      * 广度优先遍历
      * 
@@ -100,5 +110,5 @@ public interface IGraph<V, E> {
      * @param goon 是否继续遍历
      * @param begin 开始顶点
      */
-    void bfs(V begin, Predicate<Integer> goon);
+    void bfs(V begin, Predicate<V> goon);
 }

@@ -1,6 +1,7 @@
 package org.song.algorithm.base._01datatype._01base._05graph._01model.matrixgraph;
 
 import java.util.Objects;
+import java.util.function.Predicate;
 
 /**
  * 数组存储
@@ -89,6 +90,16 @@ public class AdjacencyMatrix<V, E> extends MatrixGraph<V, E> {
     @Override
     public int vertices() {
         return vertexSize;
+    }
+
+    @Override
+    public void dfs(V begin, Predicate<V> goon) {
+        
+    }
+
+    @Override
+    public void bfs(V begin, Predicate<V> goon) {
+
     }
 
     /**

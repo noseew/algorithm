@@ -47,16 +47,6 @@ public abstract class MatrixGraph<V, E> implements IGraph<V, E> {
             }
         }
     }
-
-    @Override
-    public void dfs(Predicate<Integer> goon) {
-
-    }
-
-    @Override
-    public void bfs(Predicate<Integer> goon) {
-
-    }
     
     /**
      * 顶点Node

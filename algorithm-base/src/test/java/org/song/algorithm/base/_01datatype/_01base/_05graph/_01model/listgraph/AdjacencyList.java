@@ -1,9 +1,6 @@
 package org.song.algorithm.base._01datatype._01base._05graph._01model.listgraph;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -150,6 +147,44 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
     @Override
     public int vertices() {
         return vertices.size();
+    }
+
+    @Override
+    public void dfs(V begin, Predicate<V> goon) {
+    }
+
+    @Override
+    public void bfs(V begin, Predicate<V> goon) {
+        Vertex<V, E> beginVertex = vertices.get(begin);
+        if (beginVertex == null) {
+            return;
+        }
+
+        // 已访问记录
+        Set<Vertex<V, E>> visited = new HashSet<>();
+        // 协调队列
+        Queue<Vertex<V, E>> queue = new LinkedList<>();
+        // 从给定的顶点开始遍历
+        queue.offer(beginVertex);
+        visited.add(beginVertex);
+
+        while (!queue.isEmpty()) {
+            // 出队
+            Vertex<V, E> vertex = queue.poll();
+            if (!goon.test(vertex.value)) {
+                // 遍历的具体操作
+                break;
+            }
+            visited.add(vertex);
+            for (Edge<V, E> outEdge : vertex.outEdges) {
+                // 重复访问校验
+                if (visited.contains(outEdge.to)) {
+                    continue;
+                }
+                // 将下一步直接连接顶点入队
+                queue.offer(outEdge.to);
+            }
+        }
     }
 
     @Override

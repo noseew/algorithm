@@ -5,20 +5,8 @@ import org.song.algorithm.base._01datatype._01base._05graph._01model.IGraph;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Predicate;
 
 public abstract class ListGraph<V, E> implements IGraph<V, E> {
-
-
-    @Override
-    public void dfs(Predicate<Integer> goon) {
-
-    }
-
-    @Override
-    public void bfs(Predicate<Integer> goon) {
-
-    }
 
     /**
      * 顶点Node
