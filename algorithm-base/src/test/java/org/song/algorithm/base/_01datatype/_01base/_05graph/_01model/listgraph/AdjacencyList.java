@@ -175,7 +175,6 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
                 // 遍历的具体操作
                 break;
             }
-            visited.add(vertex);
             for (Edge<V, E> outEdge : vertex.outEdges) {
                 // 重复访问校验
                 if (visited.contains(outEdge.to)) {
@@ -183,6 +182,7 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
                 }
                 // 将下一步直接连接顶点入队
                 queue.offer(outEdge.to);
+                visited.add(vertex);
             }
         }
     }
