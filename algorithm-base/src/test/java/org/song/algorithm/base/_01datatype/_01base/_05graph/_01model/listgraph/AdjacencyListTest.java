@@ -73,6 +73,13 @@ public class AdjacencyListTest {
             System.out.println(e);
             return true;
         });
+        
+        System.out.println();
+
+        adJacencyList.dfs("V1", e -> {
+            System.out.println(e);
+            return true;
+        });
 
     }
 }

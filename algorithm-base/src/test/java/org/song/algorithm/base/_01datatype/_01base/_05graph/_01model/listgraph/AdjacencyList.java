@@ -151,6 +151,38 @@ public class AdjacencyList<V, E extends Comparable<E>> extends ListGraph<V, E> {
 
     @Override
     public void dfs(V begin, Predicate<V> goon) {
+        Vertex<V, E> beginVertex = vertices.get(begin);
+        if (beginVertex == null) {
+            return;
+        }
+        // 已访问记录
+        Set<Vertex<V, E>> visited = new HashSet<>();
+        visited.add(beginVertex);
+        dfs(beginVertex, visited, goon);
+    }
+
+    /**
+     * 采用递归的方式, 深度优先搜索
+     * 
+     * @param vertex
+     * @param visited
+     * @param goon
+     */
+    private void dfs(Vertex<V, E> vertex, Set<Vertex<V, E>> visited, Predicate<V> goon) {
+        if (!goon.test(vertex.value)) {
+            // 遍历的具体操作
+            return;
+        }
+
+        for (Edge<V, E> outEdge : vertex.outEdges) {
+            // 重复访问校验
+            if (visited.contains(outEdge.to)) {
+                continue;
+            }
+            visited.add(outEdge.to);
+            dfs(outEdge.to, visited, goon);
+        }
+        
     }
 
     @Override
@@ -182,7 +214,7 @@ public class AdjacencyList<V, E extends Comparable<E>> extends ListGraph<V, E> {
                 }
                 // 将下一步直接连接顶点入队
                 queue.offer(outEdge.to);
-                visited.add(vertex);
+                visited.add(outEdge.to);
             }
         }
     }
