@@ -2,6 +2,8 @@ package org.song.algorithm.base._01datatype._01base._05graph._01model.listgraph;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 public class AdjacencyListTest {
 
     @Test
@@ -80,6 +82,23 @@ public class AdjacencyListTest {
             System.out.println(e);
             return true;
         });
+
+    }
+
+    @Test
+    public void test05() {
+
+        AdjacencyList<String, Integer> adJacencyList = new AdjacencyList<>();
+
+        adJacencyList.addEdge("V1", "V2", 1);
+        adJacencyList.addEdge("V2", "V3", 2);
+        adJacencyList.addEdge("V3", "V4", 3);
+        adJacencyList.addEdge("V4", "V5", 4);
+        adJacencyList.addEdge("V1", "V3", 3);
+        System.out.println(adJacencyList);
+
+        List<String> topologySort = adJacencyList.topologySort();
+        System.out.println(topologySort);
 
     }
 }

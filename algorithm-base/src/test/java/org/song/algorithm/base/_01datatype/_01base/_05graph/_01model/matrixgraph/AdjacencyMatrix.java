@@ -1,5 +1,6 @@
 package org.song.algorithm.base._01datatype._01base._05graph._01model.matrixgraph;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -100,6 +101,11 @@ public class AdjacencyMatrix<V, E extends Comparable<E>> extends MatrixGraph<V, 
     @Override
     public void bfs(V begin, Predicate<V> goon) {
 
+    }
+
+    @Override
+    public List<V> topologySort() {
+        return null;
     }
 
     /**

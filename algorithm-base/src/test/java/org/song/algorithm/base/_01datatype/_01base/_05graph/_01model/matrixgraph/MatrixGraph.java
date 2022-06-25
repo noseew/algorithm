@@ -3,7 +3,6 @@ package org.song.algorithm.base._01datatype._01base._05graph._01model.matrixgrap
 import org.song.algorithm.base._01datatype._01base._05graph._01model.IGraph;
 
 import java.util.Objects;
-import java.util.function.Predicate;
 
 public abstract class MatrixGraph<V, E extends Comparable<E>> implements IGraph<V, E> {
     

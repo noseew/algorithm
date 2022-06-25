@@ -1,5 +1,6 @@
 package org.song.algorithm.base._01datatype._01base._05graph._01model;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 /*
@@ -111,4 +112,28 @@ public interface IGraph<V, E extends Comparable<E>> {
      * @param begin 开始顶点
      */
     void bfs(V begin, Predicate<V> goon);
+
+    /*
+    拓扑排序
+        前置知识:
+            AOV网: 
+            大工程分为多个子工程的集合, 而这些子工程之间有相互依赖关系, 只有子工程A完成后才能进行子工程B
+            使用有向无环图来表示这样的工程关系, 这样的图称为AOV网
+            其中, 图的顶点表示一个子工程, 有向图的方向表示子工程的依赖关系
+            拓扑排序就是将 AOV网中, 按照依赖关系排除并输出
+        条件: 1. 有向无环图; 2. 排序结果并不唯一, 因为会存在没有相互依赖关系的顶点
+    实现
+        一 卡恩算法
+        思路: 
+            1. 找到图中所有入度为0的顶点的集合, 删除并记录他们
+            2. 剩下的顶点集合中, 继续执行1的步骤; 此顺序删除的顶点就是拓扑排序的结果
+            注意: 如果删除的顶点数量不等于原图顶点数, 则说明图中存在环
+            具体的实现参照卡恩算法
+     */
+    /**
+     * 拓扑排序, 返回拓扑排序结果
+     * 
+     * @return
+     */
+    List<V> topologySort();
 }

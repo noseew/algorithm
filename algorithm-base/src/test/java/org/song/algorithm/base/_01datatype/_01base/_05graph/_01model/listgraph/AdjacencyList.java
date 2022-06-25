@@ -245,6 +245,53 @@ public class AdjacencyList<V, E extends Comparable<E>> extends ListGraph<V, E> {
             }
         }
     }
+    /*
+    参考卡恩算法实现的拓扑排序
+    现实中不可能真的删除顶点, 这里采用模拟删除, 也就是记录每次删除后的变化
+    删除后的变化其实就是, 其他顶点的入度数量发生了变化
+    inDegreeMap: 记录动态的每个顶点的入度数量
+    degree0: 每次遍历, 当有顶点入度数量变成0时, 进入次队列
+    sorted: 从degree0队列中依次取出的顶点, 就是排好序的顶点
+     */
+    @Override
+    public List<V> topologySort() {
+        // 返回排序后的结果
+        List<V> sorted = new ArrayList<>();
+        // 用于记录每个顶点动态入度数量
+        Map<Vertex<V, E>, Integer> inDegreeMap = new HashMap<>();
+        // 用于记录所有入度为0的顶点, 入度为0的顶点意味着该顶点将要"删除", 同时也意味着接下来的排序是他们
+        Queue<Vertex<V, E>> degree0 = new LinkedList<>();
+        
+        // 初始化入度的数量
+        vertices.forEach((k, v) -> {
+            int ind = v.inEdges.size();
+            if (ind == 0) {
+                // 找到初始入度为0的顶点
+                degree0.offer(v);
+            } else {
+                // 记录所有顶点入度数量
+                inDegreeMap.put(v, ind);
+            } 
+        });
+
+        while (!degree0.isEmpty()) {
+            Vertex<V, E> vertex = degree0.poll();
+            sorted.add(vertex.value);
+
+            // 模拟删除一个顶点
+            vertex.outEdges.forEach(e -> {
+                int newSize = inDegreeMap.get(e.to) - 1;
+                if (newSize == 0) {
+                    // 如果顶点数量变成0, 则放入队列, 等待队列取出并排序
+                    degree0.offer(e.to);
+                } else {
+                    // 更新剩下顶点的入度数量
+                    inDegreeMap.put(e.to, newSize);
+                }
+            });
+        }
+        return sorted;
+    }
 
     @Override
     public String toString() {
