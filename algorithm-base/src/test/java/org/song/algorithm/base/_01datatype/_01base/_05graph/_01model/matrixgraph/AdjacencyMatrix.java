@@ -7,7 +7,7 @@ import java.util.function.Predicate;
  * 数组存储
  * 邻接矩阵方式存储
  */
-public class AdjacencyMatrix<V, E> extends MatrixGraph<V, E> {
+public class AdjacencyMatrix<V, E extends Comparable<E>> extends MatrixGraph<V, E> {
 
     public AdjacencyMatrix(int vertex) {
         super(vertex);

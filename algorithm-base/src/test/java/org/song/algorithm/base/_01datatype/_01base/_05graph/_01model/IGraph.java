@@ -28,7 +28,7 @@ import java.util.function.Predicate;
     将邻接表的出度和入度结合起来, 则每个链表节点都表示出度链表的一个节点和入度链表的一个节点, 从而形成十字形状链表
     从顶点出发形成两个链表, 一个是出度链表, 一个是入度链表
  */
-public interface IGraph<V, E> {
+public interface IGraph<V, E extends Comparable<E>> {
     /**
      * 添加一个顶点
      * 

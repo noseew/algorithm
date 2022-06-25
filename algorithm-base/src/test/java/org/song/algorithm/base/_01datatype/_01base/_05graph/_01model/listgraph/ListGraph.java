@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public abstract class ListGraph<V, E> implements IGraph<V, E> {
+public abstract class ListGraph<V, E extends Comparable<E>> implements IGraph<V, E> {
 
     /**
      * 顶点Node
@@ -14,7 +14,7 @@ public abstract class ListGraph<V, E> implements IGraph<V, E> {
      * @param <V> 表示顶点存储的值
      * @param <E> 适用于边
      */
-    class Vertex<V, E> {
+    class Vertex<V, E extends Comparable<E>> {
         V value; // 顶点的值
         Set<Edge<V, E>> inEdges = new HashSet<>(); // 当前顶点的入度边
         Set<Edge<V, E>> outEdges = new HashSet<>(); // 当前顶点的出度边
@@ -43,7 +43,7 @@ public abstract class ListGraph<V, E> implements IGraph<V, E> {
      * @param <V> 适用于顶点
      * @param <E> 边权重
      */
-    class Edge<V, E> {
+    class Edge<V, E extends Comparable<E>> {
         Vertex<V, E> from; // 表示该边出度的顶点
         Vertex<V, E> to; // 表示该边入度的顶点
         E wight; // 边的权重
