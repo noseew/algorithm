@@ -152,13 +152,40 @@ public class AdjacencyList<V, E extends Comparable<E>> extends ListGraph<V, E> {
     @Override
     public void dfs(V begin, Predicate<V> goon) {
         Vertex<V, E> beginVertex = vertices.get(begin);
-        if (beginVertex == null) {
-            return;
+        if (beginVertex == null) return;
+        
+        dfsStack(beginVertex, goon);
+//        dfsRecursion(beginVertex, goon);
+    }
+    
+    private void dfsStack(Vertex<V, E> beginVertex, Predicate<V> goon) {
+        Set<Vertex<V, E>> visited = new HashSet<>();
+        Stack<Vertex<V, E>> stack = new Stack<>();
+        stack.push(beginVertex);
+        visited.add(beginVertex);
+        if (!goon.test(beginVertex.value)) return;
+        
+        while (!stack.isEmpty()) {
+            Vertex<V, E> vertex = stack.pop();
+            
+            for (Edge<V, E> outEdge : vertex.outEdges) {
+                // 重复访问校验
+                if (visited.contains(outEdge.to)) continue;
+                
+                stack.push(vertex);
+                stack.push(outEdge.to);
+                visited.add(outEdge.to);
+                if (!goon.test(outEdge.to.value)) return;
+                break;
+            }
         }
+    }
+    
+    private void dfsRecursion(Vertex<V, E> beginVertex, Predicate<V> goon) {
         // 已访问记录
         Set<Vertex<V, E>> visited = new HashSet<>();
         visited.add(beginVertex);
-        dfs(beginVertex, visited, goon);
+        dfsRecursion(beginVertex, visited, goon);
     }
 
     /**
@@ -168,7 +195,7 @@ public class AdjacencyList<V, E extends Comparable<E>> extends ListGraph<V, E> {
      * @param visited
      * @param goon
      */
-    private void dfs(Vertex<V, E> vertex, Set<Vertex<V, E>> visited, Predicate<V> goon) {
+    private void dfsRecursion(Vertex<V, E> vertex, Set<Vertex<V, E>> visited, Predicate<V> goon) {
         if (!goon.test(vertex.value)) {
             // 遍历的具体操作
             return;
@@ -180,7 +207,7 @@ public class AdjacencyList<V, E extends Comparable<E>> extends ListGraph<V, E> {
                 continue;
             }
             visited.add(outEdge.to);
-            dfs(outEdge.to, visited, goon);
+            dfsRecursion(outEdge.to, visited, goon);
         }
     }
 
