@@ -1,6 +1,5 @@
 package org.song.algorithm.base._01datatype._01base._05graph._01model.listgraph;
 
-import org.song.algorithm.base._01datatype._01base._04tree.heap.Heap_base_01;
 import org.song.algorithm.base._01datatype._01base._04tree.heap.Heap_base_03;
 import org.song.algorithm.base._01datatype._02high.unionfindsets.UFS;
 import org.song.algorithm.base._01datatype._02high.unionfindsets.common.UFSQuickUnion_PathHalve;
