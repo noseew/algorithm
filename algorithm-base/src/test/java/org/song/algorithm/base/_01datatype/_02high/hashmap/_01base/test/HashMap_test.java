@@ -4,11 +4,14 @@ import org.junit.Test;
 import org.song.algorithm.base._01datatype._02high.hashmap._01base.*;
 import org.song.algorithm.base._01datatype._02high.hashmap._02redis.Dict_base_01;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
 
 public class HashMap_test {
+
+    private Comparator<Integer> comparator = Comparator.comparing(e -> e);
 
     private int maxVal = 50000;
     private int maxSize = 5000;
@@ -37,7 +40,7 @@ public class HashMap_test {
 //            HashMap_base_02<Integer, Integer> map1 = new HashMap_base_02<>();
 //            HashMap_base_03<Integer, Integer> map1 = new HashMap_base_03<>();
 //            HashMap_base_04<Integer, Integer> map1 = new HashMap_base_04<>();
-            HashMap_base_05<Integer, Integer> map1 = new HashMap_base_05<>();
+            HashMap_base_05<Integer, Integer> map1 = new HashMap_base_05<>(comparator, 8);
 //            HashMap_openAddressing_01<Integer, Integer> map1 = new HashMap_openAddressing_01<>();
 //            Dict_base_01<Integer, Integer> map1 = new Dict_base_01<>();
             for (int i = 0; i < maxSize; i++) {
@@ -85,8 +88,8 @@ public class HashMap_test {
         HashMap_base_01<Integer, Integer> map1 = new HashMap_base_01<>();
         HashMap_base_02<Integer, Integer> map2 = new HashMap_base_02<>();
         HashMap_base_03<Integer, Integer> map3 = new HashMap_base_03<>();
-        HashMap_base_04<Integer, Integer> map4 = new HashMap_base_04<>();
-        HashMap_base_05<Integer, Integer> map5 = new HashMap_base_05<>();
+        HashMap_base_04<Integer, Integer> map4 = new HashMap_base_04<>(comparator, 8);
+        HashMap_base_05<Integer, Integer> map5 = new HashMap_base_05<>(comparator, 8);
         Dict_base_01<Integer, Integer> dictMap1 = new Dict_base_01<>();
 
         for (int i = 0; i < maxSize; i++) {

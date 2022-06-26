@@ -153,7 +153,7 @@ public class Trie01<V> extends AbstractTrie<V> {
     word表示截止到当前节点, 存在一个完整的字符串, 用于匹配字符串, 防止公共前缀字符串无法区分的情况
      */
     public static class Node<V> {
-        HashMap_base_05<Character, Node<V>> children = new HashMap_base_05<>();
+        HashMap_base_05<Character, Node<V>> children = new HashMap_base_05<>(null, 8);
         boolean word;
         V val;
         // 当前节点所表示的字符, 方便删除

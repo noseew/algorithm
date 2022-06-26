@@ -6,10 +6,13 @@ import org.song.algorithm.base._01datatype._02high.skiplist._02redis.AbstractSki
 import org.song.algorithm.base._01datatype._02high.skiplist._02redis.SkipListLinked01;
 import org.song.algorithm.base._01datatype._02high.skiplist._02redis.SkipListLinked02;
 
+import java.util.Comparator;
 import java.util.Objects;
 import java.util.Random;
 
 public class SkipList01Test {
+
+    private Comparator<Integer> comparator = Comparator.comparing(e -> e);
 
     private int maxVal = 1000;
     private int maxSize = 50;
@@ -19,7 +22,7 @@ public class SkipList01Test {
     @Test
     public void test01() {
 
-        SkipListLinked01<Integer, Integer> skip1 = new SkipListLinked01<>();
+        SkipListLinked01<Integer, Integer> skip1 = new SkipListLinked01<>(comparator);
 //        SkipListLinked02<Integer, Integer> skip1 = new SkipListLinked02<>();
         for (int i = 0; i < maxSize; i++) {
             int val = r.nextInt(maxVal);
@@ -55,7 +58,7 @@ public class SkipList01Test {
         for (int i = 0; i < 10; i++) {
 
 //            SkipListLinked01<Integer, Integer> skip1 = new SkipListLinked01<>();
-            SkipListLinked02<Integer, Integer> skip1 = new SkipListLinked02<>();
+            SkipListLinked02<Integer, Integer> skip1 = new SkipListLinked02<>(Comparator.comparing(Integer::intValue));
             for (int j = 0; j < maxSize; j++) {
                 int key = r.nextInt(maxVal);
                 int val = r.nextInt(maxVal);

@@ -4,6 +4,7 @@ import lombok.Data;
 import org.song.algorithm.base._01datatype._01base._01linear.list._01model.ArrayBase01;
 import org.song.algorithm.base._01datatype._01base._02queue_stack._01model.queue.Queue_Link_01;
 
+import java.util.Comparator;
 import java.util.Objects;
 
 /**
@@ -18,6 +19,7 @@ public class SkipListLinked03Rank<K extends Comparable<K>, V> extends AbstractSk
     protected int NO = 0;
 
     public SkipListLinked03Rank() {
+        super(Comparator.comparing(e -> e));
         // 临时头node节点
         Node<K, V> node = new Node<>();
         node.score = minScore; // 头结点分值最小, 其他分值必须 >= 0

@@ -6,10 +6,13 @@ import org.song.algorithm.base._01datatype._02high.hashmap._02redis.Dict_base_01
 import org.song.algorithm.base.utils.StopWatchUtils;
 import org.springframework.util.StopWatch;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Random;
 
 public class HashMap_perf_test {
+
+    private Comparator<String> comparator = Comparator.comparing(e -> e);
 
 
     /**
@@ -217,7 +220,7 @@ public class HashMap_perf_test {
             for (int i = 0; i < num; i++) {
                 map.put(String.valueOf(r.nextInt()), "");
             }
-            HashMap_base_05<String, String> map2 = new HashMap_base_05<>();
+            HashMap_base_05<String, String> map2 = new HashMap_base_05<>(comparator, 8);
             for (int i = 0; i < num; i++) {
                 map2.put(String.valueOf(r.nextInt()), "");
             }
@@ -230,7 +233,7 @@ public class HashMap_perf_test {
             }
         });
         Runnable r2 = () -> StopWatchUtils.run(stopWatch, "HashMap_base_05 红黑树", () -> {
-            HashMap_base_05<String, String> map2 = new HashMap_base_05<>();
+            HashMap_base_05<String, String> map2 = new HashMap_base_05<>(comparator, 8);
             for (int i = 0; i < num; i++) {
                 map2.put(String.valueOf(r.nextInt()), "");
             }
@@ -260,24 +263,24 @@ public class HashMap_perf_test {
         Random r = new Random();
 
         StopWatchUtils.warnup(() -> {
-            HashMap_base_04<String, String> map = new HashMap_base_04<>();
+            HashMap_base_04<String, String> map = new HashMap_base_04<>(comparator, 8);
             for (int i = 0; i < num; i++) {
                 map.put(String.valueOf(r.nextInt()), "");
             }
-            HashMap_base_05<String, String> map2 = new HashMap_base_05<>();
+            HashMap_base_05<String, String> map2 = new HashMap_base_05<>(comparator, 8);
             for (int i = 0; i < num; i++) {
                 map2.put(String.valueOf(r.nextInt()), "");
             }
         });
 
         Runnable r1 = () -> StopWatchUtils.run(stopWatch, "HashMap_base_04 AVL", () -> {
-            HashMap_base_04<String, String> map2 = new HashMap_base_04<>();
+            HashMap_base_04<String, String> map2 = new HashMap_base_04<>(comparator, 8);
             for (int i = 0; i < num; i++) {
                 map2.put(String.valueOf(r.nextInt()), "");
             }
         });
         Runnable r2 = () -> StopWatchUtils.run(stopWatch, "HashMap_base_05 红黑树", () -> {
-            HashMap_base_05<String, String> map2 = new HashMap_base_05<>();
+            HashMap_base_05<String, String> map2 = new HashMap_base_05<>(comparator, 8);
             for (int i = 0; i < num; i++) {
                 map2.put(String.valueOf(r.nextInt()), "");
             }
@@ -307,7 +310,7 @@ public class HashMap_perf_test {
         Random r = new Random();
 
         StopWatchUtils.warnup(() -> {
-            HashMap_base_04<String, String> map = new HashMap_base_04<>();
+            HashMap_base_04<String, String> map = new HashMap_base_04<>(comparator, 8);
             for (int i = 0; i < num; i++) {
                 map.put(String.valueOf(r.nextInt()), "");
             }
@@ -318,7 +321,7 @@ public class HashMap_perf_test {
         });
 
         Runnable r1 = () -> StopWatchUtils.run(stopWatch, "HashMap_base_04 AVL", () -> {
-            HashMap_base_04<String, String> map2 = new HashMap_base_04<>();
+            HashMap_base_04<String, String> map2 = new HashMap_base_04<>(comparator, 8);
             for (int i = 0; i < num; i++) {
                 map2.put(String.valueOf(r.nextInt()), "");
             }
@@ -358,7 +361,7 @@ public class HashMap_perf_test {
             for (int i = 0; i < num; i++) {
                 map.put(String.valueOf(r.nextInt()), "");
             }
-            HashMap_base_05<String, String> map2 = new HashMap_base_05<>();
+            HashMap_base_05<String, String> map2 = new HashMap_base_05<>(comparator, 8);
             for (int i = 0; i < num; i++) {
                 map2.put(String.valueOf(r.nextInt()), "");
             }
@@ -371,7 +374,7 @@ public class HashMap_perf_test {
             }
         });
         Runnable r2 = () -> StopWatchUtils.run(stopWatch, "HashMap_base_05", () -> {
-            HashMap_base_05<String, String> map2 = new HashMap_base_05<>();
+            HashMap_base_05<String, String> map2 = new HashMap_base_05<>(comparator, 8);
             for (int i = 0; i < num; i++) {
                 map2.put(String.valueOf(r.nextInt()), "");
             }

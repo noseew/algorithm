@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.song.algorithm.base._01datatype._01base._01linear.list._01model.ArrayBase01;
 import org.song.algorithm.base._01datatype._02high.hashmap._01base.HashMap_base_05;
 
+import java.util.Comparator;
 import java.util.Random;
 
 /**
@@ -20,7 +21,7 @@ public abstract class AbstractSkipList<K extends Comparable<K>, V> {
     /**
      * map为了O(1)的方式定位到结点, 同时做到结点去重
      */
-    protected HashMap_base_05<K, SkipListLinked01.Node<K, V>> hashMap = new HashMap_base_05<>(8);
+    protected HashMap_base_05<K, SkipListLinked01.Node<K, V>> hashMap;
 
     /**
      * 索引层从1开始
@@ -35,6 +36,10 @@ public abstract class AbstractSkipList<K extends Comparable<K>, V> {
     protected double minScore = -1; // 最小分值, 只能出现在 headerIndex 中, 用户数据最小分值从0开始
 
     protected final Random r = new Random();
+    
+    protected AbstractSkipList(Comparator<K> comparator) {
+        this.hashMap = new HashMap_base_05<>(comparator, 8);
+    }
 
     public abstract Node<K, V> put(K k, V v, double score);
 

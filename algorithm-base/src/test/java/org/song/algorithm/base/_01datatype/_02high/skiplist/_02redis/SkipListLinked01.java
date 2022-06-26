@@ -3,6 +3,7 @@ package org.song.algorithm.base._01datatype._02high.skiplist._02redis;
 import lombok.Data;
 import org.song.algorithm.base._01datatype._01base._01linear.list._01model.ArrayBase01;
 
+import java.util.Comparator;
 import java.util.Objects;
 
 /**
@@ -42,7 +43,8 @@ public class SkipListLinked01<K extends Comparable<K>, V> extends AbstractSkipLi
      */
     protected int indexCount = 0;
     
-    public SkipListLinked01() {
+    public SkipListLinked01(Comparator<K> comparator) {
+        super(comparator);
         // 临时头node节点
         Node<K, V> node = new Node<>();
         node.score = minScore; // 头结点分值最小, 其他分值必须 >= 0

@@ -10,6 +10,8 @@ import java.util.*;
 
 public class SkipList_perf_Test {
 
+    private Comparator<Integer> comparator = Comparator.comparing(e -> e);
+
     private Random r = new Random();
 
     /**
@@ -23,7 +25,7 @@ public class SkipList_perf_Test {
         StopWatch stopWatch = new StopWatch();
 
         StopWatchUtils.warnup(() -> {
-            SkipListLinked02<Integer, Integer> skip1 = new SkipListLinked02<>();
+            SkipListLinked02<Integer, Integer> skip1 = new SkipListLinked02<>(comparator);
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip1.put(key, 0, key);
@@ -36,7 +38,7 @@ public class SkipList_perf_Test {
         });
 
         Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListLinked02", () -> {
-            SkipListLinked02<Integer, Integer> skip1 = new SkipListLinked02<>();
+            SkipListLinked02<Integer, Integer> skip1 = new SkipListLinked02<>(comparator);
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip1.put(key, 0, key);
@@ -75,12 +77,12 @@ public class SkipList_perf_Test {
         StopWatch stopWatch = new StopWatch();
 
         StopWatchUtils.warnup(() -> {
-            SkipListLinked01<Integer, Integer> skip1 = new SkipListLinked01<>();
+            SkipListLinked01<Integer, Integer> skip1 = new SkipListLinked01<>(comparator);
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip1.put(key, 0, key);
             }
-            SkipListLinked02<Integer, Integer> skip2 = new SkipListLinked02<>();
+            SkipListLinked02<Integer, Integer> skip2 = new SkipListLinked02<>(comparator);
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip2.put(key, 0, key);
@@ -88,14 +90,14 @@ public class SkipList_perf_Test {
         });
 
         Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListBase01Linked", () -> {
-            SkipListLinked01<Integer, Integer> skip1 = new SkipListLinked01<>();
+            SkipListLinked01<Integer, Integer> skip1 = new SkipListLinked01<>(comparator);
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip1.put(key, 0, key);
             }
         });
         Runnable r2 = () -> StopWatchUtils.run(stopWatch, "SkipListBase01Linked02", () -> {
-            SkipListLinked02<Integer, Integer> skip2 = new SkipListLinked02<>();
+            SkipListLinked02<Integer, Integer> skip2 = new SkipListLinked02<>(comparator);
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip2.put(key, 0, key);
@@ -126,7 +128,7 @@ public class SkipList_perf_Test {
         StopWatch stopWatch = new StopWatch();
 
         StopWatchUtils.warnup(() -> {
-            SkipListLinked02<Integer, Integer> skip1 = new SkipListLinked02<>();
+            SkipListLinked02<Integer, Integer> skip1 = new SkipListLinked02<>(comparator);
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip1.put(key, 0, key);
@@ -139,7 +141,7 @@ public class SkipList_perf_Test {
         });
 
         Runnable r1 = () -> StopWatchUtils.run(stopWatch, "SkipListBase01Linked02", () -> {
-            SkipListLinked02<Integer, Integer> skip1 = new SkipListLinked02<>();
+            SkipListLinked02<Integer, Integer> skip1 = new SkipListLinked02<>(comparator);
             for (int i = 0; i < num; i++) {
                 int key = r.nextInt(maxVal);
                 skip1.put(key, 0, key);

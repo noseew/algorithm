@@ -8,6 +8,7 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.song.algorithm.base._01datatype._02high.hashmap._01base.HashMap_base_05;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -16,6 +17,8 @@ import java.util.concurrent.TimeUnit;
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 @State(Scope.Thread)
 public class HashMap_perf_Benchmark {
+
+    static Comparator<String> comparator = Comparator.comparing(e -> e);
     int num = 1_0000;
 
 
@@ -52,7 +55,7 @@ public class HashMap_perf_Benchmark {
 
     @Benchmark
     public void HashMap_base_05() {
-        HashMap_base_05<String, String> map2 = new HashMap_base_05<>();
+        HashMap_base_05<String, String> map2 = new HashMap_base_05<>(comparator, 8);
         for (int i = 0; i < num; i++) {
             String s = UUID.randomUUID().toString();
             map2.put(s, "");

@@ -14,21 +14,18 @@ import java.util.function.Predicate;
  * @param <K>
  * @param <V>
  */
-public class HashMap_base_05<K extends Comparable<K>, V> extends HashMap_base_04<K, V> {
+public class HashMap_base_05<K, V> extends HashMap_base_04<K, V> {
 
     protected int treeCapacity = 8; // 变成树的阈值
     protected int linkedCapacity = 6; // 变成链表的阈值
     protected boolean dilatation = false; // 是否正在扩容
+    protected Comparator<K> comparator;
 
     public static final boolean RED = true;
     public static final boolean BLACK = false;
 
-    public HashMap_base_05() {
-        super();
-    }
-
-    public HashMap_base_05(int capacity) {
-        super(capacity);
+    public HashMap_base_05(Comparator<K> comparator, int capacity) {
+        super(comparator, capacity);
     }
 
     @Override
@@ -292,7 +289,7 @@ public class HashMap_base_05<K extends Comparable<K>, V> extends HashMap_base_04
     private TreeNode<K, V> intoTree(Entry<K, V> head) {
         TreeNode<K, V> treeHead = null;
         while (head != null) {
-            TreeNode<K, V> treeNode = new TreeNode<>(head.k, head.val);
+            TreeNode<K, V> treeNode = new TreeNode<>(this.comparator, head.k, head.val);
             treeNode.hash = head.hash;
             if (treeHead == null) {
                 treeHead = treeNode;
@@ -375,7 +372,7 @@ public class HashMap_base_05<K extends Comparable<K>, V> extends HashMap_base_04
      *
      * @param <K, V>
      */
-    static class TreeNode<K extends Comparable<K>, V> extends Entry<K, V> {
+    static class TreeNode<K, V> extends Entry<K, V> {
 
         TreeNode<K, V> left;
         TreeNode<K, V> right;
@@ -383,10 +380,11 @@ public class HashMap_base_05<K extends Comparable<K>, V> extends HashMap_base_04
         boolean red;
         int size;
         TreeNode<K, V> root;
-        Comparator<K> comparator = Comparator.comparing(e -> e);
+        Comparator<K> comparator;
 
-        TreeNode(K k, V v) {
+        TreeNode(Comparator<K> comparator, K k, V v) {
             super(k, v, null);
+            this.comparator = comparator;
         }
 
         public String toBaseString() {
@@ -424,7 +422,7 @@ public class HashMap_base_05<K extends Comparable<K>, V> extends HashMap_base_04
         }
 
         TreeNode<K, V> newNode(K k, V v) {
-            TreeNode<K, V> node = new TreeNode<>(k, v);
+            TreeNode<K, V> node = new TreeNode<>(this.comparator, k, v);
             node.red = RED;
             size++;
             return node;

@@ -1,5 +1,6 @@
 package org.song.algorithm.base._01datatype._02high.skiplist._02redis;
 
+import java.util.Comparator;
 import java.util.Objects;
 
 /**
@@ -11,6 +12,10 @@ import java.util.Objects;
  * 
  */
 public class SkipListLinked02<K extends Comparable<K>, V> extends SkipListLinked01<K, V> {
+
+    public SkipListLinked02(Comparator<K> comparator) {
+        super(comparator);
+    }
 
     @Override
     public Node<K, V> put(K k, V v, double score) {
