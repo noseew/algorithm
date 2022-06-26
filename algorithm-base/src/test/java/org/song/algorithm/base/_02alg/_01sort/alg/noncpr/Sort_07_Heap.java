@@ -4,6 +4,8 @@ import org.junit.Test;
 import org.song.algorithm.base._01datatype._01base._04tree.heap.Heap_build_01;
 import org.song.algorithm.base._02alg._01sort.AbstractSort;
 
+import java.util.Comparator;
+
 /**
  * 堆排序
  * 非比较排序, 而是利用额外工具 堆(也可以将数组原地变堆), 进行排序,
@@ -17,6 +19,8 @@ import org.song.algorithm.base._02alg._01sort.AbstractSort;
  * 复杂度是 O(logn), 主要在数组堆化这一步是 O(logn) 的
  */
 public class Sort_07_Heap {
+
+    private static Comparator<Integer> comparator = Comparator.comparing(Integer::intValue);
 
 
     @Test
@@ -44,7 +48,7 @@ public class Sort_07_Heap {
         @Override
         public void sort(Comparable[] cs) {
             // 将数组原地建堆(如果需要升序, 则需要大堆)
-            Heap_build_01 heapLittle = new Heap_build_01(false, cs);
+            Heap_build_01 heapLittle = new Heap_build_01(false, cs, comparator);
             heapLittle.heapify3();
 
             // 依次取出, 并原地排序, 取出大堆头数据放入队尾, 完成后正好是升序

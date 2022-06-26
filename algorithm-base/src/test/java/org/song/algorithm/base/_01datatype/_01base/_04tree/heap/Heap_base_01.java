@@ -1,6 +1,7 @@
 package org.song.algorithm.base._01datatype._01base._04tree.heap;
 
 import java.lang.reflect.Array;
+import java.util.Comparator;
 
 /**
  * heap 基于数组存储
@@ -27,15 +28,10 @@ import java.lang.reflect.Array;
 public class Heap_base_01<T> extends AbstractHeap<T> {
 
     private double dilatationRatio = 0.8;
-    private static int initCapacity = 7;
+    protected static int initCapacity = 7;
 
-    public Heap_base_01() {
-        this(true);
-    }
-
-    public Heap_base_01(boolean little) {
-        this.little = little;
-        datas = (T[]) new Object[initCapacity];
+    public Heap_base_01(boolean little, Comparator<T> comparator) {
+        super(little, initCapacity, comparator);
     }
 
     /*

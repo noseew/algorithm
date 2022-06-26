@@ -1,5 +1,7 @@
 package org.song.algorithm.base._01datatype._01base._04tree.heap;
 
+import java.util.Comparator;
+
 /**
  * heap 基于数组存储
  * <p>
@@ -9,12 +11,8 @@ package org.song.algorithm.base._01datatype._01base._04tree.heap;
  */
 public class Heap_base_02<T> extends Heap_base_01<T> {
 
-    public Heap_base_02() {
-        this(true);
-    }
-
-    public Heap_base_02(boolean little) {
-        super(little);
+    public Heap_base_02(boolean little, Comparator<T> comparator) {
+        super(little, comparator);
     }
 
     /**

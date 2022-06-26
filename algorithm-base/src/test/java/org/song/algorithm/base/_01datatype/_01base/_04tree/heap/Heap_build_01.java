@@ -1,5 +1,7 @@
 package org.song.algorithm.base._01datatype._01base._04tree.heap;
 
+import java.util.Comparator;
+
 /**
  * heap 原地建堆
  * 3种方式 原地建堆
@@ -16,11 +18,12 @@ package org.song.algorithm.base._01datatype._01base._04tree.heap;
  */
 public class Heap_build_01<T> extends Heap_base_02<T> {
 
-    public Heap_build_01(T[] datas) {
-        this(true, datas);
+    public Heap_build_01(T[] datas, Comparator<T> comparator) {
+        this(true, datas, comparator);
     }
 
-    public Heap_build_01(boolean little, T[] datas) {
+    public Heap_build_01(boolean little, T[] datas, Comparator<T> comparator) {
+        super(little, comparator);
         this.little = little;
         this.datas = datas;
     }

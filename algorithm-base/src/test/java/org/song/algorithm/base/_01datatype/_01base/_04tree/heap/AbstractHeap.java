@@ -10,6 +10,12 @@ public abstract class AbstractHeap<T> {
     protected boolean little;
 
     protected Comparator<T> comparator;
+    
+    protected AbstractHeap(boolean little, int initCapacity, Comparator<T> comparator) {
+        this.little = little;
+        this.comparator = comparator;
+        datas = (T[]) new Object[initCapacity];
+    }
 
     public abstract void push(T v);
 
