@@ -34,7 +34,7 @@ public class Heap_base_02<T> extends Heap_base_01<T> {
         while ((parentIndex = (childIndex - 1) >> 1) >= 0) {
             if (less(parentIndex, v)) {
                 // 直接将父元素放入子元素位置, 子元素取出, 然后等待合适时机再放入
-                datas[parentIndex] = datas[childIndex];
+                datas[childIndex] = datas[parentIndex];
                 childIndex = parentIndex;
             } else {
                 break;
