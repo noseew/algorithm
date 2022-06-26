@@ -3,6 +3,7 @@ package org.song.algorithm.base._01datatype._01base._04tree.heap;
 import org.junit.Test;
 import org.song.algorithm.base._02alg._01sort.AbstractSort;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
@@ -14,12 +15,23 @@ public class Heap_test03 {
      * 原地建堆
      */
     @Test
-    public void test_start_01() {
+    public void test_start_01_little() {
         int size = 20;
         for (int i = 0; i < size; i++) {
             List<Integer> con = AbstractSort.buildList(size);
             Heap_base_03<Integer> heap = new Heap_base_03<>(true, comparator, con);
             isLittleHeap(heap);
+        }
+
+    }
+    
+    @Test
+    public void test_start_01_data() {
+        int size = 20;
+        for (int i = 0; i < size; i++) {
+            List<Integer> con = AbstractSort.buildList(size);
+            Heap_base_03<Integer> heap = new Heap_base_03<>(true, comparator, con);
+            isValidDataHeap(heap, con);
         }
 
     }
@@ -36,5 +48,12 @@ public class Heap_test03 {
             last = pop;
             assert heap.size == size - i - 1;
         }
+    }
+
+    public static void isValidDataHeap(Heap_base_03<Integer> heap, Collection<Integer> collection) {
+        while (!heap.isEmpty()) {
+            assert collection.remove(heap.pop());
+        }
+        assert collection.isEmpty();
     }
 }
