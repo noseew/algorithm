@@ -2,8 +2,7 @@ package org.song.algorithm.base._01datatype._01base._04tree.heap;
 
 import org.junit.Test;
 
-import java.util.Comparator;
-import java.util.Random;
+import java.util.*;
 
 public class Heap_test01 {
 
@@ -42,7 +41,7 @@ public class Heap_test01 {
     }
 
     @Test
-    public void test_03_auto() {
+    public void test_03_auto_little() {
         int size = 1_0000;
         int maxValue = 100_0000;
         Random random = new Random();
@@ -57,7 +56,25 @@ public class Heap_test01 {
     }
 
     @Test
-    public void test_04_auto() {
+    public void test_03_auto_data() {
+        int size = 1_0000;
+        int maxValue = 100_0000;
+        Random random = new Random();
+        Heap_base_01<Integer> heap = new Heap_base_01<>(true, comparator);
+        List<Integer> con = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            int data = random.nextInt(maxValue);
+            con.add(data);
+            heap.push(data);
+            assert heap.size == i + 1;
+        }
+        System.out.println("push");
+        isValidDataHeap(heap, con);
+        System.out.println("OK");
+    }
+
+    @Test
+    public void test_04_auto_little() {
         int size = 1_0000;
         int maxValue = 100_0000;
         Random random = new Random();
@@ -70,6 +87,24 @@ public class Heap_test01 {
         isLittleHeap(heap);
         System.out.println("OK");
     }
+
+    @Test
+    public void test_04_auto_data() {
+        int size = 1_0000;
+        int maxValue = 100_0000;
+        Random random = new Random();
+        Heap_base_02<Integer> heap = new Heap_base_02<>(true, comparator);
+        List<Integer> con = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            int data = random.nextInt(maxValue);
+            con.add(data);
+            heap.push(data);
+            assert heap.size == i + 1;
+        }
+        System.out.println("push");
+        isValidDataHeap(heap, con);
+        System.out.println("OK");
+    }
     
     public static void isLittleHeap(Heap_base_01<Integer> heap) {
         int size = heap.size;
@@ -80,5 +115,12 @@ public class Heap_test01 {
             last = pop;
             assert heap.size == size - i - 1;
         }
+    }
+    
+    public static void isValidDataHeap(Heap_base_01<Integer> heap, Collection<Integer> collection) {
+        while (!heap.isEmpty()) {
+            assert collection.remove(heap.pop());
+        }
+        assert collection.isEmpty();
     }
 }

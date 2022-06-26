@@ -5,7 +5,7 @@ import org.song.algorithm.base._02alg._01sort.AbstractSort;
 
 import java.util.Comparator;
 
-public class Heap_test02 {
+public class Heap_build_test01 {
 
     private static Comparator<Comparable> comparator = Comparator.comparing(e -> e);
 
