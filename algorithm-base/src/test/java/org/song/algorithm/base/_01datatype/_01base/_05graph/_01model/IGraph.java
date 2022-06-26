@@ -1,6 +1,12 @@
 package org.song.algorithm.base._01datatype._01base._05graph._01model;
 
+import lombok.Data;
+import org.song.algorithm.base._01datatype._01base._05graph._01model.listgraph.ListGraph;
+
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Predicate;
 
 /*
@@ -29,7 +35,7 @@ import java.util.function.Predicate;
     将邻接表的出度和入度结合起来, 则每个链表节点都表示出度链表的一个节点和入度链表的一个节点, 从而形成十字形状链表
     从顶点出发形成两个链表, 一个是出度链表, 一个是入度链表
  */
-public interface IGraph<V, E extends Comparable<E>> {
+public interface IGraph<V, E> {
     /**
      * 添加一个顶点
      * 
@@ -136,4 +142,71 @@ public interface IGraph<V, E extends Comparable<E>> {
      * @return
      */
     List<V> topologySort();
+    
+    /*
+    最小生成树, 适用于有权连通图
+    背景:
+    1. 生成树:
+        别名:支撑树, 也就是图的骨架, 
+        也就是连通图的极小连通子图, 也就是将一个连通图去掉尽可能多的边, 这个图依然连通; 
+            边数不能再少了, 再少的话图就不连通的, 也就是有顶点无法相连了
+    2. 最小生成树 minimal spanning tree, MST
+        别名: 最小权重生成树, 最小支撑树
+        所有生成树中总权值最小的生成树
+        如果图中存在多条相同权重的边, 则最小生成树可能有多个
+    应用:
+        1. 在各个城市中架设道路, 能将所有城市连接且总里程最少的方案
+    
+    最小生成树算法
+    1. prim
+    2. kruskal
+    
+     */
+
+    /**
+     * 返回最小生成树的边集
+     * 
+     * @return
+     */
+    Set<EdgeInfo<V, E>> mst();
+    
+    @Data
+    class EdgeInfo<V, E> {
+        V from; // 表示该边出度的顶点
+        V to; // 表示该边入度的顶点
+        E wight; // 边的权重
+
+        public EdgeInfo(V from, V to, E wight) {
+            this.from = from;
+            this.to = to;
+            this.wight = wight;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof EdgeInfo)) return false;
+            EdgeInfo<?, ?> edge = (EdgeInfo<?, ?>) o;
+            return Objects.equals(from, edge.from) &&
+                    Objects.equals(to, edge.to);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(from, to);
+        }
+        
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append(from).append(" --(").append(wight).append(")--> ").append(to);
+            return sb.toString();
+        }
+    }
+
+    abstract class EdgeOpr<E> {
+
+        public abstract int compare(E e1, E e2);
+
+        public abstract E add(E e1, E e2);
+    }
 }

@@ -1,12 +1,24 @@
 package org.song.algorithm.base._01datatype._01base._05graph._01model.listgraph;
 
+import lombok.Data;
 import org.song.algorithm.base._01datatype._01base._05graph._01model.IGraph;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public abstract class ListGraph<V, E extends Comparable<E>> implements IGraph<V, E> {
+public abstract class ListGraph<V, E> implements IGraph<V, E> {
+    
+    protected EdgeOpr<E> edgeOpr;
+    
+    protected Comparator<Edge<V, E>> comparator;
+    
+    protected ListGraph(EdgeOpr<E> edgeOpr) {
+        this.edgeOpr = edgeOpr;
+        this.comparator = (e1, e2) -> edgeOpr.compare(e1.wight, e2.wight);
+    }
+    
 
     /**
      * 顶点Node
@@ -14,7 +26,7 @@ public abstract class ListGraph<V, E extends Comparable<E>> implements IGraph<V,
      * @param <V> 表示顶点存储的值
      * @param <E> 适用于边
      */
-    class Vertex<V, E extends Comparable<E>> {
+    class Vertex<V, E> {
         V value; // 顶点的值
         Set<Edge<V, E>> inEdges = new HashSet<>(); // 当前顶点的入度边
         Set<Edge<V, E>> outEdges = new HashSet<>(); // 当前顶点的出度边
@@ -43,7 +55,8 @@ public abstract class ListGraph<V, E extends Comparable<E>> implements IGraph<V,
      * @param <V> 适用于顶点
      * @param <E> 边权重
      */
-    class Edge<V, E extends Comparable<E>> {
+    @Data
+    class Edge<V, E> {
         Vertex<V, E> from; // 表示该边出度的顶点
         Vertex<V, E> to; // 表示该边入度的顶点
         E wight; // 边的权重

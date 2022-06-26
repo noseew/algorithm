@@ -2,13 +2,14 @@ package org.song.algorithm.base._01datatype._01base._05graph._01model.matrixgrap
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Predicate;
 
 /**
  * 数组存储
  * 邻接矩阵方式存储
  */
-public class AdjacencyMatrix<V, E extends Comparable<E>> extends MatrixGraph<V, E> {
+public class AdjacencyMatrix<V, E> extends MatrixGraph<V, E> {
 
     public AdjacencyMatrix(int vertex) {
         super(vertex);
@@ -105,6 +106,11 @@ public class AdjacencyMatrix<V, E extends Comparable<E>> extends MatrixGraph<V, 
 
     @Override
     public List<V> topologySort() {
+        return null;
+    }
+
+    @Override
+    public Set<EdgeInfo<V, E>> mst() {
         return null;
     }
 

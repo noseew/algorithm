@@ -4,7 +4,7 @@ import org.song.algorithm.base._01datatype._01base._05graph._01model.IGraph;
 
 import java.util.Objects;
 
-public abstract class MatrixGraph<V, E extends Comparable<E>> implements IGraph<V, E> {
+public abstract class MatrixGraph<V, E> implements IGraph<V, E> {
     
     // 最多顶点数
     protected int maxVertex;
@@ -84,7 +84,7 @@ public abstract class MatrixGraph<V, E extends Comparable<E>> implements IGraph<
      *
      * @param <E> 边权重
      */
-    class Edge<E extends Comparable<E>> {
+    class Edge<E> {
         
         E wight; // 边的权重
 

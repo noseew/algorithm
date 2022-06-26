@@ -1,5 +1,8 @@
 package org.song.algorithm.base._01datatype._01base._05graph._01model.listgraph;
 
+import org.song.algorithm.base._01datatype._01base._04tree.heap.Heap_base_01;
+import org.song.algorithm.base._01datatype._01base._04tree.heap.Heap_base_03;
+
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
@@ -13,7 +16,7 @@ import java.util.stream.Collectors;
  * @param <V>
  * @param <E>
  */
-public class AdjacencyList<V, E extends Comparable<E>> extends ListGraph<V, E> {
+public class AdjacencyList<V, E> extends ListGraph<V, E> {
     /**
      * 顶点的集合
      * key=顶点的值
@@ -25,6 +28,10 @@ public class AdjacencyList<V, E extends Comparable<E>> extends ListGraph<V, E> {
      * 元素=边的Node
      */
     private Set<Edge<V, E>> edges = new HashSet<>();
+
+    protected AdjacencyList(EdgeOpr<E> edgeOpr) {
+        super(edgeOpr);
+    }
 
     /**
      * 添加一个顶点
@@ -291,6 +298,44 @@ public class AdjacencyList<V, E extends Comparable<E>> extends ListGraph<V, E> {
             });
         }
         return sorted;
+    }
+
+    @Override
+    public Set<EdgeInfo<V, E>> mst() {
+
+        return prim();
+    }
+
+    /*
+    prim算法, 计算最小生成树
+    1. 切分定理
+        用一条线将图分割成两个部分, 该条线所穿过的1条或多条边中, 权重最小的那条边一定是最小生成树中的一条边
+    
+     */
+    /**
+     * prim 算法, 返回最小生成树
+     * 
+     * @return
+     */
+    private Set<EdgeInfo<V, E>> prim() {
+
+        Set<Edge<V, E>> minEdges = new HashSet<>();
+
+        Vertex<V, E> nextVertex = vertices.values().stream().findFirst().get();
+        Heap_base_03<Edge<V, E>> heap = new Heap_base_03<>(true, comparator, nextVertex.outEdges);
+
+        while (!heap.isEmpty()) {
+            Edge<V, E> edge = heap.pop();
+            if (minEdges.contains(edge)) {
+                continue;
+            }
+            minEdges.add(edge);
+            heap.addAll(edge.to.outEdges);
+        }
+        return minEdges.stream()
+                .map(e -> new EdgeInfo<>(e.from.value, e.to.value, e.wight))
+                .collect(Collectors.toSet());
+        
     }
 
     @Override
