@@ -1,6 +1,8 @@
 package org.song.algorithm.base._02alg._01sort;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 /*
@@ -93,6 +95,14 @@ public abstract class AbstractSort {
             ints[i] = random.nextInt(num * 10);
         }
         return ints;
+    }
+    
+    public static List<Integer> buildList(int num) {
+        List<Integer> list = new ArrayList<>(num);
+        for (int i = 0; i < num; i++) {
+            list.add(random.nextInt(num * 10));
+        }
+        return list;
     }
     
     public static int[] buildInt(int num) {

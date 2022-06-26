@@ -4,37 +4,27 @@ import org.junit.Test;
 import org.song.algorithm.base._02alg._01sort.AbstractSort;
 
 import java.util.Comparator;
+import java.util.List;
 
 public class Heap_test03 {
 
-    private static Comparator<Comparable> comparator = Comparator.comparing(e -> e);
+    private Comparator<Integer> comparator = Comparator.comparing(Integer::intValue);
 
     /**
-     * 3种方式 原地建堆
+     * 原地建堆
      */
     @Test
     public void test_start_01() {
-        int size = 100;
+        int size = 20;
         for (int i = 0; i < size; i++) {
-            Comparable[] build = AbstractSort.build(size);
-            Heap_build_01<Comparable> heap = new Heap_build_01<>(build, comparator);
-            heap.heapify1();
+            List<Integer> con = AbstractSort.buildList(size);
+            Heap_base_03<Integer> heap = new Heap_base_03<>(true, comparator, con);
             isLittleHeap(heap);
-            
-            Comparable[] build2 = AbstractSort.build(size);
-            Heap_build_01<Comparable> heap2 = new Heap_build_01<>(build2, comparator);
-            heap2.heapify2();
-            isLittleHeap(heap2);
-            
-            Comparable[] build3 = AbstractSort.build(size);
-            Heap_build_01<Comparable> heap3 = new Heap_build_01<>(build3, comparator);
-            heap3.heapify3();
-            isLittleHeap(heap3);
         }
 
     }
 
-    public static void isLittleHeap(Heap_build_01<Comparable> heap) {
+    public static void isLittleHeap(Heap_base_03<Integer> heap) {
         int size = heap.size;
         int last = -1;
         for (int i = 0; i < size; i++) {
