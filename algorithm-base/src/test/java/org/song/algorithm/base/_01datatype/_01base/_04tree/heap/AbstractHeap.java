@@ -202,9 +202,15 @@ public abstract class AbstractHeap<T> {
 
         if (!little) {
             // 大堆
+            if (comparator != null) {
+                return comparator.compare(childLeft, childRight) < 0 ? right : left;
+            }
             return ((Comparable)childLeft).compareTo(childRight) < 0 ? right : left;
         } else {
             // 小堆
+            if (comparator != null) {
+                return comparator.compare(childLeft, childRight) > 0 ? right : left;
+            }
             return ((Comparable)childLeft).compareTo(childRight) > 0 ? right : left;
         }
     }
