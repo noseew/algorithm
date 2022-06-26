@@ -29,12 +29,23 @@ public class UFSQuickUnion_PathHalve<T> extends AbstractUFS<T> {
     @Override
     public T findRoot(T n) {
         validRange(n);
-        while (Objects.equals(parentOf(n), n)) {
+        while (!Objects.equals(parentOf(n), n)) {
             setParent(n, parentOf(parentOf(n)));
             n = parentOf(n);
         }
         // 返回最终的根节点
         return parentOf(n);
+    }
+
+    @Override
+    protected Node<T> findRootNode(T n) {
+        validRange(n);
+        while (!Objects.equals(parentOf(n), n)) {
+            setParent(n, parentOf(parentOf(n)));
+            n = parentOf(n);
+        }
+        // 返回最终的根节点
+        return parentNodeOf(n);
     }
 
     @Override

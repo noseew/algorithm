@@ -44,16 +44,20 @@ public abstract class UnionFindSets implements UFS<Integer> {
     最顶层的parent元素, 也就是root元素, 就代表了这个集合, 而不是下面某个节点代表这个集合
      */
     protected Integer[] parents;
-    protected int capacity;
+    protected int size;
 
     protected UnionFindSets(int capacity) {
         validRange(capacity);
-        this.capacity = capacity;
         parents = new Integer[capacity];
         for (int i = 0; i < parents.length; i++) {
             // 目的是, 数组中每个数据和自己都形成独立的集合
             parents[i] = i;
         }
+    }
+
+    public void add(Integer n) {
+        parents = Arrays.copyOf(parents, parents.length + 1);
+        parents[size++] = n;
     }
     
     /**
@@ -85,8 +89,12 @@ public abstract class UnionFindSets implements UFS<Integer> {
         return findRoot(n1) == findRoot(n2);
     }
 
+    public int size() {
+        return size;
+    }
+
     protected void validRange(int n) {
-        Assert.isTrue(n >= 0 && n < capacity, "数组下标越界");
+        Assert.isTrue(n >= 0 && n < size, "数组下标越界");
     }
 
 }

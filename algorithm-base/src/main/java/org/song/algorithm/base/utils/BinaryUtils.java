@@ -1,7 +1,5 @@
 package org.song.algorithm.base.utils;
 
-import java.util.Arrays;
-
 public class BinaryUtils {
 
     public static String binaryPretty(int i) {
