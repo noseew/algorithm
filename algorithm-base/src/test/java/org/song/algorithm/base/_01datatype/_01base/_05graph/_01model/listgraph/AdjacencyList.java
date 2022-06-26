@@ -2,6 +2,8 @@ package org.song.algorithm.base._01datatype._01base._05graph._01model.listgraph;
 
 import org.song.algorithm.base._01datatype._01base._04tree.heap.Heap_base_01;
 import org.song.algorithm.base._01datatype._01base._04tree.heap.Heap_base_03;
+import org.song.algorithm.base._01datatype._02high.unionfindsets.UFS;
+import org.song.algorithm.base._01datatype._02high.unionfindsets.common.UFSQuickUnion_PathHalve;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -303,13 +305,20 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
     @Override
     public Set<EdgeInfo<V, E>> mst() {
 
-        return prim();
+//        return prim();
+        return kruskal();
     }
 
     /*
     prim算法, 计算最小生成树
     1. 切分定理
         用一条线将图分割成两个部分, 该条线所穿过的1条或多条边中, 权重最小的那条边一定是最小生成树中的一条边
+        
+    prim算法就是根据切分定理来实现的
+    集合S是切分已计算的顶点集合, 
+    1. 从某一个顶点开始切割, 将该顶点记录在S中, 则从S和该图其他顶点之间(非S)的边选出权重最小的边, 加入最小生成树集合中
+    2. 以此类推, 重复步骤1, 直到最小生成树中的边数等于该图顶点数-1, 则最小生成树完成
+    注意: 过程中需要防止边的重复添加
     
      */
     /**
@@ -321,21 +330,67 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
 
         Set<Edge<V, E>> minEdges = new HashSet<>();
 
+        // 从任意一个顶点开始 切分
         Vertex<V, E> nextVertex = vertices.values().stream().findFirst().get();
+        // 采用堆进行排序, 提高效率
         Heap_base_03<Edge<V, E>> heap = new Heap_base_03<>(true, comparator, nextVertex.outEdges);
 
         while (!heap.isEmpty()) {
             Edge<V, E> edge = heap.pop();
             if (minEdges.contains(edge)) {
+                // 过滤掉重复的边
                 continue;
             }
+            // 添加本次切分中, 最小的边
             minEdges.add(edge);
+            // 增加下次需要切分边
             heap.addAll(edge.to.outEdges);
         }
         return minEdges.stream()
                 .map(e -> new EdgeInfo<>(e.from.value, e.to.value, e.wight))
                 .collect(Collectors.toSet());
         
+    }
+
+    /*
+    kruskal算法, 计算最小生成树
+    1. 根据prim的切分定理, 能得到
+        1. 所有边的集合中, 权重最小的(和次小的)一定是最小生成树中的一条边
+            根据切分定理, 最小的和次小的一定会在某次切分中出现且是该次切分中最小的边
+        2. 去掉那些能够构成环的边, 则这些最小的边就是最小生成树的边(最小边数要等于顶点数-1)
+            最小边中, 可能会出现环, 所以去掉那些环, 之后的边依然满足1
+    
+    kruskal算法, 就是将所有的边从小到大排序, 去除掉能构成环的边之后, 边数到达定点数-1, 既是最小生成树
+    如何判断是否会构成环呢? 采用并查集
+     */
+    /**
+     * kruskal 算法, 返回最小生成树
+     * 
+     * @return
+     */
+    private Set<EdgeInfo<V, E>> kruskal() {
+
+        Set<Edge<V, E>> minEdges = new HashSet<>();
+        
+        // 采用堆进行排序, 提高效率
+        Heap_base_03<Edge<V, E>> heap = new Heap_base_03<>(true, comparator, edges);
+        // 将所有顶点加入并查集, 各自成为独立集合
+        UFS<Vertex<V, E>> ufs = new UFSQuickUnion_PathHalve<>(vertices.values());
+
+        while (!heap.isEmpty() && minEdges.size() < vertices.size() - 1) {
+            Edge<V, E> edge = heap.pop();
+            if (ufs.isSame(edge.from, edge.to)) {
+                // 如果两个顶点是同一个集合, 则会成为环
+                continue;
+            }
+
+            minEdges.add(edge);
+            // 将两个顶点合并到一个集合
+            ufs.union(edge.from, edge.to);
+        }
+        return minEdges.stream()
+                .map(e -> new EdgeInfo<>(e.from.value, e.to.value, e.wight))
+                .collect(Collectors.toSet());
     }
 
     @Override

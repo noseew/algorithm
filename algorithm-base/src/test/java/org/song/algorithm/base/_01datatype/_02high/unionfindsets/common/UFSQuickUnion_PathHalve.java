@@ -1,5 +1,6 @@
 package org.song.algorithm.base._01datatype._02high.unionfindsets.common;
 
+import java.util.Collection;
 import java.util.Objects;
 
 /*
@@ -14,8 +15,12 @@ import java.util.Objects;
  */
 public class UFSQuickUnion_PathHalve<T> extends AbstractUFS<T> {
 
-    protected UFSQuickUnion_PathHalve(int capacity) {
+    public UFSQuickUnion_PathHalve(int capacity) {
         super(capacity);
+    }
+
+    public UFSQuickUnion_PathHalve(Collection<T> collection) {
+        super(collection);
     }
 
     /*

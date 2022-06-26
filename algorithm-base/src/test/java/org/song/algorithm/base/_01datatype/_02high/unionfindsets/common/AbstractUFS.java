@@ -3,8 +3,8 @@ package org.song.algorithm.base._01datatype._02high.unionfindsets.common;
 import org.song.algorithm.base._01datatype._02high.unionfindsets.UFS;
 import org.springframework.util.Assert;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -21,6 +21,14 @@ public abstract class AbstractUFS<T> implements UFS<T> {
     protected AbstractUFS(int capacity) {
         data = new HashMap<>(capacity);
         this.capacity = capacity;
+    }
+
+    protected AbstractUFS(Collection<T> collection) {
+        data = new HashMap<>(collection.size());
+        this.capacity = capacity;
+        for (T t : collection) {
+            add(t);
+        }
     }
 
     public void add(T t) {
