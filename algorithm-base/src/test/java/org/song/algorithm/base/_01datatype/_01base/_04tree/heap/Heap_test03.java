@@ -10,7 +10,7 @@ public class Heap_test03 {
      */
     @Test
     public void test_start_01() {
-        int size = 10;
+        int size = 100;
         for (int i = 0; i < size; i++) {
             Comparable[] build = AbstractSort.build(size);
             Heap_build_01<Comparable> heap = new Heap_build_01<>(build);

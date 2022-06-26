@@ -117,7 +117,8 @@ public class Heap_base_01<T> extends AbstractHeap<T> {
     private void ensureCapacity() {
         if ((double) size / (double) datas.length > dilatationRatio) {
             // 扩容 1.5 倍
-            T[] newDatas = (T[]) Array.newInstance(Comparable.class, datas.length + (datas.length >> 1));
+//            T[] newDatas = (T[]) Array.newInstance(Comparable.class, datas.length + (datas.length >> 1));
+            T[] newDatas = (T[]) Array.newInstance(Object.class, datas.length + (datas.length >> 1));
             System.arraycopy(datas, 0, newDatas, 0, size);
             datas = newDatas;
         }

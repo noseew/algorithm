@@ -1,12 +1,15 @@
 package org.song.algorithm.base._01datatype._01base._04tree.heap;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 public abstract class AbstractHeap<T> {
 
     protected T[] datas;
     protected int size;
     protected boolean little;
+
+    protected Comparator<T> comparator;
 
     public abstract void push(T v);
 
@@ -21,7 +24,7 @@ public abstract class AbstractHeap<T> {
     }
     
     public boolean isEmpty() {
-        return size == datas.length;
+        return size == 0;
     }
     
     public boolean isFull() {
@@ -115,9 +118,15 @@ public abstract class AbstractHeap<T> {
 
         if (!little) {
             // 大堆
+            if (comparator != null) {
+                return comparator.compare(parent, child) < 0;
+            }
             return ((Comparable)parent).compareTo(child) < 0;
         } else {
             // 小堆
+            if (comparator != null) {
+                return comparator.compare(parent, child) > 0;
+            }
             return ((Comparable)parent).compareTo(child) > 0;
         }
     }
@@ -129,9 +138,15 @@ public abstract class AbstractHeap<T> {
 
         if (!little) {
             // 大堆
+            if (comparator != null) {
+                return comparator.compare(parent, child) < 0;
+            }
             return ((Comparable)parent).compareTo(child) < 0;
         } else {
             // 小堆
+            if (comparator != null) {
+                return comparator.compare(parent, child) > 0;
+            }
             return ((Comparable)parent).compareTo(child) > 0;
         }
     }
@@ -143,9 +158,15 @@ public abstract class AbstractHeap<T> {
 
         if (!little) {
             // 大堆
+            if (comparator != null) {
+                return comparator.compare(parent, child) < 0;
+            }
             return ((Comparable)parent).compareTo(child) < 0;
         } else {
             // 小堆
+            if (comparator != null) {
+                return comparator.compare(parent, child) > 0;
+            }
             return ((Comparable)parent).compareTo(child) > 0;
         }
     }
