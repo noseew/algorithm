@@ -17,6 +17,10 @@ public class Heap_base_03<T> extends Heap_base_02<T> {
     public Heap_base_03(boolean little, Comparator<T> comparator, Collection<T> collection) {
         super(little, comparator);
         this.comparator = comparator;
+        addAll(collection);
+    }
+    
+    public void addAll(Collection<T> collection) {
         for (T data : collection) {
             push(data);
         }
