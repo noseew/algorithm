@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.song.algorithm.base._01datatype._01base._05graph._01model.IGraph;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class AdjacencyListTest {
@@ -134,6 +135,25 @@ public class AdjacencyListTest {
 
         Set<IGraph.EdgeInfo<String, Integer>> mst = adJacencyList.mst();
         System.out.println(mst);
+
+    }
+
+    @Test
+    public void test07() {
+
+        AdjacencyList<String, Integer> adJacencyList = new AdjacencyList<>(integerEdgeOpr);
+
+        adJacencyList.addEdge("V1", "V2", 1);
+        adJacencyList.addEdge("V2", "V3", 2);
+        adJacencyList.addEdge("V1", "V3", 4);
+        adJacencyList.addEdge("V3", "V4", 3);
+        adJacencyList.addEdge("V4", "V5", 4);
+        adJacencyList.addEdge("V2", "V5", 10);
+        adJacencyList.addEdge("V4", "V1", 7);
+        System.out.println(adJacencyList);
+
+        Map<String, Integer> shortestPath = adJacencyList.shortestPath("V1");
+        System.out.println(shortestPath);
 
     }
 }

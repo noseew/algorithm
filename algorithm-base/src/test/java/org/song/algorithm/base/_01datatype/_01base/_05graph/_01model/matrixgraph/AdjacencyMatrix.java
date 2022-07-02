@@ -1,6 +1,7 @@
 package org.song.algorithm.base._01datatype._01base._05graph._01model.matrixgraph;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -111,6 +112,11 @@ public class AdjacencyMatrix<V, E> extends MatrixGraph<V, E> {
 
     @Override
     public Set<EdgeInfo<V, E>> mst() {
+        return null;
+    }
+
+    @Override
+    public Map<V, E> shortestPath(V begin) {
         return null;
     }
 

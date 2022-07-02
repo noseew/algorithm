@@ -304,8 +304,22 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
     @Override
     public Set<EdgeInfo<V, E>> mst() {
 
+        /*
+        复杂度分析
+        prim O(ElogE), E 表示顶点数量
+        不过稍微比 kruskal 好点
+        kruskal O(ElogE), E 表示顶点数量
+        
+        效率主要体现在, 堆的选择上, 使用什么堆效果是不一样的, 这里采用的是二叉堆, 其他的还有菲波那切堆
+         */
 //        return prim();
         return kruskal();
+    }
+
+    @Override
+    public Map<V, E> shortestPath(V begin) {
+        Vertex<V, E> vertex = vertices.get(begin);
+        return dijkstra(vertex);
     }
 
     /*
@@ -390,6 +404,99 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
         return minEdges.stream()
                 .map(e -> new EdgeInfo<>(e.from.value, e.to.value, e.wight))
                 .collect(Collectors.toSet());
+    }
+
+    /*
+    从一个顶点到其他顶点的最短路径, 不支持有负权边的图, 该算法不支持
+    效率 O(ElogV)
+    
+    算法思路
+        算法思路模拟: 将多个石头用绳线连起来, 线的长度就是权重, 将其平放在桌面上, 如此就构成了一个图
+        1. 以其中一个石头(顶点)为起点V1, 慢慢向上提起, 直到有下一个石头V2被带起来; 此时顶点和下一个石头就构成了两个顶点间的最短路径
+            下一个被提起的石头, 权重一定是接下来中最小的
+        2. 重复第一步, 下一个被带起来的石头V3, 就构成了V1到V3的最短路径
+    
+    算法记录: 
+    1. 记录一个顶点V1到其他顶点的所有最短路径的表
+    
+        开始顶点 | 目标顶点 | 最短路径 | 最短路径值
+        V1     | V2      | V1-V2   | 1
+        V1     | V3      | 无穷大   | 无穷大
+        其他省略 ...
+    
+    2. 按照算法思路, 先找到V1第一个提起的顶点V2, 然后将表中的V1-V2路径记录下路径, 并标记为最短路径, 
+        1. 标记为最短路径的标志是, 该顶点被提起离开桌面; 
+            算法中确定下一个被提起的石头就是在上表中, 除了已经标记了最短路径的其他最短路路径值中取最小的 
+        2. 更新最短路径条件是, 随着每次新的石头被提起, 发现新的路径指向目标顶点, 且新的路径长度小于原来路径长度
+            比如 V1-V3 = 10, 随着V2被提起, 发现 V1-V2-V3 = 7, 则V1-V3的路径更新为 V1-V2-V3
+    
+    松弛操作:
+        松弛操作其实就是更新最短路径和其权值
+        优先能确定的路径权值, (比如V1-V3, 他们是直接相连的, 但是他们的权值并不一定是最短路径), 
+        在提起石头的过程中, 新的路径被发现, 发现 V1-V2-V3 比 V1-V3 权值更短, 相当于 V1-V3 这根线边送了, 取而代之的是 V1-V2-V3 这根线变紧了
+
+     */
+    /**
+     * 
+     * @return
+     */
+    private Map<V, E> dijkstra(Vertex<V, E> beginVertex) {
+        /*
+        路径表
+        key表示 beginVertex->V的路径
+        val表示 beginVertex->V的权重, 如果没有表示路径权重无穷大
+        初始的时候
+         */
+        // 路径表
+        Map<Vertex<V, E>, E> paths = new HashMap<>();
+        beginVertex.outEdges.forEach(edge -> {
+            // 初始化路径表, 将起点能直接找到的路径放入, 其他路径未知, 为null, 也就是默认权重无穷大
+            paths.put(beginVertex, edge.wight);
+        });
+        // 已经提起来的顶点, 也就是已经确认了是最短路径的顶点
+        Map<V, E> selected = new HashMap<>();
+        while (!paths.isEmpty()) {
+            // 找到下一个被提起来的顶点, 也就是在历史路径权重集合中, 找到最小的权重
+            Map.Entry<Vertex<V, E>, E> minPath = minPath(paths);
+            // 将提起的顶点和其新的路径权重放入, 选中集合中, 相当于标记了该顶点最短路已经确定
+            selected.put(minPath.getKey().value, minPath.getValue());
+            // 将该顶点从待选择集合中去掉
+            paths.remove(minPath.getKey());
+
+            // 随着新的顶点的提起, 将会有更多的路径被发现, 那这些新的路径可能会更新原有的路径权值
+            for (Edge<V, E> outEdge : minPath.getKey().outEdges) {
+                // 新的路径重复, 忽略
+                if (selected.containsKey(outEdge.to.value) || beginVertex.equals(outEdge.to)) {
+                    continue;
+                }
+                /*
+                接下来就是松弛操作, 
+                松弛 Edge 表示:
+                更新 beginVertex -> Edge.to 的路径的权值
+                 */
+                // 新的路径所产生的新的权值, 
+                E newWight = edgeOpr.add(minPath.getValue(), outEdge.wight);
+                // 判断新的路径有没有对应老的权值, 如果该边的to是新的顶点, 原本没有记录, 则这里直接放入
+                E oldWight = paths.get(outEdge.to);
+                if (oldWight == null || edgeOpr.compare(newWight, oldWight) < 0) {
+                    // 更新路径权值
+                    paths.put(outEdge.to, newWight);
+                }
+            }
+        }
+
+        return selected;
+    }
+    
+    private Map.Entry<Vertex<V, E>, E> minPath(Map<Vertex<V, E>, E> paths) {
+        Map.Entry<Vertex<V, E>, E> minEntry = paths.entrySet().iterator().next();
+        E minEdge = minEntry.getValue();
+        for (Map.Entry<Vertex<V, E>, E> entry : paths.entrySet()) {
+            if (edgeOpr.compare(entry.getValue(), minEdge) < 0) {
+                minEntry = entry;
+            }
+        }
+        return minEntry;
     }
 
     @Override

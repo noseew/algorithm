@@ -3,10 +3,7 @@ package org.song.algorithm.base._01datatype._01base._05graph._01model;
 import lombok.Data;
 import org.song.algorithm.base._01datatype._01base._05graph._01model.listgraph.ListGraph;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 
 /*
@@ -165,10 +162,22 @@ public interface IGraph<V, E> {
 
     /**
      * 返回最小生成树的边集
+     * minimal spanning tree
      * 
      * @return
      */
     Set<EdgeInfo<V, E>> mst();
+
+    /**
+     * 返回单源最短路径集合
+     * 返回 k-v, 
+     * k= begin到v的标识
+     * v= begin到v的最短路径权值
+     *
+     * @param begin 开始顶点
+     * @return
+     */
+    Map<V, E> shortestPath(V begin);
     
     @Data
     class EdgeInfo<V, E> {
