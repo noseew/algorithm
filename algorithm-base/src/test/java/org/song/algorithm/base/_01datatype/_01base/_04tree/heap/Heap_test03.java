@@ -19,7 +19,7 @@ public class Heap_test03 {
         int size = 20;
         for (int i = 0; i < size; i++) {
             List<Integer> con = AbstractSort.buildList(size);
-            Heap_base_03<Integer> heap = new Heap_base_03<>(true, comparator, con);
+            BinaryHeap_base_03<Integer> heap = new BinaryHeap_base_03<>(true, comparator, con);
             isLittleHeap(heap);
         }
 
@@ -30,13 +30,13 @@ public class Heap_test03 {
         int size = 20;
         for (int i = 0; i < size; i++) {
             List<Integer> con = AbstractSort.buildList(size);
-            Heap_base_03<Integer> heap = new Heap_base_03<>(true, comparator, con);
+            BinaryHeap_base_03<Integer> heap = new BinaryHeap_base_03<>(true, comparator, con);
             isValidDataHeap(heap, con);
         }
 
     }
 
-    public static void isLittleHeap(Heap_base_03<Integer> heap) {
+    public static void isLittleHeap(BinaryHeap_base_03<Integer> heap) {
         int size = heap.size;
         int last = -1;
         for (int i = 0; i < size; i++) {
@@ -50,7 +50,7 @@ public class Heap_test03 {
         }
     }
 
-    public static void isValidDataHeap(Heap_base_03<Integer> heap, Collection<Integer> collection) {
+    public static void isValidDataHeap(BinaryHeap_base_03<Integer> heap, Collection<Integer> collection) {
         while (!heap.isEmpty()) {
             assert collection.remove(heap.pop());
         }

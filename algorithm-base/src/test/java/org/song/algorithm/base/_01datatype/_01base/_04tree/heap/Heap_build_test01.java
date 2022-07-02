@@ -17,24 +17,24 @@ public class Heap_build_test01 {
         int size = 100;
         for (int i = 0; i < size; i++) {
             Comparable[] build = AbstractSort.build(size);
-            Heap_build_01<Comparable> heap = new Heap_build_01<>(build, comparator);
+            BinaryHeap_build_01<Comparable> heap = new BinaryHeap_build_01<>(build, comparator);
             heap.heapify1();
             isLittleHeap(heap);
             
             Comparable[] build2 = AbstractSort.build(size);
-            Heap_build_01<Comparable> heap2 = new Heap_build_01<>(build2, comparator);
+            BinaryHeap_build_01<Comparable> heap2 = new BinaryHeap_build_01<>(build2, comparator);
             heap2.heapify2();
             isLittleHeap(heap2);
             
             Comparable[] build3 = AbstractSort.build(size);
-            Heap_build_01<Comparable> heap3 = new Heap_build_01<>(build3, comparator);
+            BinaryHeap_build_01<Comparable> heap3 = new BinaryHeap_build_01<>(build3, comparator);
             heap3.heapify3();
             isLittleHeap(heap3);
         }
 
     }
 
-    public static void isLittleHeap(Heap_build_01<Comparable> heap) {
+    public static void isLittleHeap(BinaryHeap_build_01<Comparable> heap) {
         int size = heap.size;
         int last = -1;
         for (int i = 0; i < size; i++) {

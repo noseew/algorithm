@@ -16,13 +16,13 @@ import java.util.Comparator;
  *      
  * 注意: 其他的(自上而下下滤/自下而上上滤) 都不行
  */
-public class Heap_build_01<T> extends Heap_base_02<T> {
+public class BinaryHeap_build_01<T> extends BinaryHeap_base_02<T> {
 
-    public Heap_build_01(T[] datas, Comparator<T> comparator) {
+    public BinaryHeap_build_01(T[] datas, Comparator<T> comparator) {
         this(true, datas, comparator);
     }
 
-    public Heap_build_01(boolean little, T[] datas, Comparator<T> comparator) {
+    public BinaryHeap_build_01(boolean little, T[] datas, Comparator<T> comparator) {
         super(little, comparator);
         this.little = little;
         this.datas = datas;

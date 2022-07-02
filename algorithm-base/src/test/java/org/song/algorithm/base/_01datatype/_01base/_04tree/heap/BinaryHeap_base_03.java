@@ -6,7 +6,7 @@ import java.util.Comparator;
 /**
  * @param <T>
  */
-public class Heap_base_03<T> extends Heap_base_02<T> {
+public class BinaryHeap_base_03<T> extends BinaryHeap_base_02<T> {
     
     /**
      * 建堆
@@ -14,7 +14,7 @@ public class Heap_base_03<T> extends Heap_base_02<T> {
      * @param comparator
      * @param collection
      */
-    public Heap_base_03(boolean little, Comparator<T> comparator, Collection<T> collection) {
+    public BinaryHeap_base_03(boolean little, Comparator<T> comparator, Collection<T> collection) {
         super(little, comparator);
         this.comparator = comparator;
         addAll(collection);

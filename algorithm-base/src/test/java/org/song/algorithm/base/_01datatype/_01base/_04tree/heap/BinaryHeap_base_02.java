@@ -9,9 +9,9 @@ import java.util.Comparator;
  *
  * @param <T>
  */
-public class Heap_base_02<T> extends Heap_base_01<T> {
+public class BinaryHeap_base_02<T> extends BinaryHeap_base_01<T> {
 
-    public Heap_base_02(boolean little, Comparator<T> comparator) {
+    public BinaryHeap_base_02(boolean little, Comparator<T> comparator) {
         super(little, comparator);
     }
 

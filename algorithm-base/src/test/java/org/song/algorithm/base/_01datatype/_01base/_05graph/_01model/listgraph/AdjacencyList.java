@@ -1,6 +1,6 @@
 package org.song.algorithm.base._01datatype._01base._05graph._01model.listgraph;
 
-import org.song.algorithm.base._01datatype._01base._04tree.heap.Heap_base_03;
+import org.song.algorithm.base._01datatype._01base._04tree.heap.BinaryHeap_base_03;
 import org.song.algorithm.base._01datatype._02high.unionfindsets.UFS;
 import org.song.algorithm.base._01datatype._02high.unionfindsets.common.UFSQuickUnion_PathHalve;
 
@@ -346,7 +346,7 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
         // 从任意一个顶点开始 切分
         Vertex<V, E> nextVertex = vertices.values().stream().findFirst().get();
         // 采用堆进行排序, 提高效率
-        Heap_base_03<Edge<V, E>> heap = new Heap_base_03<>(true, comparator, nextVertex.outEdges);
+        BinaryHeap_base_03<Edge<V, E>> heap = new BinaryHeap_base_03<>(true, comparator, nextVertex.outEdges);
 
         while (!heap.isEmpty()) {
             Edge<V, E> edge = heap.pop();
@@ -386,7 +386,7 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
         Set<Edge<V, E>> minEdges = new HashSet<>();
         
         // 采用堆进行排序, 提高效率
-        Heap_base_03<Edge<V, E>> heap = new Heap_base_03<>(true, comparator, edges);
+        BinaryHeap_base_03<Edge<V, E>> heap = new BinaryHeap_base_03<>(true, comparator, edges);
         // 将所有顶点加入并查集, 各自成为独立集合
         UFS<Vertex<V, E>> ufs = new UFSQuickUnion_PathHalve<>(vertices.values());
 

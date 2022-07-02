@@ -1,7 +1,7 @@
 package org.song.algorithm.base._02alg._01sort.alg.noncpr;
 
 import org.junit.Test;
-import org.song.algorithm.base._01datatype._01base._04tree.heap.Heap_build_01;
+import org.song.algorithm.base._01datatype._01base._04tree.heap.BinaryHeap_build_01;
 import org.song.algorithm.base._02alg._01sort.AbstractSort;
 
 import java.util.Comparator;
@@ -48,7 +48,7 @@ public class Sort_07_Heap {
         @Override
         public void sort(Comparable[] cs) {
             // 将数组原地建堆(如果需要升序, 则需要大堆)
-            Heap_build_01 heapLittle = new Heap_build_01(false, cs, comparator);
+            BinaryHeap_build_01 heapLittle = new BinaryHeap_build_01(false, cs, comparator);
             heapLittle.heapify3();
 
             // 依次取出, 并原地排序, 取出大堆头数据放入队尾, 完成后正好是升序

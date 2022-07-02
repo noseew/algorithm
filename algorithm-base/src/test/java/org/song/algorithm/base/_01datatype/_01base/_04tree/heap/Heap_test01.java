@@ -10,7 +10,7 @@ public class Heap_test01 {
 
     @Test
     public void test_start_01() {
-        Heap_base_01<Integer> heap = new Heap_base_01<>(true, comparator);
+        BinaryHeap_base_01<Integer> heap = new BinaryHeap_base_01<>(true, comparator);
         heap.push(2);
         heap.push(1);
         heap.push(4);
@@ -31,7 +31,7 @@ public class Heap_test01 {
     @Test
     public void test_start_02() {
         Random random = new Random();
-        Heap_base_01<Integer> heap = new Heap_base_01<>(true, comparator);
+        BinaryHeap_base_01<Integer> heap = new BinaryHeap_base_01<>(true, comparator);
         for (int i = 0; i < 20; i++) {
             heap.push(random.nextInt(30));
         }
@@ -45,7 +45,7 @@ public class Heap_test01 {
         int size = 1_0000;
         int maxValue = 100_0000;
         Random random = new Random();
-        Heap_base_01<Integer> heap = new Heap_base_01<>(true, comparator);
+        BinaryHeap_base_01<Integer> heap = new BinaryHeap_base_01<>(true, comparator);
         for (int i = 0; i < size; i++) {
             heap.push(random.nextInt(maxValue));
             assert heap.size == i + 1;
@@ -60,7 +60,7 @@ public class Heap_test01 {
         int size = 1_0000;
         int maxValue = 100_0000;
         Random random = new Random();
-        Heap_base_01<Integer> heap = new Heap_base_01<>(true, comparator);
+        BinaryHeap_base_01<Integer> heap = new BinaryHeap_base_01<>(true, comparator);
         List<Integer> con = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             int data = random.nextInt(maxValue);
@@ -78,7 +78,7 @@ public class Heap_test01 {
         int size = 1_0000;
         int maxValue = 100_0000;
         Random random = new Random();
-        Heap_base_02<Integer> heap = new Heap_base_02<>(true, comparator);
+        BinaryHeap_base_02<Integer> heap = new BinaryHeap_base_02<>(true, comparator);
         for (int i = 0; i < size; i++) {
             heap.push(random.nextInt(maxValue));
             assert heap.size == i + 1;
@@ -93,7 +93,7 @@ public class Heap_test01 {
         int size = 1_0000;
         int maxValue = 100_0000;
         Random random = new Random();
-        Heap_base_02<Integer> heap = new Heap_base_02<>(true, comparator);
+        BinaryHeap_base_02<Integer> heap = new BinaryHeap_base_02<>(true, comparator);
         List<Integer> con = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             int data = random.nextInt(maxValue);
@@ -106,7 +106,7 @@ public class Heap_test01 {
         System.out.println("OK");
     }
     
-    public static void isLittleHeap(Heap_base_01<Integer> heap) {
+    public static void isLittleHeap(BinaryHeap_base_01<Integer> heap) {
         int size = heap.size;
         int last = -1;
         for (int i = 0; i < size; i++) {
@@ -117,7 +117,7 @@ public class Heap_test01 {
         }
     }
     
-    public static void isValidDataHeap(Heap_base_01<Integer> heap, Collection<Integer> collection) {
+    public static void isValidDataHeap(BinaryHeap_base_01<Integer> heap, Collection<Integer> collection) {
         while (!heap.isEmpty()) {
             assert collection.remove(heap.pop());
         }

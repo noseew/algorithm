@@ -25,12 +25,12 @@ import java.util.Comparator;
  *
  * @param <T>
  */
-public class Heap_base_01<T> extends AbstractHeap<T> {
+public class BinaryHeap_base_01<T> extends AbstractHeap<T> {
 
     private double dilatationRatio = 0.8;
     protected static int initCapacity = 7;
 
-    public Heap_base_01(boolean little, Comparator<T> comparator) {
+    public BinaryHeap_base_01(boolean little, Comparator<T> comparator) {
         super(little, initCapacity, comparator);
     }
 

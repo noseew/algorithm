@@ -3,7 +3,7 @@ package org.song.algorithm.base._01datatype._01base._04tree.heap;
 import java.util.Arrays;
 import java.util.Comparator;
 
-public abstract class AbstractHeap<T> {
+public abstract class AbstractHeap<T> implements Heap<T> {
 
     protected T[] datas;
     protected int size;
