@@ -505,6 +505,7 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
      * @return
      */
     private Map<V, PathInfo<V, E>> dijkstraPath(Vertex<V, E> beginVertex) {
+        // 只要进入 paths, 就说明了记录了起点到指定点的权重值
         Map<Vertex<V, E>, PathInfo<V, E>> paths = new HashMap<>();
         beginVertex.outEdges.forEach(edge -> {
             PathInfo<V, E> pathInfo = new PathInfo<>();
@@ -521,21 +522,37 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
                 if (selected.containsKey(outEdge.to.value)) {
                     continue;
                 }
+                /*
+                新的权重=当前扫描边权重+开始顶点到当前顶点权重
+                 */
                 E newWight = edgeOpr.add(outEdge.wight, minPath.getValue().getWight());
+                /*
+                松弛操作
+                看看原来有没有记录旧的权重, 只要进入 paths, 就说明了记录了起点到指定点的权重值 如果新的权重值小于旧值, 则进行松弛操作
+                 */
                 PathInfo<V, E> oldPathInfo = paths.get(outEdge.to);
                 if (oldPathInfo != null && edgeOpr.compare(newWight, oldPathInfo.getWight()) >= 0) {
+                    // 新发现的路径并不比原来的路径更短, 忽略
                     continue;
                 }
                 if (oldPathInfo == null) {
+                    // 新发现的路径, 之前没有记录, 所以要重新记录
                     oldPathInfo = new PathInfo<>();
+                    // 表示 起点->outEdge.to 这条路径
                     paths.put(outEdge.to, oldPathInfo);
                 } else {
+                    /*
+                    使用新的路径覆盖老的路径, 所以老的路径要清空, 完全采用新的路径
+                     */
                     oldPathInfo.getEdgeInfos().clear();
                 }
 
+                // 新的权值
                 oldPathInfo.setWight(newWight);
+                // 加上当前点确定的已有路径
                 oldPathInfo.getEdgeInfos().addAll(minPath.getValue().getEdgeInfos());
-                paths.put(outEdge.to, oldPathInfo);
+                // 新增的路径
+                oldPathInfo.getEdgeInfos().add(outEdge.toEdgeInfo());
             }
         }
         selected.remove(beginVertex.value);

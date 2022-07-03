@@ -160,7 +160,11 @@ public class AdjacencyListTest {
         System.out.println("---");
 
         Map<String, IGraph.PathInfo<String, Integer>> pathInfoMap = adJacencyList.shortestPath("V1");
-        System.out.println(pathInfoMap);
+        pathInfoMap.forEach((k,v) -> {
+            System.out.println("V1->" + k);
+            System.out.println(v);
+            System.out.println();
+        });
 
     }
 }

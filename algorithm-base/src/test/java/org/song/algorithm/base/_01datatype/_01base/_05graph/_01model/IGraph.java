@@ -210,7 +210,7 @@ public interface IGraph<V, E> {
         
         public String toString() {
             StringBuilder sb = new StringBuilder();
-            sb.append(from).append(" --(").append(wight).append(")--> ").append(to);
+            sb.append(from).append(" -").append(wight).append("-> ").append(to);
             return sb.toString();
         }
     }
