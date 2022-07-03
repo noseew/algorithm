@@ -577,7 +577,15 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
         // 新增的路径
         oldPathInfo.getEdgeInfos().add(edge.toEdgeInfo());
     }
-
+    
+    /*
+    算法原理, 基于 dijkstra 的松弛操作实现: 假设图有n条边, 则对图 每条边 进行最多n-1次松弛操作即可
+    
+    原理讲解
+    1. 如果第一次松弛的边from还没有确定边权值, 则松弛失败, 等待下次松弛
+    2. 由于每次松弛都是对所有边进行松弛, 因此任何一点总会在某一次中计算到权值(顶点到当前点), 类似于冒牌排序, 
+    3. 类似于冒牌排序, 最终所有的边都会进行一次类似"正序"的松弛操作, 从而计算出所有的最短路径
+     */
     /**
      * 返回路径加总权重
      * bellmanFord 算法
