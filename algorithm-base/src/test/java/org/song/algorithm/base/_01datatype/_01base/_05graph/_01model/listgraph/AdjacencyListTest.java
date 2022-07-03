@@ -19,6 +19,11 @@ public class AdjacencyListTest {
         public Integer add(Integer e1, Integer e2) {
             return e1 + e2;
         }
+
+        @Override
+        public Integer zero() {
+            return 0;
+        }
     };
     
     

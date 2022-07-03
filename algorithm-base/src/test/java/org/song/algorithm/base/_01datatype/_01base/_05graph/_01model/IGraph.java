@@ -236,5 +236,7 @@ public interface IGraph<V, E> {
         public abstract int compare(E e1, E e2);
 
         public abstract E add(E e1, E e2);
+
+        public abstract E zero();
     }
 }

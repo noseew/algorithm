@@ -325,7 +325,8 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
     @Override
     public Map<V, PathInfo<V, E>> shortestPath(V begin) {
         Vertex<V, E> vertex = vertices.get(begin);
-        return dijkstraPath(vertex);
+//        return dijkstraPath(vertex);
+        return bellmanFordPath(vertex);
     }
 
     /*
@@ -553,6 +554,54 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
     }
 
     /**
+     * 返回路径加总权重
+     * bellmanFord 算法
+     * 
+     * @param beginVertex
+     * @return
+     */
+    private Map<V, PathInfo<V, E>> bellmanFordPath(Vertex<V, E> beginVertex) {
+        // bellmanFord 每次循环都是在更新路径权重表
+        Map<V, PathInfo<V, E>> selected = new HashMap<>();
+        // 将初始的起始节点加进去, 并赋值权重为0
+        PathInfo<V, E> b = new PathInfo<>();
+        b.setWight(edgeOpr.zero());
+        selected.put(beginVertex.value, b);
+        // 循环次数, 边数-1
+        boolean relax = true; // 类似排序, 是否提前退出循环
+        for (int i = 0; i < edges.size() - 1 && relax; i++) {
+            boolean relaxEveryOne = false;
+            // 遍历每条边, 进行松弛操作
+            for (Edge<V, E> edge : edges) {
+                // 改编的from节点, 还没有确定路径, 松弛失败, 等待下次
+                PathInfo<V, E> pathInfo = selected.get(edge.from.value);
+                if (pathInfo == null) {
+                    continue;
+                }
+                // 一次遍历, 只要有一次松弛成功, 说明还可以继续松弛
+                relaxEveryOne |= relaxBellmanFord(selected, pathInfo, edge);
+            }
+            relax = relaxEveryOne;
+        }
+        
+        // 在松弛一次, 如果还能成功, 说明存在 负权环
+        for (Edge<V, E> edge : edges) {
+            PathInfo<V, E> pathInfo = selected.get(edge.from.value);
+            if (pathInfo == null) {
+                continue;
+            }
+            boolean relaxEveryOne = relaxBellmanFord(selected, pathInfo, edge);
+            if (relaxEveryOne) {
+                System.out.println("存在 负权环");
+                return null;
+            }
+        }
+        
+        selected.remove(beginVertex.value);
+        return selected;
+    }
+
+    /**
      * 松弛操作
      * 松弛就是对 起点->edge.to 这条路径的权重进行重新计算
      * 表现上就是 起点->当前点->当前点.to, 这条路径的权重进行重新计算
@@ -599,6 +648,42 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
         oldPathInfo.getEdgeInfos().addAll(minPath.getEdgeInfos());
         // 新增的路径
         oldPathInfo.getEdgeInfos().add(edge.toEdgeInfo());
+    }
+
+    private boolean relaxBellmanFord(Map<V, PathInfo<V, E>> paths, PathInfo<V, E> minPath, Edge<V, E> edge) {
+        /*
+        新的权重=当前扫描边权重+开始顶点到当前顶点权重
+         */
+        E newWight = edgeOpr.add(edge.wight, minPath.getWight());
+        /*
+        松弛操作
+        看看原来有没有记录旧的权重, 只要进入 paths, 就说明了记录了起点到指定点的权重值 如果新的权重值小于旧值, 则进行松弛操作
+         */
+        PathInfo<V, E> oldPathInfo = paths.get(edge.to.value);
+        if (oldPathInfo != null && edgeOpr.compare(newWight, oldPathInfo.getWight()) >= 0) {
+            // 新发现的路径并不比原来的路径更短, 忽略
+            return false;
+        }
+        if (oldPathInfo == null) {
+            // 新发现的路径, 之前没有记录, 所以要重新记录
+            oldPathInfo = new PathInfo<>();
+            // 表示 起点->edge.to 这条路径
+            paths.put(edge.to.value, oldPathInfo);
+        } else {
+            /*
+            使用新的路径覆盖老的路径, 所以老的路径要清空, 完全采用新的路径
+             */
+            oldPathInfo.getEdgeInfos().clear();
+        }
+
+        // 新的权值
+        oldPathInfo.setWight(newWight);
+        // 加上当前点确定的已有路径
+        oldPathInfo.getEdgeInfos().addAll(minPath.getEdgeInfos());
+        // 新增的路径
+        oldPathInfo.getEdgeInfos().add(edge.toEdgeInfo());
+
+        return true;
     }
 
     /**
