@@ -1,7 +1,6 @@
 package org.song.algorithm.base._01datatype._01base._05graph._01model.listgraph;
 
 import org.song.algorithm.base._01datatype._01base._04tree.heap.BinaryHeap_base_03;
-import org.song.algorithm.base._01datatype._01base._05graph._01model.IGraph;
 import org.song.algorithm.base._01datatype._02high.unionfindsets.UFS;
 import org.song.algorithm.base._01datatype._02high.unionfindsets.common.UFSQuickUnion_PathHalve;
 
@@ -479,7 +478,7 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
                     continue;
                 }
                 
-                relax(paths, minPath.getValue(), outEdge);
+                relaxDijkstra(paths, minPath.getValue(), outEdge);
             }
         }
         // 删除自己的权重
@@ -490,32 +489,32 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
 
     /**
      * 松弛操作
-     * 松弛就是对 起点->outEdge.to 这条路径的权重进行重新计算
+     * 松弛就是对 起点->edge.to 这条路径的权重进行重新计算
      * 表现上就是 起点->当前点->当前点.to, 这条路径的权重进行重新计算
      * 由于 顶点->当前点 已经算出, 所以就是对 当前点->当前点.to 进行松弛
      * 
      * 起点: begen
      * 当前点: paths.key
-     * 当前点.to: outEdge.to
-     * 松弛边就是对 outEdge 这条边进行松弛, 主义不是字面意思的松弛, 而是 (松弛就是对 起点->outEdge.to 这条路径的权重进行重新计算)
+     * 当前点.to: edge.to
+     * 松弛边就是对 edge 这条边进行松弛, 主义不是字面意思的松弛, 而是 (松弛就是对 起点->edge.to 这条路径的权重进行重新计算)
      * 
      * @param paths 待选择路径
      * @param minPath 本次提起的顶点
-     * @param outEdge 本次提起的顶点和目标边
+     * @param edge 本次提起的顶点和目标边
      */
-    private void relax(Map<Vertex<V, E>, E> paths, E minPath, Edge<V, E> outEdge) {
+    private void relaxDijkstra(Map<Vertex<V, E>, E> paths, E minPath, Edge<V, E> edge) {
         /*
         接下来就是松弛操作, 
         松弛 Edge 表示:
         更新 beginVertex -> Edge.to 的路径的权值
          */
         // 新的路径所产生的新的权值, 
-        E newWight = edgeOpr.add(minPath, outEdge.wight);
+        E newWight = edgeOpr.add(minPath, edge.wight);
         // 判断新的路径有没有对应老的权值, 如果该边的to是新的顶点, 原本没有记录, 则这里直接放入
-        E oldWight = paths.get(outEdge.to);
+        E oldWight = paths.get(edge.to);
         if (oldWight == null || edgeOpr.compare(newWight, oldWight) < 0) {
             // 更新路径权值
-            paths.put(outEdge.to, newWight);
+            paths.put(edge.to, newWight);
         }
     }
 
@@ -545,7 +544,7 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
                     continue;
                 }
                 // 松弛操作
-                relax(paths, minPath.getValue(), outEdge);
+                relaxDijkstra(paths, minPath.getValue(), outEdge);
             }
         }
         selected.remove(beginVertex.value);
@@ -555,29 +554,29 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
 
     /**
      * 松弛操作
-     * 松弛就是对 起点->outEdge.to 这条路径的权重进行重新计算
+     * 松弛就是对 起点->edge.to 这条路径的权重进行重新计算
      * 表现上就是 起点->当前点->当前点.to, 这条路径的权重进行重新计算
      * 由于 顶点->当前点 已经算出, 所以就是对 当前点->当前点.to 进行松弛
      *
      * 起点: begen
      * 当前点: paths.key
-     * 当前点.to: outEdge.to
-     * 松弛边就是对 outEdge 这条边进行松弛, 主义不是字面意思的松弛, 而是 (松弛就是对 起点->outEdge.to 这条路径的权重进行重新计算)
+     * 当前点.to: edge.to
+     * 松弛边就是对 edge 这条边进行松弛, 主义不是字面意思的松弛, 而是 (松弛就是对 起点->edge.to 这条路径的权重进行重新计算)
      * 
      * @param paths 待选择路径
      * @param minPath 本次提起的顶点
-     * @param outEdge 本次提起的顶点和目标边
+     * @param edge 本次提起的顶点和目标边
      */
-    private void relax(Map<Vertex<V, E>, PathInfo<V, E>> paths, PathInfo<V, E> minPath, Edge<V, E> outEdge) {
+    private void relaxDijkstra(Map<Vertex<V, E>, PathInfo<V, E>> paths, PathInfo<V, E> minPath, Edge<V, E> edge) {
         /*
         新的权重=当前扫描边权重+开始顶点到当前顶点权重
          */
-        E newWight = edgeOpr.add(outEdge.wight, minPath.getWight());
+        E newWight = edgeOpr.add(edge.wight, minPath.getWight());
         /*
         松弛操作
         看看原来有没有记录旧的权重, 只要进入 paths, 就说明了记录了起点到指定点的权重值 如果新的权重值小于旧值, 则进行松弛操作
          */
-        PathInfo<V, E> oldPathInfo = paths.get(outEdge.to);
+        PathInfo<V, E> oldPathInfo = paths.get(edge.to);
         if (oldPathInfo != null && edgeOpr.compare(newWight, oldPathInfo.getWight()) >= 0) {
             // 新发现的路径并不比原来的路径更短, 忽略
             return;
@@ -585,8 +584,8 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
         if (oldPathInfo == null) {
             // 新发现的路径, 之前没有记录, 所以要重新记录
             oldPathInfo = new PathInfo<>();
-            // 表示 起点->outEdge.to 这条路径
-            paths.put(outEdge.to, oldPathInfo);
+            // 表示 起点->edge.to 这条路径
+            paths.put(edge.to, oldPathInfo);
         } else {
             /*
             使用新的路径覆盖老的路径, 所以老的路径要清空, 完全采用新的路径
@@ -599,7 +598,7 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
         // 加上当前点确定的已有路径
         oldPathInfo.getEdgeInfos().addAll(minPath.getEdgeInfos());
         // 新增的路径
-        oldPathInfo.getEdgeInfos().add(outEdge.toEdgeInfo());
+        oldPathInfo.getEdgeInfos().add(edge.toEdgeInfo());
     }
 
     /**
