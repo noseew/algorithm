@@ -463,7 +463,7 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
         // 已经提起来的顶点, 也就是已经确认了是最短路径的顶点
         Map<V, E> selected = new HashMap<>();
         while (!paths.isEmpty()) {
-            // 找到下一个被提起来的顶点, 也就是在历史路径权重集合中, 找到最小的权重
+            // 找到下一个被提起来的顶点(本次离开桌面的), 也就是在历史路径权重集合中, 找到最小的权重
             Map.Entry<Vertex<V, E>, E> minPath = minPathWight(paths);
             // 将提起的顶点和其新的路径权重放入, 选中集合中, 相当于标记了该顶点最短路已经确定
             selected.put(minPath.getKey().value, minPath.getValue());
@@ -500,6 +500,7 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
 
     /**
      * 返回路径加总权重
+     * dijkstraWight 的 增强版
      * 
      * @param beginVertex
      * @return
@@ -560,6 +561,16 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
         return selected;
     }
     
+    private void relax() {
+        
+    }
+
+    /**
+     * 遍历map, 返回权重最小的值
+     * 
+     * @param paths
+     * @return
+     */
     private Map.Entry<Vertex<V, E>, E> minPathWight(Map<Vertex<V, E>, E> paths) {
         Map.Entry<Vertex<V, E>, E> minEntry = paths.entrySet().iterator().next();
         E minEdge = minEntry.getValue();
@@ -570,7 +581,13 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
         }
         return minEntry;
     }
-    
+
+    /**
+     * 遍历map, 返回权重最小的值
+     * 
+     * @param paths
+     * @return
+     */
     private Map.Entry<Vertex<V, E>, PathInfo<V, E>> minPathInfo(Map<Vertex<V, E>, PathInfo<V, E>> paths) {
         Map.Entry<Vertex<V, E>, PathInfo<V, E>> minEntry = paths.entrySet().iterator().next();
         PathInfo<V, E> pathInfo = minEntry.getValue();
