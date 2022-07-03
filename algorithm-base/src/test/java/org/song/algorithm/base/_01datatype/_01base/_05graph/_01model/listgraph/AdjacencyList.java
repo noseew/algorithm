@@ -490,6 +490,14 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
 
     /**
      * 松弛操作
+     * 松弛就是对 起点->outEdge.to 这条路径的权重进行重新计算
+     * 表现上就是 起点->当前点->当前点.to, 这条路径的权重进行重新计算
+     * 由于 顶点->当前点 已经算出, 所以就是对 当前点->当前点.to 进行松弛
+     * 
+     * 起点: begen
+     * 当前点: paths.key
+     * 当前点.to: outEdge.to
+     * 松弛边就是对 outEdge 这条边进行松弛, 主义不是字面意思的松弛, 而是 (松弛就是对 起点->outEdge.to 这条路径的权重进行重新计算)
      * 
      * @param paths 待选择路径
      * @param minPath 本次提起的顶点
@@ -547,7 +555,14 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
 
     /**
      * 松弛操作
-     * 松弛就是对 顶点->outEdge.to 这条路径的权重进行重新计算
+     * 松弛就是对 起点->outEdge.to 这条路径的权重进行重新计算
+     * 表现上就是 起点->当前点->当前点.to, 这条路径的权重进行重新计算
+     * 由于 顶点->当前点 已经算出, 所以就是对 当前点->当前点.to 进行松弛
+     *
+     * 起点: begen
+     * 当前点: paths.key
+     * 当前点.to: outEdge.to
+     * 松弛边就是对 outEdge 这条边进行松弛, 主义不是字面意思的松弛, 而是 (松弛就是对 起点->outEdge.to 这条路径的权重进行重新计算)
      * 
      * @param paths 待选择路径
      * @param minPath 本次提起的顶点
