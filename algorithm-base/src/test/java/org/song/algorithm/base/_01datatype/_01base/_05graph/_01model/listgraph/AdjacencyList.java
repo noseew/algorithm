@@ -319,7 +319,173 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
     @Override
     public Map<V, E> shortestPathWight(V begin) {
         Vertex<V, E> vertex = vertices.get(begin);
-        return dijkstraWight(vertex);
+//        return dijkstraWight(vertex);
+        return bellmanFordWight(vertex);
+    }
+
+    /*
+    从一个顶点到其他顶点的最短路径, 不支持有负权边的图, 该算法不支持
+    效率 O(ElogV)
+    
+    算法思路
+        算法思路模拟: 将多个石头用绳线连起来, 线的长度就是权重, 将其平放在桌面上, 如此就构成了一个图
+        1. 以其中一个石头(顶点)为起点V1, 慢慢向上提起, 直到有下一个石头V2被带起来; 此时顶点和下一个石头就构成了两个顶点间的最短路径
+            下一个被提起的石头, 权重一定是接下来中最小的
+        2. 重复第一步, 下一个被带起来的石头V3, 就构成了V1到V3的最短路径
+    
+    算法记录: 
+    1. 记录一个顶点V1到其他顶点的所有最短路径的表
+    
+        开始顶点 | 目标顶点 | 最短路径 | 最短路径值
+        V1     | V2      | V1-V2   | 1
+        V1     | V3      | 无穷大   | 无穷大
+        其他省略 ...
+    
+    2. 按照算法思路, 先找到V1第一个提起的顶点V2, 然后将表中的V1-V2路径记录下路径, 并标记为最短路径, 
+        1. 标记为最短路径的标志是, 该顶点被提起离开桌面; 
+            算法中确定下一个被提起的石头就是在上表中, 除了已经标记了最短路径的其他最短路路径值中取最小的 
+        2. 更新最短路径条件是, 随着每次新的石头被提起, 发现新的路径指向目标顶点, 且新的路径长度小于原来路径长度
+            比如 V1-V3 = 10, 随着V2被提起, 发现 V1-V2-V3 = 7, 则V1-V3的路径更新为 V1-V2-V3
+    
+    松弛操作:
+        松弛操作其实就是更新最短路径和其权值
+        优先能确定的路径权值, (比如V1-V3, 他们是直接相连的, 但是他们的权值并不一定是最短路径), 
+        在提起石头的过程中, 新的路径被发现, 发现 V1-V2-V3 比 V1-V3 权值更短, 相当于 V1-V3 这根线边送了, 取而代之的是 V1-V2-V3 这根线变紧了
+
+     */
+
+    /**
+     * 返回路径总权重
+     *
+     * @return
+     */
+    private Map<V, E> dijkstraWight(Vertex<V, E> beginVertex) {
+        /*
+        路径表
+        key表示 beginVertex->V的路径
+        val表示 beginVertex->V的权重, 如果没有表示路径权重无穷大
+        初始的时候
+         */
+        // 路径表
+        Map<Vertex<V, E>, E> paths = new HashMap<>();
+        beginVertex.outEdges.forEach(edge -> {
+            // 初始化路径表, 将起点能直接找到的路径放入, 其他路径未知, 为null, 也就是默认权重无穷大
+            paths.put(edge.to, edge.wight);
+        });
+        // 已经提起来的顶点, 也就是已经确认了是最短路径的顶点
+        Map<V, E> selected = new HashMap<>();
+        while (!paths.isEmpty()) {
+            // 找到下一个被提起来的顶点(本次离开桌面的), 也就是在历史路径权重集合中, 找到最小的权重
+            Map.Entry<Vertex<V, E>, E> minPath = minPathWight(paths);
+            // 将提起的顶点和其新的路径权重放入, 选中集合中, 相当于标记了该顶点最短路已经确定
+            selected.put(minPath.getKey().value, minPath.getValue());
+            // 将该顶点从待选择集合中去掉
+            paths.remove(minPath.getKey());
+
+            // 随着新的顶点的提起, 将会有更多的路径被发现, 那这些新的路径可能会更新原有的路径权值
+            for (Edge<V, E> outEdge : minPath.getKey().outEdges) {
+                // 新的路径重复, 忽略
+//                if (selected.containsKey(outEdge.to.value) || beginVertex.equals(outEdge.to)) {
+                if (selected.containsKey(outEdge.to.value)) {
+                    continue;
+                }
+
+                dijkstraWightRelax(paths, minPath.getValue(), outEdge);
+            }
+        }
+        // 删除自己的权重
+        selected.remove(beginVertex.value);
+
+        return selected;
+    }
+
+    /**
+     * 松弛操作
+     * 松弛就是对 起点->edge.to 这条路径的权重进行重新计算
+     * 表现上就是 起点->当前点->当前点.to, 这条路径的权重进行重新计算
+     * 由于 顶点->当前点 已经算出, 所以就是对 当前点->当前点.to 进行松弛
+     * <p>
+     * 起点: begen
+     * 当前点: paths.key
+     * 当前点.to: edge.to
+     * 松弛边就是对 edge 这条边进行松弛, 主义不是字面意思的松弛, 而是 (松弛就是对 起点->edge.to 这条路径的权重进行重新计算)
+     *
+     * @param paths   待选择路径
+     * @param minPath 本次提起的顶点
+     * @param edge    本次提起的顶点和目标边
+     */
+    private void dijkstraWightRelax(Map<Vertex<V, E>, E> paths, E minPath, Edge<V, E> edge) {
+        /*
+        接下来就是松弛操作, 
+        松弛 Edge 表示:
+        更新 beginVertex -> Edge.to 的路径的权值
+         */
+        // 新的路径所产生的新的权值, 
+        E newWight = edgeOpr.add(minPath, edge.wight);
+        // 判断新的路径有没有对应老的权值, 如果该边的to是新的顶点, 原本没有记录, 则这里直接放入
+        E oldWight = paths.get(edge.to);
+        if (oldWight == null || edgeOpr.compare(newWight, oldWight) < 0) {
+            // 更新路径权值
+            paths.put(edge.to, newWight);
+        }
+    }
+
+    private Map<V, E> bellmanFordWight(Vertex<V, E> beginVertex) {
+        Map<V, E> selected = new HashMap<>();
+        // 将初始的起始节点加进去, 并赋值权重为0
+        selected.put(beginVertex.value, edgeOpr.zero());
+        // 循环次数, 边数-1
+        boolean relax = true; // 类似排序, 是否提前退出循环
+        for (int i = 0; i < edges.size() - 1 && relax; i++) {
+            boolean relaxEveryOne = false;
+            // 遍历每条边, 进行松弛操作
+            for (Edge<V, E> edge : edges) {
+                // 改编的from节点, 还没有确定路径, 松弛失败, 等待下次
+                E oldWight = selected.get(edge.from.value);
+                if (oldWight == null) {
+                    continue;
+                }
+                // 一次遍历, 只要有一次松弛成功, 说明还可以继续松弛
+                relaxEveryOne |= bellmanFordWightRelax(selected, oldWight, edge);
+            }
+            relax = relaxEveryOne;
+        }
+
+        // 在松弛一次, 如果还能成功, 说明存在 负权环
+        for (Edge<V, E> edge : edges) {
+            E oldWight = selected.get(edge.from.value);
+            if (oldWight == null) {
+                continue;
+            }
+            boolean relaxEveryOne = bellmanFordWightRelax(selected, oldWight, edge);
+            if (relaxEveryOne) {
+                System.out.println("存在 负权环");
+                return null;
+            }
+        }
+
+
+        // 删除自己的权重
+        selected.remove(beginVertex.value);
+        return selected;
+    }
+
+    private boolean bellmanFordWightRelax(Map<V, E> paths, E minPath, Edge<V, E> edge) {
+        /*
+        接下来就是松弛操作, 
+        松弛 Edge 表示:
+        更新 beginVertex -> Edge.to 的路径的权值
+         */
+        // 新的路径所产生的新的权值, 
+        E newWight = edgeOpr.add(minPath, edge.wight);
+        // 判断新的路径有没有对应老的权值, 如果该边的to是新的顶点, 原本没有记录, 则这里直接放入
+        E oldWight = paths.get(edge.to.value);
+        if (oldWight == null || edgeOpr.compare(newWight, oldWight) < 0) {
+            // 更新路径权值
+            paths.put(edge.to.value, newWight);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -327,6 +493,182 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
         Vertex<V, E> vertex = vertices.get(begin);
 //        return dijkstraPath(vertex);
         return bellmanFordPath(vertex);
+    }
+
+    /**
+     * 返回路径加总权重
+     * dijkstraWight 的 增强版
+     *
+     * @param beginVertex
+     * @return
+     */
+    private Map<V, PathInfo<V, E>> dijkstraPath(Vertex<V, E> beginVertex) {
+        // 只要进入 paths, 就说明了记录了起点到指定点的权重值
+        Map<Vertex<V, E>, PathInfo<V, E>> paths = new HashMap<>();
+        beginVertex.outEdges.forEach(edge -> {
+            PathInfo<V, E> pathInfo = new PathInfo<>();
+            pathInfo.setWight(edge.wight);
+            pathInfo.getEdgeInfos().add(edge.toEdgeInfo());
+            paths.put(edge.to, pathInfo);
+        });
+        Map<V, PathInfo<V, E>> selected = new HashMap<>();
+        while (!paths.isEmpty()) {
+            Map.Entry<Vertex<V, E>, PathInfo<V, E>> minPath = minPathInfo(paths);
+            selected.put(minPath.getKey().value, minPath.getValue());
+            paths.remove(minPath.getKey());
+            for (Edge<V, E> outEdge : minPath.getKey().outEdges) {
+                if (selected.containsKey(outEdge.to.value)) {
+                    continue;
+                }
+                // 松弛操作
+                dijkstraPathRelax(paths, minPath.getValue(), outEdge);
+            }
+        }
+        selected.remove(beginVertex.value);
+
+        return selected;
+    }
+
+    /**
+     * 松弛操作
+     * 松弛就是对 起点->edge.to 这条路径的权重进行重新计算
+     * 表现上就是 起点->当前点->当前点.to, 这条路径的权重进行重新计算
+     * 由于 顶点->当前点 已经算出, 所以就是对 当前点->当前点.to 进行松弛
+     * <p>
+     * 起点: begen
+     * 当前点: paths.key
+     * 当前点.to: edge.to
+     * 松弛边就是对 edge 这条边进行松弛, 主义不是字面意思的松弛, 而是 (松弛就是对 起点->edge.to 这条路径的权重进行重新计算)
+     *
+     * @param paths   待选择路径
+     * @param minPath 本次提起的顶点
+     * @param edge    本次提起的顶点和目标边
+     */
+    private void dijkstraPathRelax(Map<Vertex<V, E>, PathInfo<V, E>> paths, PathInfo<V, E> minPath, Edge<V, E> edge) {
+        /*
+        新的权重=当前扫描边权重+开始顶点到当前顶点权重
+         */
+        E newWight = edgeOpr.add(edge.wight, minPath.getWight());
+        /*
+        松弛操作
+        看看原来有没有记录旧的权重, 只要进入 paths, 就说明了记录了起点到指定点的权重值 如果新的权重值小于旧值, 则进行松弛操作
+         */
+        PathInfo<V, E> oldPathInfo = paths.get(edge.to);
+        if (oldPathInfo != null && edgeOpr.compare(newWight, oldPathInfo.getWight()) >= 0) {
+            // 新发现的路径并不比原来的路径更短, 忽略
+            return;
+        }
+        if (oldPathInfo == null) {
+            // 新发现的路径, 之前没有记录, 所以要重新记录
+            oldPathInfo = new PathInfo<>();
+            // 表示 起点->edge.to 这条路径
+            paths.put(edge.to, oldPathInfo);
+        } else {
+            /*
+            使用新的路径覆盖老的路径, 所以老的路径要清空, 完全采用新的路径
+             */
+            oldPathInfo.getEdgeInfos().clear();
+        }
+
+        // 新的权值
+        oldPathInfo.setWight(newWight);
+        // 加上当前点确定的已有路径
+        oldPathInfo.getEdgeInfos().addAll(minPath.getEdgeInfos());
+        // 新增的路径
+        oldPathInfo.getEdgeInfos().add(edge.toEdgeInfo());
+    }
+
+    /**
+     * 返回路径加总权重
+     * bellmanFord 算法
+     *
+     * @param beginVertex
+     * @return
+     */
+    private Map<V, PathInfo<V, E>> bellmanFordPath(Vertex<V, E> beginVertex) {
+        // bellmanFord 每次循环都是在更新路径权重表
+        Map<V, PathInfo<V, E>> selected = new HashMap<>();
+        // 将初始的起始节点加进去, 并赋值权重为0
+        PathInfo<V, E> b = new PathInfo<>();
+        b.setWight(edgeOpr.zero());
+        selected.put(beginVertex.value, b);
+        // 循环次数, 边数-1
+        boolean relax = true; // 类似排序, 是否提前退出循环
+        for (int i = 0; i < edges.size() - 1 && relax; i++) {
+            boolean relaxEveryOne = false;
+            // 遍历每条边, 进行松弛操作
+            for (Edge<V, E> edge : edges) {
+                // 改编的from节点, 还没有确定路径, 松弛失败, 等待下次
+                PathInfo<V, E> pathInfo = selected.get(edge.from.value);
+                if (pathInfo == null) {
+                    continue;
+                }
+                // 一次遍历, 只要有一次松弛成功, 说明还可以继续松弛
+                relaxEveryOne |= bellmanFordPathRelax(selected, pathInfo, edge);
+            }
+            relax = relaxEveryOne;
+        }
+
+        // 在松弛一次, 如果还能成功, 说明存在 负权环
+        for (Edge<V, E> edge : edges) {
+            PathInfo<V, E> pathInfo = selected.get(edge.from.value);
+            if (pathInfo == null) {
+                continue;
+            }
+            boolean relaxEveryOne = bellmanFordPathRelax(selected, pathInfo, edge);
+            if (relaxEveryOne) {
+                System.out.println("存在 负权环");
+                return null;
+            }
+        }
+
+        selected.remove(beginVertex.value);
+        return selected;
+    }
+
+    /**
+     * 松弛操作 BellmanFord
+     * 和 Dijkstra 相比, 简单调整
+     *
+     * @param paths
+     * @param minPath
+     * @param edge
+     * @return
+     */
+    private boolean bellmanFordPathRelax(Map<V, PathInfo<V, E>> paths, PathInfo<V, E> minPath, Edge<V, E> edge) {
+        /*
+        新的权重=当前扫描边权重+开始顶点到当前顶点权重
+         */
+        E newWight = edgeOpr.add(edge.wight, minPath.getWight());
+        /*
+        松弛操作
+        看看原来有没有记录旧的权重, 只要进入 paths, 就说明了记录了起点到指定点的权重值 如果新的权重值小于旧值, 则进行松弛操作
+         */
+        PathInfo<V, E> oldPathInfo = paths.get(edge.to.value);
+        if (oldPathInfo != null && edgeOpr.compare(newWight, oldPathInfo.getWight()) >= 0) {
+            // 新发现的路径并不比原来的路径更短, 忽略
+            return false;
+        }
+        if (oldPathInfo == null) {
+            // 新发现的路径, 之前没有记录, 所以要重新记录
+            oldPathInfo = new PathInfo<>();
+            // 表示 起点->edge.to 这条路径
+            paths.put(edge.to.value, oldPathInfo);
+        } else {
+            /*
+            使用新的路径覆盖老的路径, 所以老的路径要清空, 完全采用新的路径
+             */
+            oldPathInfo.getEdgeInfos().clear();
+        }
+
+        // 新的权值
+        oldPathInfo.setWight(newWight);
+        // 加上当前点确定的已有路径
+        oldPathInfo.getEdgeInfos().addAll(minPath.getEdgeInfos());
+        // 新增的路径
+        oldPathInfo.getEdgeInfos().add(edge.toEdgeInfo());
+
+        return true;
     }
 
     /*
@@ -411,279 +753,6 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
         return minEdges.stream()
                 .map(e -> new EdgeInfo<>(e.from.value, e.to.value, e.wight))
                 .collect(Collectors.toSet());
-    }
-
-    /*
-    从一个顶点到其他顶点的最短路径, 不支持有负权边的图, 该算法不支持
-    效率 O(ElogV)
-    
-    算法思路
-        算法思路模拟: 将多个石头用绳线连起来, 线的长度就是权重, 将其平放在桌面上, 如此就构成了一个图
-        1. 以其中一个石头(顶点)为起点V1, 慢慢向上提起, 直到有下一个石头V2被带起来; 此时顶点和下一个石头就构成了两个顶点间的最短路径
-            下一个被提起的石头, 权重一定是接下来中最小的
-        2. 重复第一步, 下一个被带起来的石头V3, 就构成了V1到V3的最短路径
-    
-    算法记录: 
-    1. 记录一个顶点V1到其他顶点的所有最短路径的表
-    
-        开始顶点 | 目标顶点 | 最短路径 | 最短路径值
-        V1     | V2      | V1-V2   | 1
-        V1     | V3      | 无穷大   | 无穷大
-        其他省略 ...
-    
-    2. 按照算法思路, 先找到V1第一个提起的顶点V2, 然后将表中的V1-V2路径记录下路径, 并标记为最短路径, 
-        1. 标记为最短路径的标志是, 该顶点被提起离开桌面; 
-            算法中确定下一个被提起的石头就是在上表中, 除了已经标记了最短路径的其他最短路路径值中取最小的 
-        2. 更新最短路径条件是, 随着每次新的石头被提起, 发现新的路径指向目标顶点, 且新的路径长度小于原来路径长度
-            比如 V1-V3 = 10, 随着V2被提起, 发现 V1-V2-V3 = 7, 则V1-V3的路径更新为 V1-V2-V3
-    
-    松弛操作:
-        松弛操作其实就是更新最短路径和其权值
-        优先能确定的路径权值, (比如V1-V3, 他们是直接相连的, 但是他们的权值并不一定是最短路径), 
-        在提起石头的过程中, 新的路径被发现, 发现 V1-V2-V3 比 V1-V3 权值更短, 相当于 V1-V3 这根线边送了, 取而代之的是 V1-V2-V3 这根线变紧了
-
-     */
-    /**
-     * 返回路径总权重
-     * 
-     * @return
-     */
-    private Map<V, E> dijkstraWight(Vertex<V, E> beginVertex) {
-        /*
-        路径表
-        key表示 beginVertex->V的路径
-        val表示 beginVertex->V的权重, 如果没有表示路径权重无穷大
-        初始的时候
-         */
-        // 路径表
-        Map<Vertex<V, E>, E> paths = new HashMap<>();
-        beginVertex.outEdges.forEach(edge -> {
-            // 初始化路径表, 将起点能直接找到的路径放入, 其他路径未知, 为null, 也就是默认权重无穷大
-            paths.put(edge.to, edge.wight);
-        });
-        // 已经提起来的顶点, 也就是已经确认了是最短路径的顶点
-        Map<V, E> selected = new HashMap<>();
-        while (!paths.isEmpty()) {
-            // 找到下一个被提起来的顶点(本次离开桌面的), 也就是在历史路径权重集合中, 找到最小的权重
-            Map.Entry<Vertex<V, E>, E> minPath = minPathWight(paths);
-            // 将提起的顶点和其新的路径权重放入, 选中集合中, 相当于标记了该顶点最短路已经确定
-            selected.put(minPath.getKey().value, minPath.getValue());
-            // 将该顶点从待选择集合中去掉
-            paths.remove(minPath.getKey());
-
-            // 随着新的顶点的提起, 将会有更多的路径被发现, 那这些新的路径可能会更新原有的路径权值
-            for (Edge<V, E> outEdge : minPath.getKey().outEdges) {
-                // 新的路径重复, 忽略
-//                if (selected.containsKey(outEdge.to.value) || beginVertex.equals(outEdge.to)) {
-                if (selected.containsKey(outEdge.to.value)) {
-                    continue;
-                }
-                
-                relaxDijkstra(paths, minPath.getValue(), outEdge);
-            }
-        }
-        // 删除自己的权重
-        selected.remove(beginVertex.value);
-
-        return selected;
-    }
-
-    /**
-     * 松弛操作
-     * 松弛就是对 起点->edge.to 这条路径的权重进行重新计算
-     * 表现上就是 起点->当前点->当前点.to, 这条路径的权重进行重新计算
-     * 由于 顶点->当前点 已经算出, 所以就是对 当前点->当前点.to 进行松弛
-     * 
-     * 起点: begen
-     * 当前点: paths.key
-     * 当前点.to: edge.to
-     * 松弛边就是对 edge 这条边进行松弛, 主义不是字面意思的松弛, 而是 (松弛就是对 起点->edge.to 这条路径的权重进行重新计算)
-     * 
-     * @param paths 待选择路径
-     * @param minPath 本次提起的顶点
-     * @param edge 本次提起的顶点和目标边
-     */
-    private void relaxDijkstra(Map<Vertex<V, E>, E> paths, E minPath, Edge<V, E> edge) {
-        /*
-        接下来就是松弛操作, 
-        松弛 Edge 表示:
-        更新 beginVertex -> Edge.to 的路径的权值
-         */
-        // 新的路径所产生的新的权值, 
-        E newWight = edgeOpr.add(minPath, edge.wight);
-        // 判断新的路径有没有对应老的权值, 如果该边的to是新的顶点, 原本没有记录, 则这里直接放入
-        E oldWight = paths.get(edge.to);
-        if (oldWight == null || edgeOpr.compare(newWight, oldWight) < 0) {
-            // 更新路径权值
-            paths.put(edge.to, newWight);
-        }
-    }
-
-    /**
-     * 返回路径加总权重
-     * dijkstraWight 的 增强版
-     * 
-     * @param beginVertex
-     * @return
-     */
-    private Map<V, PathInfo<V, E>> dijkstraPath(Vertex<V, E> beginVertex) {
-        // 只要进入 paths, 就说明了记录了起点到指定点的权重值
-        Map<Vertex<V, E>, PathInfo<V, E>> paths = new HashMap<>();
-        beginVertex.outEdges.forEach(edge -> {
-            PathInfo<V, E> pathInfo = new PathInfo<>();
-            pathInfo.setWight(edge.wight);
-            pathInfo.getEdgeInfos().add(edge.toEdgeInfo());
-            paths.put(edge.to, pathInfo);
-        });
-        Map<V, PathInfo<V, E>> selected = new HashMap<>();
-        while (!paths.isEmpty()) {
-            Map.Entry<Vertex<V, E>, PathInfo<V, E>> minPath = minPathInfo(paths);
-            selected.put(minPath.getKey().value, minPath.getValue());
-            paths.remove(minPath.getKey());
-            for (Edge<V, E> outEdge : minPath.getKey().outEdges) {
-                if (selected.containsKey(outEdge.to.value)) {
-                    continue;
-                }
-                // 松弛操作
-                relaxDijkstra(paths, minPath.getValue(), outEdge);
-            }
-        }
-        selected.remove(beginVertex.value);
-
-        return selected;
-    }
-
-    /**
-     * 返回路径加总权重
-     * bellmanFord 算法
-     * 
-     * @param beginVertex
-     * @return
-     */
-    private Map<V, PathInfo<V, E>> bellmanFordPath(Vertex<V, E> beginVertex) {
-        // bellmanFord 每次循环都是在更新路径权重表
-        Map<V, PathInfo<V, E>> selected = new HashMap<>();
-        // 将初始的起始节点加进去, 并赋值权重为0
-        PathInfo<V, E> b = new PathInfo<>();
-        b.setWight(edgeOpr.zero());
-        selected.put(beginVertex.value, b);
-        // 循环次数, 边数-1
-        boolean relax = true; // 类似排序, 是否提前退出循环
-        for (int i = 0; i < edges.size() - 1 && relax; i++) {
-            boolean relaxEveryOne = false;
-            // 遍历每条边, 进行松弛操作
-            for (Edge<V, E> edge : edges) {
-                // 改编的from节点, 还没有确定路径, 松弛失败, 等待下次
-                PathInfo<V, E> pathInfo = selected.get(edge.from.value);
-                if (pathInfo == null) {
-                    continue;
-                }
-                // 一次遍历, 只要有一次松弛成功, 说明还可以继续松弛
-                relaxEveryOne |= relaxBellmanFord(selected, pathInfo, edge);
-            }
-            relax = relaxEveryOne;
-        }
-        
-        // 在松弛一次, 如果还能成功, 说明存在 负权环
-        for (Edge<V, E> edge : edges) {
-            PathInfo<V, E> pathInfo = selected.get(edge.from.value);
-            if (pathInfo == null) {
-                continue;
-            }
-            boolean relaxEveryOne = relaxBellmanFord(selected, pathInfo, edge);
-            if (relaxEveryOne) {
-                System.out.println("存在 负权环");
-                return null;
-            }
-        }
-        
-        selected.remove(beginVertex.value);
-        return selected;
-    }
-
-    /**
-     * 松弛操作
-     * 松弛就是对 起点->edge.to 这条路径的权重进行重新计算
-     * 表现上就是 起点->当前点->当前点.to, 这条路径的权重进行重新计算
-     * 由于 顶点->当前点 已经算出, 所以就是对 当前点->当前点.to 进行松弛
-     *
-     * 起点: begen
-     * 当前点: paths.key
-     * 当前点.to: edge.to
-     * 松弛边就是对 edge 这条边进行松弛, 主义不是字面意思的松弛, 而是 (松弛就是对 起点->edge.to 这条路径的权重进行重新计算)
-     * 
-     * @param paths 待选择路径
-     * @param minPath 本次提起的顶点
-     * @param edge 本次提起的顶点和目标边
-     */
-    private void relaxDijkstra(Map<Vertex<V, E>, PathInfo<V, E>> paths, PathInfo<V, E> minPath, Edge<V, E> edge) {
-        /*
-        新的权重=当前扫描边权重+开始顶点到当前顶点权重
-         */
-        E newWight = edgeOpr.add(edge.wight, minPath.getWight());
-        /*
-        松弛操作
-        看看原来有没有记录旧的权重, 只要进入 paths, 就说明了记录了起点到指定点的权重值 如果新的权重值小于旧值, 则进行松弛操作
-         */
-        PathInfo<V, E> oldPathInfo = paths.get(edge.to);
-        if (oldPathInfo != null && edgeOpr.compare(newWight, oldPathInfo.getWight()) >= 0) {
-            // 新发现的路径并不比原来的路径更短, 忽略
-            return;
-        }
-        if (oldPathInfo == null) {
-            // 新发现的路径, 之前没有记录, 所以要重新记录
-            oldPathInfo = new PathInfo<>();
-            // 表示 起点->edge.to 这条路径
-            paths.put(edge.to, oldPathInfo);
-        } else {
-            /*
-            使用新的路径覆盖老的路径, 所以老的路径要清空, 完全采用新的路径
-             */
-            oldPathInfo.getEdgeInfos().clear();
-        }
-
-        // 新的权值
-        oldPathInfo.setWight(newWight);
-        // 加上当前点确定的已有路径
-        oldPathInfo.getEdgeInfos().addAll(minPath.getEdgeInfos());
-        // 新增的路径
-        oldPathInfo.getEdgeInfos().add(edge.toEdgeInfo());
-    }
-
-    private boolean relaxBellmanFord(Map<V, PathInfo<V, E>> paths, PathInfo<V, E> minPath, Edge<V, E> edge) {
-        /*
-        新的权重=当前扫描边权重+开始顶点到当前顶点权重
-         */
-        E newWight = edgeOpr.add(edge.wight, minPath.getWight());
-        /*
-        松弛操作
-        看看原来有没有记录旧的权重, 只要进入 paths, 就说明了记录了起点到指定点的权重值 如果新的权重值小于旧值, 则进行松弛操作
-         */
-        PathInfo<V, E> oldPathInfo = paths.get(edge.to.value);
-        if (oldPathInfo != null && edgeOpr.compare(newWight, oldPathInfo.getWight()) >= 0) {
-            // 新发现的路径并不比原来的路径更短, 忽略
-            return false;
-        }
-        if (oldPathInfo == null) {
-            // 新发现的路径, 之前没有记录, 所以要重新记录
-            oldPathInfo = new PathInfo<>();
-            // 表示 起点->edge.to 这条路径
-            paths.put(edge.to.value, oldPathInfo);
-        } else {
-            /*
-            使用新的路径覆盖老的路径, 所以老的路径要清空, 完全采用新的路径
-             */
-            oldPathInfo.getEdgeInfos().clear();
-        }
-
-        // 新的权值
-        oldPathInfo.setWight(newWight);
-        // 加上当前点确定的已有路径
-        oldPathInfo.getEdgeInfos().addAll(minPath.getEdgeInfos());
-        // 新增的路径
-        oldPathInfo.getEdgeInfos().add(edge.toEdgeInfo());
-
-        return true;
     }
 
     /**
