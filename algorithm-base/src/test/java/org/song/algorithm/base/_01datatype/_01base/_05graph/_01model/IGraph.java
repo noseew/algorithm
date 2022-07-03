@@ -3,6 +3,7 @@ package org.song.algorithm.base._01datatype._01base._05graph._01model;
 import lombok.Data;
 import org.song.algorithm.base._01datatype._01base._05graph._01model.listgraph.ListGraph;
 
+import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -177,7 +178,9 @@ public interface IGraph<V, E> {
      * @param begin 开始顶点
      * @return
      */
-    Map<V, E> shortestPath(V begin);
+    Map<V, E> shortestPathWight(V begin);
+    
+    Map<V, PathInfo<V, E>> shortestPath(V begin);
     
     @Data
     class EdgeInfo<V, E> {
@@ -208,6 +211,22 @@ public interface IGraph<V, E> {
         public String toString() {
             StringBuilder sb = new StringBuilder();
             sb.append(from).append(" --(").append(wight).append(")--> ").append(to);
+            return sb.toString();
+        }
+    }
+
+    @Data
+    class PathInfo<V, E> {
+        E wight;
+        List<EdgeInfo<V, E>> edgeInfos = new ArrayList<>();
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append("wight=").append(wight).append("\r\n");
+            edgeInfos.forEach(e -> {
+                sb.append(e.toString()).append("; ");
+            });
             return sb.toString();
         }
     }

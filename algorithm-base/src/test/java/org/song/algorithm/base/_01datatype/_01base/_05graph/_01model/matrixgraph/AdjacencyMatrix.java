@@ -116,7 +116,12 @@ public class AdjacencyMatrix<V, E> extends MatrixGraph<V, E> {
     }
 
     @Override
-    public Map<V, E> shortestPath(V begin) {
+    public Map<V, E> shortestPathWight(V begin) {
+        return null;
+    }
+
+    @Override
+    public Map<V, PathInfo<V, E>> shortestPath(V begin) {
         return null;
     }
 

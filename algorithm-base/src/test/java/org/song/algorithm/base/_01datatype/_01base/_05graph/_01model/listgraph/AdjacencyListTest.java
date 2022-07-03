@@ -152,8 +152,15 @@ public class AdjacencyListTest {
         adJacencyList.addEdge("V4", "V1", 7);
         System.out.println(adJacencyList);
 
-        Map<String, Integer> shortestPath = adJacencyList.shortestPath("V1");
+        System.out.println("---");
+
+        Map<String, Integer> shortestPath = adJacencyList.shortestPathWight("V1");
         System.out.println(shortestPath);
+
+        System.out.println("---");
+
+        Map<String, IGraph.PathInfo<String, Integer>> pathInfoMap = adJacencyList.shortestPath("V1");
+        System.out.println(pathInfoMap);
 
     }
 }

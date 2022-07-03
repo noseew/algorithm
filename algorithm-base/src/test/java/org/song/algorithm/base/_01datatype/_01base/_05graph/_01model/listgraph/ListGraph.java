@@ -47,6 +47,11 @@ public abstract class ListGraph<V, E> implements IGraph<V, E> {
         public int hashCode() {
             return Objects.hash(value);
         }
+
+        @Override
+        public String toString() {
+            return value.toString();
+        }
     }
 
     /**
@@ -65,11 +70,15 @@ public abstract class ListGraph<V, E> implements IGraph<V, E> {
             this.from = from;
             this.to = to;
         }
+        
+        public EdgeInfo<V, E> toEdgeInfo() {
+            return new EdgeInfo<V, E>(from.value, to.value, wight);
+        }
 
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
-            sb.append(from.value).append(" --(").append(wight).append(")--> ").append(to.value);
+            sb.append(from.value).append(" -").append(wight).append("-> ").append(to.value);
             return sb.toString();
         }
 

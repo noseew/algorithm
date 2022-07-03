@@ -317,9 +317,15 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
     }
 
     @Override
-    public Map<V, E> shortestPath(V begin) {
+    public Map<V, E> shortestPathWight(V begin) {
         Vertex<V, E> vertex = vertices.get(begin);
-        return dijkstra(vertex);
+        return dijkstraWight(vertex);
+    }
+
+    @Override
+    public Map<V, PathInfo<V, E>> shortestPath(V begin) {
+        Vertex<V, E> vertex = vertices.get(begin);
+        return dijkstraPath(vertex);
     }
 
     /*
@@ -437,10 +443,11 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
 
      */
     /**
+     * 返回路径总权重
      * 
      * @return
      */
-    private Map<V, E> dijkstra(Vertex<V, E> beginVertex) {
+    private Map<V, E> dijkstraWight(Vertex<V, E> beginVertex) {
         /*
         路径表
         key表示 beginVertex->V的路径
@@ -451,13 +458,13 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
         Map<Vertex<V, E>, E> paths = new HashMap<>();
         beginVertex.outEdges.forEach(edge -> {
             // 初始化路径表, 将起点能直接找到的路径放入, 其他路径未知, 为null, 也就是默认权重无穷大
-            paths.put(beginVertex, edge.wight);
+            paths.put(edge.to, edge.wight);
         });
         // 已经提起来的顶点, 也就是已经确认了是最短路径的顶点
         Map<V, E> selected = new HashMap<>();
         while (!paths.isEmpty()) {
             // 找到下一个被提起来的顶点, 也就是在历史路径权重集合中, 找到最小的权重
-            Map.Entry<Vertex<V, E>, E> minPath = minPath(paths);
+            Map.Entry<Vertex<V, E>, E> minPath = minPathWight(paths);
             // 将提起的顶点和其新的路径权重放入, 选中集合中, 相当于标记了该顶点最短路已经确定
             selected.put(minPath.getKey().value, minPath.getValue());
             // 将该顶点从待选择集合中去掉
@@ -466,7 +473,8 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
             // 随着新的顶点的提起, 将会有更多的路径被发现, 那这些新的路径可能会更新原有的路径权值
             for (Edge<V, E> outEdge : minPath.getKey().outEdges) {
                 // 新的路径重复, 忽略
-                if (selected.containsKey(outEdge.to.value) || beginVertex.equals(outEdge.to)) {
+//                if (selected.containsKey(outEdge.to.value) || beginVertex.equals(outEdge.to)) {
+                if (selected.containsKey(outEdge.to.value)) {
                     continue;
                 }
                 /*
@@ -484,15 +492,73 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
                 }
             }
         }
+        // 删除自己的权重
+        selected.remove(beginVertex.value);
+
+        return selected;
+    }
+
+    /**
+     * 返回路径加总权重
+     * 
+     * @param beginVertex
+     * @return
+     */
+    private Map<V, PathInfo<V, E>> dijkstraPath(Vertex<V, E> beginVertex) {
+        Map<Vertex<V, E>, PathInfo<V, E>> paths = new HashMap<>();
+        beginVertex.outEdges.forEach(edge -> {
+            PathInfo<V, E> pathInfo = new PathInfo<>();
+            pathInfo.setWight(edge.wight);
+            pathInfo.getEdgeInfos().add(edge.toEdgeInfo());
+            paths.put(edge.to, pathInfo);
+        });
+        Map<V, PathInfo<V, E>> selected = new HashMap<>();
+        while (!paths.isEmpty()) {
+            Map.Entry<Vertex<V, E>, PathInfo<V, E>> minPath = minPathInfo(paths);
+            selected.put(minPath.getKey().value, minPath.getValue());
+            paths.remove(minPath.getKey());
+            for (Edge<V, E> outEdge : minPath.getKey().outEdges) {
+                if (selected.containsKey(outEdge.to.value)) {
+                    continue;
+                }
+                E newWight = edgeOpr.add(outEdge.wight, minPath.getValue().getWight());
+                PathInfo<V, E> oldPathInfo = paths.get(outEdge.to);
+                if (oldPathInfo != null && edgeOpr.compare(newWight, oldPathInfo.getWight()) >= 0) {
+                    continue;
+                }
+                if (oldPathInfo == null) {
+                    oldPathInfo = new PathInfo<>();
+                    paths.put(outEdge.to, oldPathInfo);
+                } else {
+                    oldPathInfo.getEdgeInfos().clear();
+                }
+
+                oldPathInfo.setWight(newWight);
+                oldPathInfo.getEdgeInfos().addAll(minPath.getValue().getEdgeInfos());
+                paths.put(outEdge.to, oldPathInfo);
+            }
+        }
+        selected.remove(beginVertex.value);
 
         return selected;
     }
     
-    private Map.Entry<Vertex<V, E>, E> minPath(Map<Vertex<V, E>, E> paths) {
+    private Map.Entry<Vertex<V, E>, E> minPathWight(Map<Vertex<V, E>, E> paths) {
         Map.Entry<Vertex<V, E>, E> minEntry = paths.entrySet().iterator().next();
         E minEdge = minEntry.getValue();
         for (Map.Entry<Vertex<V, E>, E> entry : paths.entrySet()) {
             if (edgeOpr.compare(entry.getValue(), minEdge) < 0) {
+                minEntry = entry;
+            }
+        }
+        return minEntry;
+    }
+    
+    private Map.Entry<Vertex<V, E>, PathInfo<V, E>> minPathInfo(Map<Vertex<V, E>, PathInfo<V, E>> paths) {
+        Map.Entry<Vertex<V, E>, PathInfo<V, E>> minEntry = paths.entrySet().iterator().next();
+        PathInfo<V, E> pathInfo = minEntry.getValue();
+        for (Map.Entry<Vertex<V, E>, PathInfo<V, E>> entry : paths.entrySet()) {
+            if (edgeOpr.compare(entry.getValue().getWight(), pathInfo.getWight()) < 0) {
                 minEntry = entry;
             }
         }
