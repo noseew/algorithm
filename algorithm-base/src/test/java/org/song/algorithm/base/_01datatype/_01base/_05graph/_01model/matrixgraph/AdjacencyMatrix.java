@@ -125,6 +125,11 @@ public class AdjacencyMatrix<V, E> extends MatrixGraph<V, E> {
         return null;
     }
 
+    @Override
+    public Map<V, Map<V, PathInfo<V, E>>> shortestPath() {
+        return null;
+    }
+
     /**
      * 返回元素的下标
      *

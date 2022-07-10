@@ -165,10 +165,35 @@ public class AdjacencyListTest {
         System.out.println("---");
 
         Map<String, IGraph.PathInfo<String, Integer>> pathInfoMap = adJacencyList.shortestPath("V1");
-        pathInfoMap.forEach((k,v) -> {
+        pathInfoMap.forEach((k, v) -> {
             System.out.println("V1->" + k);
             System.out.println(v);
             System.out.println();
+        });
+
+    }
+
+    @Test
+    public void test08() {
+
+        AdjacencyList<String, Integer> adJacencyList = new AdjacencyList<>(integerEdgeOpr);
+
+        adJacencyList.addEdge("V1", "V2", 1);
+        adJacencyList.addEdge("V2", "V3", 2);
+        adJacencyList.addEdge("V1", "V3", 4);
+        adJacencyList.addEdge("V3", "V4", 3);
+        adJacencyList.addEdge("V4", "V5", 4);
+        adJacencyList.addEdge("V2", "V5", 10);
+        adJacencyList.addEdge("V4", "V1", 7);
+        System.out.println(adJacencyList);
+
+        System.out.println("---");
+        Map<String, Map<String, IGraph.PathInfo<String, Integer>>> pathInfoMap = adJacencyList.shortestPath();
+        pathInfoMap.forEach((from, toMap) -> {
+            System.out.println("from->" + from);
+            toMap.forEach((to, path) -> {
+                System.out.println(from + "->" + to + ": " + path);
+            });
         });
 
     }

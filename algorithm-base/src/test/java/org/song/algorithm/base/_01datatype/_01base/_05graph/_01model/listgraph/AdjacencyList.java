@@ -495,6 +495,98 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
         return bellmanFordPath(vertex);
     }
 
+    @Override
+    public Map<V, Map<V, PathInfo<V, E>>> shortestPath() {
+        return floyd();
+    }
+
+    /*
+    floyd
+    多源最短路径算法, 算出每两条边的两两最短路径
+    算法复杂度 O(V^3), 复杂度要比循环 dijkstra 要低
+    算法伪代码
+    for (int k = 0; k < v; k++) {
+      for (int i = 0; i < v; i++) {
+        for (int j = 0; j < v; j++) {
+          if (dist(i, k) + dist(k, j) < dist(i, j)) {
+            dist(i,j) = dist(i,k) + dist(k,j)
+          }
+        }
+      }
+    }
+    算法原理
+    路径: i -> j 的最短路径只有两种 
+        1) i 直接到 j, 
+        2) i -> k...kn -> j
+    假设 dist(i,j) 表示 i -> j 最短路径
+    对于每个顶点, 检查 dist(i,k) + dist(k,j) < dist(i,j) 是否成立, 
+    如果成立, 则 更新 i->j的最短路径; dist(i,j) = dist(i,k) + dist(k,j)
+    
+     */
+    /**
+     * 返回多源最短路径
+     * key=from顶点, val={key=to顶点, val=路径}
+     * 
+     * @return
+     */
+    private Map<V, Map<V, PathInfo<V, E>>> floyd() {
+        Map<V, Map<V, PathInfo<V, E>>> paths = new HashMap<>();
+        // 初始化, 将每条边权重放入 paths 中
+        for (Edge<V, E> edge : edges) {
+            Map<V, PathInfo<V, E>> pathTo = paths.computeIfAbsent(edge.from.value, k -> new HashMap<>());
+            pathTo.computeIfAbsent(edge.to.value, k -> {
+                PathInfo<V, E> pathInfo = new PathInfo<>(edge.wight);
+                pathInfo.getEdgeInfos().add(edge.toEdgeInfo());
+                return pathInfo;
+            });
+        }
+        
+        paths.forEach((v2, v2Map) -> {
+            paths.forEach((v1, v1Map) -> {
+                if (v2.equals(v1)) {
+                    return;
+                }
+                paths.forEach((v3, v3Map) -> {
+                    if (v1.equals(v3) || v3.equals(v2)) {
+                        return;
+                    }
+                    PathInfo<V, E> path12 = getPath(paths, v1, v2);
+                    if (path12 == null) {
+                        return;
+                    }
+                    PathInfo<V, E> path23 = getPath(paths, v2, v3);
+                    if (path23 == null) {
+                        return;
+                    }
+                    PathInfo<V, E> path13 = getPath(paths, v1, v3);
+                    // 两两比较, 如果新的路径, 比原有路径短, 则更新
+                    E newWight = edgeOpr.add(path12.getWight(), path23.getWight());
+                    if (path13 != null && edgeOpr.compare(newWight, path13.getWight()) >= 0) {
+                        return;
+                    }
+                    if (path13 == null) {
+                        path13 = new PathInfo<>();
+                        paths.get(v1).put(v3, path13);
+                    } else {
+                        path13.getEdgeInfos().clear();
+                    }
+                    path13.setWight(newWight);
+                    path13.getEdgeInfos().addAll(path12.getEdgeInfos());
+                    path13.getEdgeInfos().addAll(path23.getEdgeInfos());
+                });
+            });
+        });
+        return paths;
+    }
+
+    private PathInfo<V, E> getPath(Map<V, Map<V, PathInfo<V, E>>> paths, V from, V to) {
+        Map<V, PathInfo<V, E>> fromPath = paths.get(from);
+        if (fromPath != null) {
+            return fromPath.get(to);
+        }
+        return null;
+    }
+
     /**
      * 返回路径加总权重
      * dijkstraWight 的 增强版

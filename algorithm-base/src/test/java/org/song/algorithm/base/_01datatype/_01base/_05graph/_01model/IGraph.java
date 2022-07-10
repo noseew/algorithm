@@ -179,8 +179,17 @@ public interface IGraph<V, E> {
      * @return
      */
     Map<V, E> shortestPathWight(V begin);
-    
+
+    /**
+     * 返回多源最短路路径集合
+     * 也就是两两顶点之间的最短路径集合
+     * 
+     * @param begin
+     * @return
+     */
     Map<V, PathInfo<V, E>> shortestPath(V begin);
+
+    Map<V, Map<V, PathInfo<V, E>>> shortestPath();
     
     @Data
     class EdgeInfo<V, E> {
@@ -219,6 +228,13 @@ public interface IGraph<V, E> {
     class PathInfo<V, E> {
         E wight;
         List<EdgeInfo<V, E>> edgeInfos = new ArrayList<>();
+
+        public PathInfo(E wight) {
+            this.wight = wight;
+        }
+
+        public PathInfo() {
+        }
 
         @Override
         public String toString() {
