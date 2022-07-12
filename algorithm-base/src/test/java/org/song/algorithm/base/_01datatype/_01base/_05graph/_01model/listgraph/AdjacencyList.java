@@ -30,7 +30,7 @@ public class AdjacencyList<V, E> extends ListGraph<V, E> {
      */
     private Set<Edge<V, E>> edges = new HashSet<>();
 
-    protected AdjacencyList(EdgeOpr<E> edgeOpr) {
+    public AdjacencyList(EdgeOpr<E> edgeOpr) {
         super(edgeOpr);
     }
 
