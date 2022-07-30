@@ -1,9 +1,6 @@
 package org.song.algorithm.base._02alg.thinking.greedy;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 0-1 背包问题
@@ -46,8 +43,12 @@ public class _03Knapsack {
         // 通过比较器, 按某个主导属性进行排序
         Arrays.sort(data, cmp);
         // 以某个属性为主导, 实现贪心策略
-        int capacity = 150, weight = 0, value = 0;
-        List<Article> selectedArticles = new LinkedList<Article>(); // 选择的物品集合
+        int capacity = 150, // 总重量限制
+                weight = 0, // 当前权重
+                value = 0; // 已累加总价值
+        
+        
+        List<Article> selectedArticles = new ArrayList<>(); // 选择的物品集合
         for (int i = 0; i < data.length && weight < capacity; i++) {
             int newWeight = weight + data[i].weight;
             if (newWeight <= capacity) {
@@ -56,6 +57,8 @@ public class _03Knapsack {
                 selectedArticles.add(data[i]);
             }
         }
+        
+        // 打印选择结果
         System.out.println("-----------------------------");
         System.out.println("【" + title + "】");
         System.out.println("总价值: " + value);
