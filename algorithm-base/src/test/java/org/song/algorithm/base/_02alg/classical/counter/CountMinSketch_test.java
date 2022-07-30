@@ -1,4 +1,4 @@
-package org.song.algorithm.base._02alg.counter;
+package org.song.algorithm.base._02alg.classical.counter;
 
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.junit.jupiter.api.Test;

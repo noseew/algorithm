@@ -1,4 +1,4 @@
-package org.song.algorithm.base._02alg.counter;
+package org.song.algorithm.base._02alg.classical.counter;
 
 import java.util.Random;
 

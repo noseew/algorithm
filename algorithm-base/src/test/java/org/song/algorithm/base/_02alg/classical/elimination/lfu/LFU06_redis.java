@@ -1,7 +1,7 @@
 package org.song.algorithm.base._02alg.classical.elimination.lfu;
 
 import org.junit.jupiter.api.Test;
-import org.song.algorithm.base._02alg.counter.MorrisCounter_test;
+import org.song.algorithm.base._02alg.classical.counter.MorrisCounter_test;
 
 /**
  * Redis 4.0+ 中的LFU 计数器, MorrisCounter

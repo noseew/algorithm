@@ -1,6 +1,6 @@
 package org.song.algorithm.base._02alg.classical.elimination.lfu;
 
-import org.song.algorithm.base._02alg.counter.CountMinSketch_test;
+import org.song.algorithm.base._02alg.classical.counter.CountMinSketch_test;
 import org.song.algorithm.base._02alg.classical.elimination.lru.LRU01_base;
 import org.song.algorithm.base._02alg.classical.elimination.lru.LRU02_SLRU;
 import org.song.algorithm.base._01datatype._02high.bloom.BloomFilter;
