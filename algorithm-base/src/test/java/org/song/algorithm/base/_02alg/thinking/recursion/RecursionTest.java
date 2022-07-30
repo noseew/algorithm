@@ -1,11 +1,11 @@
 package org.song.algorithm.base._02alg.thinking.recursion;
 
-public class Main {
+public class RecursionTest {
     public void main(String[] args) {
         System.out.println(sum(100));
         a(5);
         log(5);
-        System.out.println(new Main().factorial(4));
+        System.out.println(new RecursionTest().factorial(4));
     }
 
 //    int fib(int n) {

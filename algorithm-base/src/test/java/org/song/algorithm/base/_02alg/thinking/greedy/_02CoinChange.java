@@ -10,7 +10,7 @@ import java.util.Arrays;
  * 
  * 贪心算法并不能得到全局最优解, 知识做到每一步的最优解
  */
-public class CoinChange {
+public class _02CoinChange {
     Integer[] integers = {25, 10, 5, 1};
 
     @Test
@@ -48,7 +48,12 @@ public class CoinChange {
             System.out.println(faces[i]);
             money -= faces[i];
             coins++;
-            i = 0; // 这步是不需要的
+            /*
+            这步是不需要的, 因为剩下的金额肯定不满足i之前的面值来减, 所以最好的方式是从当前金额再试一次剩下的金额
+            示例: 5,2,1
+            如果已经到2了, 则5肯定不需要再次计算了
+             */
+            i = 0; // 
         }
         return coins;
     }

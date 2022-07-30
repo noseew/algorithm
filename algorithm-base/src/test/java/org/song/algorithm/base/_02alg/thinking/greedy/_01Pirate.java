@@ -11,7 +11,7 @@ import java.util.Arrays;
  *
  * 贪心算法并不能得到全局最优解, 知识做到每一步的最优解
  */
-public class Pirate {
+public class _01Pirate {
     @Test
     public void test() {
         int[] weights = {3, 5, 4, 10, 7, 14, 2, 11};
