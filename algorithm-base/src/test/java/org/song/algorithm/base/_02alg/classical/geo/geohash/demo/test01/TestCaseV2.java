@@ -2,6 +2,7 @@ package org.song.algorithm.base._02alg.classical.geo.geohash.demo.test01;
 
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.base._02alg.classical.geo.geohash.base.PrecisionLevel;
+import org.song.algorithm.base.utils.SystemClock;
 
 import java.util.List;
 
@@ -31,11 +32,11 @@ public class TestCaseV2 {
         double lng = 120.741271;
         double lat = 31.27732;
         int precisionLevel = PrecisionLevel.Level7.getCode();
-        long start = System.currentTimeMillis();
+        long start = SystemClock.now();
         GeoHash_test01 place = GeoHash_test01.withPrecision(lat, lng, precisionLevel);
 
         GeoHash_test01[] parentAllGeos = place.getAdjacentAndSelf();
-        long end = System.currentTimeMillis();
+        long end = SystemClock.now();
         System.out.println((end - start) + " ms");
         print(parentAllGeos);
         
@@ -52,11 +53,11 @@ public class TestCaseV2 {
         double lng = 120.741271;
         double lat = 31.27732;
         int precisionLevel = PrecisionLevel.Level7.getCode();
-        long start = System.currentTimeMillis();
+        long start = SystemClock.now();
         GeoHash_test01 place = GeoHash_test01.withPrecision(lat, lng, precisionLevel);
 
         List<GeoHash_test01> parentAllGeos = place.getAdjacentAdapt(5000);
-        long end = System.currentTimeMillis();
+        long end = SystemClock.now();
         System.out.println((end - start) + " ms");
         print(parentAllGeos);
         

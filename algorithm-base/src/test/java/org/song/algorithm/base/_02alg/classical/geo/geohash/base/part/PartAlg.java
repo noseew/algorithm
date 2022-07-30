@@ -2,6 +2,7 @@ package org.song.algorithm.base._02alg.classical.geo.geohash.base.part;
 
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.base.utils.BinaryUtils;
+import org.song.algorithm.base.utils.SystemClock;
 
 /**
  * 组成 GEO hash 的具体部分算法
@@ -34,34 +35,34 @@ public class PartAlg {
 
         int loop = 10000000;
         int i = 0;
-        long start = System.currentTimeMillis();
+        long start = SystemClock.now();
         for (i = 0; i < loop; i++) {
             geohashEncode(lat_range, lon_range, latitude, longitude, 24, hash);
         }
 
-        long end = System.currentTimeMillis();
+        long end = SystemClock.now();
         System.out.println(String.format("Cost %sms to encode\n", end - start));
 
-        start = System.currentTimeMillis();
+        start = SystemClock.now();
         for (i = 0; i < loop; i++) {
             geohashFastEncode(lat_range, lon_range, latitude, longitude, 24, fast_hash);
         }
-        end = System.currentTimeMillis();
+        end = SystemClock.now();
         System.out.println(String.format("Cost %sms to fast encode\n", end - start));
 
         GeoHashArea area = new GeoHashArea(), area1 = new GeoHashArea();
-        start = System.currentTimeMillis();
+        start = SystemClock.now();
         for (i = 0; i < loop; i++) {
             geohashDecode(lat_range, lon_range, hash, area);
         }
-        end = System.currentTimeMillis();
+        end = SystemClock.now();
         System.out.println(String.format("Cost %sms to  decode\n", end - start));
 
-        start = System.currentTimeMillis();
+        start = SystemClock.now();
         for (i = 0; i < loop; i++) {
             geohashFastDecode(lat_range, lon_range, hash, area1);
         }
-        end = System.currentTimeMillis();
+        end = SystemClock.now();
         System.out.println(String.format("Cost %sms to fast decode\n", end - start));
 
     }

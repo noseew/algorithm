@@ -1,6 +1,7 @@
 package org.song.algorithm.base._03distrib.ratelimit;
 
 import lombok.Data;
+import org.song.algorithm.base.utils.SystemClock;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
@@ -73,7 +74,7 @@ public class RL02SlidingWindow02 extends AbstractRateLimit {
      */
     public synchronized boolean get() {
         // 当前秒, 当前秒的访问会落到指定位置的数组中
-        long now = System.currentTimeMillis();
+        long now = SystemClock.now();
         // 当前请求落点下标
         int currentIndex = (int) (now % this.win % countWin.length);
         // 计算总数开始下标, currentIndex > i < startIndex, i都要清零

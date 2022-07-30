@@ -3,6 +3,7 @@ package org.song.algorithm.base._02alg.classical.elimination.lru;
 import org.assertj.core.util.Sets;
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.base._02alg.classical.elimination.AbstractEliminate;
+import org.song.algorithm.base.utils.SystemClock;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -91,7 +92,7 @@ public class LRU03_Redis {
                 node.key = k;
             }
             node.value = v;
-            node.lru = System.currentTimeMillis(); // 访问时间
+            node.lru = SystemClock.now(); // 访问时间
             CacheNode<K, V> put = cacheMaps.put(k, node);
             return put != null ? put.value : null;
         }
@@ -107,7 +108,7 @@ public class LRU03_Redis {
             if (node == null) {
                 return null;
             }
-            node.lru = System.currentTimeMillis(); // 更新访问时间
+            node.lru = SystemClock.now(); // 更新访问时间
             return node.value;
         }
 

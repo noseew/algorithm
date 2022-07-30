@@ -1,5 +1,7 @@
 package org.song.algorithm.base._03distrib.ratelimit;
 
+import org.song.algorithm.base.utils.SystemClock;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -51,7 +53,7 @@ public class RL02SlidingWindow extends AbstractRateLimit {
      */
     public boolean get() {
         // 当前秒, 当前秒的访问会落到指定位置的数组中
-        long now = System.currentTimeMillis();
+        long now = SystemClock.now();
         // 当前请求落点下标
         int currentIndex = (int) (now % this.win % countWin.length);
         // 计算总数开始下标, currentIndex > i < startIndex, i都要清零
@@ -83,7 +85,7 @@ public class RL02SlidingWindow extends AbstractRateLimit {
 
     @Override
     public String toString() {
-        long now = System.currentTimeMillis();
+        long now = SystemClock.now();
         StringBuilder sb = new StringBuilder();
         for (int i = (int) (now % this.win); i < countWin.length; i++) {
             countWin[i % countWin.length].get();

@@ -1,5 +1,7 @@
 package org.song.algorithm.base._03distrib.ratelimit;
 
+import org.song.algorithm.base.utils.SystemClock;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -17,7 +19,7 @@ public class RL01FixedWindow02 extends AbstractRateLimit {
     /**
      * 上次窗口时间
      */
-    private long lastTime = System.currentTimeMillis();
+    private long lastTime = SystemClock.now();
 
     RL01FixedWindow02(int maxLimit, int winSecond) {
         this.maxLimit = maxLimit;
@@ -30,7 +32,7 @@ public class RL01FixedWindow02 extends AbstractRateLimit {
      * @return
      */
     public boolean get() {
-        long now = System.currentTimeMillis();
+        long now = SystemClock.now();
             /*
             如果在窗口之外, 则重置
              */

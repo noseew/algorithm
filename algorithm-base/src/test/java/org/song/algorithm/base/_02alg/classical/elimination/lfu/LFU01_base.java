@@ -2,6 +2,7 @@ package org.song.algorithm.base._02alg.classical.elimination.lfu;
 
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.base._02alg.classical.elimination.AbstractEliminate;
+import org.song.algorithm.base.utils.SystemClock;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -100,7 +101,7 @@ public class LFU01_base {
             Node node = dataMap.get(k);
             if (node != null) {
                 node.count++; // 次数升级
-                node.time = System.currentTimeMillis(); // 访问时间更新
+                node.time = SystemClock.now(); // 访问时间更新
                 minHeap.remove(node);
                 minHeap.offer(node);
                 return node.val;
@@ -115,7 +116,7 @@ public class LFU01_base {
                 V oldVal = node.val;
                 node.val = v;
                 node.count++; // 次数升级
-                node.time = System.currentTimeMillis(); // 访问时间更新
+                node.time = SystemClock.now(); // 访问时间更新
                 minHeap.remove(node);
                 minHeap.offer(node);
                 return oldVal;
@@ -145,7 +146,7 @@ public class LFU01_base {
             public K key;
             public V val;
             int count = 1; // 该节点的访问次数
-            long time = System.currentTimeMillis(); // 该节点的访问时间位置, 实现LRU功能, 越小越久没访问, 就越应该删除
+            long time = SystemClock.now(); // 该节点的访问时间位置, 实现LRU功能, 越小越久没访问, 就越应该删除
 
             public Node(K k, V v) {
                 this.key = k;

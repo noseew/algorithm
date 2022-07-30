@@ -1,5 +1,7 @@
 package org.song.algorithm.base._02alg.classical.geo.geohash.testcase;
 
+import org.song.algorithm.base.utils.SystemClock;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -387,13 +389,13 @@ public class GeoHashDemo {
 
     public static void main(String[] args) {
         // TODO Auto-generated method stub
-        long time = System.currentTimeMillis();
+        long time = SystemClock.now();
         GeoHashDemo g = new GeoHashDemo(40.222012, 116.248283);
         g.sethashLength(12);
         System.out.println("当前坐标：" + g.getGeoHashBase32());
         for (String str : g.getGeoHashBase32For9()) {
             System.out.println(str);
         }
-        System.out.println(System.currentTimeMillis() - time);
+        System.out.println(SystemClock.now() - time);
     }
 }

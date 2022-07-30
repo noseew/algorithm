@@ -1,6 +1,7 @@
 package org.song.algorithm.base._04exercise.leetcode.simple;
 
 import org.junit.jupiter.api.Test;
+import org.song.algorithm.base.utils.SystemClock;
 
 import java.time.LocalDateTime;
 import java.util.TreeMap;
@@ -60,7 +61,7 @@ public class Leetcode_993_RecentCounter {
          *
          */
         public int ping(int t) {
-            long now = System.currentTimeMillis();
+            long now = SystemClock.now();
 
             Integer val = counter.get(now);
             if (val != null) {
