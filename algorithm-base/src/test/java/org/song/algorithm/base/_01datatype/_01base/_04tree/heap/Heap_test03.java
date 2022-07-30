@@ -1,7 +1,7 @@
 package org.song.algorithm.base._01datatype._01base._04tree.heap;
 
 import org.junit.Test;
-import org.song.algorithm.base._02alg._01sort.AbstractSort;
+import org.song.algorithm.base._02alg.classical._01sort.AbstractSort;
 
 import java.util.Collection;
 import java.util.Comparator;

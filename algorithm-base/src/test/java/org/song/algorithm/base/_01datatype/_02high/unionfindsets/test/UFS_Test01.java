@@ -3,7 +3,7 @@ package org.song.algorithm.base._01datatype._02high.unionfindsets.test;
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.base._01datatype._02high.unionfindsets.UFS;
 import org.song.algorithm.base._01datatype._02high.unionfindsets.common.UFSQuickUnion_PathHalve;
-import org.song.algorithm.base._02alg._01sort.AbstractSort;
+import org.song.algorithm.base._02alg.classical._01sort.AbstractSort;
 
 import java.util.List;
 

@@ -1,30 +1,30 @@
 package org.song.algorithm.base._02alg.thinking.recursion;
 
-import org.song.algorithm.base.utils.Times;
+import org.song.algorithm.base.utils.StopWatchUtils;
 
 public class Fib {
      public static void main(String[] args) {
          Fib fib = new Fib();
          int n = 30;
-         Times.test("fib0", () -> {
+         StopWatchUtils.test("fib0", () -> {
              System.out.println(fib.fib0(n));
          });
-         Times.test("fib1", () -> {
+         StopWatchUtils.test("fib1", () -> {
              System.out.println(fib.fib1(n));
          });
-         Times.test("fib2", () -> {
+         StopWatchUtils.test("fib2", () -> {
              System.out.println(fib.fib2(n));
          });
-         Times.test("fib3", () -> {
+         StopWatchUtils.test("fib3", () -> {
              System.out.println(fib.fib3(n));
          });
-         Times.test("fib4", () -> {
+         StopWatchUtils.test("fib4", () -> {
              System.out.println(fib.fib4(n));
          });
-         Times.test("fib5", () -> {
+         StopWatchUtils.test("fib5", () -> {
              System.out.println(fib.fib5(n));
          });
-         Times.test("fib6", () -> {
+         StopWatchUtils.test("fib6", () -> {
              System.out.println(fib.fib6(n));
          });
          int i = 100;
