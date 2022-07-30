@@ -29,6 +29,7 @@ public class _03Hanoi {
      */
 
     /**
+     * 将 n 个盘子从 p1 移动到 p3
      * 最终将 P1 移动到 P3, P2位临时柱子
      * 复杂度 O(2^n)
      * 
@@ -47,6 +48,7 @@ public class _03Hanoi {
 //        2. 将n的盘子从A移动到C
         move(n, p1, p3);
 //        3. 将n-1个盘子从B移动到C
+        hanoi(n - 1, p1, p2, p3);
         hanoi(n - 1, p2, p1, p3);
     }
 
