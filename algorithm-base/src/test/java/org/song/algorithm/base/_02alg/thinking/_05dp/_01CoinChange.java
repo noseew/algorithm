@@ -197,6 +197,8 @@ public class _01CoinChange {
                 第7次, i=7, dp[7] = dp[7 - 5]
                                 = dp[2] = 2, 前一步已经算过了
                                 = 新值 2+1 = 硬币数3
+             
+             这里的 dp[i], 就是凑够i的最优硬币数, 每一个i都是, 对当前i来说是最优的凑够硬币数量
              */
             dp[i] = min + 1;
         }
@@ -236,7 +238,9 @@ public class _01CoinChange {
     int coins4(int n) {
         if (n < 1) return -1; // 处理非法数据
         int[] dp = new int[n + 1];
-        // faces[i] 是凑够i分时最后选择的那枚硬币的面值
+        /*
+        faces[i] 是凑够i分时最后选择的那枚硬币的面值
+         */
         int[] faces = new int[dp.length]; // 存放硬币面值(为了输出)
         for (int i = 1; i <= n; i++) {
             int min = Integer.MAX_VALUE;
@@ -260,6 +264,9 @@ public class _01CoinChange {
                 faces[i] = 25;
             }
             dp[i] = min + 1;
+            /*
+            这里的 faces[i], 就是i, 在凑硬币数的时候, 最后凑的那枚硬币面值
+             */
             print(faces, i); // 打印凑够面值 1 ~ n 的方案
         }
         print(faces, n); // 打印凑够面值 n 的方案
@@ -267,6 +274,9 @@ public class _01CoinChange {
     }
 
 
+    /**
+     * 将面值当成数组参数传进去
+     */
     @Test
     public void test5() {
         assert coins5_1( 41, new int[]{1, 5, 20, 25}) == 3;
@@ -315,9 +325,13 @@ public class _01CoinChange {
 
     // 打印凑够面值 n
     // 的方案
-
     void print(int[] faces, int n) {
         System.out.print("[" + n + "] = ");
+        /*
+        faces[n] 表示凑够n时, 最后的那个硬币的面值, 通常是最小的面值
+        则 n - faces[n], 就是将当前面值n减去一个已经算过的面值的数
+        则 faces[n - faces[n]], 就是等价于倒数第二个凑够的硬币的值
+         */
         while (n > 0) {
             System.out.print(faces[n] + " ");
             n -= faces[n];
