@@ -1,4 +1,4 @@
-package org.song.algorithm.base._02alg.thinking.recursion;
+package org.song.algorithm.base._02alg.thinking._01recursion;
  public class Frame {
      int n;
      int v;

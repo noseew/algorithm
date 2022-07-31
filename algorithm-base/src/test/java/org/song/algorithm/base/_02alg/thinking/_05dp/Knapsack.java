@@ -1,4 +1,4 @@
-package org.song.algorithm.base._02alg.thinking.dp;
+package org.song.algorithm.base._02alg.thinking._05dp;
 
 public class Knapsack {
     public static void main(String[] args) {

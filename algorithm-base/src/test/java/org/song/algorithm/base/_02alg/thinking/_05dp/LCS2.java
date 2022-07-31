@@ -1,4 +1,4 @@
-package org.song.algorithm.base._02alg.thinking.dp;
+package org.song.algorithm.base._02alg.thinking._05dp;
 
 /**
  * 最长公共子序列

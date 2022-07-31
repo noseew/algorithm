@@ -1,4 +1,4 @@
-package org.song.algorithm.base._02alg.thinking.backtracking;
+package org.song.algorithm.base._02alg.thinking._02backtracking;
 
 import org.junit.jupiter.api.Test;
 /*

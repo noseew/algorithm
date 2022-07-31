@@ -1,4 +1,4 @@
-package org.song.algorithm.base._02alg.thinking.greedy;
+package org.song.algorithm.base._02alg.thinking._03greedy;
 
 import org.junit.jupiter.api.Test;
 

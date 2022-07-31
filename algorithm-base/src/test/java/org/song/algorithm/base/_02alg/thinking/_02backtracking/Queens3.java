@@ -1,4 +1,4 @@
-package org.song.algorithm.base._02alg.thinking.backtracking;
+package org.song.algorithm.base._02alg.thinking._02backtracking;
 // /**
 // * 八皇后优化 - 位运算
 // */

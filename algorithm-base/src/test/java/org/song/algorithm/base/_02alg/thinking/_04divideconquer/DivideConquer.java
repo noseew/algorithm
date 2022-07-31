@@ -1,4 +1,4 @@
-package org.song.algorithm.base._02alg.thinking.divideconquer;
+package org.song.algorithm.base._02alg.thinking._04divideconquer;
 
 import org.junit.jupiter.api.Test;
 
