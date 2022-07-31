@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * 采用动态规划计算换零钱问题
+ * 找零钱
  */
 public class _01CoinChange {
 
@@ -301,6 +302,9 @@ public class _01CoinChange {
         return dp[n];
     }
 
+    /**
+     * 如果 凑不出来指定的面额, 返回-1
+     */
     int coins5_2(int n, int[] faces) {
         if (n < 1 || faces == null || faces.length == 0) return -1;
         int[] dp = new int[n + 1];
@@ -315,6 +319,7 @@ public class _01CoinChange {
             }
             // 说明上面的循环中每次都是continue, 要凑的面值比给定的所有面值小
             if (min == Integer.MAX_VALUE) {
+                // 怎么凑也凑不出指定的面额, 则返回-1
                 dp[i] = -1;
             } else {
                 dp[i] = min + 1;
