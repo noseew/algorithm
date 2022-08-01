@@ -1,16 +1,20 @@
 package org.song.algorithm.base._02alg.thinking._05dp;
 
+import org.junit.jupiter.api.Test;
+
 /**
- * 最长连续子序列
+ * 最长上升子序列(不连续)的长度
  */
-public class LIS {
-    public static void main(String[] args) {
+public class _03LIS {
+
+    @Test
+    public void main() {
         System.out.println(lengthOfLIS1(new int[]{10, 2, 2, 5, 1, 7, 101, 18}));
         System.out.println(lengthOfLIS2(new int[]{10, 2, 2, 5, 1, 7, 101, 18}));
         System.out.println(lengthOfLIS3(new int[]{10, 2, 2, 5, 1, 7, 101, 18}));
     }
 
-    static int lengthOfLIS3(int[] nums) {
+    int lengthOfLIS3(int[] nums) {
         if (nums == null || nums.length == 0) return 0;
         // 牌堆的数量
         int len = 0;
@@ -36,7 +40,7 @@ public class LIS {
         return len;
     }
 
-    static int lengthOfLIS2(int[] nums) {
+    int lengthOfLIS2(int[] nums) {
         if (nums == null || nums.length == 0) return 0;
         // 牌堆的数量
         int len = 0;
@@ -62,7 +66,7 @@ public class LIS {
         return len;
     }
 
-    static public int lengthOfLIS1(int[] nums) {
+    public int lengthOfLIS1(int[] nums) {
         if (nums == null || nums.length == 0) return 0;
         int[] dp = new int[nums.length];
         int max = dp[0] = 1; // 只有一个元素则长度为1
