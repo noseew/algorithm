@@ -14,32 +14,30 @@ public class _03LIS {
         System.out.println(lengthOfLIS3(new int[]{10, 2, 2, 5, 1, 7, 101, 18}));
     }
 
-    int lengthOfLIS3(int[] nums) {
+    /**
+     * dp[i] 表示第i个元素拥有的最长升序子序列数量
+     * 默认都是1
+     */
+    public int lengthOfLIS1(int[] nums) {
         if (nums == null || nums.length == 0) return 0;
-        // 牌堆的数量
-        int len = 0;
-        // 牌顶数组
-        int[] top = new int[nums.length];
-        // 遍历所有的牌
-        for (int num : nums) {
-            int begin = 0;
-            int end = len;
-            while (begin < end) {
-                int mid = (begin + end) >> 1;
-                if (num <= top[mid]) {
-                    end = mid;
-                } else {
-                    begin = mid + 1;
-                }
-            }
-            // 覆盖牌顶
-            top[begin] = num;
-            // 检查是否要新建一个牌堆
-            if (begin == len) len++;
-        }
-        return len;
-    }
+        int[] dp = new int[nums.length];
+        int max = dp[0] = 1; // 只有一个元素则长度为1
+        for (int i = 1; i < dp.length; i++) {
+            // 默认只有一个元素时长度为1
+            dp[i] = 1;
+            for (int j = 0; j < i; j++) {
+                // 无法成为一个上升子序列
+                if (nums[j] >= nums[i]) continue;
 
+                // 和上一个i可以行程上升子序列, 则更新i
+                dp[i] = Math.max(dp[j] + 1, dp[i]);
+            }
+            // 记录最长子序列, 用于返回
+            max = Math.max(dp[i], max);
+        }
+        return max;
+    }
+    
     int lengthOfLIS2(int[] nums) {
         if (nums == null || nums.length == 0) return 0;
         // 牌堆的数量
@@ -66,19 +64,32 @@ public class _03LIS {
         return len;
     }
 
-    public int lengthOfLIS1(int[] nums) {
+    /**
+     * 采用而分法优化遍历, 达到 O(nlogn)
+     */
+    int lengthOfLIS3(int[] nums) {
         if (nums == null || nums.length == 0) return 0;
-        int[] dp = new int[nums.length];
-        int max = dp[0] = 1; // 只有一个元素则长度为1
-        for (int i = 1; i < dp.length; i++) {
-            dp[i] = 1; // 默认只有一个元素时长度为1
-            for (int j = 0; j < i; j++) {
-                // 无法成为一个上升子序列
-                if (nums[j] >= nums[i]) continue;
-                dp[i] = Math.max(dp[j] + 1, dp[i]);
+        // 牌堆的数量
+        int len = 0;
+        // 牌顶数组
+        int[] top = new int[nums.length];
+        // 遍历所有的牌
+        for (int num : nums) {
+            int begin = 0;
+            int end = len;
+            while (begin < end) {
+                int mid = (begin + end) >> 1;
+                if (num <= top[mid]) {
+                    end = mid;
+                } else {
+                    begin = mid + 1;
+                }
             }
-            max = Math.max(dp[i], max);
+            // 覆盖牌顶
+            top[begin] = num;
+            // 检查是否要新建一个牌堆
+            if (begin == len) len++;
         }
-        return max;
+        return len;
     }
 }
