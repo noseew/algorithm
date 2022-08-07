@@ -1,6 +1,9 @@
 package org.song.algorithm.base._02alg.thinking._05dp;
 
-public class Knapsack {
+/**
+ * 01背包问题
+ */
+public class _0601Knapsack {
     public static void main(String[] args) {
         int[] values = {6, 3, 5, 4, 6};
         int[] weights = {2, 2, 6, 5, 4};
