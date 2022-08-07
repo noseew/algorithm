@@ -2,6 +2,9 @@ package org.song.algorithm.base._02alg.thinking._05dp;
 
 /**
  * 01背包问题
+ * 
+ * 1. 求最大价值
+ * 2. 求恰好装满的最大价值
  */
 public class _0601Knapsack {
     public static void main(String[] args) {
