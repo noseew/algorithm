@@ -18,6 +18,7 @@ public class PatternMatcher {
     - Boyer-Moore(BM)
         坏字符规则和好后缀规则
     - Sunday
+        失配之后, 判断主串多出的下一个字符
     - AC自动机
      */
 
