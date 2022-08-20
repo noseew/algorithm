@@ -13,7 +13,7 @@ public class Leetcode_203_removeElements {
     public void test() {
         ListNode headA = new ListNode(1, new ListNode(2, new ListNode(2, new ListNode(1, null))));
 
-        ListNode newHead = removeElements(headA, 1);
+        ListNode newHead = removeElements2(headA, 1);
         System.out.println(newHead.val);
     }
 
@@ -38,5 +38,19 @@ public class Leetcode_203_removeElements {
         }
 
         return newHead;
+    }
+
+
+    public ListNode removeElements2(ListNode head, int val) {
+        ListNode link = new ListNode(-1, head);
+        ListNode node = link;
+        while (node.next != null) {
+            if (node.next.val == val) {
+                node.next = node.next.next;
+            } else {
+                node = node.next;
+            } 
+        }
+        return link.next;
     }
 }
