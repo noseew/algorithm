@@ -35,25 +35,41 @@ import org.junit.Test;
  */
 public class Leetcode_02_TowSum {
 
+
     @Test
-    public void test() {
-        ListNode listNode = addTwoNumbers4(
-                new ListNode(9),
-                new ListNode(1,
-                        new ListNode(9,
-                                new ListNode(9,
-                                        new ListNode(9,
-                                                new ListNode(9,
-                                                        new ListNode(9,
-                                                                new ListNode(9,
-                                                                        new ListNode(9,
-                                                                                new ListNode(9,
-                                                                                        new ListNode(9)))))))))));
+    public void test01() {
+        System.out.println(build(9, 9, 9, 9, 9, 9, 9));
+        System.out.println(build(9, 9, 9, 9));
+        System.out.println(build(2, 4, 3));
+    }
+
+    @Test
+    public void test02() {
+//        ListNode listNode = addTwoNumbers4(
+//                new ListNode(9),
+//                new ListNode(1,
+//                        new ListNode(9,
+//                                new ListNode(9,
+//                                        new ListNode(9,
+//                                                new ListNode(9,
+//                                                        new ListNode(9,
+//                                                                new ListNode(9,
+//                                                                        new ListNode(9,
+//                                                                                new ListNode(9,
+//                                                                                        new ListNode(9)))))))))));
 
 
-//        ListNode listNode = addTwoNumbers4(new ListNode(2, new ListNode(4, new ListNode(3))),
-//                new ListNode(5, new ListNode(6, new ListNode(4))));
-        System.out.println(listNode.val);
+        ListNode listNode = addTwoNumbers4(new ListNode(2, new ListNode(4, new ListNode(3))),
+                new ListNode(5, new ListNode(6, new ListNode(4))));
+        System.out.println(listNode);
+    }
+
+    @Test
+    public void test03() {
+        // 7,0,8
+        System.out.println(addTwoNumbers5(build(2, 4, 3), build(5, 6, 4)));
+        // 8,9,9,9,0,0,0,1
+        System.out.println(addTwoNumbers5(build(9, 9, 9, 9, 9, 9, 9), build(9, 9, 9, 9)));
     }
 
 
@@ -240,6 +256,50 @@ public class Leetcode_02_TowSum {
         return head;
     }
 
+    public ListNode addTwoNumbers5(ListNode l1, ListNode l2) {
+        if (l1 == null) return l2;
+        if (l2 == null) return l1;
+
+        ListNode dummyHead = new ListNode();
+        ListNode current = new ListNode();
+        dummyHead.next = current;
+
+        while (l1 != null || l2 != null) {
+            int val = current.val;
+            if (l1 != null) {
+                val += l1.val;
+                l1 = l1.next;
+            }
+            if (l2 != null) {
+                val += l2.val;
+                l2 = l2.next;
+            }
+            current.val = val % 10;
+            int nextVal = val / 10;
+            if (l1 != null || l2 != null || nextVal > 0) {
+                current.next = new ListNode();
+                current.next.val = nextVal;
+                current = current.next;
+            }
+        }
+        return dummyHead.next;
+    }
+
+
+    private ListNode build(int... val) {
+        ListNode dummyHead = new ListNode();
+        ListNode current = new ListNode();
+        dummyHead.next = current;
+        for (int i = 0; i < val.length; i++) {
+            current.val = val[i];
+            if (i != val.length - 1) {
+                current.next = new ListNode();
+                current = current.next;
+            }
+        }
+        return dummyHead.next;
+    }
+
 
     // Definition for singly-linked list.
     public class ListNode {
@@ -256,6 +316,18 @@ public class Leetcode_02_TowSum {
         ListNode(int val, ListNode next) {
             this.val = val;
             this.next = next;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append(val);
+            ListNode n = next;
+            while (n != null) {
+                sb.append(",").append(n.val);
+                n = n.next;
+            }
+            return sb.toString();
         }
     }
 }
