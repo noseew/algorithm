@@ -41,6 +41,13 @@ public class Leetcode_88_merge {
         System.out.println();
     }
 
+    /**
+     * 
+     * @param nums1 len = m+n
+     * @param m
+     * @param nums2
+     * @param n
+     */
     public void merge(int[] nums1, int m, int[] nums2, int n) {
         if (n == 0) {
             return;
@@ -68,6 +75,40 @@ public class Leetcode_88_merge {
             } else {
                 nums1[last] = nums2[nNext];
                 nNext--;
+            }
+        }
+    }
+
+    public void merge2(int[] nums1, int m, int[] nums2, int n) {
+        if (n == 0) return;
+        if (m == 0) {
+            for (int i = 0; i < nums2.length; i++) {
+                nums1[i] = nums2[i];
+            }
+            return;
+        }
+
+        int mr = m - 1;
+        int nr = n - 1;
+        for (int current = nums1.length - 1; current >= 0; current--) {
+            if (nr < 0) break;
+            if (mr < 0 || nums2[nr] > nums1[mr]) {
+                nums1[current] = nums2[nr--];
+            } else {
+                nums1[current] = nums1[mr--];
+            }
+        }
+    }
+
+    public void merge3(int[] nums1, int m, int[] nums2, int n) {
+        if (n == 0) return;
+        int mr = m - 1;
+        int nr = n - 1;
+        for (int current = nums1.length - 1; current >= 0 && nr >= 0; current--) {
+            if (mr < 0 || nums2[nr] > nums1[mr]) {
+                nums1[current] = nums2[nr--];
+            } else {
+                nums1[current] = nums1[mr--];
             }
         }
     }
