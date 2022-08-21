@@ -100,4 +100,44 @@ public class Leetcode_239_maxSlidingWindow {
         return maxArray;
     }
 
+    @Test
+    public void test3() {
+//        System.out.println(Arrays.toString(maxSlidingWindow3(new int[]{1, 3, -1, -3, 5, 3, 6, 7}, 3)));
+        System.out.println(Arrays.toString(maxSlidingWindow3(new int[]{1, 3, -1, -3, 5, 3, 6, 7}, 3)));
+    }
+
+    /**
+     * 思路 是暴力解法的优化, 不过效率限于数据格式
+     */
+    public int[] maxSlidingWindow3(int[] nums, int k) {
+        if (nums == null || nums.length == 0 || k < 1 || k > nums.length) return null;
+        if (k == 1) return nums;
+
+        // 窗口内最大值数组
+        int[] maxArray = new int[nums.length - k + 1];
+        int maxIndex = -1;
+
+        for (int start = 0; start < maxArray.length; start++) {
+            // 重置最大索引
+            if (maxIndex < start) {
+                maxIndex = start;
+                for (int i = start + 1; i < start + k; i++) {
+                    if (nums[i] > nums[maxIndex]) {
+                        maxIndex = i;
+                    }
+                }
+            }
+            // 新进入窗口的值如果更大则替换
+            if (nums[maxIndex] <= nums[start + k - 1]) {
+                maxIndex = start + k - 1;
+            }
+            
+            System.out.println(maxIndex);
+            // 赋值最大值
+            maxArray[start] = nums[maxIndex];
+        }
+
+        return maxArray;
+    }
+
 }
