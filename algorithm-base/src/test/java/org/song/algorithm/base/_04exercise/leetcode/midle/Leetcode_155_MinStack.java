@@ -24,7 +24,6 @@ public class Leetcode_155_MinStack {
 
     @Test
     public void test() {
-        MinStack1 obj = new MinStack1();
         MinStack1 minStack = new MinStack1();
         minStack.push(-2);
         minStack.push(0);
@@ -76,6 +75,60 @@ public class Leetcode_155_MinStack {
 
         public int getMin() {
             return min.peek();
+        }
+    }
+
+
+    @Test
+    public void test2() {
+        MinStack2 minStack = new MinStack2();
+        minStack.push(-2);
+        minStack.push(0);
+        minStack.push(-3);
+        System.out.println(minStack.getMin()); // --> 返回 -3.
+        minStack.pop();
+        System.out.println(minStack.top()); //  --> 返回 0.
+        System.out.println(minStack.getMin()); // --> 返回 -2.
+    }
+
+    /**
+     * 思路2, 和思路1相同, 不过两个栈合并成一个栈
+     */
+    class MinStack2 {
+
+        Stack<Node> stack = new Stack<>();
+
+        public MinStack2() {
+
+        }
+
+        public void push(int val) {
+            if (stack.isEmpty() || stack.peek().min > val) {
+                stack.push(new Node(val, val));
+            } else {
+                stack.push(new Node(val, stack.peek().min));
+            }
+        }
+
+        public void pop() {
+            stack.pop();
+        }
+
+        public int top() {
+            return stack.peek().val;
+        }
+
+        public int getMin() {
+            return stack.peek().min;
+        }
+        
+        class Node {
+            int val;
+            int min;
+            public Node(int val, int min) {
+                this.val = val;
+                this.min = min;
+            }
         }
     }
 }
