@@ -16,6 +16,22 @@ public class Leetcode_234_isPalindrome {
         System.out.println(isPalindrome(headA));
     }
 
+    @Test
+    public void test2() {
+
+//        ListNode headA = new ListNode(1, new ListNode(2, new ListNode(1, null)));
+        ListNode headA = new ListNode(1, new ListNode(2, new ListNode(3, null)));
+
+        System.out.println(isPalindrome2(headA));
+
+        ListNode reversal = reversal(headA);
+        System.out.println(reversal);
+    }
+
+    /**
+     * 思路, 链表转数组, 通过数组判断
+     * 空间效率 O(n)
+     */
     public boolean isPalindrome(ListNode head) {
 
         ListNode node = head;
@@ -38,8 +54,47 @@ public class Leetcode_234_isPalindrome {
                 }
             }
         }
-
-
         return true;
     }
+
+    /**
+     * 思路2, 
+     * 将中间节点往后的节点进行翻转, 然后从头和从中间开始遍历对比
+     */
+    public boolean isPalindrome2(ListNode head) {
+        if (head.next == null) return true;
+        
+        ListNode node = head;
+        int size = 0;
+        while (node != null) {
+            size++;
+            node = node.next;
+        }
+        // 中间的定义是, 其下一个节点是接下来需要遍历的节点
+        int middle = (size + 1) >> 1;
+
+        ListNode r = head, l = head;
+        for (int i = 1; i <= size && r.next != null; i++) {
+            // 达到中间节点后, 后面的开始翻转
+            if (i == middle) r.next = reversal(r.next);
+            r = r.next;
+            if (i >= middle) {
+                if (l.val != r.val) return false;
+                l = l.next;
+            }
+        }
+        return true;
+    }
+    
+    public ListNode reversal(ListNode head) {
+        ListNode newHead = null;
+        while (head != null) {
+            ListNode next = head.next;
+            head.next = newHead;
+            newHead = head;
+            head = next;
+        }
+        return newHead;
+    }
+
 }
