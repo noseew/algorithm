@@ -79,7 +79,7 @@ public class Leetcode_239_maxSlidingWindow {
         LinkedList<Integer> queue = new LinkedList<>();
         queue.addLast(0);
 
-        for (int end = 0, start = end - k + 1; end < nums.length; end++, start++) {
+        for (int end = 1, start = end - k + 1; end < nums.length; end++, start++) {
             // 将右侧, 小于当前的值移除, 因为要留下最大值
             while (!queue.isEmpty() && nums[queue.peekLast()] <= nums[end]) queue.pollLast();
 
@@ -87,7 +87,7 @@ public class Leetcode_239_maxSlidingWindow {
 //            System.out.println(queue.toString());
             if (start >= 0) {
                 // 将左侧, 超出窗口的值移除
-                while (queue.peekFirst() < start) queue.pollFirst();
+                if (queue.peekFirst() < start) queue.pollFirst();
                 // 从左侧取出最大值, 也就是窗口内的最大值, 放入新的队列
                 maxArray[start] = nums[queue.peekFirst()];
             }
