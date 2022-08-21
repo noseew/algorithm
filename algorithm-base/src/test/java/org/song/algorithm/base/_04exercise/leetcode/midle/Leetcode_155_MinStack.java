@@ -131,4 +131,53 @@ public class Leetcode_155_MinStack {
             }
         }
     }
+
+    @Test
+    public void test3() {
+        MinStack3 minStack = new MinStack3();
+        minStack.push(-2);
+        minStack.push(0);
+        minStack.push(-3);
+        System.out.println(minStack.getMin()); // --> 返回 -3.
+        minStack.pop();
+        System.out.println(minStack.top()); //  --> 返回 0.
+        System.out.println(minStack.getMin()); // --> 返回 -2.
+    }
+
+    /**
+     * 思路3, 和思路2相同, 自己实现一个栈
+     */
+    class MinStack3 {
+        Node top = new Node(0, Integer.MAX_VALUE, null);
+        public MinStack3() {
+
+        }
+
+        public void push(int val) {
+            top = new Node(val, Math.min(val, top.min), top);
+        }
+
+        public void pop() {
+            top = top.next;
+        }
+
+        public int top() {
+            return top.val;
+        }
+
+        public int getMin() {
+            return top.min;
+        }
+        
+        class Node {
+            int val;
+            int min;
+            Node next;
+            public Node(int val, int min, Node next) {
+                this.val = val;
+                this.min = min;
+                this.next = next;
+            }
+        }
+    }
 }
