@@ -23,8 +23,12 @@ public class Leetcode_239_maxSlidingWindow {
     }
 
     /**
+     * 暴力法效率是O(n*k)
+     * <p>
      * 要求是O(n)
      * 解法思路相当于最小栈升级版, 都是将路过的最值记录下来, 不过这里需要将溢出的值出队
+     * 单调递减队列,
+     * 为什么能实现O(n)?, 因为循环处理队列中的数据, 而队列中的数据最多就是N,
      */
     public int[] maxSlidingWindow(int[] nums, int k) {
         if (nums == null || nums.length == 0 || k < 1 || k > nums.length) return null;
@@ -94,108 +98,6 @@ public class Leetcode_239_maxSlidingWindow {
         }
 
         return maxArray;
-    }
-
-    @Test
-    public void test3() {
-        System.out.println(Arrays.toString(maxSlidingWindow3(new int[]{1, 3, -1, -3, 5, 3, 6, 7}, 3)));
-    }
-
-    /**
-     * 思路和 maxSlidingWindow2 一致, 自己实现队列, TODO 未完成
-     */
-    public int[] maxSlidingWindow3(int[] nums, int k) {
-        if (nums == null || nums.length == 0 || k < 1 || k > nums.length) return null;
-        if (k == 1) return nums;
-
-        // 窗口内最大值数组
-        int[] maxArray = new int[nums.length - k + 1];
-        // 双向队列, 用于存放窗口内的值, 从左往右, 从大到小排序
-        DQ queue = new DQ();
-        queue.addLast(0);
-
-        for (int end = 0, start = end - k + 1; end < nums.length; end++, start++) {
-            // 将右侧, 小于当前的值移除, 因为要留下最大值
-            while (!queue.isEmpty() && nums[queue.peekLast()] <= nums[end]) queue.pollLast();
-
-            queue.addLast(end);
-//            System.out.println(queue.toString());
-            if (start >= 0) {
-                // 将左侧, 超出窗口的值移除
-                while (queue.peekFirst() < start) queue.pollFirst();
-                // 从左侧取出最大值, 也就是窗口内的最大值, 放入新的队列
-                maxArray[start] = nums[queue.peekFirst()];
-            }
-        }
-
-        return maxArray;
-    }
-
-    class DQ {
-
-        Node first, last;
-        int size;
-
-        DQ() {
-            first = new Node(Integer.MIN_VALUE, null, null);
-        }
-
-        boolean isEmpty() {
-            return size == 0;
-        }
-
-        void addLast(int val) {
-            if (last != null) {
-                last.last = new Node(val, last, null);
-            } else {
-                last = new Node(val, first, null);
-            }
-            size++;
-        }
-
-        int peekFirst() {
-            return first.val;
-        }
-
-        int pollFirst() {
-            Node f = this.first;
-            Node newFirst = this.first.last;
-            removeNode(f);
-            this.first = newFirst;
-            size--;
-            return f.val;
-        }
-
-        int peekLast() {
-            return last.val;
-        }
-
-        int pollLast() {
-            Node l = this.last;
-            Node newLast = this.last.first;
-            removeNode(l);
-            this.last = newLast;
-            size--;
-            return l.val;
-        }
-        
-        Node removeNode(Node node) {
-            if (node == null) return null;
-            if (node.first != null) node.first.last = node.last;
-            if (node.last != null) node.last.first = node.first;
-            return node;
-        }
-
-        class Node {
-            int val;
-            Node first, last;
-
-            public Node(int val, Node first, Node last) {
-                this.val = val;
-                this.first = first;
-                this.last = last;
-            }
-        }
     }
 
 }
