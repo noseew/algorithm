@@ -121,6 +121,16 @@ public class Leetcode_234_isPalindrome {
         }
         return true;
     }
+
+    /**
+     * 思路4
+     * 采用栈解决, TODO
+     */
+    public boolean isPalindrome4(ListNode head) {
+        if (head.next == null) return true;
+        if (head.next.next == null) return head.val == head.next.val;
+        return true;
+    }
     
     public ListNode reversal(ListNode head) {
         ListNode newHead = null;

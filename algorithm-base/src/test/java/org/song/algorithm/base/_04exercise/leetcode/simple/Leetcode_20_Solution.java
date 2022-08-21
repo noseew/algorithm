@@ -14,7 +14,10 @@ public class Leetcode_20_Solution {
         System.out.println("print: " + isValid("()[]{}"));
         System.out.println("print: " + isValid("{[]}"));
         System.out.println("print: " + isValid("([)]"));
+    }
 
+    @Test
+    public void test2() {
         System.out.println("print: " + isValid2("()[]{}"));
         System.out.println("print: " + isValid2("{[]}"));
         System.out.println("print: " + isValid2("([)]"));
@@ -62,12 +65,9 @@ public class Leetcode_20_Solution {
 
 
     public boolean isValid2(String s) {
-        if (s == null) {
-            return false;
-        }
-        if ("".equals(s)) {
-            return true;
-        }
+        if (s == null) return false;
+        if ("".equals(s)) return true;
+        
         Stack<Character> stack = new Stack<>();
         char[] chars = s.toCharArray();
         for (char c : chars) {
