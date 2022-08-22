@@ -128,6 +128,7 @@ public class LinkedSingleInversion {
 
     /**
      * 链表倒转, 递归的方式
+     * 翻转链表
      */
     @Test
     public void test_recursion02() {
@@ -164,6 +165,7 @@ public class LinkedSingleInversion {
 
     /**
      * 链表倒转, 递归的方式
+     * 翻转链表
      */
     @Test
     public void test_recursion03() {
