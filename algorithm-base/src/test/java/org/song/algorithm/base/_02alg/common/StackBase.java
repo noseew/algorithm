@@ -13,16 +13,4 @@ public class StackBase {
         return nums;
     }
 
-
-    static class ListNode {
-
-        public int val;
-        public ListNode prev, next;
-
-        public ListNode(int val, ListNode prev, ListNode next) {
-            this.val = val;
-            this.prev = prev;
-            this.next = next;
-        }
-    }
 }

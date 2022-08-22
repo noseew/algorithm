@@ -1,6 +1,7 @@
 package org.song.algorithm.base._04exercise.leetcode.midle;
 
 import org.junit.Test;
+import org.song.algorithm.base._04exercise.leetcode.ListNode;
 
 /**
  * 2. 两数相加
@@ -38,9 +39,9 @@ public class Leetcode_02_TowSum {
 
     @Test
     public void test01() {
-        System.out.println(build(9, 9, 9, 9, 9, 9, 9));
-        System.out.println(build(9, 9, 9, 9));
-        System.out.println(build(2, 4, 3));
+        System.out.println(ListNode.build(9, 9, 9, 9, 9, 9, 9));
+        System.out.println(ListNode.build(9, 9, 9, 9));
+        System.out.println(ListNode.build(2, 4, 3));
     }
 
     @Test
@@ -67,9 +68,9 @@ public class Leetcode_02_TowSum {
     @Test
     public void test03() {
         // 7,0,8
-        System.out.println(addTwoNumbers5(build(2, 4, 3), build(5, 6, 4)));
+        System.out.println(addTwoNumbers5(ListNode.build(2, 4, 3), ListNode.build(5, 6, 4)));
         // 8,9,9,9,0,0,0,1
-        System.out.println(addTwoNumbers5(build(9, 9, 9, 9, 9, 9, 9), build(9, 9, 9, 9)));
+        System.out.println(addTwoNumbers5(ListNode.build(9, 9, 9, 9, 9, 9, 9), ListNode.build(9, 9, 9, 9)));
     }
 
 
@@ -285,49 +286,4 @@ public class Leetcode_02_TowSum {
         return dummyHead.next;
     }
 
-
-    private ListNode build(int... val) {
-        ListNode dummyHead = new ListNode();
-        ListNode current = new ListNode();
-        dummyHead.next = current;
-        for (int i = 0; i < val.length; i++) {
-            current.val = val[i];
-            if (i != val.length - 1) {
-                current.next = new ListNode();
-                current = current.next;
-            }
-        }
-        return dummyHead.next;
-    }
-
-
-    // Definition for singly-linked list.
-    public class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode() {
-        }
-
-        ListNode(int val) {
-            this.val = val;
-        }
-
-        ListNode(int val, ListNode next) {
-            this.val = val;
-            this.next = next;
-        }
-
-        @Override
-        public String toString() {
-            StringBuilder sb = new StringBuilder();
-            sb.append(val);
-            ListNode n = next;
-            while (n != null) {
-                sb.append(",").append(n.val);
-                n = n.next;
-            }
-            return sb.toString();
-        }
-    }
 }

@@ -1,5 +1,7 @@
 package org.song.algorithm.base._02alg.common;
 
+import org.song.algorithm.base._04exercise.leetcode.ListNode;
+
 public class LinkedBase {
 
     public void test01() {
@@ -28,14 +30,5 @@ public class LinkedBase {
     }
 
 
-    static class ListNode {
-
-        public int val;
-        public ListNode next;
-
-        public ListNode(int x, ListNode next) {
-            this.val = x;
-            this.next = next;
-        }
-    }
 }
+
