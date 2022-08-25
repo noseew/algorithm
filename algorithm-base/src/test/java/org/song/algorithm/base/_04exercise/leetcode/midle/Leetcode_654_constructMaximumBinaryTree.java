@@ -86,9 +86,9 @@ public class Leetcode_654_constructMaximumBinaryTree {
         // 从栈低到栈顶, 单调递减
         Stack<Integer> stack = new Stack<>();
 
-        // 左边第一个比其小的位置
+        // 左边第一个比其大的位置
         int[] larray = new int[nums.length];
-        // 右边第一个比其小的位置
+        // 右边第一个比其大的位置
         int[] rarray = new int[nums.length];
 
         for (int i = 0; i < nums.length; i++) {
@@ -163,9 +163,9 @@ public class Leetcode_654_constructMaximumBinaryTree {
         // 从栈低到栈顶, 单调递减
         Stack<Integer> stack = new Stack<>();
 
-        // 左边第一个比其小的位置
+        // 左边第一个比其大的位置
         int[] larray = new int[nums.length];
-        // 右边第一个比其小的位置
+        // 右边第一个比其大的位置
         int[] rarray = new int[nums.length];
 
         for (int i = 0; i < nums.length; i++) {
