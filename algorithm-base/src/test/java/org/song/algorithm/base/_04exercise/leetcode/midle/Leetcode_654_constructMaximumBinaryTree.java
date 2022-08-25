@@ -130,14 +130,23 @@ public class Leetcode_654_constructMaximumBinaryTree {
         for (int i = 0; i < nums.length; i++) {
             // 如果都为-1, 则取值-1
             if (larray[i] == -1 && rarray[i] == -1) res[i] = -1;
-            
+
+            if (larray[i] == -1) {
+                res[i] = rarray[i];
+                continue;
+            }
+            if (rarray[i] == -1) {
+                res[i] = larray[i];
+                continue;
+            }
+
             // 左边为-1 或 左边更远 或 左边值更大 => 取右边
-            if (larray[i] == -1 || larray[i] > rarray[i] || nums[larray[i]] > nums[rarray[i]]) {
+            if (larray[i] > rarray[i] || nums[larray[i]] > nums[rarray[i]]) {
                 res[i] = rarray[i];
                 continue;
             }
             // 右边为-1 或 右边更远 或 右边值更大 => 取左边
-            if (rarray[i] == -1 || larray[i] < rarray[i] || nums[larray[i]] < nums[rarray[i]]) {
+            if (larray[i] < rarray[i] || nums[larray[i]] < nums[rarray[i]]) {
                 res[i] = larray[i];
                 continue;
             }
@@ -175,13 +184,26 @@ public class Leetcode_654_constructMaximumBinaryTree {
         for (int i = 0; i < nums.length; i++) {
             // 如果都为-1, 则取值-1
             if (larray[i] == -1 && rarray[i] == -1) res[i] = -1;
+            
+            if (larray[i] == -1) {
+                res[i] = rarray[i];
+                continue;
+            }
+            if (rarray[i] == -1) {
+                res[i] = larray[i];
+                continue;
+            }
+
             // 左边为-1 或 左边更远 或 左边值更大 => 取右边
-            if (larray[i] == -1 || larray[i] > rarray[i] || nums[larray[i]] > nums[rarray[i]]) {
+            if (larray[i] > rarray[i] || nums[larray[i]] > nums[rarray[i]]) {
                 res[i] = rarray[i];
                 continue;
             }
             // 右边为-1 或 右边更远 或 右边值更大 => 取左边
-            if (rarray[i] == -1 || larray[i] < rarray[i] || nums[larray[i]] < nums[rarray[i]]) res[i] = larray[i];
+            if (larray[i] < rarray[i] || nums[larray[i]] < nums[rarray[i]]) {
+                res[i] = larray[i];
+                continue;
+            }
         }
 
         return res;
