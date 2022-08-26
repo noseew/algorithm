@@ -15,10 +15,13 @@ public class Leetcode_242_isAnagram {
     public void test() {
         System.out.println(isAnagram("anagram", "nagaram"));
         System.out.println(isAnagram("rat", "car"));
+        
+        System.out.println(isAnagram2("anagram", "nagaram"));
+        System.out.println(isAnagram2("rat", "car"));
     }
 
     /**
-     *
+     * 采用map计数
      */
     public boolean isAnagram(String s, String t) {
         char[] schars = s.toCharArray();
@@ -39,6 +42,28 @@ public class Leetcode_242_isAnagram {
                 return false;
             }
             map.put(tc, val - 1);
+        }
+        return true;
+    }
+
+    /**
+     * 由于值范围确定 a-z, 所以采用数组计数
+     */
+    public boolean isAnagram2(String s, String t) {
+        char[] schars = s.toCharArray();
+        char[] tchars = t.toCharArray();
+
+        if (schars.length != tchars.length) return false;
+
+        int[] counter = new int['z' - 'a' + 1];
+
+        for (int i = 0; i < schars.length; i++) {
+            counter[schars[i] - 'a']++;
+        }
+        for (int i = 0; i < tchars.length; i++) {
+            if (--counter[tchars[i] - 'a'] < 0) {
+                return false;
+            }
         }
         return true;
     }
