@@ -19,8 +19,13 @@ public class Leetcode_offer47_maxValue {
                 {1, 5, 1},
                 {4, 2, 1}
         };
-        int val = maxValue(ints);
-        System.out.println(val); // 12
+        System.out.println(maxValue(ints)); // 12
+        int[][] ints2 = {
+                {1, 2},
+                {5, 6},
+                {1, 1}
+        };
+        System.out.println(maxValue(ints2)); // 13
     }
 
     /**
@@ -52,6 +57,51 @@ public class Leetcode_offer47_maxValue {
             }
         }
         return values[col - 1][row - 1];
+    }
+
+    @Test
+    public void test2() {
+        int[][] ints = {
+                {1, 3, 1},
+                {1, 5, 1},
+                {4, 2, 1}
+        };
+        System.out.println(maxValue2(ints)); // 12
+        int[][] ints2 = {
+                {1, 2},
+                {5, 6},
+                {1, 1}
+        };
+        System.out.println(maxValue2(ints2)); // 13
+    }
+
+    /**
+     * 空间优化版
+     */
+    public int maxValue2(int[][] grid) {
+        int row = grid[0].length; // 行
+        int col = grid.length; // 列
+
+        // 第一行的每个格子最大价值
+        int[] values = new int[row];
+        // 初始化第一个格子
+        values[0] = grid[0][0];
+
+        // 初始化 第一行
+        for (int i = 1; i < row; i++) {
+            values[i] = values[i - 1] + grid[0][i];
+        }
+
+        for (int c = 1; c < col; c++) {
+            // 初始化第一列
+            values[0] = values[0] + grid[c][0];
+            for (int r = 1; r < row; r++) {
+                int val = grid[c][r];
+                // 到当前格子的最大价值 = 当前格子价值 + max(左边最大价值, 上边最大价值)
+                values[r] = val + Math.max(values[r - 1], values[r]);
+            }
+        }
+        return values[row - 1];
     }
 
 }
