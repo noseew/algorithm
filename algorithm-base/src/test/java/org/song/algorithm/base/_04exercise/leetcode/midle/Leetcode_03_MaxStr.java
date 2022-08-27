@@ -118,4 +118,42 @@ public class Leetcode_03_MaxStr {
         }
         return maxMap.size();
     }
+
+    @Test
+    public void test3() {
+        System.out.println(lengthOfLongestSubstring3("bbbbb")); // 1
+        System.out.println(lengthOfLongestSubstring3("abcabcbb")); // 3
+        System.out.println(lengthOfLongestSubstring3("pwwkew")); // 3
+        System.out.println(lengthOfLongestSubstring3("dvdf")); // 3
+    }
+
+    /**
+     * 思路, 类似于动态规划思想
+     * 一次遍历
+     * 利用map, 记录元素上一次出现的位置, 则
+     * 当前位置减去上一次出现的位置 和 上一个下标的最大不重复长度对比, 最小的就是最大不重复长度
+     */
+    public int lengthOfLongestSubstring3(String s) {
+        if (s == null) return 0;
+        if (s.length() <= 1) return s.length();
+
+        char[] chars = s.toCharArray();
+        // 该字符, 上一次出现的位置, pi
+        Map<Character, Integer> preIndex = new HashMap<>();
+        preIndex.put(chars[0], 0);
+
+        // 以i-1位置字符结尾的最长不重复字符串的开始位置
+        int li = 0;
+        int max = 1;
+        for (int i = 1; i < chars.length; i++) {
+            char val = chars[i];
+            // 上一次出现的位置
+            Integer pi = preIndex.getOrDefault(val, -1);
+            if (li <= pi) li = pi + 1;
+            // 存储这个字符出现的位置
+            preIndex.put(val, i);
+            max = Math.max(max, i - li + 1);
+        }
+        return max;
+    }
 }
