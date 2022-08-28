@@ -25,6 +25,7 @@ public class Leetcode_121_maxProfit {
 
     /**
      * 思路, 一次遍历, 过程中, 找出最小值和利润最大值
+     * 计算出, 第i天卖出时最大利润是多少, 遍历完成后, 也就得到了所有的天中, 最大利润
      */
     public int maxProfit(int[] prices) {
         if (prices == null || prices.length == 0) return 0;
@@ -38,6 +39,37 @@ public class Leetcode_121_maxProfit {
             } else {
                 min = price;
             }
+        }
+        return profit;
+    }
+
+    @Test
+    public void test2() {
+        System.out.println("5 = " + maxProfit2(new int[]{7, 1, 5, 3, 6, 4}));
+        System.out.println("0 = " + maxProfit2(new int[]{7, 6, 4, 3, 1}));
+
+    }
+
+    /**
+     * 思路2,
+     * 动态规划
+     * 第i天卖的最大利润就是, 从i开始往前每天的差值之和, 取最大的话就转化成了, 最大连续子序列和的问题, 可以使用动态规划
+     * 用动态规划比第一种更复杂, 这里只是熟悉动态规划
+     */
+    public int maxProfit2(int[] prices) {
+        if (prices == null || prices.length == 0) return 0;
+
+        int[] maxProfit = new int[prices.length];
+
+        int profit = 0; // 最大利润
+        for (int i = 1; i < prices.length; i++) {
+            // 初值为第i天和前一天的差值, 动态规划就是计算第i天截止, 求这些最大连续差值的和
+            maxProfit[i] = prices[i] - prices[i - 1];
+            // 转换成 第i天截止, 求这些最大连续差值的和
+            maxProfit[i] = Math.max(maxProfit[i], maxProfit[i] + maxProfit[i - 1]);
+
+            profit = Math.max(profit, maxProfit[i]);
+
         }
         return profit;
     }
