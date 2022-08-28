@@ -2,8 +2,6 @@ package org.song.algorithm.base._04exercise.leetcode.hard;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Stack;
-
 /**
  * 72. 编辑距离
  * 给你两个单词 word1 和 word2， 请返回将 word1 转换成 word2 所使用的最少操作数  。
@@ -70,5 +68,49 @@ public class Leetcode_72_minDistance {
             }
         }
         return dp[rowArray.length][ colArray.length];
+    }
+
+
+    @Test
+    public void test2() {
+        System.out.println(minDistance2("horse", "ros"));
+        System.out.println(minDistance2("intention", "execution"));
+        System.out.println(minDistance2("", "a"));
+        System.out.println(minDistance2("b", ""));
+    }
+
+    /**
+     * 动态规划, 空间优化版, 采用一维数组实现
+     * TODO 未完成
+     */
+    public int minDistance2(String word1, String word2) {
+        if (word1 == null || word2 == null) return 0;
+
+        char[] rowArray = word1.toCharArray();
+        char[] colArray = word2.toCharArray();
+        int[] dp = new int[colArray.length + 1];
+        /*
+        初始化
+         */
+        for (int col = 1; col <= colArray.length; col++) {
+            dp[col] = col;
+        }
+
+        for (int row = 1; row <= rowArray.length; row++) {
+            int lastLeft = dp[0];
+            for (int col = 1; col <= colArray.length; col++) {
+                dp[0] = col;
+                // 上一个 最短距离
+                int top = 1 + dp[col];
+                // 左边 最短距离
+                int left = 1 + dp[col - 1];
+                // 左上角 最短距离
+                int leftTop = rowArray[row - 1] != colArray[col - 1] ? 1 + lastLeft : lastLeft;;
+                lastLeft = dp[col];
+                // 取最小
+                dp[col] = Math.min(leftTop, Math.min(top, left));
+            }
+        }
+        return dp[colArray.length];
     }
 }
