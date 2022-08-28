@@ -107,6 +107,9 @@ public class Leetcode_05_LongestPalindrome {
         return s.substring(startIndex, startIndex + maxLen);
     }
 
+    /**
+     * 暴力解法
+     */
     public String longestPalindrome2(String s) {
 
         if (s.length() <= 1) {
@@ -170,6 +173,28 @@ public class Leetcode_05_LongestPalindrome {
             }
 
         }
+
+        return s.substring(startIndex, startIndex + maxLen);
+    }
+
+    /**
+     * 采用动态规划
+     * TODO 未完成
+     */
+    public String longestPalindrome3(String s) {
+
+        if (s.length() <= 1) {
+            return s;
+        }
+
+        char[] chars = s.toCharArray();
+
+        if (chars.length == 2 && chars[0] != chars[1]) {
+            return String.valueOf(chars[0]);
+        }
+
+        int startIndex = 0;
+        int maxLen = 1;
 
         return s.substring(startIndex, startIndex + maxLen);
     }
