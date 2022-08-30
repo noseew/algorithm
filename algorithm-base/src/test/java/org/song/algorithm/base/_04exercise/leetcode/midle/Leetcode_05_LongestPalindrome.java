@@ -39,7 +39,7 @@ public class Leetcode_05_LongestPalindrome {
     @Test
     public void test() {
         // "xaabacxcabaax"
-//        System.out.println(longestPalindrome2("xaabacxcabaaxcabaax"));
+        System.out.println(longestPalindrome2("xaabacxcabaaxcabaax"));
         System.out.println(longestPalindrome2("cbbd"));
         System.out.println();
     }
@@ -177,9 +177,17 @@ public class Leetcode_05_LongestPalindrome {
         return s.substring(startIndex, startIndex + maxLen);
     }
 
+    @Test
+    public void test3() {
+        // "xaabacxcabaax"
+        System.out.println(longestPalindrome3("xaabacxcabaaxcabaax"));
+        System.out.println(longestPalindrome3("cbbd"));
+        System.out.println(longestPalindrome3("aaaaa"));
+        System.out.println();
+    }
+
     /**
-     * 采用动态规划
-     * TODO 未完成
+     * 中心扩散优化, 上面两个方法的优化
      */
     public String longestPalindrome3(String s) {
 
@@ -188,14 +196,73 @@ public class Leetcode_05_LongestPalindrome {
         }
 
         char[] chars = s.toCharArray();
+        int length = chars.length;
 
-        if (chars.length == 2 && chars[0] != chars[1]) {
-            return String.valueOf(chars[0]);
+        int max = 1;
+        int start = 0;
+        // 长度超过剩余则不用继续
+        for (int i = 0; i <= length - (max / 2); i++) {
+            // 奇对称
+            int m2 = palindrome(chars, i, i);
+            if (m2 > max) {
+                max = m2;
+                start = i - (m2 / 2);
+            }
+            // 偶对称
+            int m1 = palindrome(chars, i, i + 1);
+            if (m1 > max) {
+                max = m1;
+                start = i - (m1 / 2) + 1;
+            }
+        }
+        return s.substring(start, start + max);
+    }
+
+    private int palindrome(char[] chars, int start, int end) {
+        int len = 0;
+        if (start == end) {
+            // 奇对称提前+1
+            len++;
+            start--;
+            end++;
+        }
+        while (start >= 0 && end < chars.length) {
+            if (chars[start--] != chars[end++]) break;
+            // 相等一次+2
+            len += 2;
+        }
+        return len;
+    }
+
+    /**
+     * 采用动态规划
+     * TODO 未完成
+     */
+    public String longestPalindrome4(String s) {
+
+        if (s.length() <= 1) {
+            return s;
         }
 
-        int startIndex = 0;
-        int maxLen = 1;
+        char[] chars = s.toCharArray();
+        int length = chars.length;
 
-        return s.substring(startIndex, startIndex + maxLen);
+        int max = 1;
+        int start = 0;
+        for (int i = 0; i < length; i++) {
+            // 偶对称
+            int m1 = palindrome(chars, i, i + 1);
+            if (m1 > max) {
+                max = m1;
+                start = i + (m1 / 2);
+            }
+            // 奇对称
+            int m2 = palindrome(chars, i, i);
+            if (m2 > max) {
+                max = m2;
+                start = i + (m1 / 2);
+            }
+        }
+        return s.substring(start, start + max);
     }
 }
