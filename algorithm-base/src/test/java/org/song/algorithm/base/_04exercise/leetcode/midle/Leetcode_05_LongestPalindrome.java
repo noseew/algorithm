@@ -234,35 +234,48 @@ public class Leetcode_05_LongestPalindrome {
         return len;
     }
 
+    @Test
+    public void test4() {
+        // "xaabacxcabaax"
+        System.out.println(longestPalindrome4("xaabacxcabaaxcabaax"));
+        System.out.println(longestPalindrome4("cbbd"));
+        System.out.println(longestPalindrome4("aaaaa"));
+        System.out.println();
+    }
+
     /**
-     * 采用动态规划
-     * TODO 未完成
+     * 中心扩散优化, 上面两个方法的优化
      */
     public String longestPalindrome4(String s) {
-
-        if (s.length() <= 1) {
-            return s;
-        }
-
         char[] chars = s.toCharArray();
-        int length = chars.length;
 
         int max = 1;
         int start = 0;
-        for (int i = 0; i < length; i++) {
-            // 偶对称
-            int m1 = palindrome(chars, i, i + 1);
-            if (m1 > max) {
-                max = m1;
-                start = i + (m1 / 2);
-            }
+        // 长度超过剩余则不用继续
+        for (int i = 0; i <= chars.length - (max / 2); i++) {
             // 奇对称
-            int m2 = palindrome(chars, i, i);
+            int m2 = palindrome2(chars, i - 1, i + 1) + 1;
             if (m2 > max) {
                 max = m2;
-                start = i + (m1 / 2);
+                start = i - (m2 / 2);
+            }
+            // 偶对称
+            int m1 = palindrome2(chars, i, i + 1);
+            if (m1 > max) {
+                max = m1;
+                start = i - (m1 / 2) + 1;
             }
         }
         return s.substring(start, start + max);
+    }
+
+    private int palindrome2(char[] chars, int start, int end) {
+        int len = 0;
+        while (start >= 0 && end < chars.length) {
+            if (chars[start--] != chars[end++]) break;
+            // 相等一次+2
+            len += 2;
+        }
+        return len;
     }
 }
