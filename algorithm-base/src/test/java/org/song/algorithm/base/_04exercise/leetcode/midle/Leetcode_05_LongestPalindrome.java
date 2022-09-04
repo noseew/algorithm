@@ -47,6 +47,11 @@ public class Leetcode_05_LongestPalindrome {
 
     /**
      * 中心扩散
+     * 效率O(n^2)
+     * 
+     * 思路
+     * 以某个字符作为中心 奇对称
+     * 以某两个字符中间作为中心, 偶对称
      */
     public String longestPalindrome(String s) {
         if (s.length() == 1) return s;
@@ -95,6 +100,9 @@ public class Leetcode_05_LongestPalindrome {
 
     /**
      * 中心扩散优化,
+     * 效率O(n^2), 不过会比O(n^2)低, 在有连续相等的字符中效果更明显
+     * 
+     * 思路
      * 将中心变成一个相等的子串
      * 最少的是, 要么是一个字符(奇对称), 要么是两个相等的字符(偶对称)
      */
