@@ -141,4 +141,51 @@ public class Leetcode_05_LongestPalindrome {
         if (max == chars.length) return s;
         return s.substring(start, start + max);
     }
+
+    @Test
+    public void test3() {
+        // "xaabacxcabaax"
+        System.out.println(longestPalindrome3("xaabacxcabaaxcabaax"));
+        System.out.println(longestPalindrome3("cbbd"));
+        System.out.println(longestPalindrome3("aaaaa"));
+        System.out.println(longestPalindrome3("ac"));
+        System.out.println(longestPalindrome3("abb"));
+        System.out.println();
+    }
+
+    /**
+     * manacher 马拉车 TODO
+     * 
+     */
+    public String longestPalindrome3(String s) {
+        if (s.length() == 1) return s;
+
+        char[] chars = s.toCharArray();
+        char[] m = manacher(chars);
+        System.out.println(new String(m, 0, m.length));
+        int max = 1;
+        int start = 0;
+        
+        
+        if (max == chars.length) return s;
+        return s.substring(start, start + max);
+    }
+
+    /**
+     * 预处理原字符串
+     */
+    private char[] manacher(char[] chars) {
+        char[] m = new char[(chars.length << 2) + 1];
+        char delimiter = '#'; // 自定义分隔符, 可以使任意字符
+        m[0] = '^'; // 开始字符, 必须唯一, 不能出现在主串中
+        m[1] = delimiter; 
+        m[m.length - 1] = '$'; // 截止字符, 必须唯一, 不能出现在主串中
+
+        for (int i = 2; i < chars.length; i++) {
+            int j = (i << 2) + 2;
+            m[j] = chars[i];
+            m[j + 1] = delimiter;
+        }
+        return m;
+    }
 }
