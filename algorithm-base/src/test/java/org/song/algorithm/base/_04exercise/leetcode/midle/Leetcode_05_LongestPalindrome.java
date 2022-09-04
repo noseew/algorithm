@@ -39,171 +39,25 @@ public class Leetcode_05_LongestPalindrome {
     @Test
     public void test() {
         // "xaabacxcabaax"
-        System.out.println(longestPalindrome2("xaabacxcabaaxcabaax"));
-        System.out.println(longestPalindrome2("cbbd"));
+        System.out.println(longestPalindrome("xaabacxcabaaxcabaax"));
+        System.out.println(longestPalindrome("cbbd"));
+        System.out.println(longestPalindrome("aaaaa"));
         System.out.println();
     }
 
+    /**
+     * 中心扩散
+     */
     public String longestPalindrome(String s) {
-
-        if (s.length() <= 1) {
-            return s;
-        }
-
+        if (s.length() == 1) return s;
         char[] chars = s.toCharArray();
-
-        if (chars.length == 2 && chars[0] != chars[1]) {
-            return String.valueOf(chars[0]);
-        }
-
-        int startIndex = 0;
-        int maxLen = 1;
-
-        for (int i = 0; i < chars.length; i++) {
-            if (maxLen == chars.length) {
-                break;
-            }
-
-            if (i >= 1 && chars[i] == chars[i - 1]) {
-                // 偶对称
-                int maxLenTemp = 0;
-                int startIndexTemp = i - 1;
-                int maxJ = Math.min(chars.length - i, i);
-                for (int j = 0; j < maxJ; j++) {
-                    if (chars[i - j - 1] == chars[i + j]) {
-                        maxLenTemp += 2;
-                        startIndexTemp = i - j - 1;
-                    } else {
-                        break;
-                    }
-                }
-                if (maxLenTemp > maxLen) {
-                    startIndex = startIndexTemp;
-                    maxLen = maxLenTemp;
-                }
-            }
-            if (i > 0 && i < chars.length - 1
-                    && chars[i - 1] == chars[i + 1]) {
-                // 奇对称
-                int maxLenTemp = 1;
-                int startIndexTemp = i;
-                int maxJ = Math.min(chars.length - i - 1, i);
-                for (int j = 1; j <= maxJ; j++) {
-                    if (chars[i + j] == chars[i - j]) {
-                        maxLenTemp += 2;
-                        startIndexTemp = i - j;
-                    } else {
-                        break;
-                    }
-                }
-                if (maxLenTemp > maxLen) {
-                    startIndex = startIndexTemp;
-                    maxLen = maxLenTemp;
-                }
-            }
-
-        }
-
-        return s.substring(startIndex, startIndex + maxLen);
-    }
-
-    /**
-     * 暴力解法
-     */
-    public String longestPalindrome2(String s) {
-
-        if (s.length() <= 1) {
-            return s;
-        }
-
-        char[] chars = s.toCharArray();
-
-        if (chars.length == 2 && chars[0] != chars[1]) {
-            return String.valueOf(chars[0]);
-        }
-
-        int startIndex = 0;
-        int maxLen = 1;
-
-        for (int i = 0; i < chars.length; i++) {
-            if (maxLen == chars.length) {
-                break;
-            }
-
-            if (i >= 1 && chars[i] == chars[i - 1]) {
-                // 偶对称
-                int maxLenTemp = 0;
-                int startIndexTemp = i - 1;
-                int maxJ = Math.min(chars.length - i, i);
-                int maxAble = maxLenTemp + maxJ * 2;
-                if (maxAble > maxLen) {
-                    for (int j = 0; j < maxJ; j++) {
-                        if (chars[i - j - 1] != chars[i + j]) {
-                            break;
-                        }
-                        maxLenTemp += 2;
-                        startIndexTemp = i - j - 1;
-                    }
-                }
-                if (maxLenTemp > maxLen) {
-                    startIndex = startIndexTemp;
-                    maxLen = maxLenTemp;
-                }
-            }
-            if (i > 0 && i < chars.length - 1
-                    && chars[i - 1] == chars[i + 1]) {
-                // 奇对称
-                int maxLenTemp = 1;
-                int startIndexTemp = i;
-                int maxJ = Math.min(chars.length - i - 1, i);
-                int maxAble = maxLenTemp + maxJ * 2;
-                if (maxAble > maxLen) {
-                    for (int j = 1; j <= maxJ; j++) {
-                        if (chars[i + j] != chars[i - j]) {
-                            break;
-                        }
-                        maxLenTemp += 2;
-                        startIndexTemp = i - j;
-                    }
-                }
-                if (maxLenTemp > maxLen) {
-                    startIndex = startIndexTemp;
-                    maxLen = maxLenTemp;
-                }
-            }
-
-        }
-
-        return s.substring(startIndex, startIndex + maxLen);
-    }
-
-    @Test
-    public void test3() {
-        // "xaabacxcabaax"
-        System.out.println(longestPalindrome3("xaabacxcabaaxcabaax"));
-        System.out.println(longestPalindrome3("cbbd"));
-        System.out.println(longestPalindrome3("aaaaa"));
-        System.out.println();
-    }
-
-    /**
-     * 中心扩散优化, 上面两个方法的优化
-     */
-    public String longestPalindrome3(String s) {
-
-        if (s.length() <= 1) {
-            return s;
-        }
-
-        char[] chars = s.toCharArray();
-        int length = chars.length;
 
         int max = 1;
         int start = 0;
         // 长度超过剩余则不用继续
-        for (int i = 0; i <= length - (max / 2); i++) {
+        for (int i = 0; i <= chars.length - (max >>> 1); i++) {
             // 奇对称
-            int m2 = palindrome(chars, i, i);
+            int m2 = palindrome(chars, i - 1, i + 1) + 1;
             if (m2 > max) {
                 max = m2;
                 start = i - (m2 / 2);
@@ -212,67 +66,16 @@ public class Leetcode_05_LongestPalindrome {
             int m1 = palindrome(chars, i, i + 1);
             if (m1 > max) {
                 max = m1;
-                start = i - (m1 / 2) + 1;
+                start = i - (m1 >>> 1) + 1;
             }
         }
+        if (max == chars.length) return s;
         return s.substring(start, start + max);
     }
 
     private int palindrome(char[] chars, int start, int end) {
         int len = 0;
-        if (start == end) {
-            // 奇对称提前+1
-            len++;
-            start--;
-            end++;
-        }
-        while (start >= 0 && end < chars.length) {
-            if (chars[start--] != chars[end++]) break;
-            // 相等一次+2
-            len += 2;
-        }
-        return len;
-    }
-
-    @Test
-    public void test4() {
-        // "xaabacxcabaax"
-        System.out.println(longestPalindrome4("xaabacxcabaaxcabaax"));
-        System.out.println(longestPalindrome4("cbbd"));
-        System.out.println(longestPalindrome4("aaaaa"));
-        System.out.println();
-    }
-
-    /**
-     * 中心扩散优化, 上面两个方法的优化
-     */
-    public String longestPalindrome4(String s) {
-        char[] chars = s.toCharArray();
-
-        int max = 1;
-        int start = 0;
-        // 长度超过剩余则不用继续
-        for (int i = 0; i <= chars.length - (max / 2); i++) {
-            // 奇对称
-            int m2 = palindrome2(chars, i - 1, i + 1) + 1;
-            if (m2 > max) {
-                max = m2;
-                start = i - (m2 / 2);
-            }
-            // 偶对称
-            int m1 = palindrome2(chars, i, i + 1);
-            if (m1 > max) {
-                max = m1;
-                start = i - (m1 / 2) + 1;
-            }
-        }
-        return s.substring(start, start + max);
-    }
-
-    private int palindrome2(char[] chars, int start, int end) {
-        int len = 0;
         while (start >= 0 && end < chars.length && chars[start--] == chars[end++]) {
-            if (chars[start--] == chars[end++]) break;
             // 相等一次+2
             len += 2;
         }
@@ -280,43 +83,52 @@ public class Leetcode_05_LongestPalindrome {
     }
 
     @Test
-    public void test5() {
+    public void test2() {
         // "xaabacxcabaax"
-        System.out.println(longestPalindrome5("xaabacxcabaaxcabaax"));
-        System.out.println(longestPalindrome5("cbbd"));
-        System.out.println(longestPalindrome5("aaaaa"));
+        System.out.println(longestPalindrome2("xaabacxcabaaxcabaax"));
+        System.out.println(longestPalindrome2("cbbd"));
+        System.out.println(longestPalindrome2("aaaaa"));
+        System.out.println(longestPalindrome2("ac"));
+        System.out.println(longestPalindrome2("abb"));
         System.out.println();
     }
 
     /**
-     * 中心扩散优化, 上面两个方法的优化, 
-     * 优化内存, 减少方法调用, 不必要的String
+     * 中心扩散优化,
+     * 将中心变成一个相等的子串
+     * 最少的是, 要么是一个字符(奇对称), 要么是两个相等的字符(偶对称)
      */
-    public String longestPalindrome5(String s) {
-        char[] chars = s.toCharArray();
+    public String longestPalindrome2(String s) {
+        if (s.length() == 1) return s;
 
+        char[] chars = s.toCharArray();
         int max = 1;
         int start = 0;
         // 长度超过剩余则不用继续
-        for (int i = 0; i <= chars.length - (max >>> 2); i++) {
-            // 奇对称
-            int st = i - 1;
-            int ed = i + 1;
-            int len = 1;
-            while (st >= 0 && ed < chars.length && chars[st--] == chars[ed++]) len += 2;
-            if (len > max) {
-                max = len;
-                start = i - (len >>> 1);
+        for (int i = 0; i < chars.length - (max >> 2); ) {
+            // r = 跳过连续相等, 的下一个位置
+            int r = i;
+            while (r < chars.length && chars[r] == chars[i]) r++;
+//            System.out.printf("i=%s, r=%s \r\n", i, r);
+
+            // begin = 连续相等的左边位置
+            int begin = i - 1;
+            int end = r;
+            // 开始重新扩散
+            while (begin >= 0 && end < chars.length && chars[begin] == chars[end]) {
+                begin--;
+                end++;
             }
-            // 偶对称
-            st = i;
-            ed = i + 1;
-            len = 0;
-            while (st >= 0 && ed < chars.length && chars[st--] == chars[ed++]) len += 2;
+            // 扩散后的最大长度
+            int len = end - (begin + 1);
+//            System.out.println("len=" + len);
             if (len > max) {
+                // 更新长度和开始位置
                 max = len;
-                start = i - (len >>> 1) + 1;
+                start = begin + 1;
             }
+            // 跳过连续的长度
+            i = r;
         }
         if (max == chars.length) return s;
         return s.substring(start, start + max);
