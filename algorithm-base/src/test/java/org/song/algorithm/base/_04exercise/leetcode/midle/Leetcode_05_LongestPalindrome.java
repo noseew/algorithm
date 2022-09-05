@@ -152,6 +152,16 @@ public class Leetcode_05_LongestPalindrome {
         System.out.println(longestPalindrome3("abb"));
         System.out.println();
     }
+    @Test
+    public void testm() {
+        // "xaabacxcabaax"
+        System.out.println(manacher("xaabacxcabaaxcabaax".toCharArray()));
+        System.out.println(manacher("cbbd".toCharArray()));
+        System.out.println(manacher("aaaaa".toCharArray()));
+        System.out.println(manacher("ac".toCharArray()));
+        System.out.println(manacher("abb".toCharArray()));
+        System.out.println();
+    }
 
     /**
      * manacher 马拉车 TODO
@@ -160,29 +170,63 @@ public class Leetcode_05_LongestPalindrome {
     public String longestPalindrome3(String s) {
         if (s.length() == 1) return s;
 
-        char[] chars = s.toCharArray();
-        char[] m = manacher(chars);
-        System.out.println(new String(m, 0, m.length));
-        int max = 1;
-        int start = 0;
-        
-        
-        if (max == chars.length) return s;
-        return s.substring(start, start + max);
+        char[] oldCs = s.toCharArray();
+        char[] cs = manacher(oldCs);
+        int[] m = new int[cs.length];
+        int lastIndex = m.length - 2;
+
+        // 最大长度
+        int max = 0;
+        // 最大长度的索引中心
+        int maxIndex = 0;
+
+        // 当前最大长度索引中心
+        int c = 1;
+        // 基于c为中心的最大长度对称的右边最后一个位置
+        int r = 1;
+        for (int i = 2; i < lastIndex; i++) {
+            // 找到对称位置的最大子串
+            if (r > i) {
+                int li = (c << 1) - i;
+                m[i] = i + m[li] <= r ? m[li] : r - i;
+            }
+
+            // 以i为中心, 扩散
+            while (cs[i + m[i] + 1] == cs[i - m[i] - 1]) {
+                m[i]++; // 长度增加
+            }
+
+            // 更新 c, r
+            if (i + m[i] > r) {
+                c = i;
+                r = i + m[i];
+            }
+
+            // 找出更大的子串
+            if (m[i] > max) {
+                max = m[i];
+                // 记录最大子串的位置
+                maxIndex = i;
+            }
+        }
+
+        int start = (maxIndex - max) >> 1;
+        if (max == s.length()) return s;
+        return new String(oldCs, start, max);
     }
 
     /**
      * 预处理原字符串
      */
     private char[] manacher(char[] chars) {
-        char[] m = new char[(chars.length << 2) + 1];
+        char[] m = new char[(chars.length << 1) + 3];
         char delimiter = '#'; // 自定义分隔符, 可以使任意字符
         m[0] = '^'; // 开始字符, 必须唯一, 不能出现在主串中
         m[1] = delimiter; 
         m[m.length - 1] = '$'; // 截止字符, 必须唯一, 不能出现在主串中
 
-        for (int i = 2; i < chars.length; i++) {
-            int j = (i << 2) + 2;
+        for (int i = 0; i < chars.length; i++) {
+            int j = (i << 1) + 2;
             m[j] = chars[i];
             m[j + 1] = delimiter;
         }
