@@ -43,8 +43,10 @@ public class Leetcode_236_lowestCommonAncestor {
         TreeNode right = lowestCommonAncestor(root.right, p, q);
 
         if (left != null && right != null) {
+            // 情况1
             return root;
         }
+        // 包含情况2/3/4
         return left != null ? left : right;
 
     }
