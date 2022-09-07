@@ -56,4 +56,25 @@ public class Leetcode_99_recoverTree {
         prev = root;
         inOrder(root.right);
     }
+
+    private void inOrder2(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        inOrder2(root.left);
+        // 出现逆序对
+        if (prev != null && prev.val > root.val) {
+            // 第二个逆序对的尾, 这里也表示第一个逆序对的尾
+            last = root;
+            
+            if (first != null) {
+                // 此时已经是第二个逆序对, 可以return
+                return;
+            }
+            // 第一个逆序对的头
+            first = prev;
+        }
+        prev = root;
+        inOrder2(root.right);
+    }
 }
