@@ -232,4 +232,44 @@ public class Leetcode_05_LongestPalindrome {
         }
         return m;
     }
+
+    @Test
+    public void test4() {
+        // "xaabacxcabaax"
+        System.out.println(longestPalindrome4("xaabacxcabaaxcabaax"));
+        System.out.println(longestPalindrome4("cbbd"));
+        System.out.println(longestPalindrome4("aaaaa"));
+        System.out.println(longestPalindrome4("ac"));
+        System.out.println(longestPalindrome4("abb"));
+        System.out.println();
+    }
+
+    /**
+     * 采用动态规划实现
+     * 动态规划并不是最优解, 这里只是学习动态规划
+     */
+    public String longestPalindrome4(String s) {
+        if (s.length() == 1) return s;
+
+        char[] cs = s.toCharArray();
+        // dp[i][j]表示 cs[i][j] 是否是回文子串
+        boolean[][] dp = new boolean[cs.length][cs.length];
+
+        // 最大长度
+        int max = 0;
+        // 最大长度的索引中心
+        int start = 0;
+
+        for (int i = cs.length - 1; i >= 0; i--) {
+            for (int j = i; j < cs.length; j++) {
+                int len = j - i + 1;
+                dp[i][j] = cs[i] == cs[j] && (len <= 2 || dp[i + 1][j - 1]);
+                if (dp[i][j] && len > max) {
+                    max = len;
+                    start = i;
+                }
+            }
+        }
+        return new String(cs, start, max);
+    }
 }
