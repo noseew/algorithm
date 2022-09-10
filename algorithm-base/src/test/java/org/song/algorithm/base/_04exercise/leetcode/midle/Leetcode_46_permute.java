@@ -145,6 +145,64 @@ public class Leetcode_46_permute {
     }
 
 
+    @Test
+    public void test4() {
+        List<List<Integer>> permute = permute4(new int[]{1, 2, 3});
+        print(permute);
+    }
+
+    /**
+     * DFS 使用形参变量
+     * 采用值替换的思路, 类似于冒泡排序将所有组合换一遍
+     * 思路:
+     * 原数组: 1,2,3
+     * 第一层, 
+     * -    值1和1交换(下标0和0交换), 得到第1个值 注意需要换回来
+     * -    值1和2交换(下标0和1交换), 得到第2个值
+     * -    值1和3交换(下标0和2交换), 得到第3个值
+     * 第二层, 
+     * -    值2和2交换(下标1和1交换), 得到第1个值
+     * -    值2和3交换(下标1和2交换), 得到第2个值
+     * 第三层, 
+     * -    值3和3交换(下标2和2交换), 得到第1个值
+     * 
+     * 这样一次DFS下来, 第一个组合就得到了, 以此类推
+     * 
+     */
+    public List<List<Integer>> permute4(int[] nums) {
+        // 最终的结果
+        List<List<Integer>> results = new ArrayList<>();
+        dfs4(0, results, nums);
+        return results;
+    }
+
+    private void dfs4(int index, List<List<Integer>> results, int[] selectLevel) {
+        if (index == selectLevel.length) {
+            List<Integer> r = new ArrayList<>();
+            for (int i : selectLevel) {
+                r.add(i);
+            }
+            results.add(r);
+            return;
+        }
+
+        for (int i = index; i < selectLevel.length; i++) {
+            // 交换两个地方值
+            swap(selectLevel, index, i);
+            dfs4(index + 1, results, selectLevel);
+            // 换回来
+            swap(selectLevel, index, i);
+        }
+    }
+    
+    private static void swap(int[] array, int i, int j) {
+        if (i == j) return;
+        int val = array[i];
+        array[i] = array[j];
+        array[j] = val;
+    }
+
+
     private static void print(List<List<Integer>> permute) {
         for (List<Integer> integers : permute) {
             for (Integer integer : integers) {
