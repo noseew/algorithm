@@ -21,70 +21,56 @@ public class Leetcode_17_letterCombinations {
     @Test
     public void test() {
 
-        List<String> list = letterCombinations("23");
-        System.out.println(Arrays.toString(list.toArray()));
-
-        System.out.println('0' - 48);
-        System.out.println('9' - 48);
+        System.out.println(Arrays.toString(letterCombinations("23").toArray()));
+        results.clear();
+        System.out.println(Arrays.toString(letterCombinations("").toArray()));
 
     }
+
+    char[][] number = {
+            {'a', 'b', 'c'},
+            {'d', 'e', 'f'},
+            {'g', 'h', 'i'},
+            {'j', 'k', 'l'},
+            {'m', 'n', 'o'},
+            {'p', 'q', 'r', 's'},
+            {'t', 'u', 'v'},
+            {'w', 'x', 'y', 'z'}
+    };
+    
+    char[] chars;
+    char[] str; // 用来存储每一层选择的字母
+    List<String> results = new ArrayList<>();
+    
 
     /**
-     * 未完成 建议递归试试
+     * 采用 dfs
      */
     public List<String> letterCombinations(String digits) {
-        List<String> res = new ArrayList<>();
-
-        List<String[]> chars = new ArrayList<>();
-        for (char c : digits.toCharArray()) {
-            chars.add(parse(c - 48));
-        }
-
-        int[] bits = new int[chars.size()];
-
-        int bit = chars.size() - 1;
-        while (bit >= 0) {
-            StringBuilder sb = new StringBuilder(chars.size());
-            for (int i = 0; i < chars.size(); i++) {
-                sb.append(chars.get(i)[bits[i]]);
-                if (i > bit) {
-
-                } else if (i == bit) {
-
-                    bits[i]++;
-                    if (bits[i] >= chars.get(i).length) {
-                        bit--;
-                        bits[i] = 0;
-                    }
-                }
-            }
-            res.add(sb.toString());
-        }
-
-
-        return res;
+        if (digits == null) return null;
+        if (digits.length() == 0) return new ArrayList<>();
+        
+        chars = digits.toCharArray();
+        str = new char[digits.length()];
+        // 表示层号
+        dfs(0);
+        return results;
     }
 
-    private String[] parse(int i) {
-        switch (i) {
-            case 2:
-                return new String[]{"a", "b", "c"};
-            case 3:
-                return new String[]{"d", "e", "f"};
-            case 4:
-                return new String[]{"g", "h", "i"};
-            case 5:
-                return new String[]{"j", "k", "l"};
-            case 6:
-                return new String[]{"m", "n", "o"};
-            case 7:
-                return new String[]{"p", "q", "r", "s"};
-            case 8:
-                return new String[]{"t", "u", "v"};
-            case 9:
-                return new String[]{"w", "x", "y", "z"};
+    private void dfs(int index) {
+        if (index == chars.length) {
+            // 到了最后一层, 深度结束, 得到了一个结果
+            results.add(new String(str));
+            return;
         }
-        return new String[]{};
-    }
 
+        // 数字字符
+        char digit = chars[index];
+        // 能做的选择字母表
+        char[] letters = number[digit - '2'];
+        for (char letter : letters) {
+            str[index] = letter;
+            dfs(index + 1);
+        }
+    }
 }
