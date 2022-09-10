@@ -17,14 +17,12 @@ public class Leetcode_46_permute {
     @Test
     public void test() {
         List<List<Integer>> permute = permute(new int[]{1, 2, 3});
-        for (List<Integer> integers : permute) {
-            for (Integer integer : integers) {
-                System.out.print(" " + integer);
-            }
-            System.out.println();
-        }
+        print(permute);
     }
 
+    /**
+     * DFS 使用成员变量
+     */
     public List<List<Integer>> permute(int[] nums) {
         result = new int[nums.length];
         selectAble = new boolean[nums.length];
@@ -70,14 +68,12 @@ public class Leetcode_46_permute {
     @Test
     public void test2() {
         List<List<Integer>> permute = permute2(new int[]{1, 2, 3});
-        for (List<Integer> integers : permute) {
-            for (Integer integer : integers) {
-                System.out.print(" " + integer);
-            }
-            System.out.println();
-        }
+        print(permute);
     }
 
+    /**
+     * DFS 使用形参变量
+     */
     public List<List<Integer>> permute2(int[] nums) {
         int[] result = new int[nums.length];
         boolean[] selectAble = new boolean[nums.length];
@@ -109,6 +105,52 @@ public class Leetcode_46_permute {
             dfs2(index + 1, results, result, selectAble, selectLevel);
             // 退出后, 恢复现场, 标记为可选
             selectAble[i] = true;
+        }
+    }
+
+    @Test
+    public void test3() {
+        List<List<Integer>> permute = permute3(new int[]{1, 2, 3});
+        print(permute);
+    }
+
+    /**
+     * DFS 使用形参变量
+     * 取消一个参数, 复用现有参数
+     */
+    public List<List<Integer>> permute3(int[] nums) {
+        List<Integer> result = new ArrayList<>();
+        // 最终的结果
+        List<List<Integer>> results = new ArrayList<>();
+        dfs3(0, results, result, nums);
+        return results;
+    }
+
+    private void dfs3(int index, List<List<Integer>> results, List<Integer> result, int[] selectLevel) {
+        if (index == selectLevel.length) {
+            results.add(new ArrayList<>(result));
+            return;
+        }
+
+        for (int i = 0; i < selectLevel.length; i++) {
+            if (result.contains(selectLevel[i])) {
+                // 如果参数已经存在, 则直接跳过, 等价上面的 selectAble, 不过这里效率变成了O(n), 时间换空间
+                continue;
+            }
+            // 当前层选择的值
+            result.add(selectLevel[i]);
+            dfs3(index + 1, results, result, selectLevel);
+            result.remove(index);
+        }
+    }
+
+
+    private static void print(List<List<Integer>> permute) {
+        for (List<Integer> integers : permute) {
+            for (Integer integer : integers) {
+                System.out.print(" " + integer);
+            }
+            System.out.println();
         }
     }
 }
