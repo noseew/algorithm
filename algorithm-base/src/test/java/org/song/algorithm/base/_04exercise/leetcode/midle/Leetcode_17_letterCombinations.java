@@ -41,7 +41,6 @@ public class Leetcode_17_letterCombinations {
     char[] chars; // 用户输入的数字, 也就是层
     char[] str; // 用来存储每一层选择的字母
     List<String> results = new ArrayList<>(); // 最终的结果组合
-    
 
     /**
      * 采用 dfs
@@ -77,6 +76,50 @@ public class Leetcode_17_letterCombinations {
             str[index] = letter;
             // 向下一层继续选择
             dfs(index + 1);
+        }
+    }
+
+    @Test
+    public void test2() {
+
+        System.out.println(Arrays.toString(letterCombinations2("23").toArray()));
+        System.out.println(Arrays.toString(letterCombinations2("").toArray()));
+
+    }
+
+
+    /**
+     * 采用 dfs
+     */
+    public List<String> letterCombinations2(String digits) {
+        if (digits == null) return null;
+        if (digits.length() == 0) return new ArrayList<>();
+
+        // 用户输入的数字, 也就是层
+        char[] chars = digits.toCharArray();
+        // 用来存储每一层选择的字母
+        char[] str = new char[digits.length()];
+        // 最终的结果组合
+        List<String> results = new ArrayList<>();
+        // 表示层号
+        dfs2(0, results, chars, str);
+        return results;
+    }
+
+    /**
+     * 一层一层的递归选择
+     */
+    private void dfs2(int index, List<String> results, char[] chars, char[] str) {
+        if (index == chars.length) {
+            // 到了最后一层, 深度结束, 得到了一个结果
+            results.add(new String(str));
+            return;
+        }
+
+        char[] letters = number[ chars[index] - '2'];
+        for (char letter : letters) {
+            str[index] = letter;
+            dfs2(index + 1, results, chars, str);
         }
     }
 }
