@@ -152,7 +152,7 @@ public class Leetcode_46_permute {
     }
 
     /**
-     * DFS 使用形参变量
+     * DFS 使用形参变量, 减少一个参数 selectAble, 同时效率O(n)
      * 采用值替换的思路, 类似于冒泡排序将所有组合换一遍
      * 思路:
      * 原数组: 1,2,3
