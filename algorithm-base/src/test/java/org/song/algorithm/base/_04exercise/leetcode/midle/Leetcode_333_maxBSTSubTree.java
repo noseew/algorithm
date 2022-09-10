@@ -34,16 +34,8 @@ public class Leetcode_333_maxBSTSubTree {
     }
 
     private int count(TreeNode root) {
-        AtomicInteger count = new AtomicInteger();
-        count(root, count);
-        return count.get();
-    }
-
-    private void count(TreeNode root, AtomicInteger count) {
-        if (root == null) return;
-        count(root.left, count);
-        count.incrementAndGet();
-        count(root.right, count);
+        if (root == null) return 0;
+        return 1 + count(root.left) + count(root.right);
     }
 
     private boolean isBST(TreeNode root) {
