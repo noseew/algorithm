@@ -28,19 +28,19 @@ public class Leetcode_17_letterCombinations {
     }
 
     char[][] number = {
-            {'a', 'b', 'c'},
-            {'d', 'e', 'f'},
-            {'g', 'h', 'i'},
-            {'j', 'k', 'l'},
-            {'m', 'n', 'o'},
-            {'p', 'q', 'r', 's'},
-            {'t', 'u', 'v'},
-            {'w', 'x', 'y', 'z'}
+            {'a', 'b', 'c'}, // 2, index - 2
+            {'d', 'e', 'f'}, // 3
+            {'g', 'h', 'i'}, // 4
+            {'j', 'k', 'l'}, // 5
+            {'m', 'n', 'o'}, // 6
+            {'p', 'q', 'r', 's'}, // 7
+            {'t', 'u', 'v'}, // 8
+            {'w', 'x', 'y', 'z'} // 9
     };
     
-    char[] chars;
+    char[] chars; // 用户输入的数字, 也就是层
     char[] str; // 用来存储每一层选择的字母
-    List<String> results = new ArrayList<>();
+    List<String> results = new ArrayList<>(); // 最终的结果组合
     
 
     /**
@@ -57,6 +57,9 @@ public class Leetcode_17_letterCombinations {
         return results;
     }
 
+    /**
+     * 一层一层的递归选择
+     */
     private void dfs(int index) {
         if (index == chars.length) {
             // 到了最后一层, 深度结束, 得到了一个结果
@@ -64,12 +67,15 @@ public class Leetcode_17_letterCombinations {
             return;
         }
 
-        // 数字字符
+        // 当前层所对应的数字 [0-9], 由用户输入
         char digit = chars[index];
-        // 能做的选择字母表
+        // 每个数字对应的字母表
         char[] letters = number[digit - '2'];
+        // 遍历这一层能选择的所有字母
         for (char letter : letters) {
+            // 记录当前层的字母
             str[index] = letter;
+            // 向下一层继续选择
             dfs(index + 1);
         }
     }
