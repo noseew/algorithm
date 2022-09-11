@@ -4,7 +4,6 @@ import org.junit.Test;
 import org.song.algorithm.base._04exercise.leetcode.TreeNode;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -121,6 +120,50 @@ public class Leetcode_129_sumNumbers {
         }
         if (root.right != null) {
             dfs2(root.right, select * 10 + root.val, result);
+        }
+    }
+
+    @Test
+    public void test3() {
+        TreeNode treeNode = new TreeNode();
+        treeNode.val = 10;
+        TreeNode left = new TreeNode();
+        left.val = 5;
+        TreeNode right = new TreeNode();
+        right.val = 5;
+
+
+        treeNode.left = left;
+        treeNode.right = right;
+        System.out.println(sumNumbers3(treeNode));
+    }
+
+    /**
+     * 典型的 DFS思路
+     * 节省空间, 提高效率
+     */
+    public int sumNumbers3(TreeNode root) {
+        if (root == null) return 0;
+        dfs3(root, 0);
+        return result;
+    }
+
+    private int result;
+
+    private void dfs3(TreeNode root, int select) {
+        int val = select * 10 + root.val;
+        // 如果是叶子结点, 且值相等, 则返回true
+        if (root.left == null && root.right == null) {
+            result += val;
+            return;
+        }
+
+        // 向左右探索
+        if (root.left != null) {
+            dfs3(root.left, val);
+        }
+        if (root.right != null) {
+            dfs3(root.right, val);
         }
     }
 
