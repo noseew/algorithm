@@ -67,5 +67,56 @@ public class Leetcode_283_moveZeroes {
         }
     }
 
+    @Test
+    public void test3() {
+        int[] ints = new int[]{0, 1, 0, 3, 12};
+        moveZeroes3(ints);
+        System.out.println(Arrays.toString(ints));
+    }
+
+    /**
+     * 思路
+     * 双指针, 将非0元素向前移动
+     */
+    public void moveZeroes3(int[] nums) {
+
+        int noZero = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == 0) continue;
+            swap(nums, i, noZero++);
+        }
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int v = nums[i];
+        nums[i] = nums[j];
+        nums[j] = v;
+    }
+
+    @Test
+    public void test4() {
+        int[] ints = new int[]{0, 1, 0, 3, 12};
+        moveZeroes4(ints);
+        System.out.println(Arrays.toString(ints));
+        int[] ints2 = new int[]{1, 0};
+        moveZeroes4(ints2);
+        System.out.println(Arrays.toString(ints2));
+    }
+
+    /**
+     * 思路
+     * 双指针, 将非0元素向前移动
+     */
+    public void moveZeroes4(int[] nums) {
+        if (nums.length == 1) return;
+        int noZero = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == 0) continue;
+            int v = nums[i];
+            nums[i] = nums[noZero];
+            nums[noZero++] = v;
+        }
+    }
+
 
 }
