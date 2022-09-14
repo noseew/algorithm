@@ -52,7 +52,7 @@ public class TreeTraverse {
      */
     @Test
     public void test_02_traverse_02() {
-        TreeNode<Integer> root = initAVLTreeNode(3);
+        TreeNode<Integer> root = initAVLTreeNode(6);
         BTreeUtils.print(root, true);
         // 二叉树前序遍历   根-> 左-> 右
         preOrderTraversalWithStack(root);
@@ -62,8 +62,11 @@ public class TreeTraverse {
         System.out.println();
         // 二叉树后序遍历   左-> 右-> 根
         postOrderTraversalWithStack(root);
+        System.out.println();
         // 层序遍历
         levelOrder(root);
+        System.out.println("---");
+        levelOrderSplit(root);
     }
 
     @Test
@@ -290,14 +293,39 @@ public class TreeTraverse {
         LinkedList<TreeNode> queue = new LinkedList<>();
         queue.add(root);
         while (!queue.isEmpty()) {
-            root = queue.pop();
+            root = queue.pollFirst();
             System.out.print(root.val + " ");
             if (root.left != null) {
-                queue.add(root.left);
+                queue.addLast(root.left);
             }
             if (root.right != null) {
-                queue.add(root.right);
+                queue.addLast(root.right);
             }
+        }
+    }
+
+
+    static TreeNode nullNode = new TreeNode();
+
+    private static void levelOrderSplit(TreeNode root) {
+        LinkedList<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        queue.add(nullNode);
+        while (!queue.isEmpty()) {
+            root = queue.pollFirst();
+            if (root != nullNode) {
+                System.out.print(root.val + " ");
+            } else {
+                System.out.print("|");
+                continue;
+            }
+            if (root.left != null) {
+                queue.addLast(root.left);
+            }
+            if (root.right != null) {
+                queue.addLast(root.right);
+            }
+            queue.add(nullNode);
         }
     }
 }

@@ -14,28 +14,33 @@ public class Leetcode_461_hammingDistance {
     @Test
     public void test() {
         System.out.println("2 = " + hammingDistance(1, 4));
+        System.out.println("1 = " + hammingDistance(3, 1));
+        // ?
+        System.out.println("2 = " + hammingDistance(93, 73));
     }
 
     /**
-     * 未完成, 啥是距离 ?
+     * 
+     * 啥是距离? TODO 未完成
      */
     public int hammingDistance(int x, int y) {
-        int count = 0;
+        if (x == 0 || y == 0) return 1;
+        if (x == y) return 0;
+        
+        int max, min;
 
-        if (x < y) {
-            y = Integer.highestOneBit(y);
-            while (x < y) {
-                x = (x << 1);
-                count++;
-            }
+        if (x == Integer.MIN_VALUE || x > y) {
+            max = x;
+            min = y;
         } else {
-            x = Integer.highestOneBit(x);
-            while (y < x) {
-                y = (y << 1);
-                count++;
-            }
+            max = y;
+            min = x;
         }
-
+        int count = 0;
+        while (max != min && max != 0) {
+            count++;
+            max = max >>> 1;
+        }
         return count;
     }
 
