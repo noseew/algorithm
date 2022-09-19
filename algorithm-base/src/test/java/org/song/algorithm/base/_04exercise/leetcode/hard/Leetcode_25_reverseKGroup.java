@@ -3,9 +3,6 @@ package org.song.algorithm.base._04exercise.leetcode.hard;
 import org.junit.jupiter.api.Test;
 import org.song.algorithm.base._04exercise.leetcode.ListNode;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * 25. K 个一组翻转链表
  * 给你一个链表，每 k 个节点一组进行翻转，请你返回翻转后的链表。
@@ -43,72 +40,62 @@ public class Leetcode_25_reverseKGroup {
      * 1. 遍历并反转链表, 同时根据k进行拆解链表, 同时串联新链表. 实现比较复杂
      */
     public ListNode reverseKGroup(ListNode head, int k) {
+        if (head == null || head.next == null) return head;
 
-        if (head == null || head.next == null) {
-            return head;
-        }
-
-        List<ListNode> list = new ArrayList<>();
-
-        int k_times = 1;
-
-        ListNode h = head, prev = null;
-        while (h != null) {
-            ListNode next = h.next;
-            h.next = prev;
-            prev = h;
-
-            if (k_times % k == 0) {
-                // 分组添加到list
-                list.add(h);
-            } else if (k_times % k == 1) {
-                // 分组断开
-                h.next = null;
-            }
-
-            if (next == null) {
-                break;
-            }
-
-            h = next;
-            k_times++;
-        }
-        if (k_times % k != 0) {
-            // 末尾不足的链表, 该链表不进行翻转(所以需要反过来)
-            h = prev;
-            prev = null;
-            while (h != null) {
-                ListNode next = h.next;
-                h.next = prev;
-                prev = h;
-                h = next;
-            }
-            list.add(prev);
-        }
-
-        // 总队头
         ListNode newHead = null;
 
-        // 串新链表
-        ListNode listTail = null;
-        for (ListNode listHead : list) {
-            // 本次队头
+        ListNode h = head;
+        ListNode headPrev = null;
+
+        while (h != null) {
+            // 找到k组的尾部, 如果不够返回null
+            ListNode tail = tailNodeByK(h, k);
+            // 不够k提前终止
+            if (tail == null) break;
+
+            ListNode tailNext = tail.next;
+            // 翻转到tailNext就终止
+            ListNode nh = revert(headPrev, h, tailNext);
             if (newHead == null) {
-                newHead = listHead;
+                newHead = nh;
             }
-
-            if (listTail != null) {
-                // 上一个队尾连接本次队头
-                listTail.next = listHead;
-            }
-
-            // 本次队尾
-            while (listHead != null) {
-                listTail = listHead;
-                listHead = listHead.next;
-            }
+            headPrev = h;
+            h = tailNext;
         }
+        return newHead;
+    }
 
+    private ListNode tailNodeByK(ListNode list, int k) {
+        while (k > 1 && list != null) {
+            list = list.next;
+            k--;
+        }
+        return list;
+    }
+
+    /**
+     * @param headPrev head的前一个
+     * @param list     链表头, 要反转的就是他
+     * @param tailNext 链表尾部的下一个, 也是翻转截止的下一个位置
+     * @return
+     */
+    private ListNode revert(ListNode headPrev, ListNode list, ListNode tailNext) {
+        ListNode newTail = list, newHead = recursion(list, tailNext);
+        newTail.next = tailNext;
+        if (headPrev != null) {
+            headPrev.next = newHead;
+            return headPrev;
+        }
+        return newHead;
+    }
+
+    private ListNode recursion(ListNode head, ListNode brokenNode) {
+        if (head == null || head.next == null || head.next == brokenNode) {
+            return head;
+        }
+        ListNode newHead = recursion(head.next, brokenNode);
+        head.next.next = head;
+        head.next = null;
         return newHead;
     }
 
